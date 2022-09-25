@@ -1,9 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styles from './BlogSectionListNewsItem.module.scss';
-import classNames from 'classnames/bind';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import { Link } from '@material-ui/core';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import classNames from 'classnames/bind';
+import styles from './BlogSectionListNewsItem.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +16,7 @@ function BlogSectionListNewsItem(props) {
     };
 
     return (
-        <Link className={cx('wrapper')} underline='none' href={data.href} color=''>
+        <Link className={cx('wrapper')} underline='none' href={data.href} color='inherit'>
             <FiberManualRecordIcon fontSize='small' />
             <div className={cx('content')}>
                 {data.label} <span className={cx('badge-new')}>new</span>

@@ -1,8 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import './NavBarButtonItem.scss';
-import stringHelper from 'helpers/stringHelper';
 
 NavBarButtonItem.propTypes = {
     iconName: PropTypes.element,
@@ -11,7 +9,6 @@ NavBarButtonItem.propTypes = {
 };
 
 NavBarButtonItem.defaultProps = {
-    iconName: '',
     label: '',
     href: '',
 };
@@ -19,8 +16,8 @@ NavBarButtonItem.defaultProps = {
 function NavBarButtonItem(props) {
     const { iconName, label, href } = props;
     return (
-        <Link className='navbar-button-item' href={href} color='#000' underline='none'>
-            {stringHelper.isNullOrEmpty(iconName) && iconName}
+        <Link className='navbar-button-item' href={href} color='inherit' underline='none'>
+            {iconName && iconName}
             {label}
         </Link>
     );

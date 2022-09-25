@@ -17,7 +17,7 @@ function BlogSectionShortNews(props) {
 
     return (
         <div className={cx('wrapper')}>
-            <Link href={data.link} underline='none' color=''>
+            <Link href={data.link} underline='none' color='inherit'>
                 <h3>{data.title}</h3>
             </Link>
             <img src={data.image} alt='' width={'100%'} />

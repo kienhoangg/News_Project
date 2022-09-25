@@ -18,7 +18,7 @@ function Home(props) {
                         <img src={Images.CONG_DICH_VU} alt='' />
                     </Link>
                     <div className={cx('call-out-middle-hr')}></div>
-                    <Link href='/' underline='none' className={cx('btn-call-out')} color=''>
+                    <Link href='/' underline='none' className={cx('btn-call-out')} color='inherit'>
                         <div>CÔNG DÂN DOANH NGHIỆP MỚI</div>
                     </Link>
                 </div>
