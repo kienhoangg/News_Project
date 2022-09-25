@@ -1,0 +1,14 @@
+.news-navbar {
+    height: 48px;
+    background-color: #dcddde;
+
+    display: flex;
+    align-items: center;
+
+    .news-navbar-hr {
+        height: 24px;
+        border-radius: 16px;
+        width: 1px;
+        background-color: #000000;
+    }
+}

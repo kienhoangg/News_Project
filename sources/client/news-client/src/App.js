@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import "./assets/styles/app.scss";
 import NotFound from './components/NotFound/NotFound';
 import About from './features/About/About';
 import Home from './features/Home/Home';

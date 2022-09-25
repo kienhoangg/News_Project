@@ -1,0 +1,20 @@
+.wrapper {
+    display: flex;
+    padding: 8px 4px;
+    font-style: italic;
+
+    > svg {
+        margin-right: 4px;
+        margin-top: 4px;
+    }
+}
+
+.badge-new {
+    margin-left: 8px;
+    padding: 4px;
+    border-radius: 8px;
+
+    background-color: red;
+    font-size: 11px;
+    color: #fff;
+}

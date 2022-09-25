@@ -1,0 +1,16 @@
+.wrapper {
+    height: 500px;
+    background-color: #fff;
+}
+
+.list-news {
+    height: calc(100% - 200px);
+}
+.map {
+    height: 200px;
+    background-color: aquamarine;
+
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
