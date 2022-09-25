@@ -14,6 +14,7 @@
     --default-layout-horizontal-spacer: 24px;
 
     --default-color-second: #ececec;
+    --default-bg: #dcddde;
 }
 
 * {
@@ -33,6 +34,8 @@ body {
     text-rendering: optimizespeed;
     color: var(--text-color);
     overflow-y: overlay;
+
+    margin-bottom: 300px;
 }
 
 // Scrollbar CSS

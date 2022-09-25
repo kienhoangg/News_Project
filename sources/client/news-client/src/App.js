@@ -1,27 +1,41 @@
-import React, { Suspense } from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import NotFound from './components/NotFound/NotFound';
-import About from './features/About/About';
-import Home from './features/Home/Home';
+import DefaultLayout from 'layouts/DefaultLayout/DefaultLayout';
+import React from 'react';
+import { Fragment } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { publicRoutes } from 'routers/routers';
 
-// Lazy load - Code splitting
-const Blog = React.lazy(() => import('./features/Blog/Blog'));
 
 function App() {
     return (
-        <div className="news-app">
-            <Suspense fallback={<div>Loading ...</div>}>
-                <BrowserRouter>
-                    <Switch>
-                        <Redirect exact from="/" to="/home" />
-                        <Route path="/home" component={Home} />
-                        <Route path="/blog" component={Blog} />
-                        <Route path="/about" component={About} />
-                        <Route component={NotFound} />
-                    </Switch>
-                </BrowserRouter>
-            </Suspense>
-        </div>
+        <Router>
+            <div className="news">
+                <Routes>
+                    {publicRoutes.map((route, index) => {
+                        const Page = route.component;
+                        let Layout = DefaultLayout;
+
+                        if (route.layout) {
+                            Layout = route.layout;
+                        } else if (route.layout === null) {
+                            Layout = Fragment;
+                        }
+
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
+                </Routes>
+            </div>
+        </Router>
+
     );
 }
 export default App;

@@ -1,12 +1,9 @@
 import { Link } from '@material-ui/core';
-import React from 'react';
-import Images from '../../common/images';
-import Banner from '../../components/Banner/Banner';
-import Navbar from '../../components/Navbar/Navbar';
-import BlogSection from './components/BlogSection/BlogSection';
-import styles from './Home.module.scss';
 import classNames from 'classnames/bind';
+import Images from '../../common/images';
+import BlogSection from './components/BlogSection/BlogSection';
 import MediaBlogSection from './components/MediaBlogSection/MediaBlogSection';
+import styles from './Home.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -14,8 +11,6 @@ function Home(props) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
-                <Banner />
-                <Navbar />
                 <div className='news-home-utilities'></div>
                 <BlogSection />
                 <div className={cx('section-callout-middle')}>

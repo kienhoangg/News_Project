@@ -1,19 +1,16 @@
-.wrapper {
+.navbar {
     display: flex;
     align-items: center;
 
     height: 56px;
     background-color: #d1d2d4;
-}
 
-.navbar-left {
-    flex: 1;
-}
+    .navbar-left {
+        flex: 1;
+    }
 
-.navbar-right {
-    display: flex;
-    flex: 1;
-}
-
-.btn-multimedia {
+    .navbar-right {
+        display: flex;
+        flex: 1;
+    }
 }

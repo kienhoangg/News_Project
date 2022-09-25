@@ -9,6 +9,9 @@ npm i @material-ui/core
 npm install @material-ui/icons
 
 
+npm i --save-dev node-sass
+npm i --save react-router-dom
+
 
 ---
 ## Extensions

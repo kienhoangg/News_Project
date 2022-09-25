@@ -2,3 +2,12 @@
     height: 100%;
     overflow: auto;
 }
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 50px;
+    background-color: var(--default-bg);
+}

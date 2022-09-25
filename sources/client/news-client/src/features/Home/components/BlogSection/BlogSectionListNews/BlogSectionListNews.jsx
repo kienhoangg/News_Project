@@ -13,7 +13,9 @@ BlogSectionListNews.defaultProps = {};
 function BlogSectionListNews(props) {
     return (
         <div className={cx('wrapper')}>
-            <h3>VĂN BẢN CHỈ ĐẠO ĐIỀU HÀNH</h3>
+            <div className={cx('title')}>
+                <h3>VĂN BẢN CHỈ ĐẠO ĐIỀU HÀNH</h3>
+            </div>
             <div className={cx('items')}>
                 <BlogSectionListNewsItem />
                 <BlogSectionListNewsItem />
