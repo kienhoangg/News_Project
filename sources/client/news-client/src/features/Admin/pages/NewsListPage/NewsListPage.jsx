@@ -16,7 +16,8 @@ const columns = [
     {
         field: 'createdDate',
         headerName: 'Ngày tạo',
-        width: 150,
+        type: 'date',
+        width: 180,
     },
     {
         field: 'info',
@@ -38,7 +39,7 @@ const columns = [
         renderCell: () => (
             <strong>
                 <Button variant='contained' color='primary' size='small' style={{ marginLeft: 16 }}>
-                    Open
+                    Chỉnh sửa
                 </Button>
             </strong>
         ),
@@ -46,15 +47,15 @@ const columns = [
 ];
 
 const rows = [
-    { id: 1, title: 'Snow', field: 'Jon', age: 12, action: <Button>Click</Button> },
-    { id: 2, title: 'Lannister', field: 'Cersei', age: 42 },
-    { id: 3, title: 'Lannister', field: 'Jaime', age: 45 },
-    { id: 4, title: 'Stark', field: 'Arya', age: 16 },
-    { id: 5, title: 'Targaryen', field: 'Daenerys', age: null },
-    { id: 6, title: 'Melisandre', field: null, age: 150 },
-    { id: 7, title: 'Clifford', field: 'Ferrara', age: 44 },
-    { id: 8, title: 'Frances', field: 'Rossini', age: 36 },
-    { id: 9, title: 'Roxie', field: 'Harvey', age: 65 },
+    { id: 1, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 2, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 3, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 4, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 5, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 6, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 7, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 8, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
+    { id: 9, title: 'Văn Yên: Tăng cường ứng dụng công nghệ thông tin, chuyển đổi số trong hoạt động của HĐND', createdDate: '16:18:06 27/09/2022', info: 'Tổng biên tập xuất bản' },
 ];
 
 function NewsListPage(props) {
