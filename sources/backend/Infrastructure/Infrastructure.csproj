@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Implements\" />
+    <None Remove="FluentValidation" />
+    <None Remove="AutoMapper" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="Mappings\" />
+    <None Remove="Shared\" />
+    <None Remove="Shared\SeedWork\" />
+    <None Remove="Shared\Paging\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Implements\" />
+    <Folder Include="Mappings\" />
+    <Folder Include="Shared\" />
+    <Folder Include="Shared\SeedWork\" />
+    <Folder Include="Shared\Paging\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+</Project>
