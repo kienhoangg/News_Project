@@ -1,6 +1,7 @@
 .wrapper {
     height: 100%;
-    overflow: auto;
+
+    --title-height: 50px;
 }
 
 .title {
@@ -8,6 +9,11 @@
     align-items: center;
     justify-content: center;
 
-    height: 50px;
+    height: var(--title-height);
     background-color: var(--default-bg);
+}
+
+.items {
+    height: calc(100% - var(--title-height));
+    overflow: auto;
 }

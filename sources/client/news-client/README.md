@@ -12,6 +12,8 @@ npm install @material-ui/icons
 npm i --save-dev node-sass
 npm i --save react-router-dom
 
+(React Router v6)
+
 ---
 
 ## Extensions
@@ -55,7 +57,7 @@ BlogSectionShortListItem.propTypes = {};
 BlogSectionShortListItem.defaultProps = {};
 
 function BlogSectionShortListItem(props) {
-return <div className={cx('wrapper')}></div>;
+return <div className={cx('wrapper')}>BlogSectionShortListItem</div>;
 }
 
 export default BlogSectionShortListItem;
@@ -63,3 +65,9 @@ export default BlogSectionShortListItem;
 
 
 ```
+
+Deploy surge.sh
+$ npm i -g surge
+
+$ npm run build
+$

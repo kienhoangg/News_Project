@@ -1,11 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styles from './MediaBlogSection.module.scss';
 import classNames from 'classnames/bind';
-import { Link } from '@material-ui/core';
 import Images from '../../../../common/images';
-import MediaBlogSectionButton from './MediaBlogSectionButton/MediaBlogSectionButton';
+import styles from './MediaBlogSection.module.scss';
 import MediaBlogSectionBanner from './MediaBlogSectionBanner/MediaBlogSectionBanner';
+import MediaBlogSectionButton from './MediaBlogSectionButton/MediaBlogSectionButton';
 
 const cx = classNames.bind(styles);
 
@@ -27,7 +24,7 @@ function MediaBlogSection(props) {
                     <MediaBlogSectionButton href={'/'} size='small' label='Photos' imageName={Images.EMBELEM_VIETNAM} />
                 </div>
             </div>
-            <div className='carousel'>
+            <div className={cx('carousel')}>
                 <MediaBlogSectionBanner />
             </div>
         </div>

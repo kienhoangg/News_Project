@@ -1,7 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styles from './Banner.module.scss';
 import classNames from 'classnames/bind';
+import styles from './Banner.module.scss';
 
 const cx = classNames.bind(styles);
 
