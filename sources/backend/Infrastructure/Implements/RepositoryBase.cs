@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Common.Interfaces;
 using Contracts.Domains;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Linq.Expressions;
 
 namespace Infrastructure.Implements
 {
@@ -52,6 +52,19 @@ namespace Infrastructure.Implements
             return !trackChanges
                        ? _dbContext.Set<T>().Where(expression).AsNoTracking()
                        : _dbContext.Set<T>().Where(expression);
+        }
+
+         public IQueryable<T> FindByMultiCondition(
+            params Expression<Func<T, bool>>[] expressions)
+        {
+            DbSet<T>? query = _dbContext.Set<T>(); 
+            foreach(var expression in expressions)
+            {
+                if(expression != null){
+                    query.Where(expression);
+                }
+            }
+            return query.AsQueryable();
         }
 
         public IQueryable<T> FindByCondition(
@@ -106,6 +119,7 @@ namespace Infrastructure.Implements
             T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
+             await SaveChangesAsync();
             return entity.Id;
         }
 
@@ -113,21 +127,22 @@ namespace Infrastructure.Implements
             IEnumerable<T> entities)
         {
             await _dbContext.Set<T>().AddRangeAsync(entities);
+             await SaveChangesAsync();
             return entities.Select(x => x.Id).ToList();
         }
 
-        public Task UpdateAsync(
+        public async Task UpdateAsync(
             T entity)
         {
             if (_dbContext.Entry(entity).State == EntityState.Unchanged)
-                return Task.CompletedTask;
+                return;
 
             var exist = _dbContext.Set<T>()
                                   .Find(entity.Id);
 
             _dbContext.Entry(exist).CurrentValues.SetValues(entity);
-
-            return Task.CompletedTask;
+            await SaveChangesAsync();
+         
         }
 
         public Task UpdateListAsync(
@@ -137,11 +152,11 @@ namespace Infrastructure.Implements
         }
 
         public void Delete(T entity) => _dbContext.Set<T>().Remove(entity);
-        public Task DeleteAsync(
+        public async Task DeleteAsync(
             T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            return Task.CompletedTask;
+            await SaveChangesAsync();
         }
 
         public Task DeleteListAsync(
