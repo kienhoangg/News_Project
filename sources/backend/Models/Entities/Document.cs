@@ -1,8 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Contracts.Interfaces;
 using Contracts.Domains;
 
 namespace Models.Entities
@@ -27,4 +24,3 @@ namespace Models.Entities
         public string FilePath { get; set; }
     }
 }
-

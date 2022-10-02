@@ -1,0 +1,82 @@
+using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Models.Dtos;
+using Models.Entities.News;
+using Models.Requests;
+using News.API.Interfaces;
+
+namespace News.API.Controllers
+{
+    [Route("api/[controller]")]
+    public class SourceNewsController : ControllerBase
+    {
+        private readonly ISourceNewsService _sourceNewsService;
+
+        private readonly IMapper _mapper;
+
+        public SourceNewsController(
+            ISourceNewsService sourceNewsService,
+            IMapper mapper
+        )
+        {
+            _sourceNewsService = sourceNewsService;
+            _mapper = mapper;
+        }
+
+        [HttpPost("filter")]
+        public async Task<IActionResult>
+        GetSourceNewsByPaging([FromBody] SourceNewsRequest sourceNewsRequest)
+        {
+            var result =
+                await _sourceNewsService
+                    .GetSourceNewsByPaging(sourceNewsRequest);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>
+        CreateSourceNewsDto([FromBody] SourceNewsDto sourceNewsDto)
+        {
+            var sourceNews = _mapper.Map<SourceNews>(sourceNewsDto);
+            await _sourceNewsService.CreateSourceNews(sourceNews);
+            var result = _mapper.Map<SourceNewsDto>(sourceNews);
+            return Ok(result);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetSourceNewsById([Required] int id)
+        {
+            SourceNews? sourceNews = await _sourceNewsService.GetSourceNews(id);
+            if (sourceNews == null) return NotFound();
+
+            var result = _mapper.Map<SourceNewsDto>(sourceNews);
+            return Ok(result);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult>
+        UpdateSourceNewsDto(
+            [Required] int id,
+            [FromBody] SourceNewsDto sourceNewsDto
+        )
+        {
+            SourceNews? SourceNews = await _sourceNewsService.GetSourceNews(id);
+            if (SourceNews == null) return NotFound();
+            var updatedSourceNews = _mapper.Map(sourceNewsDto, SourceNews);
+            await _sourceNewsService.UpdateSourceNews(updatedSourceNews);
+            var result = _mapper.Map<SourceNewsDto>(updatedSourceNews);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteSourceNewsDto([Required] int id)
+        {
+            SourceNews? sourceNews = await _sourceNewsService.GetSourceNews(id);
+            if (sourceNews == null) return NotFound();
+
+            await _sourceNewsService.DeleteSourceNews(id);
+            return NoContent();
+        }
+    }
+}

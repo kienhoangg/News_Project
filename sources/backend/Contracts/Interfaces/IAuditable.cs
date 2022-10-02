@@ -1,8 +1,6 @@
 ﻿using System;
+
 namespace Contracts.Interfaces
 {
-    public interface IAuditable : IDateTracking
-    {
-    }
+    public interface IAuditable : IDateTracking, IUserTracking { }
 }
-
