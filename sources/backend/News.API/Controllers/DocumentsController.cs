@@ -19,7 +19,6 @@ namespace News.API.Controllers
         [HttpPost]
         public async Task<IActionResult> GetDocumentsByPaging([FromBody] DocumentRequest documentRequest, [FromQuery] int currentPage)
         {
-
             var result = await _documentService.GetDocumentsByPaging(documentRequest, currentPage);
             return Ok(result);
         }
