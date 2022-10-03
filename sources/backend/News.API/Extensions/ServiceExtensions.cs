@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using Common.Interfaces;
 using FluentValidation;
 using Infrastructure.Implements;
@@ -17,7 +18,13 @@ namespace News.API.Extensions
             IConfiguration configuration
         )
         {
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler =
+                        ReferenceHandler.IgnoreCycles;
+                });
             services
                 .Configure<RouteOptions>(options =>
                     options.LowercaseUrls = true);

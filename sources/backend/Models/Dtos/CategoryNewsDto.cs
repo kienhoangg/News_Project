@@ -11,6 +11,6 @@ namespace Models.Dtos
 
         public string? Keyword { get; set; }
 
-        public FieldNews? FieldNews { get; set; }
+        public FieldNewsDto? FieldNews { get; set; }
     }
 }

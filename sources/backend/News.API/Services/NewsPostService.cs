@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Common.Interfaces;
@@ -29,19 +30,21 @@ namespace News.API.Services
             await CreateAsync(newsPost);
         }
 
-        public async Task DeleteNewsPost(long id)
+        public async Task<int> DeleteNewsPost(long id)
         {
            var newsPost = await GetByIdAsync(id);
-            await DeleteAsync(newsPost);
+            return await DeleteAsync(newsPost);
         }
 
         public async Task<NewsPost> GetNewsPost(long id)
         {
-            return await GetByIdAsync(id);
+            var lstInclude = new Expression<Func<NewsPost, object>>[] { (x=>x.FieldNews),(x=>x.SourceNews),(x=>x.CategoryNews)};
+            return await GetByIdAsync(id, lstInclude);
         }
 
         public async Task<ApiSuccessResult<NewsPostDto>> GetNewsPostByPaging(NewsPostRequest newsPostRequest)
         {
+          
             var query = FindAll();
 
             if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
@@ -64,7 +67,8 @@ namespace News.API.Services
 
              if(newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
-                query = query.Where(x => x.CollaboratorId == newsPostRequest.CollaboratorId);
+                query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&
+                 x.PublishedDate >= newsPostRequest.ToDate.Value);
             }
             IQueryable<NewsPostDto>? mappingQuery = query.ProjectTo<NewsPostDto>(_mapper.ConfigurationProvider);
             PagedResult<NewsPostDto>? paginationSet = await mappingQuery.PaginatedListAsync(newsPostRequest.CurrentPage
@@ -74,9 +78,9 @@ namespace News.API.Services
             return result; 
         }
 
-        public async Task UpdateNewsPost(NewsPost product)
+        public async Task<int> UpdateNewsPost(NewsPost product)
         {
-            await UpdateAsync(product);
+           return await UpdateAsync(product);
         }
     }
 }

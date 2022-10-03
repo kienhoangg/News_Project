@@ -18,6 +18,6 @@ namespace Models.Entities.News
 
         public string? Keyword { get; set; }
 
-        public ICollection<NewsPost> NewsPosts { get; set; }
+        public virtual ICollection<NewsPost> NewsPosts { get; set; }
     }
 }

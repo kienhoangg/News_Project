@@ -32,15 +32,15 @@ namespace Models.Entities.News
 
         public int? CollaboratorId { get; set; }
 
-        public Collaborator? Collaborator { get; set; }
+        public virtual Collaborator? Collaborator { get; set; }
 
         public int? FieldNewsId { get; set; }
 
-        public FieldNews FieldNews { get; set; }
+        public virtual FieldNews FieldNews { get; set; }
 
         public int? SourceNewsId { get; set; }
 
-        public SourceNews? SourceNews { get; set; }
+        public virtual SourceNews? SourceNews { get; set; }
 
         public string? FilePath { get; set; }
     }
