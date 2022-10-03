@@ -1,6 +1,8 @@
+using Contracts.Domains;
+
 namespace Models.Dtos
 {
-    public class CollaboratorDto
+    public class CollaboratorDto : DtoBase
     {
         public string Name { get; set; }
 
