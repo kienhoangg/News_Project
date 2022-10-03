@@ -10,6 +10,6 @@ namespace Models.Entities.News
 
         public string? Description { get; set; }
 
-        public ICollection<NewsPost> NewsPosts { get; set; }
+        public virtual ICollection<NewsPost> NewsPosts { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace News.API.Interfaces
 
         Task CreateNewsPost(NewsPost newsPost);
 
-        Task UpdateNewsPost(NewsPost newsPost);
+        Task<int> UpdateNewsPost(NewsPost newsPost);
 
-        Task DeleteNewsPost(long id);
+        Task<int> DeleteNewsPost(long id);
     }
 }

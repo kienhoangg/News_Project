@@ -1,7 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Extensions;
 using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities.News;
 using Models.Requests;
@@ -42,14 +45,53 @@ namespace News.API.Controllers
         public async Task<IActionResult>
         CreateNewsPostDto([FromForm] NewsPostUploadDto newsPostUploadDto)
         {
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<NewsPost
+                    >(lstErrorString));
+                }
+            }
+
+            string avartarPath = "";
+            string fileAttachmentPath = "";
+
+            // Upload file avatar if exist
+            if (newsPostUploadDto.Avatar != null)
+            {
+                avartarPath =
+                    await newsPostUploadDto
+                        .Avatar
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            // Upload file attachment if exist
+            if (newsPostUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await newsPostUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
             var newsPostDto =
                 _serializeService
                     .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
-            
+
             var newsPost = _mapper.Map<NewsPost>(newsPostDto);
+            newsPost.Avatar = avartarPath;
+            newsPost.FilePath = fileAttachmentPath;
             await _newsPostService.CreateNewsPost(newsPost);
             var result = _mapper.Map<NewsPostDto>(newsPost);
-            return Ok();
+            return Ok(result);
         }
 
         [HttpGet("{id:long}")]
@@ -66,13 +108,82 @@ namespace News.API.Controllers
         public async Task<IActionResult>
         UpdateNewsPostDto(
             [Required] long id,
-            [FromBody] NewsPostDto newsPostDto
+            [FromForm] NewsPostUploadDto newsPostUploadDto
         )
         {
-            NewsPost? NewsPost = await _newsPostService.GetNewsPost(id);
-            if (NewsPost == null) return NotFound();
-            var updatedNewsPost = _mapper.Map(newsPostDto, NewsPost);
-            await _newsPostService.UpdateNewsPost(updatedNewsPost);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<NewsPost
+                    >(lstErrorString));
+                }
+            }
+            NewsPost? newsPost = await _newsPostService.GetNewsPost(id);
+            var tempAvatarPath = newsPost.Avatar;
+            var tempFileAttachmentPath = newsPost.FilePath;
+            if (newsPost == null) return NotFound();
+            var newsPostDto = new NewsPostDto();
+            if (!string.IsNullOrEmpty(newsPostUploadDto.JsonString))
+            {
+                newsPostDto =
+                    _serializeService
+                        .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
+            }
+            string avartarPath = "";
+            string fileAttachmentPath = "";
+
+            // Upload file avatar if exist
+            if (newsPostUploadDto.Avatar != null)
+            {
+                avartarPath =
+                    await newsPostUploadDto
+                        .Avatar
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            // Upload file attachment if exist
+            if (newsPostUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await newsPostUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+            var updatedNewsPost = _mapper.Map(newsPostDto, newsPost);
+            updatedNewsPost.Avatar = avartarPath;
+            updatedNewsPost.FilePath = fileAttachmentPath;
+            updatedNewsPost.Title = "Test title";
+            var resultUpdate =
+                await _newsPostService.UpdateNewsPost(updatedNewsPost);
+
+            if (resultUpdate > 0)
+            {
+                FileInfo fileAvatar =
+                    new FileInfo(Directory.GetCurrentDirectory() +
+                        tempAvatarPath);
+                FileInfo fileFileAttachment =
+                    new FileInfo(Directory.GetCurrentDirectory() +
+                        tempFileAttachmentPath);
+
+                // Clear old file upload if update success
+                if (fileAvatar.Exists)
+                {
+                    fileAvatar.Delete();
+                }
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
             var result = _mapper.Map<NewsPostDto>(updatedNewsPost);
             return Ok(result);
         }
@@ -85,29 +196,6 @@ namespace News.API.Controllers
 
             await _newsPostService.DeleteNewsPost(id);
             return NoContent();
-        }
-
-        [HttpPost("UploadFile")]
-        public async Task<IActionResult> UploadFile(IFormFileCollection files)
-        {
-            foreach (var fileName in files)
-            {
-                var filesPath =
-                    Directory.GetCurrentDirectory() + "/Uploadfiles";
-                if (
-                    !System.IO.Directory.Exists(filesPath) //create path
-                )
-                {
-                    Directory.CreateDirectory (filesPath);
-                }
-                var path =
-                    Path
-                        .Combine(filesPath,
-                        Path.GetFileName(fileName.FileName)); //the path to upload
-                await fileName
-                    .CopyToAsync(new FileStream(path, FileMode.Create));
-            }
-            return Ok();
         }
     }
 }

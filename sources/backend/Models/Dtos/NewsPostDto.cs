@@ -1,12 +1,11 @@
 using Contracts.Domains;
 using Microsoft.AspNetCore.Http;
+using Models.Entities.News;
 
 namespace Models.Dtos
 {
     public class NewsPostDto : DtoBase
     {
-        public int? CategoryNewsId { get; set; }
-
         public string? Title { get; set; }
 
         public DateTime? PublishedDate { get; set; }
@@ -27,10 +26,12 @@ namespace Models.Dtos
 
         public string? Content { get; set; }
 
-        public int? CollaboratorId { get; set; }
+        public string? FilePath { get; set; }
 
-        public int FieldNewsId { get; set; }
+        public string? Avatar { get; set; }
 
-        public int? SourceNewsId { get; set; }
+        public FieldNewsDto FieldNews { get; set; }
+
+        public SourceNewsDto SourceNews { get; set; }
     }
 }

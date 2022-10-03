@@ -25,7 +25,8 @@ namespace Infrastructure.Implements
                             new StringEnumConverter {
                                 NamingStrategy = new CamelCaseNamingStrategy()
                             }
-                        }
+                        },
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 });
         }
 

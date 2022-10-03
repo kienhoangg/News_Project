@@ -54,19 +54,6 @@ namespace Infrastructure.Implements
                        : _dbContext.Set<T>().Where(expression);
         }
 
-         public IQueryable<T> FindByMultiCondition(
-            params Expression<Func<T, bool>>[] expressions)
-        {
-            DbSet<T>? query = _dbContext.Set<T>(); 
-            foreach(var expression in expressions)
-            {
-                if(expression != null){
-                    query.Where(expression);
-                }
-            }
-            return query.AsQueryable();
-        }
-
         public IQueryable<T> FindByCondition(
             Expression<Func<T, bool>> expression,
             bool trackChanges = false,
@@ -131,17 +118,17 @@ namespace Infrastructure.Implements
             return entities.Select(x => x.Id).ToList();
         }
 
-        public async Task UpdateAsync(
+        public async Task<int> UpdateAsync(
             T entity)
         {
             if (_dbContext.Entry(entity).State == EntityState.Unchanged)
-                return;
+                return 0;
 
             var exist = _dbContext.Set<T>()
                                   .Find(entity.Id);
 
             _dbContext.Entry(exist).CurrentValues.SetValues(entity);
-            await SaveChangesAsync();
+            return await SaveChangesAsync();
          
         }
 
@@ -152,11 +139,11 @@ namespace Infrastructure.Implements
         }
 
         public void Delete(T entity) => _dbContext.Set<T>().Remove(entity);
-        public async Task DeleteAsync(
+        public async Task<int> DeleteAsync(
             T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            await SaveChangesAsync();
+            return await SaveChangesAsync();
         }
 
         public Task DeleteListAsync(
