@@ -20,12 +20,13 @@ import NewsSourcePage from 'features/admin/pages/news/NewsSourcePage/NewsSourceP
 import QuestionCategoryPage from 'features/admin/pages/questions/QuestionCategoryPage/QuestionCategoryPage';
 import QuestionListPage from 'features/admin/pages/questions/QuestionListPage/QuestionListPage';
 import Home from 'features/Home/Home';
+import PublisedhDocumentPage from 'features/PublishedDocumentPage/PublisedhDocumentPage';
 
 // Public routes
 const publicRoutes = [
     { path: config.routes.root, component: Home },
     // { path: config.routes.blog, component: BlogMainPage },
-    // { path: config.routes.blogDetail, component: BlogDetailPage },
+    { path: config.routes.publishedDocument, component: PublisedhDocumentPage },
     // { path: config.routes.notfound, component: NotFound, layout: null },
 
     // //Admin
@@ -67,7 +68,9 @@ const publicRoutes = [
 ];
 // { path: config.routes.home, component: Home },
 
-const privateRoutes = [];
+const privateRoutes = [
+
+];
 
 export { publicRoutes, privateRoutes };
 

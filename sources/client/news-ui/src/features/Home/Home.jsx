@@ -1,4 +1,3 @@
-import Images from '../../common/images';
 import BlogSection from './components/BlogSection/BlogSection';
 import MediaBlogSection from './components/MediaBlogSection/MediaBlogSection';
 
@@ -10,6 +9,7 @@ import { Col, Divider, Row } from 'antd';
 import ListSection from './components/ListSection/ListSection';
 import ConnectionSection from './components/ConnectionSection/ConnectionSection';
 import FooterSection from './components/FooterSection/FooterSection';
+import Images from 'common/images';
 
 const cx = classNames.bind(styles);
 
