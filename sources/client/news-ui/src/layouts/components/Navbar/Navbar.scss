@@ -1,0 +1,16 @@
+.news-navbar {
+    height: 48px;
+    background-color: #fff;
+    border-top: 1px solid var(--default-color-border);
+    border-bottom: 1px solid var(--default-color-border);
+
+    display: flex;
+    align-items: center;
+
+    .news-navbar-hr {
+        height: 24px;
+        border-radius: 16px;
+        width: 1px;
+        // background-color: var(--default-color-divider);
+    }
+}

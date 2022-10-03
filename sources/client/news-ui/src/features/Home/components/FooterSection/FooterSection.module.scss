@@ -1,0 +1,25 @@
+.wrapper {
+    background-color: #105193;
+    color: #fff;
+    padding: 16px;
+
+    .title {
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .content-item {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+
+        .content-item-detail {
+            margin-left: 12px;
+        }
+    }
+
+    .social-network {
+        display: flex;
+        justify-content: end;
+    }
+}
