@@ -18,7 +18,7 @@ function BlogSectionShortListItem(props) {
     const { className } = props;
 
     const data = {
-        href: '/blog/abc',
+        href: '/document/123456789',
         label: 'Thúc đẩy chuyển đổi số phục vụ cho học tập suốt đời sau đại dịch COVID-19',
     };
 

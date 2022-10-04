@@ -17,6 +17,11 @@ CollectionNewsEditor.defaultProps = {};
 
 function CollectionNewsEditor({ open, onCreate, onCancel }) {
     const [form] = Form.useForm();
+
+    function onEditorChange(event) {
+        // console.log('data: ', event.editor.getData());
+    }
+
     return (
         <Modal
             open={open}
@@ -30,6 +35,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel }) {
                 form.validateFields()
                     .then((values) => {
                         form.resetFields();
+                        values.content = values.content.editor.getData();
                         console.log('form values', values);
                         onCreate(values);
                     })
@@ -174,6 +180,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel }) {
                         // onInstanceReady={() => {
                         //     alert('Editor is ready!');
                         // }}
+                        onChange={onEditorChange}
                         config={{
                             language: 'vi',
                             toolbarGroups: [

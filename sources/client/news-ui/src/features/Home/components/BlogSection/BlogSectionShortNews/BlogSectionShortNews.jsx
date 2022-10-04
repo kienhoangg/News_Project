@@ -9,7 +9,7 @@ BlogSectionShortNews.propTypes = {};
 
 function BlogSectionShortNews(props) {
     const data = {
-        link: '/blog/abcd',
+        link: '/document/123456789',
         title: 'Thông tin chỉ đạo điều hành nổi bật của UBND tỉnh trong tuần (từ 12 - 18/9)',
         image: 'https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Hien-Trang/hoi%20nghi/2309202022_1.jpg',
         content: 'CTTĐT - Sáng 23/9, tại Trụ sở Chính phủ, Thủ tướng Phạm Minh Chính chủ trì Diễn đàn kinh tế hợp tác, hợp tác xã năm 2022 do Bộ Kế hoạch và Đầu tư phối hợp với.....',

@@ -2,7 +2,7 @@ const routes = {
     root: '/',
     home: '/home',
     blog: '/blog',
-    publishedDocument: '/blog/:blogId',
+    publishedDocument: '/document/:blogId',
     notfound: '/notfound',
 
     //Admin
