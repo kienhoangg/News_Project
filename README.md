@@ -11,6 +11,8 @@
 - Cách 2: Cài tool SQLServer =>> google
 
 2. Migrations DB
-B1: dotnet ef migrations add "SampleMigration1" --output-dir Persistence/Migrations
-B2: dotnet ef database update
+- cd vào thư mục chứa project NewAPI
+- Open command line run:  
+	+ dotnet ef migrations add "SampleMigration1" --output-dir Persistence/Migrations
+	+ dotnet ef database update
 
