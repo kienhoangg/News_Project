@@ -13,35 +13,44 @@ NewsSourcePage.propTypes = {};
 NewsSourcePage.defaultProps = {};
 
 function NewsSourcePage(props) {
-    const [newsData, setNewsData] = useState({});
+  const [newsData, setNewsData] = useState({});
+  const [objFilter, setObjFilter] = useState({
+    _page: 1,
+    _limit: 10,
+    _textSearch: '',
+    _sort: '-ModifiedDate',
+  });
 
-    useEffect(() => {
-        const fetchProductList = async () => {
-            try {
-                const params = {
-                    _page: 1,
-                    _limit: 10,
-                };
-                const response = await newsApi.getNewsSourceAll(params);
-                setNewsData(response);
-            } catch (error) {
-                console.log('Failed to fetch list: ', error);
-            }
-        };
-        fetchProductList();
-    }, []);
+  /**
+   * Thay đổi bộ lọc thì gọi lại danh sách
+   */
+  useEffect(() => {
+    fetchProductList();
+  }, [objFilter]);
 
-    return (
-        <div className={cx('wrapper')}>
-            <div className={cx('top')}>
-                <NewsSourcePageSearch />
-            </div>
-            <Divider style={{ margin: '0' }} />
-            <div className={cx('table-data')}>
-                <NewsSourceTableData data={newsData} />
-            </div>
-        </div>
-    );
+  /**
+   * Gọi api lấy dữ liệu danh sách nguồi tin tức
+   */
+  const fetchProductList = async () => {
+    try {
+      const response = await newsApi.getNewsSourceAll(objFilter);
+      setNewsData(response);
+    } catch (error) {
+      console.log('Failed to fetch list: ', error);
+    }
+  };
+
+  return (
+    <div className={cx('wrapper')}>
+      <div className={cx('top')}>
+        <NewsSourcePageSearch />
+      </div>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
+        <NewsSourceTableData data={newsData} />
+      </div>
+    </div>
+  );
 }
 
 export default NewsSourcePage;

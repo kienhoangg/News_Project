@@ -25,6 +25,7 @@ namespace News.API.Extensions
                     options.JsonSerializerOptions.ReferenceHandler =
                         ReferenceHandler.IgnoreCycles;
                 });
+            services.AddCors();
             services
                 .Configure<RouteOptions>(options =>
                     options.LowercaseUrls = true);
@@ -79,7 +80,9 @@ namespace News.API.Extensions
                 .AddScoped(serviceType: typeof (ISourceNewsService),
                 typeof (SourceNewsService))
                 .AddScoped(serviceType: typeof (INewsPostService),
-                typeof (NewsPostService));
+                typeof (NewsPostService))
+                .AddScoped(serviceType: typeof (ICollaboratorService),
+                typeof (CollaboratorService));
         }
     }
 }
