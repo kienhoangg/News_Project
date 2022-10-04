@@ -38,7 +38,7 @@ namespace Infrastructure.Mappings
                 .ToPagedList(queryable,
                 pageIndex,
                 pageSize,
-                orderBy,
+                string.IsNullOrEmpty(orderBy) ? "CreatedDate" : orderBy,
                 direction);
         }
     }
