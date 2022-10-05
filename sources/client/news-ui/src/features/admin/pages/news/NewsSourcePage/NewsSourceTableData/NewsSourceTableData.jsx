@@ -79,7 +79,11 @@ function NewsSourceTableData(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
+          <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => handleChangeSourceNew(record)}
+          >
             Sửa
           </Button>
           <Button
@@ -101,6 +105,10 @@ function NewsSourceTableData(props) {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
     return { ...item, CreatedDate: createdDate, key: item.Key };
   });
+
+  function handleChangeSourceNew(values) {
+    console.log(values);
+  }
 
   function handleDeleteSourceNew(values) {
     return Modal.confirm({

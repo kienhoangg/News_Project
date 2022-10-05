@@ -19,58 +19,149 @@ import NewsListPage from 'features/admin/pages/news/NewsListPage/NewsListPage';
 import NewsSourcePage from 'features/admin/pages/news/NewsSourcePage/NewsSourcePage';
 import QuestionCategoryPage from 'features/admin/pages/questions/QuestionCategoryPage/QuestionCategoryPage';
 import QuestionListPage from 'features/admin/pages/questions/QuestionListPage/QuestionListPage';
+import MenuPage from 'features/admin/pages/setup/MenuPage/MenuPage';
 import Home from 'features/Home/Home';
 import PublishedDocumentPage from 'features/PublishedDocumentPage/PublishedDocumentPage';
 
 // Public routes
 const publicRoutes = [
-    { path: config.routes.root, component: Home },
-    // { path: config.routes.blog, component: BlogMainPage },
-    { path: config.routes.publishedDocument, component: PublishedDocumentPage },
-    // { path: config.routes.notfound, component: NotFound, layout: null },
+  { path: config.routes.root, component: Home },
+  // { path: config.routes.blog, component: BlogMainPage },
+  { path: config.routes.publishedDocument, component: PublishedDocumentPage },
+  // { path: config.routes.notfound, component: NotFound, layout: null },
 
-    // //Admin
-    { path: config.routes.login, component: LoginPage, layout: null },
-    { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
-    { path: config.routes.adminNewsList, component: NewsListPage, layout: AdminLayout },
-    { path: config.routes.adminNewsHot, component: NewsHotPage, layout: AdminLayout },
-    { path: config.routes.adminNewsComment, component: NewsCommentPage, layout: AdminLayout },
-    { path: config.routes.adminNewsSource, component: NewsSourcePage, layout: AdminLayout },
-    { path: config.routes.adminNewsField, component: NewsFieldPage, layout: AdminLayout },
-    { path: config.routes.adminNewsCategory, component: NewsCategoryPage, layout: AdminLayout },
-    { path: config.routes.adminNewsCollaborators, component: NewsCollaboratorsPage, layout: AdminLayout },
+  // //Admin
+  { path: config.routes.login, component: LoginPage, layout: null },
+  { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
+  {
+    path: config.routes.adminNewsList,
+    component: NewsListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsHot,
+    component: NewsHotPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsComment,
+    component: NewsCommentPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsSource,
+    component: NewsSourcePage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsField,
+    component: NewsFieldPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsCategory,
+    component: NewsCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsCollaborators,
+    component: NewsCollaboratorsPage,
+    layout: AdminLayout,
+  },
 
-    { path: config.routes.adminDocumentList, component: DocumentListPage, layout: AdminLayout },
-    { path: config.routes.adminDocumentCategory, component: DocumentCategoryPage, layout: AdminLayout },
-    { path: config.routes.adminDocumentField, component: DocumentFieldPage, layout: AdminLayout },
-    { path: config.routes.adminDocumentSinger, component: DocumentSignerPage, layout: AdminLayout },
-    { path: config.routes.adminDocumentSource, component: DocumentSourcePage, layout: AdminLayout },
+  {
+    path: config.routes.adminDocumentList,
+    component: DocumentListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminDocumentCategory,
+    component: DocumentCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminDocumentField,
+    component: DocumentFieldPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminDocumentSinger,
+    component: DocumentSignerPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminDocumentSource,
+    component: DocumentSourcePage,
+    layout: AdminLayout,
+  },
 
-    { path: config.routes.adminQuestionList, component: QuestionListPage, layout: AdminLayout },
-    { path: config.routes.adminQuestionCategory, component: QuestionCategoryPage, layout: AdminLayout },
+  {
+    path: config.routes.adminQuestionList,
+    component: QuestionListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminQuestionCategory,
+    component: QuestionCategoryPage,
+    layout: AdminLayout,
+  },
 
-    { path: config.routes.adminMediaImageList, component: ImageListPage, layout: AdminLayout },
-    { path: config.routes.adminMediaImageCategory, component: ImageCategoryPage, layout: AdminLayout },
-    { path: config.routes.adminMediaVideoList, component: VideoListPage, layout: AdminLayout },
-    { path: config.routes.adminMediaVideoCategory, component: VideoCategoryPage, layout: AdminLayout },
+  {
+    path: config.routes.adminMediaImageList,
+    component: ImageListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminMediaImageCategory,
+    component: ImageCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminMediaVideoList,
+    component: VideoListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminMediaVideoCategory,
+    component: VideoCategoryPage,
+    layout: AdminLayout,
+  },
 
-    { path: config.routes.adminAdvertisementCategory, component: ImageListPage, layout: AdminLayout },
-    { path: config.routes.adminAdvertisementList, component: ImageCategoryPage, layout: AdminLayout },
-    { path: config.routes.adminConnectionCategory, component: VideoListPage, layout: AdminLayout },
-    { path: config.routes.adminConnectionList, component: VideoCategoryPage, layout: AdminLayout },
+  {
+    path: config.routes.adminAdvertisementCategory,
+    component: ImageListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminAdvertisementList,
+    component: ImageCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminConnectionCategory,
+    component: VideoListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminConnectionList,
+    component: VideoCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminSetupMenu,
+    component: MenuPage,
+    layout: AdminLayout,
+  },
 
-    // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
-    // { path: config.routes.adminNewsList, component: NewsListPage, layout: AdminLayout },
-    // { path: config.routes.adminNewsHot, component: NewsHotPage, layout: AdminLayout },
+  // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
+  // { path: config.routes.adminNewsList, component: NewsListPage, layout: AdminLayout },
+  // { path: config.routes.adminNewsHot, component: NewsHotPage, layout: AdminLayout },
 
-    // //TEST
-    // { path: config.routes.test, component: PostEditor, layout: null },
+  // //TEST
+  // { path: config.routes.test, component: PostEditor, layout: null },
 ];
 // { path: config.routes.home, component: Home },
 
-const privateRoutes = [
-
-];
+const privateRoutes = [];
 
 export { publicRoutes, privateRoutes };
-
