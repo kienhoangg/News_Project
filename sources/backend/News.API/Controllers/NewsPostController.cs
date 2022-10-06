@@ -62,6 +62,7 @@ namespace News.API.Controllers
                     (x => x.CategoryNews)
                 };
             var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
+            if (newsPost == null) return NotFound("News is not found !");
             var parentId = newsPost.CategoryNews.ParentId;
             var categoryParentNews =
                 await _categoryNewsService.GetCategoryNews(parentId);

@@ -2,6 +2,7 @@ using AutoMapper;
 using Common.Interfaces;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Dtos;
 using Models.Dtos.Home;
 using Models.Entities.News;
 using Models.Requests;
@@ -14,6 +15,8 @@ namespace News.API.Controllers
     {
         private readonly INewsPostService _newsPostService;
 
+        private readonly ICategoryNewsService _categoryNewsService;
+
         private readonly ISerializeService _serializeService;
 
         private readonly IMapper _mapper;
@@ -21,12 +24,14 @@ namespace News.API.Controllers
         public HomeController(
             INewsPostService newsPostService,
             ISerializeService serializeService,
-            IMapper mapper
+            IMapper mapper,
+            ICategoryNewsService categoryNewsService
         )
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
             _mapper = mapper;
+            _categoryNewsService = categoryNewsService;
         }
 
         [HttpGet]
@@ -39,14 +44,13 @@ namespace News.API.Controllers
 
             var lstHotNews =
                 await _newsPostService.GetNewsPostByPaging(hotNewsRequets);
-
+            var categoryNewsId = 5;
             var normalNews =
                 new NewsPostRequest()
                 {
                     PageSize = 5,
                     OrderBy = "Order",
-                    CategoryNewsId = 1,
-                    IsHotNews = false
+                    CategoryNewsId = categoryNewsId
                 };
 
             var lstNormalNews =
@@ -63,9 +67,18 @@ namespace News.API.Controllers
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()
                     {
-                        ListHotNews = lstHotNews.PagedData.Results.ToList(),
-                        ListNormalNews =
-                            lstNormalNews.PagedData.Results.ToList()
+                        NewsHots = lstHotNews.PagedData.Results.ToList(),
+                        NewsSectionDto =
+                            new NewsSectionDto()
+                            {
+                                CategoryNews =
+                                    _mapper
+                                        .Map
+                                        <CategoryNewsDto
+                                        >(await _categoryNewsService
+                                            .GetCategoryNews(categoryNewsId)),
+                                Data = lstNormalNews.PagedData.Results.ToList()
+                            }
                     });
 
             // Get CategoryNews with 5 normal news
