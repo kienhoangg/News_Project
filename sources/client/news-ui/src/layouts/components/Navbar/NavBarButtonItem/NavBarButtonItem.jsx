@@ -18,7 +18,6 @@ NavBarButtonItem.defaultProps = {
 
 function NavBarButtonItem(props) {
     const { imageName, label, href } = props;
-    console.log('imageName', imageName);
     return (
         <Link className='navbar-button-item' to={href} color='inherit'>
             {stringHelper.isNullOrEmpty(imageName) && <img src={imageName} alt='logo' height={16} style={{ marginRight: 4 }} />}

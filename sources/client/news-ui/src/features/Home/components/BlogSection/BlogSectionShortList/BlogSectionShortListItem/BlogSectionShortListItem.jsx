@@ -17,7 +17,7 @@ BlogSectionShortListItem.defaultProps = {
 };
 
 function BlogSectionShortListItem(props) {
-    const { className, data } = props;
+    const { className, data, onHover } = props;
     const { id, title, avatar, avatarTitle, description } = data;
 
     // const data = {
@@ -26,7 +26,18 @@ function BlogSectionShortListItem(props) {
     // };
 
     return (
-        <Link onMouseEnter={} className={cx('wrapper') + ` ${className}`} underline='none' to={commonRender.renderLinkNewsDetail(id)} color='inherit'>
+        <Link
+            onMouseEnter={() => {
+                if (onHover) onHover({ ...data, isEnter: true });
+            }}
+            onMouseLeave={() => {
+                if (onHover) onHover({ ...data, isEnter: false });
+            }}
+            className={cx('wrapper') + ` ${className}`}
+            underline='none'
+            to={commonRender.renderLinkNewsDetail(id)}
+            color='inherit'
+        >
             <div className={cx('news-hot-icon')}></div>
             <div className={cx('content')}>{title}</div>
         </Link>

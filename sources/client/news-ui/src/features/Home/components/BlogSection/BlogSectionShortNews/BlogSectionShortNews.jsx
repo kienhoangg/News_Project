@@ -25,7 +25,7 @@ function BlogSectionShortNews(props) {
     return (
         <div className={cx('wrapper')}>
             <Link to={commonRender.renderLinkNewsDetail(id)} underline='none' color='inherit'>
-                <h3>{title}</h3>
+                <h3 style={{ fontSize: 14 }}>{title}</h3>
             </Link>
             <img src={avatar} alt={avatarTitle} width={'100%'} />
             <div className={cx('content')}>{description?.slice(0, 200)}...</div>

@@ -17,6 +17,7 @@ const cx = classNames.bind(styles);
 
 function Home(props) {
     const [homeData, setHomeData] = useState();
+    const [newsPreview, setNewsPreview] = useState(null);
 
     useEffect(() => {
         const fetchHome = async () => {
@@ -24,7 +25,8 @@ function Home(props) {
                 const params = {};
                 const response = await homeApi.getData(params);
                 setHomeData(response);
-                console.log('Home', response);
+                setNewsPreview(response?.data?.newsHots[0]);
+                console.log('Home', newsPreview);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }
@@ -32,11 +34,19 @@ function Home(props) {
         fetchHome();
     }, []);
 
+    function handleOnHoverNewPreview(values) {
+        console.log('values', values);
+        if (values?.isEnter) {
+            setNewsPreview(values);
+        } else {
+        }
+    }
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <SearchBar />
-                <BlogSection newsHots={homeData?.data?.newsHots} />
+                <BlogSection newsHots={homeData?.data?.newsHots} dataPreview={newsPreview} onHover={handleOnHoverNewPreview} />
 
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>

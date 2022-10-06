@@ -8,15 +8,18 @@ import styles from './BlogSection.module.scss';
 import { Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 import routes from 'config/configRoutes';
+import { useEffect, useRef, useState } from 'react';
 const cx = classNames.bind(styles);
 
 BlogSection.propTypes = {
     newsHots: PropTypes.array,
+    onHover: PropTypes.func,
+    dataPreview: PropTypes.object,
 };
 
 function BlogSection(props) {
-    const { newsHots } = props;
-    console.log('BlogSection', props);
+    const { newsHots, onHover, dataPreview } = props;
+
     const firstHot = Array.isArray(newsHots) ? newsHots[0] : undefined;
 
     return (
@@ -25,10 +28,10 @@ function BlogSection(props) {
                 <Col span={18} className={cx('left')}>
                     <Row className={cx('left-preview')}>
                         <Col span={16} className={cx('preview-content')}>
-                            {firstHot && <BlogSectionShortNews data={firstHot} />}
+                            {dataPreview && <BlogSectionShortNews data={dataPreview} />}
                         </Col>
                         <Col span={8} className={cx('preview-news')}>
-                            <BlogSectionShortList listData={newsHots} />
+                            <BlogSectionShortList onHover={onHover} listData={newsHots} />
                         </Col>
                     </Row>
                     <Row>

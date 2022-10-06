@@ -11,7 +11,7 @@ BlogSectionShortList.propTypes = {
 };
 
 function BlogSectionShortList(props) {
-    const { listData } = props;
+    const { listData, onHover } = props;
 
     return (
         <div className={cx('wrapper')}>
@@ -19,7 +19,7 @@ function BlogSectionShortList(props) {
             <div className={cx('items')}>
                 {Array.isArray(listData) &&
                     listData.map((item) => {
-                        return <BlogSectionShortListItem data={item} key={item?.id} />;
+                        return <BlogSectionShortListItem onHover={onHover} data={item} key={item?.id} />;
                     })}
 
                 {/* <BlogSectionShortListItem />
