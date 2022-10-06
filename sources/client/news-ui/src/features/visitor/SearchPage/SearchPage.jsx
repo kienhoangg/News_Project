@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import { useSearchParams } from 'react-router-dom';
 import { Button, Divider, Form, Input, Pagination } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import SearchPageItem from './SearchPageItem/SearchPageItem';
+import SearchPageItem from '../components/SearchPageItem/SearchPageItem';
 import { commonRenderTable } from 'common/commonRender';
 
 const cx = classNames.bind(styles);

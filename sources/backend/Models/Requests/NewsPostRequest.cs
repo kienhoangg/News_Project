@@ -5,6 +5,8 @@ namespace Models.Requests
 {
     public class NewsPostRequest : FilterBase
     {
+        public bool? IsHotNews { get; set; }
+
         public int? CategoryNewsId { get; set; }
 
         public int? CollaboratorId { get; set; }

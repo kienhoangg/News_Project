@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities.News;
@@ -9,7 +10,10 @@ namespace News.API.Interfaces
     {
         Task<ApiSuccessResult<FieldNewsDto>>
         GetFieldNewsByPaging(
-            FieldNewsRequest fieldNewsRequest
+
+                FieldNewsRequest fieldNewsRequest,
+                params Expression<Func<FieldNews, object>>[] includeProperties
+
         );
 
         Task<FieldNews> GetFieldNews(int id);

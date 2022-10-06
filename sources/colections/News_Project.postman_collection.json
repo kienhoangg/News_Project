@@ -599,8 +599,25 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Title\" : \"Test Name\",\n     \"Order\" : 0,\n      \"Description\" : \"Test keyword\"\n}",
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Avatar",
+									"type": "file",
+									"src": "/Users/htkien/Downloads/307929732_392976186339348_5533785108695537122_n.jpg"
+								},
+								{
+									"key": "jsonString",
+									"value": "{\"Title\" : \"Test Name\", \"Order\" : 0,\"Description\" : \"Test keyword\", \"Avatar\": \"/UploadFiles/Images/5-1654591130-macbook-air-m2-engadget_2331519327450.jpeg\"}",
+									"type": "text"
+								},
+								{
+									"key": "FileAttachment",
+									"type": "file",
+									"src": "/Users/htkien/Downloads/4feb140f34d8a655e1389b0d05758832.jpeg",
+									"disabled": true
+								}
+							],
 							"options": {
 								"raw": {
 									"language": "json"
@@ -719,6 +736,106 @@
 								"api",
 								"newsPost",
 								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Published News Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/newsPost/published/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"newsPost",
+								"published",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "File Upload",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Avatar",
+									"type": "file",
+									"src": "/Users/htkien/Downloads/5-1654591130-macbook-air-m2-engadget.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/newsPost/file",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"newsPost",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Published News By Fields",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/newsPost/published/fields",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"newsPost",
+								"published",
+								"fields"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Home",
+			"item": [
+				{
+					"name": "Get Home",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/home",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"home"
 							]
 						}
 					},

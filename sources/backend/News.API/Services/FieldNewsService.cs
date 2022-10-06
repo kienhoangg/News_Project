@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Common.Interfaces;
@@ -39,9 +40,13 @@ namespace News.API.Services
             return await GetByIdAsync(id);
         }
 
-        public async Task<ApiSuccessResult<FieldNewsDto>> GetFieldNewsByPaging(FieldNewsRequest fieldNewsRequest)
+        public async Task<ApiSuccessResult<FieldNewsDto>> GetFieldNewsByPaging(FieldNewsRequest fieldNewsRequest, params Expression<Func<FieldNews, object>>[] includeProperties)
         {
-            var query = FindAll();
+             var query = FindAll();
+            if(includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
 
             if (!string.IsNullOrEmpty(fieldNewsRequest.Keyword))
             {

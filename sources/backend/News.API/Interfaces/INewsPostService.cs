@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities.News;
@@ -9,10 +10,19 @@ namespace News.API.Interfaces
     {
         Task<ApiSuccessResult<NewsPostDto>>
         GetNewsPostByPaging(
-            NewsPostRequest newsPostRequest
+
+                NewsPostRequest newsPostRequest,
+                params Expression<Func<NewsPost, object>>[] includeProperties
+
         );
 
-        Task<NewsPost> GetNewsPost(long id);
+        Task<NewsPost>
+        GetNewsPost(
+
+                long id,
+                params Expression<Func<NewsPost, object>>[] includeProperties
+
+        );
 
         Task CreateNewsPost(NewsPost newsPost);
 

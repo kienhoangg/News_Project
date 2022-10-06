@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using AutoMapper;
 using Common.Extensions;
 using Common.Interfaces;
@@ -17,6 +18,10 @@ namespace News.API.Controllers
     {
         private readonly INewsPostService _newsPostService;
 
+        private readonly IFieldNewsService _fieldNewsService;
+
+        private readonly ICategoryNewsService _categoryNewsService;
+
         private readonly ISerializeService _serializeService;
 
         private readonly IMapper _mapper;
@@ -24,21 +29,88 @@ namespace News.API.Controllers
         public NewsPostController(
             INewsPostService newsPostService,
             IMapper mapper,
-            ISerializeService serializeService
+            ISerializeService serializeService,
+            ICategoryNewsService categoryNewsService,
+            IFieldNewsService fieldNewsService
         )
         {
             _newsPostService = newsPostService;
             _mapper = mapper;
             _serializeService = serializeService;
+            _categoryNewsService = categoryNewsService;
+            _fieldNewsService = fieldNewsService;
         }
 
         [HttpPost("filter")]
         public async Task<IActionResult>
         GetNewsPostByPaging([FromBody] NewsPostRequest newsPostRequest)
         {
+            var lstInclude =
+                new Expression<Func<NewsPost, object>>[] {
+                    (x => x.FieldNews),
+                    (x => x.SourceNews),
+                    (x => x.CategoryNews)
+                };
             var result =
-                await _newsPostService.GetNewsPostByPaging(newsPostRequest);
+                await _newsPostService
+                    .GetNewsPostByPaging(newsPostRequest, lstInclude);
             return Ok(result);
+        }
+
+        [HttpGet("published/{id:int}")]
+        public async Task<IActionResult> GetPublishedNewsById([Required] int id)
+        {
+            var lstInclude =
+                new Expression<Func<NewsPost, object>>[] {
+                    (x => x.SourceNews),
+                    (x => x.CategoryNews)
+                };
+            var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
+            if (newsPost == null) return NotFound("News is not found !");
+            var parentId = newsPost.CategoryNews.ParentId;
+            var categoryParentNews =
+                await _categoryNewsService.GetCategoryNews(parentId);
+
+            var lstNewsRelatives =
+                await _newsPostService
+                    .GetNewsPostByPaging(new NewsPostRequest()
+                    {
+                        PageSize = 8,
+                        CategoryNewsId = newsPost.CategoryNewsId,
+                        OrderBy = "Order"
+                    });
+            var result =
+                new NewsPublishedDetailDto()
+                {
+                    NewsPostDetail = _mapper.Map<NewsPostDto>(newsPost),
+                    CategoryParentNews =
+                        _mapper.Map<CategoryNewsDto>(categoryParentNews),
+                    NewsRelatives =
+                        lstNewsRelatives
+                            .PagedData
+                            .Results
+                            .Where(x => x.Id != id)
+                            .ToList()
+                };
+            return Ok(result);
+        }
+
+        [HttpPost("file")]
+        public async Task<IActionResult>
+        FileUpload([FromForm] NewsPostUploadDto newsPostUploadDto)
+        {
+            string avartarPath = "";
+
+            // Upload file avatar if exist
+            if (newsPostUploadDto.Avatar != null)
+            {
+                avartarPath =
+                    await newsPostUploadDto
+                        .Avatar
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+                return Ok(avartarPath);
+            }
+            return BadRequest();
         }
 
         [HttpPost]
@@ -87,8 +159,8 @@ namespace News.API.Controllers
                     .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
 
             var newsPost = _mapper.Map<NewsPost>(newsPostDto);
-            newsPost.Avatar = avartarPath;
-            newsPost.FilePath = fileAttachmentPath;
+            newsPost.Avatar = newsPostDto.Avatar;
+            newsPost.FilePath = newsPostDto.FilePath;
             await _newsPostService.CreateNewsPost(newsPost);
             var result = _mapper.Map<NewsPostDto>(newsPost);
             return Ok(result);
@@ -136,6 +208,7 @@ namespace News.API.Controllers
                 newsPostDto =
                     _serializeService
                         .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
+                newsPostDto.Id = newsPost.Id;
             }
             string avartarPath = "";
             string fileAttachmentPath = "";
@@ -159,9 +232,7 @@ namespace News.API.Controllers
             }
 
             var updatedNewsPost = _mapper.Map(newsPostDto, newsPost);
-            updatedNewsPost.Avatar = avartarPath;
-            updatedNewsPost.FilePath = fileAttachmentPath;
-            updatedNewsPost.Title = "Test title";
+            updatedNewsPost.Avatar = newsPostDto.Avatar;
             var resultUpdate =
                 await _newsPostService.UpdateNewsPost(updatedNewsPost);
 
@@ -184,7 +255,7 @@ namespace News.API.Controllers
                     fileFileAttachment.Delete();
                 }
             }
-            var result = _mapper.Map<NewsPostDto>(updatedNewsPost);
+            var result = _mapper.Map<NewsPostDto>(source: updatedNewsPost);
             return Ok(result);
         }
 
@@ -196,6 +267,22 @@ namespace News.API.Controllers
 
             await _newsPostService.DeleteNewsPost(id);
             return NoContent();
+        }
+
+        [HttpGet("published/fields")]
+        public async Task<IActionResult> GetNewsPostEachFields()
+        {
+            Expression<Func<FieldNews, object>>[]? lstInclude =
+                new Expression<Func<FieldNews, object>>[] {
+                    (x => x.NewsPosts)
+                };
+            var fields =
+                await _fieldNewsService
+                    .GetFieldNewsByPaging(new FieldNewsRequest()
+                    { PageSize = 5 },
+                    lstInclude);
+            if (fields == null) return NotFound();
+            return Ok(fields.PagedData.Results);
         }
     }
 }

@@ -35,5 +35,7 @@ namespace Models.Dtos
         public FieldNewsDto FieldNews { get; set; }
 
         public SourceNewsDto SourceNews { get; set; }
+
+        public CategoryNewsDto CategoryNews { get; set; }
     }
 }

@@ -9,12 +9,17 @@ import { SearchOutlined } from '@ant-design/icons';
 import ListSectionDocument from './ListSectionDocument/ListSectionDocument';
 import { Link } from 'react-router-dom';
 import ListSectionNews from './ListSectionNews/ListSectionNews';
+import commonRender from 'common/commonRender';
 
 const cx = classNames.bind(styles);
 
-ListSection.propTypes = {};
+ListSection.propTypes = {
+    data: PropTypes.object,
+};
 
-ListSection.defaultProps = {};
+ListSection.defaultProps = {
+    data: {},
+};
 
 const LIST_BUTON = [
     {
@@ -68,6 +73,13 @@ const LIST_NEWS = [
 // imageName: PropTypes.any,
 
 function ListSection(props) {
+    const { data } = props;
+    const { categoryNews, data: items } = data;
+    if (Array.isArray(items) && items.length > 1) {
+        for (let i = 1; i < items.length; i++) {
+            items[i].avatar = '';
+        }
+    }
     return (
         <Row gutter={16} className={cx('wrapper')}>
             <Col span={8}>
@@ -101,11 +113,12 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         <div className={cx('title-news')}>
                             <div className={cx('divider')}></div>
-                            <span>Tin địa phương</span>
+                            <Link to={commonRender.renderLinkNewsCategory(categoryNews?.id)}>{categoryNews?.categoryNewsName}</Link>
                         </div>
-                        {LIST_NEWS.map((item) => {
-                            return <ListSectionNews title={item.title} key={item.title} avatar={item.avatar} href={item.href} />;
-                        })}
+                        {Array.isArray(items) &&
+                            items.map((item) => {
+                                return <ListSectionNews title={item.title} key={item.id} avatar={item.avatar} href={commonRender.renderLinkNewsDetail(item.id)} />;
+                            })}
                     </div>
                 </div>
             </Col>

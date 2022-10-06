@@ -2,6 +2,59 @@
     padding: 16px 8px;
 
     .title {
-        font-size: 28px;
+        font-size: 24px;
+    }
+
+    .description {
+        font-size: 13px;
+    }
+
+    .avatar-content {
+        padding: 8px 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-direction: column;
+
+        .avatar-title {
+            margin-top: 10px;
+            text-align: center;
+            font-style: italic;
+            color: #333;
+        }
+    }
+
+    .document-relative {
+        margin-top: 16px;
+
+        .document-relative-label {
+            font-weight: 600;
+        }
+
+        .document-relative-divider {
+            margin: 8px 0;
+            border-top: 1px solid #ececec;
+        }
+
+        .document-relative-item {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+
+            .document-relative-icon {
+                width: 5px;
+                height: 5px;
+                background-color: red;
+                border-radius: 50%;
+                margin-right: 6px;
+            }
+
+            .document-relative-date {
+                margin-left: 8px;
+                font-style: italic;
+            }
+        }
     }
 }

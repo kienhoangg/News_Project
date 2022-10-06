@@ -36,20 +36,26 @@ namespace News.API.Services
             return await DeleteAsync(newsPost);
         }
 
-        public async Task<NewsPost> GetNewsPost(long id)
+        public async Task<NewsPost> GetNewsPost(long id,params Expression<Func<NewsPost, object>>[] includeProperties)
         {
             var lstInclude = new Expression<Func<NewsPost, object>>[] { (x=>x.FieldNews),(x=>x.SourceNews),(x=>x.CategoryNews)};
-            return await GetByIdAsync(id, lstInclude);
+            return await GetByIdAsync(id, includeProperties);
         }
 
-        public async Task<ApiSuccessResult<NewsPostDto>> GetNewsPostByPaging(NewsPostRequest newsPostRequest)
+        public async Task<ApiSuccessResult<NewsPostDto>> GetNewsPostByPaging(NewsPostRequest newsPostRequest, params Expression<Func<NewsPost, object>>[] includeProperties)
         {
-           var lstInclude = new Expression<Func<NewsPost, object>>[] { (x=>x.FieldNews),(x=>x.SourceNews),(x=>x.CategoryNews)};
-            var query = FindAll(includeProperties: lstInclude);
-
+             var query = FindAll();
+            if(includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
             if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
             {
-                query = FindByCondition((x => x.Title.Contains(newsPostRequest.Keyword)));
+                query = query.Where((x => x.Title.Contains(newsPostRequest.Keyword)));
+            }
+            if(newsPostRequest.CategoryNewsId.HasValue)
+            {
+                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
             }
             if(newsPostRequest.CategoryNewsId.HasValue)
             {
@@ -64,7 +70,17 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.CollaboratorId == newsPostRequest.CollaboratorId);
             }
-
+            if(newsPostRequest.IsHotNews.HasValue)
+            {
+                if(newsPostRequest.IsHotNews.Value)
+                {
+                    query = query.Where(x => x.IsHotNews);
+                }
+                else
+                {
+                    query = query.Where(x => !x.IsHotNews);
+                }
+            }
              if(newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
                 query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&

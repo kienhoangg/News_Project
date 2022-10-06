@@ -10,15 +10,44 @@ import ListSection from './components/ListSection/ListSection';
 import ConnectionSection from './components/ConnectionSection/ConnectionSection';
 import FooterSection from './components/FooterSection/FooterSection';
 import Images from 'common/images';
+import { useEffect, useRef, useState } from 'react';
+import homeApi from 'apis/published/homeApi';
 
 const cx = classNames.bind(styles);
 
 function Home(props) {
+    const [homeData, setHomeData] = useState();
+    const [newsPreview, setNewsPreview] = useState(null);
+
+    useEffect(() => {
+        const fetchHome = async () => {
+            try {
+                const params = {};
+                const response = await homeApi.getData(params);
+                setHomeData(response);
+                setNewsPreview(response?.data?.newsHots[0]);
+                console.log('Home', newsPreview);
+            } catch (error) {
+                console.log('Failed to fetch list: ', error);
+            }
+        };
+        fetchHome();
+    }, []);
+
+    function handleOnHoverNewPreview(values) {
+        console.log('values', values);
+        if (values?.isEnter) {
+            setNewsPreview(values);
+        } else {
+        }
+    }
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <SearchBar />
-                <BlogSection />
+                <BlogSection newsHots={homeData?.data?.newsHots} dataPreview={newsPreview} onHover={handleOnHoverNewPreview} />
+
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>
                     <Col span={12}>
@@ -35,9 +64,8 @@ function Home(props) {
                     </Col>
                 </Row>
                 <MediaBlogSection />
-                <ListSection />
+                <ListSection data={homeData?.data?.newsSectionDto} />
                 <ConnectionSection />
-             
             </div>
         </div>
     );

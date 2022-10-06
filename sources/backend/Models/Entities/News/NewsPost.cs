@@ -13,7 +13,7 @@ namespace Models.Entities.News
 
         public DateTime PublishedDate { get; set; }
 
-        public bool? IsHotNews { get; set; }
+        public bool IsHotNews { get; set; }
 
         public bool? IsVideoNews { get; set; }
 
