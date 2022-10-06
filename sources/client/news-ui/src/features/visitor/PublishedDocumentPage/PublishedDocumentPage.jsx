@@ -7,6 +7,7 @@ import publishedNewsApi from 'apis/published/publishedNewsApi';
 import { Link, useParams } from 'react-router-dom';
 import datetimeHelper from 'helpers/datetimeHelper';
 import commonRender from 'common/commonRender';
+import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 
 const cx = classNames.bind(styles);
 
@@ -44,6 +45,7 @@ function PublishedDocumentPage(props) {
 
     return (
         <div className={cx('wrapper')}>
+            <ScrollToTop />
             <div className={cx('document-container')}>
                 {data && (
                     <>

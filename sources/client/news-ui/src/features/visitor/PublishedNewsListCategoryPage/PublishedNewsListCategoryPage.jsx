@@ -7,6 +7,7 @@ import publishedNewsApi from 'apis/published/publishedNewsApi';
 import { Link } from 'react-router-dom';
 import commonRender from 'common/commonRender';
 import PublishedNewsListCategoryPageItem from './PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
+import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 
 const cx = classNames.bind(styles);
 
@@ -35,6 +36,7 @@ function PublishedNewsListCategoryPage(props) {
 
     return (
         <div className={cx('wrapper')}>
+            <ScrollToTop />
             {Array.isArray(dataPage) &&
                 dataPage.map((item) => {
                     return (
