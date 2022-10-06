@@ -1,7 +1,8 @@
-import { Button, Divider, Form, Input, Modal, notification } from 'antd';
+import { Button, Divider, Form, Input, Modal } from 'antd';
 import newsApi from 'apis/newsApi';
 import classNames from 'classnames/bind';
-import { Direction } from 'common/enum';
+import { Direction, NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
 import { useEffect, useRef, useState } from 'react';
 import styles from './NewsSourcePage.module.scss';
 import NewsSourcePageSearch from './NewsSourcePageSearch/NewsSourcePageSearch';
@@ -109,15 +110,6 @@ function NewsSourcePage(props) {
     }
   };
 
-  // TODO thông báo để demo
-  const openNotification = (message, description = '', placement = 'top') => {
-    notification.success({
-      message,
-      description,
-      placement,
-    });
-  };
-
   return (
     <div className={cx('wrapper')}>
       <Modal
@@ -155,8 +147,8 @@ function NewsSourcePage(props) {
             </Select>
           </Form.Item> */}
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='submit'>
-              Submit
+            <Button type='primary' htmlType='Tạo mới'>
+              Tạo mới
             </Button>
           </Form.Item>
         </Form>

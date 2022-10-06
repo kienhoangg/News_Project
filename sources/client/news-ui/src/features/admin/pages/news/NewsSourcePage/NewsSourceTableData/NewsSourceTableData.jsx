@@ -1,11 +1,16 @@
-import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { Button, Space, Table, Tag } from 'antd';
+import {
+  DeleteFilled,
+  EditFilled,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Button, Space, Table, Tag, Modal } from 'antd';
 import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
 import styles from './NewsSourceTableData.module.scss';
 import classNames from 'classnames/bind';
 import { PropTypes } from 'prop-types';
-import { Direction } from 'common/enum';
+import { Direction, NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
 
 const cx = classNames.bind(styles);
 
@@ -74,10 +79,19 @@ function NewsSourceTableData(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
+          <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => handleChangeSourceNew(record)}
+          >
             Sửa
           </Button>
-          <Button type='ghost' danger icon={<DeleteFilled />}>
+          <Button
+            type='ghost'
+            danger
+            icon={<DeleteFilled />}
+            onClick={() => handleDeleteSourceNew(record)}
+          >
             Xóa
           </Button>
         </Space>
@@ -91,6 +105,26 @@ function NewsSourceTableData(props) {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
     return { ...item, CreatedDate: createdDate, key: item.Key };
   });
+
+  function handleChangeSourceNew(values) {
+    console.log(values);
+  }
+
+  function handleDeleteSourceNew(values) {
+    return Modal.confirm({
+      title: 'Xóa nguồn tin',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      onOk: () => deleteSourceNew(values),
+    });
+  }
+
+  const deleteSourceNew = (values) => {
+    console.log(values, 'xóa');
+    openNotification('Xóa nguồn tin thành công');
+  };
 
   function handleOnClickStatus(values) {
     // console.log(values);

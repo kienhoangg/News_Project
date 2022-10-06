@@ -5,6 +5,8 @@ namespace Models.Dtos
 {
     public class CategoryNewsDto : DtoBase
     {
+        public int Id { get; set; }
+
         public string CategoryNewsName { get; set; }
 
         public int Order { get; set; }

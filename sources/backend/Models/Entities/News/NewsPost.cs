@@ -1,3 +1,4 @@
+using System.Collections;
 using Contracts.Domains;
 
 namespace Models.Entities.News
@@ -43,5 +44,7 @@ namespace Models.Entities.News
         public virtual SourceNews? SourceNews { get; set; }
 
         public string? FilePath { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
     }
 }
