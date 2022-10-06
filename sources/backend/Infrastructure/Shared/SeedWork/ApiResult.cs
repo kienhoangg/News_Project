@@ -15,17 +15,30 @@ namespace Infrastructure.Shared.SeedWork
             IsSucceeded = isSucceeded;
         }
 
-        public ApiResult(bool isSucceeded, PagedResult<T> data, string message = null)
+        public ApiResult(bool isSucceeded, T data, string message = null)
         {
             Data = data;
             Message = message;
             IsSucceeded = isSucceeded;
         }
 
-        public bool IsSucceeded { get; set; }
-        public string Message { get; set; }
-        public PagedResult<T> Data { get; }
+        public ApiResult(
+            bool isSucceeded,
+            PagedResult<T> data,
+            string message = null
+        )
+        {
+            PagedData = data;
+            Message = message;
+            IsSucceeded = isSucceeded;
+        }
 
+        public bool IsSucceeded { get; set; }
+
+        public string Message { get; set; }
+
+        public PagedResult<T> PagedData { get; }
+
+        public T Data { get; }
     }
 }
-

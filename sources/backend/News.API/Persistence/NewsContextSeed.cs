@@ -134,7 +134,15 @@ namespace News.API.Persistence
                    },
                       CreatedBy = "SystemAdmin", 
                       LastModifiedBy ="SystemAdmin",
-                      
+                      Comments = new List<Comment>(){
+                        new Comment(){
+                           Username = "BVMINH",
+                           Content = "That tuyet voi",
+                             CreatedBy = "SystemAdmin", 
+                      LastModifiedBy ="SystemAdmin",
+                        }
+                       
+                      }
                    },
                   new NewsPost()
                    {
@@ -197,7 +205,20 @@ namespace News.API.Persistence
                    },
                       CreatedBy = "SystemAdmin", 
                       LastModifiedBy ="SystemAdmin",
-                      
+                       Comments = new List<Comment>(){
+                        new Comment(){
+                           Username = "KIENHT12",
+                           Content = "This one is awesome",
+                             CreatedBy = "SystemAdmin", 
+                      LastModifiedBy ="SystemAdmin",
+                        },
+                        new Comment(){
+                           Username = "DVHUNG1",
+                           Content = "amzing gút chóp",
+                             CreatedBy = "SystemAdmin", 
+                      LastModifiedBy ="SystemAdmin",
+                        }
+                      }
                    },
                };
         }

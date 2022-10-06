@@ -82,7 +82,9 @@ namespace News.API.Extensions
                 .AddScoped(serviceType: typeof (INewsPostService),
                 typeof (NewsPostService))
                 .AddScoped(serviceType: typeof (ICollaboratorService),
-                typeof (CollaboratorService));
+                typeof (CollaboratorService))
+                .AddScoped(serviceType: typeof (ICommentService),
+                typeof (CommentService));
         }
     }
 }

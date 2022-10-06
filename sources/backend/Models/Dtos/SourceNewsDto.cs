@@ -4,6 +4,8 @@ namespace Models.Dtos
 {
     public class SourceNewsDto : DtoBase
     {
+        public int Id { get; set; }
+
         public string Title { get; set; }
 
         public int Order { get; set; }

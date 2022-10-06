@@ -47,9 +47,10 @@ namespace News.API.Services
             {
                 query = FindByCondition((x => x.Title.Contains(fieldNewsRequest.Keyword)));
             }
-            IQueryable<FieldNewsDto>? mappingQuery = query.ProjectTo<FieldNewsDto>(_mapper.ConfigurationProvider);
-            PagedResult<FieldNewsDto>? paginationSet = await mappingQuery.PaginatedListAsync(fieldNewsRequest.CurrentPage
+            PagedResult<FieldNews>? sourcePaging= await query.PaginatedListAsync(fieldNewsRequest.CurrentPage
                                                                                              ?? 1, fieldNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, fieldNewsRequest.OrderBy, fieldNewsRequest.Direction);
+            var lstDto =  _mapper.Map<List<FieldNewsDto>>(sourcePaging.Results);
+           var paginationSet = new PagedResult<FieldNewsDto>(lstDto,sourcePaging.RowCount,sourcePaging.CurrentPage,sourcePaging.PageSize);
             ApiSuccessResult<FieldNewsDto>? result = new(paginationSet);
             return result; 
         }

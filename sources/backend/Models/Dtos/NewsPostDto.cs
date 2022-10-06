@@ -6,6 +6,8 @@ namespace Models.Dtos
 {
     public class NewsPostDto : DtoBase
     {
+        public long Id { get; set; }
+
         public string? Title { get; set; }
 
         public DateTime? PublishedDate { get; set; }

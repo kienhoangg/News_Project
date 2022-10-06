@@ -44,8 +44,8 @@ namespace News.API.Services
 
         public async Task<ApiSuccessResult<NewsPostDto>> GetNewsPostByPaging(NewsPostRequest newsPostRequest)
         {
-          
-            var query = FindAll();
+           var lstInclude = new Expression<Func<NewsPost, object>>[] { (x=>x.FieldNews),(x=>x.SourceNews),(x=>x.CategoryNews)};
+            var query = FindAll(includeProperties: lstInclude);
 
             if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
             {
@@ -69,11 +69,11 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&
                  x.PublishedDate >= newsPostRequest.ToDate.Value);
-            }
-            IQueryable<NewsPostDto>? mappingQuery = query.ProjectTo<NewsPostDto>(_mapper.ConfigurationProvider);
-            PagedResult<NewsPostDto>? paginationSet = await mappingQuery.PaginatedListAsync(newsPostRequest.CurrentPage
-                                                                                             ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE,newsPostRequest.OrderBy, newsPostRequest.Direction);
-
+            } 
+           PagedResult<NewsPost>? sourcePaging= await query.PaginatedListAsync(newsPostRequest.CurrentPage
+                                                                                             ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE, newsPostRequest.OrderBy, newsPostRequest.Direction);
+            var lstDto =  _mapper.Map<List<NewsPostDto>>(sourcePaging.Results);
+           var paginationSet = new PagedResult<NewsPostDto>(lstDto,sourcePaging.RowCount,sourcePaging.CurrentPage,sourcePaging.PageSize);
             ApiSuccessResult<NewsPostDto>? result = new(paginationSet);
             return result; 
         }

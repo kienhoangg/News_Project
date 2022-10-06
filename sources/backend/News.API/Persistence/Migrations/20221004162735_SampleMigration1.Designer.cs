@@ -12,7 +12,7 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221004143839_SampleMigration1")]
+    [Migration("20221004162735_SampleMigration1")]
     partial class SampleMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,6 +170,50 @@ namespace News.API.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Collaborators");
+                });
+
+            modelBuilder.Entity("Models.Entities.News.Comment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("NewsPostId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NewsPostId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Models.Entities.News.FieldNews", b =>
@@ -351,6 +395,17 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("FieldNews");
                 });
 
+            modelBuilder.Entity("Models.Entities.News.Comment", b =>
+                {
+                    b.HasOne("Models.Entities.News.NewsPost", "NewsPost")
+                        .WithMany("Comments")
+                        .HasForeignKey("NewsPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NewsPost");
+                });
+
             modelBuilder.Entity("Models.Entities.News.NewsPost", b =>
                 {
                     b.HasOne("Models.Entities.News.CategoryNews", "CategoryNews")
@@ -391,6 +446,11 @@ namespace News.API.Persistence.Migrations
             modelBuilder.Entity("Models.Entities.News.FieldNews", b =>
                 {
                     b.Navigation("NewsPosts");
+                });
+
+            modelBuilder.Entity("Models.Entities.News.NewsPost", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Models.Entities.News.SourceNews", b =>

@@ -6,8 +6,6 @@ namespace Models.Entities.News
     {
         public string Title { get; set; }
 
-        public int Order { get; set; }
-
         public string? Description { get; set; }
 
         public virtual ICollection<NewsPost> NewsPosts { get; set; }
