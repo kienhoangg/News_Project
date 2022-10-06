@@ -74,7 +74,7 @@ function NewsListTableData(props) {
     },
     {
       title: 'Thông tin',
-      dataIndex: 'description',
+      dataIndex: 'Description',
       key: 'description',
       width: 200,
       sorter: (a, b) => true,
