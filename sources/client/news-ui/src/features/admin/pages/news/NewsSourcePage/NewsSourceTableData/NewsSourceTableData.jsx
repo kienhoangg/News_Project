@@ -19,14 +19,20 @@ NewsSourceTableData.propTypes = {
    * Func thay đổi phân trang
    */
   setPagination: PropTypes.func,
+
+  /**
+   * Xóa nguồn tin
+   */
+  deleteSourceNew: PropTypes.func,
 };
 
 NewsSourceTableData.defaultProps = {
   setPagination: () => {},
+  deleteSourceNew: () => {},
 };
 
 function NewsSourceTableData(props) {
-  const { data, setPagination } = props;
+  const { data, setPagination, deleteSourceNew } = props;
 
   const columns = [
     {
@@ -102,8 +108,8 @@ function NewsSourceTableData(props) {
 
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
-    var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
-    return { ...item, CreatedDate: createdDate, key: item.Key };
+    var createdDate = datetimeHelper.formatDateToDateVN(item.createdDate);
+    return { ...item, createdDate: createdDate, key: item.id };
   });
 
   function handleChangeSourceNew(values) {
@@ -117,13 +123,15 @@ function NewsSourceTableData(props) {
       content: 'Bạn có chắc chắn xóa không?',
       okText: 'Xóa',
       cancelText: 'Hủy',
-      onOk: () => deleteSourceNew(values),
+      onOk: () => deleteSourceNewCustom(values),
     });
   }
 
-  const deleteSourceNew = (values) => {
-    console.log(values, 'xóa');
-    openNotification('Xóa nguồn tin thành công');
+  const deleteSourceNewCustom = (values) => {
+    if (!deleteSourceNew) {
+      return;
+    }
+    deleteSourceNew(values.id);
   };
 
   function handleOnClickStatus(values) {

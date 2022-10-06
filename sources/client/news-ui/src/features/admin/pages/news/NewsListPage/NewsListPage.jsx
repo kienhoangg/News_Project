@@ -1,6 +1,8 @@
 import { Divider } from 'antd';
 import newsApi from 'apis/newsApi';
 import classNames from 'classnames/bind';
+import { Direction, NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
 import { useEffect, useRef, useState } from 'react';
 import CollectionNewsDetail from './CollectionNewsDetail/CollectionNewsDetail';
 import CollectionNewsEditor from './CollectionNewsEditor/CollectionNewsEditor';
@@ -15,84 +17,151 @@ NewsListPage.propTypes = {};
 NewsListPage.defaultProps = {};
 
 function NewsListPage(props) {
-    const [newsData, setNewsData] = useState({});
+  const [newsData, setNewsData] = useState({});
+  const [objFilter, setObjFilter] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    direction: Direction.DESC,
+    orderBy: 'CreatedDate',
+    keyword: '',
+  });
+  const isFirstCall = useRef(true);
 
-    const [openCollectionEditor, setOpenCollectionEditor] = useState(false);
-    const [openCollectionNewsDetail, setOpenCollectionNewsDetail] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
+  const [openCollectionEditor, setOpenCollectionEditor] = useState(false);
+  const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
+    useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const dataDetail = useRef({});
+  const action = useRef('create');
 
-    const dataDetail = useRef({});
+  const onCreate = async (values) => {
+    try {
+      console.log('Received values of form: ', values);
+      setOpenCollectionEditor(false);
+      await newsApi.insertNew(values);
+      openNotification('Tạo mới tin thành công');
+      fetchList();
+    } catch (error) {
+      openNotification('Tạo mới tin thất bại', '', NotificationType.ERROR);
+    }
+  };
 
-    const onCreate = (values) => {
-        console.log('Received values of form: ', values);
-        setOpenCollectionEditor(false);
-    };
+  const handleOnClickShowRowDetail = async (values) => {
+    const detailRow = await fetchItem(values);
+    if (!detailRow) {
+      return;
+    }
+    dataDetail.current = detailRow;
+    setConfirmLoading(false);
+    setOpenCollectionNewsDetail(true);
+  };
 
-    const handleOnClickShowRowDetail = (values) => {
-        // alert(JSON.stringify(values));
+  const handleOnClickEditOneRow = async (values) => {
+    const detailRow = await fetchItem(values);
+    if (!detailRow) {
+      return;
+    }
+    dataDetail.current = detailRow;
+    setConfirmLoading(false);
+    setOpenCollectionEditor(true);
+  };
 
-        const fetchItem = async () => {
-            setConfirmLoading(true);
+  const fetchItem = async (values) => {
+    setConfirmLoading(true);
 
-            try {
-                const params = { Id: values?.Id };
-                const response = await newsApi.getNewsById(params);
-                dataDetail.current = response;
-                setConfirmLoading(false);
-                setOpenCollectionNewsDetail(true);
-            } catch (error) {
-                console.log('Failed to fetch list: ', error);
-            }
-        };
+    try {
+      const params = { Id: values?.Id };
+      return await newsApi.getNewsById(params);
+    } catch (error) {
+      console.log('Failed to fetch list: ', error);
+      return null;
+    }
+  };
 
-        fetchItem();
-    };
+  const fetchList = async () => {
+    try {
+      const response = await newsApi.getNewsAll(objFilter);
+      setNewsData({
+        data: response?.pagedData?.results ?? [],
+        total: response?.pagedData?.rowCount ?? 0,
+      });
+    } catch (error) {
+      console.log('Failed to fetch list: ', error);
+    }
+  };
 
-    /**
-     * Khởi tạo dữ liệu
-     */
-    useEffect(() => {
-        const fetchList = async () => {
-            try {
-                const params = {
-                    _page: 1,
-                    _limit: 10,
-                };
-                const response = await newsApi.getNewsAll(params);
-                setNewsData(response);
-            } catch (error) {
-                console.log('Failed to fetch list: ', error);
-            }
-        };
-        fetchList();
-    }, []);
+  /**
+   * Thay đổi phân trang
+   */
+  const handleChangePagination = (
+    currentPage,
+    pageSize,
+    orderBy,
+    direction
+  ) => {
+    setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
+  };
+  /**
+   * Sử lý thay đổi text search
+   * @param {*} textSearch Từ cần tìm
+   */
+  const handleChangeTextSearch = (textSearch) => {
+    setObjFilter({ ...objFilter, keyword: textSearch });
+  };
 
-    return (
-        <div className={cx('wrapper')}>
-            <div className={cx('top')}>
-                <NewsListMenuSearch setOpenCollectionEditor={setOpenCollectionEditor} />
-            </div>
-            <Divider style={{ margin: '0' }} />
-            <div className={cx('table-data')}>
-                <NewsListTableData data={newsData} onClickShowRowDetail={handleOnClickShowRowDetail} />
-            </div>
-            <CollectionNewsEditor
-                open={openCollectionEditor}
-                onCreate={onCreate}
-                onCancel={() => {
-                    setOpenCollectionEditor(false);
-                }}
-            />
-            <CollectionNewsDetail
-                data={dataDetail.current}
-                open={openCollectionNewsDetail}
-                onCreate={onCreate}
-                onCancel={() => {
-                    setOpenCollectionNewsDetail(false);
-                }}
-            />
-        </div>
-    );
+  /**
+   * Thay đổi bộ lọc thì gọi lại danh sách
+   */
+  useEffect(() => {
+    if (isFirstCall.current) {
+      isFirstCall.current = false;
+      return;
+    }
+    fetchList();
+  }, [objFilter]);
+
+  const handleSetActionForm = (value) => {
+    action.current = value;
+  };
+
+  return (
+    <div className={cx('wrapper')}>
+      <div className={cx('top')}>
+        <NewsListMenuSearch
+          setOpenCollectionEditor={setOpenCollectionEditor}
+          setActionForm={handleSetActionForm}
+          setTextSearch={handleChangeTextSearch}
+        />
+      </div>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
+        <NewsListTableData
+          data={newsData}
+          onClickShowRowDetail={handleOnClickShowRowDetail}
+          setPagination={handleChangePagination}
+          onClickEditOneRow={handleOnClickEditOneRow}
+          setActionForm={handleSetActionForm}
+        />
+      </div>
+      <CollectionNewsEditor
+        action={action.current}
+        data={dataDetail.current}
+        open={openCollectionEditor}
+        onCreate={onCreate}
+        onCancel={() => {
+          setOpenCollectionEditor(false);
+        }}
+      />
+      <CollectionNewsDetail
+        data={dataDetail.current}
+        open={openCollectionNewsDetail}
+        onCreate={onCreate}
+        onCancel={() => {
+          setOpenCollectionNewsDetail(false);
+        }}
+      />
+    </div>
+  );
 }
 
 export default NewsListPage;

@@ -6,4 +6,5 @@ export const Direction = {
 export const NotificationType = {
   SUCCESS: 'success',
   INFO: 'info',
+  ERROR: 'error',
 };
