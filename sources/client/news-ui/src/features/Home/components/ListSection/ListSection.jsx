@@ -74,7 +74,7 @@ const LIST_NEWS = [
 
 function ListSection(props) {
     const { data } = props;
-    const { categoryNews, items } = data;
+    const { categoryNews, data: items } = data;
     if (Array.isArray(items) && items.length > 1) {
         for (let i = 1; i < items.length; i++) {
             items[i].avatar = '';
@@ -113,7 +113,7 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         <div className={cx('title-news')}>
                             <div className={cx('divider')}></div>
-                            <Link to={commonRender.renderLinkNewsCategory(categoryNews?.id)}>{categoryNews?.title}</Link>
+                            <Link to={commonRender.renderLinkNewsCategory(categoryNews?.id)}>{categoryNews?.categoryNewsName}</Link>
                         </div>
                         {Array.isArray(items) &&
                             items.map((item) => {

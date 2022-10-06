@@ -7,6 +7,7 @@ const cx = classNames.bind(styles);
 
 BlogSectionShortListItem.propTypes = {
     className: PropTypes.string,
+    onHover: PropTypes.func,
     data: PropTypes.object,
 };
 
@@ -25,7 +26,7 @@ function BlogSectionShortListItem(props) {
     // };
 
     return (
-        <Link className={cx('wrapper') + ` ${className}`} underline='none' to={commonRender.renderLinkNewsDetail(id)} color='inherit'>
+        <Link onMouseEnter={} className={cx('wrapper') + ` ${className}`} underline='none' to={commonRender.renderLinkNewsDetail(id)} color='inherit'>
             <div className={cx('news-hot-icon')}></div>
             <div className={cx('content')}>{title}</div>
         </Link>

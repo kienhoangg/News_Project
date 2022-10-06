@@ -7,6 +7,7 @@ const cx = classNames.bind(styles);
 
 BlogSectionShortList.propTypes = {
     listData: PropTypes.array,
+    onHover: PropTypes.func,
 };
 
 function BlogSectionShortList(props) {

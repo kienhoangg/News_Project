@@ -36,7 +36,7 @@ function Home(props) {
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <SearchBar />
-                <BlogSection newsHots={homeData?.newsHots} />
+                <BlogSection newsHots={homeData?.data?.newsHots} />
 
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>
@@ -54,7 +54,7 @@ function Home(props) {
                     </Col>
                 </Row>
                 <MediaBlogSection />
-                <ListSection data={homeData?.newsSection} />
+                <ListSection data={homeData?.data?.newsSectionDto} />
                 <ConnectionSection />
             </div>
         </div>
