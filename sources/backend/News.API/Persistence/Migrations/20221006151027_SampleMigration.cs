@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace News.API.Persistence.Migrations
 {
-    public partial class SampleMigration1 : Migration
+    public partial class SampleMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -135,7 +135,7 @@ namespace News.API.Persistence.Migrations
                     CategoryNewsId = table.Column<int>(type: "int", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsHotNews = table.Column<bool>(type: "bit", nullable: true),
+                    IsHotNews = table.Column<bool>(type: "bit", nullable: false),
                     IsVideoNews = table.Column<bool>(type: "bit", nullable: true),
                     IsShowTitle = table.Column<bool>(type: "bit", nullable: true),
                     IsShowAvatar = table.Column<bool>(type: "bit", nullable: true),

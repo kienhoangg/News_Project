@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using AutoMapper;
 using Common.Extensions;
 using Common.Interfaces;
@@ -17,6 +18,8 @@ namespace News.API.Controllers
     {
         private readonly INewsPostService _newsPostService;
 
+        private readonly ICategoryNewsService _categoryNewsService;
+
         private readonly ISerializeService _serializeService;
 
         private readonly IMapper _mapper;
@@ -24,20 +27,66 @@ namespace News.API.Controllers
         public NewsPostController(
             INewsPostService newsPostService,
             IMapper mapper,
-            ISerializeService serializeService
+            ISerializeService serializeService,
+            ICategoryNewsService categoryNewsService
         )
         {
             _newsPostService = newsPostService;
             _mapper = mapper;
             _serializeService = serializeService;
+            _categoryNewsService = categoryNewsService;
         }
 
         [HttpPost("filter")]
         public async Task<IActionResult>
         GetNewsPostByPaging([FromBody] NewsPostRequest newsPostRequest)
         {
+            var lstInclude =
+                new Expression<Func<NewsPost, object>>[] {
+                    (x => x.FieldNews),
+                    (x => x.SourceNews),
+                    (x => x.CategoryNews)
+                };
             var result =
-                await _newsPostService.GetNewsPostByPaging(newsPostRequest);
+                await _newsPostService
+                    .GetNewsPostByPaging(newsPostRequest, lstInclude);
+            return Ok(result);
+        }
+
+        [HttpGet("published/{id:int}")]
+        public async Task<IActionResult> GetPublishedNewsById([Required] int id)
+        {
+            var lstInclude =
+                new Expression<Func<NewsPost, object>>[] {
+                    (x => x.SourceNews),
+                    (x => x.CategoryNews)
+                };
+            var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
+            var parentId = newsPost.CategoryNews.ParentId;
+            var categoryParentNews =
+                await _categoryNewsService.GetCategoryNews(parentId);
+
+            var lstNewsRelatives =
+                await _newsPostService
+                    .GetNewsPostByPaging(new NewsPostRequest()
+                    {
+                        PageSize = 8,
+                        CategoryNewsId = newsPost.CategoryNewsId,
+                        OrderBy = "Order"
+                    });
+            var result =
+                new NewsPublishedDetailDto()
+                {
+                    NewsPostDetail = _mapper.Map<NewsPostDto>(newsPost),
+                    CategoryParentNews =
+                        _mapper.Map<CategoryNewsDto>(categoryParentNews),
+                    NewsRelatives =
+                        lstNewsRelatives
+                            .PagedData
+                            .Results
+                            .Where(x => x.Id != id)
+                            .ToList()
+                };
             return Ok(result);
         }
 

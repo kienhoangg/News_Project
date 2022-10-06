@@ -296,7 +296,7 @@ namespace News.API.Persistence.Migrations
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsHotNews")
+                    b.Property<bool>("IsHotNews")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsShowAvatar")

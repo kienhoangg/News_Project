@@ -12,8 +12,8 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221004162735_SampleMigration1")]
-    partial class SampleMigration1
+    [Migration("20221006151027_SampleMigration")]
+    partial class SampleMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -298,7 +298,7 @@ namespace News.API.Persistence.Migrations
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsHotNews")
+                    b.Property<bool>("IsHotNews")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsShowAvatar")
