@@ -3,6 +3,8 @@ const routes = {
   home: '/home',
   blog: '/blog',
   publishedDocument: '/document/:blogId',
+  publishedNewsPostCategory: '/news-posts/category/:id',
+  publishedNewsPost: '/news-posts/:id',
   search: '/search',
   notfound: '/notfound',
 

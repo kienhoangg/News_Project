@@ -29,6 +29,7 @@ const publicRoutes = [
   { path: config.routes.root, component: Home },
   // { path: config.routes.blog, component: BlogMainPage },
   { path: config.routes.publishedDocument, component: PublishedDocumentPage },
+  { path: config.routes.publishedNewsPost, component: PublishedDocumentPage },
   { path: config.routes.search, component: SearchPage },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 

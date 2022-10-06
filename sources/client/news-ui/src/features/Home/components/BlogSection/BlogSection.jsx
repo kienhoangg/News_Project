@@ -2,25 +2,32 @@ import classNames from 'classnames/bind';
 import BlogSectionListNews from './BlogSectionListNews/BlogSectionListNews';
 import BlogSectionShortList from './BlogSectionShortList/BlogSectionShortList';
 import BlogSectionShortNews from './BlogSectionShortNews/BlogSectionShortNews';
+import PropTypes from 'prop-types';
 
 import styles from './BlogSection.module.scss';
 import { Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
-BlogSection.propTypes = {};
+BlogSection.propTypes = {
+    newsHots: PropTypes.array,
+};
 
 function BlogSection(props) {
+    const { newsHots } = props;
+    console.log('BlogSection', props);
+    const firstHot = Array.isArray(newsHots) ? newsHots[0] : undefined;
+
     return (
         <div className={cx('wrapper')}>
             <Row className='h-100'>
                 <Col span={18} className={cx('left')}>
                     <Row className={cx('left-preview')}>
                         <Col span={16} className={cx('preview-content')}>
-                            <BlogSectionShortNews />
+                            {firstHot && <BlogSectionShortNews data={firstHot} />}
                         </Col>
                         <Col span={8} className={cx('preview-news')}>
-                            <BlogSectionShortList />
+                            <BlogSectionShortList listData={newsHots} />
                         </Col>
                     </Row>
                     <Row>
