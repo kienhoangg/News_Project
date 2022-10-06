@@ -9,6 +9,15 @@ class HomeApi {
         var response = datafakeHome;
         return response;
     };
+
+    /**
+     * Convert dữ liệu lấy từ API sang dữ liệu hiển thị UI
+     * @param {object} dataApi Dữ liệu lấy từ API
+     */
+    convertDataApiToDataUI(dataApi) {
+
+    }
+
 }
 const homeApi = new HomeApi();
 export default homeApi;
