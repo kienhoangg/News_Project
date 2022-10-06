@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './PublishedDocumentPage.module.scss';
 import classNames from 'classnames/bind';
-import FormVisitorComment from 'features/admin/components/FormVisitorComment/FormVisitorComment';
+import FormVisitorComment from 'features/visitor/components/FormVisitorComment/FormVisitorComment';
 
 const cx = classNames.bind(styles);
 

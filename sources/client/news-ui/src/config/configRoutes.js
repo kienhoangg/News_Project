@@ -3,6 +3,7 @@ const routes = {
     home: '/home',
     blog: '/blog',
     publishedDocument: '/document/:blogId',
+    search: '/search',
     notfound: '/notfound',
 
     //Admin
