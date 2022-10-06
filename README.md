@@ -17,3 +17,13 @@
 	+ dotnet ef migrations add "SampleMigration1" --output-dir Persistence/Migrations
 	+ dotnet ef database update
 
+**3. Drop database**
+
+```sql
+USE master;
+GO
+ALTER DATABASE News SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+GO
+DROP DATABASE News;
+GO
+```
