@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import styles from './BlogSection.module.scss';
 import { Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
+import routes from 'config/configRoutes';
 const cx = classNames.bind(styles);
 
 BlogSection.propTypes = {
@@ -32,7 +33,7 @@ function BlogSection(props) {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Link className={cx('btn-view')} to='/'>
+                            <Link className={cx('btn-view')} to={routes.publishedNewsPostListCategory}>
                                 <span>Xem thêm</span>
                             </Link>
                         </Col>

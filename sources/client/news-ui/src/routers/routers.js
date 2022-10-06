@@ -22,6 +22,7 @@ import QuestionListPage from 'features/admin/pages/questions/QuestionListPage/Qu
 import MenuPage from 'features/admin/pages/setup/MenuPage/MenuPage';
 import Home from 'features/Home/Home';
 import PublishedDocumentPage from 'features/visitor/PublishedDocumentPage/PublishedDocumentPage';
+import PublishedNewsListCategoryPage from 'features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage';
 import SearchPage from 'features/visitor/SearchPage/SearchPage';
 
 // Public routes
@@ -30,6 +31,8 @@ const publicRoutes = [
   // { path: config.routes.blog, component: BlogMainPage },
   { path: config.routes.publishedDocument, component: PublishedDocumentPage },
   { path: config.routes.publishedNewsPost, component: PublishedDocumentPage },
+  { path: config.routes.publishedNewsPostListCategory, component: PublishedNewsListCategoryPage },
+  { path: config.routes.publishedNewsPostCategory, component: PublishedNewsListCategoryPage },
   { path: config.routes.search, component: SearchPage },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 

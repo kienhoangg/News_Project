@@ -5,7 +5,7 @@ const routes = {
   publishedDocument: '/document/:blogId',
   publishedNewsPostListCategory: '/news-posts/categories',
   publishedNewsPostCategory: '/news-posts/categories/:id',
-  publishedNewsPost: '/news-posts/:id',
+  publishedNewsPost: '/news-posts/detail/:id',
   search: '/search',
   notfound: '/notfound',
 

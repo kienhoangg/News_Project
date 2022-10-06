@@ -2,6 +2,7 @@
 
 import axiosClient from "apis/axiosClient";
 import datafakePublisedNews from "apis/datafake/datafakePublisedNews";
+import datafakePublishedCategoryList from "apis/datafake/datafakePublishedCategoryList";
 
 class PublishedNewsApi {
     getData = (params) => {
@@ -13,6 +14,10 @@ class PublishedNewsApi {
         // var response = datafakePublisedNews.objectExample;
         // return response;
     };
+    getCategoriesDataListPage() {
+        var response = datafakePublishedCategoryList;
+        return response;
+    }
 }
 const publishedNewsApi = new PublishedNewsApi();
 export default publishedNewsApi;
