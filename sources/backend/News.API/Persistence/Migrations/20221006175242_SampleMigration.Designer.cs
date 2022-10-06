@@ -12,8 +12,8 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221006153745_SampleMigration1")]
-    partial class SampleMigration1
+    [Migration("20221006175242_SampleMigration")]
+    partial class SampleMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

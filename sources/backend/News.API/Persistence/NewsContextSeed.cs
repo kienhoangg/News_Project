@@ -18,10 +18,7 @@ namespace News.API.Persistence
             // {
             //     newsContext.AddRange(GetNewsProducts());
             // }
-            // if (!newsContext.FieldNews.Any())
-            // {
-            //     newsContext.AddRange(GetFieldNews());
-            // }
+           
             //   if (!newsContext.NewsPosts.Any())
             // {
             //     newsContext.AddRange(GetNewsPost());
@@ -36,6 +33,10 @@ namespace News.API.Persistence
               if (!newsContext.NewsPosts.Any())
             {
                 newsContext.AddRange(GetNewsPostV2());
+            }
+             if (!newsContext.FieldNews.Any())
+            {
+                newsContext.AddRange(GetFieldNews());
             }
             //  if (!newsContext.SourceNews.Any())
             // {
@@ -62,7 +63,37 @@ namespace News.API.Persistence
                       BiggestFactor = 2,
                       CreatedBy = "SystemAdmin", 
                       LastModifiedBy ="SystemAdmin",
-                      
+                      NewsPosts = new List<NewsPost>(){
+                        new NewsPost()
+                   {
+                     Title = "Bộ Công an trả lời ý kiến kiến nghị của cử tri tỉnh Yên Bái", 
+                    PublishedDate = DateTime.Now,
+                    Description = "CTTĐT - Cử tri Yên Bái có ý kiến kiến nghị với Bộ Công an trình Quốc hội sớm xem xét, thông qua Luật Lực lượng tham gia bảo vệ an ninh, trật tự ở cơ sở để thống nhất quy định chức năng, nhiệm vụ, hoạt động, chế độ chính sách và trách nhiệm quản lý nhà nước đối vói lực lượng tham gia bảo vệ an ninh, trật tự ở cơ sở nhằm hoàn thiện hệ thống pháp luật về an ninh, trật tự, thể chế hóa quan điểm, định hướng trong các văn bản, nghị quyết của Đảng về xây dựng, củng cố, duy trì lực lượng tham gia bảo vệ an ninh, trật tự ở cơ sở.",
+                    IsHotNews = false,
+                    IsVideoNews = false,
+                    IsShowTitle = true,
+                    IsShowAvatar = true,
+                    IsShowComment = true,
+                    Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thu-Nga/2022/_giu-vung-an-ninh.jpg", 
+                    AvatarTitle = "Ảnh minh họa",
+                    CategoryNewsId = 2,
+                     
+                   }, new NewsPost()
+                   {
+                     Title = "Tạm hoãn xét nghĩa vụ quân sự với nam công dân là thí sinh", 
+                    PublishedDate = DateTime.Now,
+                    Description = "Bộ Quốc phòng đã đồng ý với ý kiến đề xuất của Bộ Giáo dục và Đào tạo (GD&ĐT) về cấp giấy tạm hoãn nghĩa vụ quân sự.",
+                    IsHotNews = false,
+                    IsVideoNews = false,
+                    IsShowTitle = true,
+                    IsShowAvatar = true,
+                    IsShowComment = true,
+                    Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Mai-Hien/2022/Qu%C3%BD%203/nghiavuquansu.png", 
+                    AvatarTitle = "Ảnh minh họa",
+                    CategoryNewsId = 5,
+                     
+                   },
+                      }
                    },
                    new FieldNews()
                    {
@@ -73,6 +104,37 @@ namespace News.API.Persistence
                       BiggestFactor = 5,
                       CreatedBy = "SystemAdmin", 
                       LastModifiedBy ="SystemAdmin",
+                        NewsPosts = new List<NewsPost>(){
+                        new NewsPost()
+                   {
+                     Title = "UBND tỉnh chỉ đạo tăng cường phòng, chống bệnh Đậu mùa khỉ", 
+                    PublishedDate = DateTime.Now,
+                    Description = "CTTĐT - UBND tỉnh vừa ban hành công văn số 3340/UBND-VX yêu cầu các sở, ban, ngành của tỉnh; Công an tỉnh; Bộ Chỉ huy quân sự tỉnh; Báo Yên Bái; Đài Phát thanh và Truyền hình tỉnh; UBND các huyện, thị xã, thành phố về việc tăng cường phòng, chống bệnh Đậu mùa khỉ.",
+                    IsHotNews = false,
+                    IsVideoNews = false,
+                    IsShowTitle = true,
+                    IsShowAvatar = true,
+                    IsShowComment = true,
+                    Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thu-Nga/2022/dau%20mua%20khi%20282022.jpg", 
+                    AvatarTitle = "Ảnh minh họa",
+                    CategoryNewsId = 5,
+                     
+                   }, new NewsPost()
+                   {
+                     Title = "Thông tin chỉ đạo điều hành nổi bật của UBND tỉnh Yên Bái trong tuần công tác từ 26/9-2/10/2022", 
+                    PublishedDate = DateTime.Now,
+                    Description = "CTTĐT - Tổ chức phong trào thi đua Yên Bái chung tay vì người nghèo - Không để ai bị bỏ lại phía sau giai đoạn 2021 - 2025; Điều chỉnh, bổ sung Kế hoạch thực hiện Chương trình về định hướng chiến lược địa chất, khoáng sản và công nghiệp khai khoáng đến năm 2030, tầm nhìn đến năm 2045; kế hoạch thực hiện Đề án “Hỗ trợ học sinh, sinh viên khởi nghiệp giai đoạn 2022 - 2025” tại các cơ sở giáo dục nghề nghiệp; tổ chức các hoạt động hưởng ứng Chiến dịch Làm cho thế giới sạch hơn năm 2022; Kế hoạch tổ chức các hoạt động hưởng ứng tháng cao điểm “Ngày Pháp luật nước Cộng hòa xã hội chủ nghĩa Việt Nam” năm 2022… là các thông tin chỉ đạo điều hành nổi bật của UBND tỉnh Yên Bái trong tuần công tác từ 26/9-2/10/2022.",
+                    IsHotNews = true,
+                    IsVideoNews = false,
+                    IsShowTitle = true,
+                    IsShowAvatar = true,
+                    IsShowComment = true,
+                    Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thanh-Thuy/2019/Hoinghi/c%C4%91htuanqqqq.jpg", 
+                    AvatarTitle = "Ảnh minh họa",
+                    CategoryNewsId = 5,
+                     
+                   },
+                      }
                    }
                };
         }
@@ -117,17 +179,8 @@ namespace News.API.Persistence
                    Description = "CTTĐT - Chiều 6/10, đồng chí Nguyễn Thế Phước - Ủy viên Ban Thường vụ Tỉnh ủy, Phó Chủ tịch Thường trực UBND tỉnh dự buổi sinh hoạt Chi bộ thôn Thanh Lương, xã Tân Thịnh, Thành phố Yên Bái. Cùng dự buổi sinh hoạt có lãnh đạo Thành ủy Yên Bái.",
                     Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thanh-Thuy/2019/Hoinghi/anhphuoc-thanhluong2.jpg", 
                     AvatarTitle = "Đồng chí Nguyễn Thế Phước - Phó Chủ tịch Thường trực UBND tỉnh phát biểu tại Hội nghị",
-                    CategoryNewsId = 1,
-                      FieldNews =  new FieldNews()
-                   {
-                      Title = "Chương trình công tác tháng",
-                      Order = 0,
-                      Description = "Chương trình công tác tháng",
-                      Factor = 4.5M,
-                      BiggestFactor = 5,
-                      CreatedBy = "SystemAdmin", 
-                      LastModifiedBy ="SystemAdmin",
-                   },
+                    CategoryNewsId = 1
+                    
                    },
                       new NewsPost()
                    {
@@ -141,17 +194,7 @@ namespace News.API.Persistence
                    Description = "CTTĐT - Tại Quyết định số 1739/QĐ-UBND ban hành ngày 04/10/2022, UBND tỉnh đã Quy định điều kiện, trình tự, thủ tục, hồ sơ xét, công nhận, công bố và thu hồi quyết định công nhận thôn (bản) đạt chuẩn NTM; thôn (bản) đạt chuẩn NTM kiểu mẫu trên địa bàn tỉnh giai đoạn 2021-2025.",
                     Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thu-Nga/2022/200090_lang-van-hoa.jpg", 
                     AvatarTitle = "Cổng vào Làng văn hóa thôn Làng Già, xã Yên Thắng, huyện Lục Yên - thôn nông thôn mới kiểu mẫu",
-                    CategoryNewsId = 5,
-                      FieldNews =  new FieldNews()
-                   {
-                      Title = "Chương trình công tác tháng",
-                      Order = 0,
-                      Description = "Chương trình công tác tháng",
-                      Factor = 4.5M,
-                      BiggestFactor = 5,
-                      CreatedBy = "SystemAdmin", 
-                      LastModifiedBy ="SystemAdmin",
-                   },
+                    CategoryNewsId = 5
                    },
                     new NewsPost()
                    {
@@ -165,17 +208,7 @@ namespace News.API.Persistence
                    Description = "CTTĐT - UBND tỉnh vừa ban hành công văn số 3341/UBND-VX yêu cầu các sở, ban, ngành của tỉnh; UBND các huyện, thị xã, thành phố và các đơn vị liên quan về việc tăng cường công tác chăm sóc sức khỏe người lao động và phòng chống bệnh nghề nghiệp.",
                     Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thu-Nga/2022/185331_dam-bao-van-hanh.jpg", 
                     AvatarTitle = "Công ty Điện lực Yên Bái khám sức khỏe định kỳ cho cán bộ, công nhân viên và người lao động.",
-                    CategoryNewsId = 5,
-                      FieldNews =  new FieldNews()
-                   {
-                      Title = "Chương trình công tác tháng",
-                      Order = 0,
-                      Description = "Chương trình công tác tháng",
-                      Factor = 4.5M,
-                      BiggestFactor = 5,
-                      CreatedBy = "SystemAdmin", 
-                      LastModifiedBy ="SystemAdmin",
-                   },
+                    CategoryNewsId = 5
                    
                    },
                     new NewsPost()
@@ -190,17 +223,7 @@ namespace News.API.Persistence
                    Description = "CTTĐT - Lễ hội Quế huyện Văn Yên lần thứ IV năm 2022 với chủ đề “Quế Văn Yên - khát vọng vươn xa” sẽ diễn ra trong 2 ngày 14 và 15/10/2022 với nhiều hoạt động văn hóa, nghệ thuật, du lịch đặc sắc đón chào du khách gần xa.",
                     Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thu-Nga/2022/le%20hoi%20que%20vy%205102022.jpg", 
                     AvatarTitle = "Lễ khai mạc lễ hội sẽ diễn ra vào tối ngày 14/10",
-                    CategoryNewsId = 6,
-                      FieldNews =  new FieldNews()
-                   {
-                      Title = "Chương trình công tác tháng",
-                      Order = 0,
-                      Description = "Chương trình công tác tháng",
-                      Factor = 4.5M,
-                      BiggestFactor = 5,
-                      CreatedBy = "SystemAdmin", 
-                      LastModifiedBy ="SystemAdmin",
-                   },
+                    CategoryNewsId = 6
                    },
                     new NewsPost()
                    {
@@ -214,17 +237,7 @@ namespace News.API.Persistence
                    Description = "CTTĐT - Sáng ngày 4/10, Hội LHPN huyện Văn Yên tổ chức Chung kết Hội thi tìm hiểu Nghị quyết Đại hội đại biểu phụ nữ toàn quốc lần thứ 13, Nghị quyết Đại hội đại biểu phụ nữ tỉnh và Nghị quyết Đại hội đại biểu phụ nữ huyện Văn Yên lần thứ 16.",
                     Avatar = "https://yenbai.gov.vn/noidung/tintuc/PublishingImages/Thu-Nga/2022/trao%20giai%20nhat%204102022.jpg", 
                     AvatarTitle = "Ban Tổ chức đã trao giải nhất cho thí sinh Nguyễn Thị Bích Liên - Phó Chủ tịch Hội LHPN xã Viễn Sơn",
-                    CategoryNewsId = 5,
-                      FieldNews =  new FieldNews()
-                   {
-                      Title = "Chương trình công tác tháng",
-                      Order = 0,
-                      Description = "Chương trình công tác tháng",
-                      Factor = 4.5M,
-                      BiggestFactor = 5,
-                      CreatedBy = "SystemAdmin", 
-                      LastModifiedBy ="SystemAdmin",
-                   },
+                    CategoryNewsId = 5
                    
                    }
             };

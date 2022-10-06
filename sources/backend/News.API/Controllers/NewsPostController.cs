@@ -18,6 +18,8 @@ namespace News.API.Controllers
     {
         private readonly INewsPostService _newsPostService;
 
+        private readonly IFieldNewsService _fieldNewsService;
+
         private readonly ICategoryNewsService _categoryNewsService;
 
         private readonly ISerializeService _serializeService;
@@ -28,13 +30,15 @@ namespace News.API.Controllers
             INewsPostService newsPostService,
             IMapper mapper,
             ISerializeService serializeService,
-            ICategoryNewsService categoryNewsService
+            ICategoryNewsService categoryNewsService,
+            IFieldNewsService fieldNewsService
         )
         {
             _newsPostService = newsPostService;
             _mapper = mapper;
             _serializeService = serializeService;
             _categoryNewsService = categoryNewsService;
+            _fieldNewsService = fieldNewsService;
         }
 
         [HttpPost("filter")]
@@ -263,6 +267,22 @@ namespace News.API.Controllers
 
             await _newsPostService.DeleteNewsPost(id);
             return NoContent();
+        }
+
+        [HttpGet("published/fields")]
+        public async Task<IActionResult> GetNewsPostEachFields()
+        {
+            Expression<Func<FieldNews, object>>[]? lstInclude =
+                new Expression<Func<FieldNews, object>>[] {
+                    (x => x.NewsPosts)
+                };
+            var fields =
+                await _fieldNewsService
+                    .GetFieldNewsByPaging(new FieldNewsRequest()
+                    { PageSize = 5 },
+                    lstInclude);
+            if (fields == null) return NotFound();
+            return Ok(fields.PagedData.Results);
         }
     }
 }

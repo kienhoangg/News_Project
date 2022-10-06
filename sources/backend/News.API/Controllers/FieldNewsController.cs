@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
@@ -26,9 +27,7 @@ namespace News.API.Controllers
 
         [HttpPost("filter")]
         public async Task<IActionResult>
-        GetFieldNewsByPaging(
-            [FromBody] FieldNewsRequest fieldNewsRequest
-        )
+        GetFieldNewsByPaging([FromBody] FieldNewsRequest fieldNewsRequest)
         {
             var result =
                 await _fieldNewsService.GetFieldNewsByPaging(fieldNewsRequest);

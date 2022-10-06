@@ -15,5 +15,7 @@ namespace Models.Dtos
         public decimal Factor { get; set; }
 
         public decimal BiggestFactor { get; set; }
+
+        public ICollection<NewsPostDto> NewsPosts { get; set; }
     }
 }
