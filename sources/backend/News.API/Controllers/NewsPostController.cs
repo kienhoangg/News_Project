@@ -91,6 +91,24 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("file")]
+        public async Task<IActionResult>
+        FileUpload([FromForm] NewsPostUploadDto newsPostUploadDto)
+        {
+            string avartarPath = "";
+
+            // Upload file avatar if exist
+            if (newsPostUploadDto.Avatar != null)
+            {
+                avartarPath =
+                    await newsPostUploadDto
+                        .Avatar
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+                return Ok(avartarPath);
+            }
+            return BadRequest();
+        }
+
         [HttpPost]
         public async Task<IActionResult>
         CreateNewsPostDto([FromForm] NewsPostUploadDto newsPostUploadDto)
@@ -137,8 +155,8 @@ namespace News.API.Controllers
                     .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
 
             var newsPost = _mapper.Map<NewsPost>(newsPostDto);
-            newsPost.Avatar = avartarPath;
-            newsPost.FilePath = fileAttachmentPath;
+            newsPost.Avatar = newsPostDto.Avatar;
+            newsPost.FilePath = newsPostDto.FilePath;
             await _newsPostService.CreateNewsPost(newsPost);
             var result = _mapper.Map<NewsPostDto>(newsPost);
             return Ok(result);
@@ -186,6 +204,7 @@ namespace News.API.Controllers
                 newsPostDto =
                     _serializeService
                         .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
+                newsPostDto.Id = newsPost.Id;
             }
             string avartarPath = "";
             string fileAttachmentPath = "";
@@ -209,9 +228,7 @@ namespace News.API.Controllers
             }
 
             var updatedNewsPost = _mapper.Map(newsPostDto, newsPost);
-            updatedNewsPost.Avatar = avartarPath;
-            updatedNewsPost.FilePath = fileAttachmentPath;
-            updatedNewsPost.Title = "Test title";
+            updatedNewsPost.Avatar = newsPostDto.Avatar;
             var resultUpdate =
                 await _newsPostService.UpdateNewsPost(updatedNewsPost);
 
@@ -234,7 +251,7 @@ namespace News.API.Controllers
                     fileFileAttachment.Delete();
                 }
             }
-            var result = _mapper.Map<NewsPostDto>(updatedNewsPost);
+            var result = _mapper.Map<NewsPostDto>(source: updatedNewsPost);
             return Ok(result);
         }
 
