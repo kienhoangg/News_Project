@@ -11,7 +11,7 @@ import ConnectionSection from './components/ConnectionSection/ConnectionSection'
 import FooterSection from './components/FooterSection/FooterSection';
 import Images from 'common/images';
 import { useEffect, useRef, useState } from 'react';
-import homeApi from 'apis/homeApi';
+import homeApi from 'apis/published/homeApi';
 
 const cx = classNames.bind(styles);
 

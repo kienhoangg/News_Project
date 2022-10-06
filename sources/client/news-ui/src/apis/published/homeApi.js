@@ -1,5 +1,5 @@
 // import axiosClient from './axiosClient';
-import datafakeHome from './datafake/datafakeHome';
+import datafakeHome from '../datafake/datafakeHome';
 
 class HomeApi {
     getData = (params) => {
