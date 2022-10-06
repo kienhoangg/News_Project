@@ -50,8 +50,8 @@ function NewsSourcePage(props) {
     try {
       const response = await newsApi.getNewsSourceAll(objFilter);
       setNewsData({
-        data: response?.data?.results ?? [],
-        total: response?.data?.rowCount ?? 0,
+        data: response?.pagedData?.results ?? [],
+        total: response?.pagedData?.rowCount ?? 0,
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
@@ -78,6 +78,16 @@ function NewsSourcePage(props) {
     setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
   };
 
+  const handleDeleteSourceNew = async (id) => {
+    try {
+      await newsApi.deleteSourceNew(id);
+      openNotification('Xóa nguồn tin thành công');
+      fetchProductList();
+    } catch (error) {
+      openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -101,7 +111,7 @@ function NewsSourcePage(props) {
    */
   const insertSounceNews = async (values) => {
     try {
-      await newsApi.insertSounceNew(values);
+      await newsApi.insertSourceNew(values);
       setIsModalOpen(false);
       fetchProductList();
       openNotification('Tạo mới nguồn tin tức thành công');
@@ -167,6 +177,7 @@ function NewsSourcePage(props) {
         <NewsSourceTableData
           data={newsData}
           setPagination={handleChangePagination}
+          deleteSourceNew={handleDeleteSourceNew}
         />
       </div>
     </div>

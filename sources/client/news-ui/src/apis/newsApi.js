@@ -1,18 +1,19 @@
 import commonFunc from 'common/commonFunc';
+import convertHelper from 'helpers/convertHelper';
 import axiosClient from './axiosClient';
 import datafakeNews from './datafake/datafakeNews';
 
 class NewsApi {
-  getNewsAll = (params) => {
-    // const url = '/news';
-    // return axiosClient.get(url, { params });
+  getNewsAll = (body) => {
+    const url = '/newsPost/filter';
+    return axiosClient.post(url, body);
 
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeNews.news.objectExample
-    );
-    return response;
+    // var response = commonFunc.generateFakeData(
+    //   20,
+    //   50,
+    //   datafakeNews.news.objectExample
+    // );
+    // return response;
   };
 
   getNewsById = (params) => {
@@ -87,9 +88,21 @@ class NewsApi {
     return response;
   };
 
-  insertSounceNew = (body) => {
+  insertNew = (body) => {
+    const url = '/newsPost';
+    var formData = new FormData();
+    formData.append('JsonString', convertHelper.Serialize(body));
+    return axiosClient.post(url, formData);
+  };
+
+  insertSourceNew = (body) => {
     const url = '/sourceNews';
     return axiosClient.post(url, body);
+  };
+
+  deleteSourceNew = (id) => {
+    const url = `/sourceNews/${id}`;
+    return axiosClient.delete(url);
   };
 }
 const newsApi = new NewsApi();
