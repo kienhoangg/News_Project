@@ -72,7 +72,9 @@ function PublishedDocumentPage(props) {
                         return (
                             <div key={item.id} className={cx('document-relative-item')}>
                                 <div className={cx('document-relative-icon')}></div>
-                                <Link to={commonRender.renderLinkNewsDetail(item.id)}>{item.title}</Link>
+                                <Link reloadDocument to={commonRender.renderLinkNewsDetail(item.id)}>
+                                    {item.title}
+                                </Link>
                                 <span className={cx('document-relative-date')}>{datetimeHelper.formatDateToDateVN(item.publishedDate)}</span>
                             </div>
                         );
