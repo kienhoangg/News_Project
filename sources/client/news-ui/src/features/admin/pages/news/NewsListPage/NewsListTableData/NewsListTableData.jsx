@@ -101,21 +101,6 @@ function NewsListTableData(props) {
         );
       },
     },
-    {
-      key: 'action',
-      render: (_, { id, status }) => (
-        <Space size='middle'>
-          <Button
-            type='primary'
-            icon={<EditFilled />}
-            onClick={handleOnClickEditRow}
-          >
-            Sửa
-          </Button>
-        </Space>
-      ),
-      width: 100,
-    },
   ];
 
   let dataItems = data?.data ?? [];

@@ -22,8 +22,6 @@ NewsSourcePage.defaultProps = {};
 function NewsSourcePage(props) {
   const [newsData, setNewsData] = useState({});
   const isFirstCall = useRef(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
@@ -31,6 +29,8 @@ function NewsSourcePage(props) {
     orderBy: 'CreatedDate',
     keyword: '',
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách

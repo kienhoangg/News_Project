@@ -47,37 +47,61 @@ class NewsApi {
     );
     return response;
   };
-
+  //#region Nguồn tin
   getNewsSourceAll = (body) => {
     const url = '/sourceNews/filter';
     return axiosClient.post(url, body);
   };
 
-  getNewsFieldAll = (params) => {
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeNews.Field.objectExample
-    );
-    return response;
+  insertSourceNew = (body) => {
+    const url = '/sourceNews';
+    return axiosClient.post(url, body);
   };
 
-  getNewsCategoryAll = (params) => {
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeNews.Category.objectExample
-    );
-    return response;
+  deleteSourceNew = (id) => {
+    const url = `/sourceNews/${id}`;
+    return axiosClient.delete(url);
+  };
+  //#endregion
+
+  //#endregion Lĩnh vực
+  getNewsFieldAll = (body) => {
+    const url = '/fieldNews/filter';
+    return axiosClient.post(url, body);
   };
 
-  getNewsCategoryById = (params) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(datafakeNews.Category.objectExample);
-      });
-    }, 2000);
+  insertFieldNews = (body) => {
+    const url = '/fieldNews';
+    return axiosClient.post(url, body);
   };
+
+  deleteFieldNews = (id) => {
+    const url = `/fieldNews/${id}`;
+    return axiosClient.delete(url);
+  };
+  //#endregion
+
+  //#region Danh mục
+  getNewsCategoryAll = (body) => {
+    const url = '/categoryNews/filter';
+    return axiosClient.post(url, body);
+  };
+
+  insertCategoryNews = (body) => {
+    const url = '/categoryNews';
+    return axiosClient.post(url, body);
+  };
+
+  deleteCategoryNews = (id) => {
+    const url = `/categoryNews/${id}`;
+    return axiosClient.delete(url);
+  };
+
+  getNewsCategoryById = (id) => {
+    const url = `/categoryNews/${id}`;
+    return axiosClient.get(url);
+  };
+  //#endregion
 
   getNewsCollaboratorsAll = (params) => {
     var response = commonFunc.generateFakeData(
@@ -93,16 +117,6 @@ class NewsApi {
     var formData = new FormData();
     formData.append('JsonString', convertHelper.Serialize(body));
     return axiosClient.post(url, formData);
-  };
-
-  insertSourceNew = (body) => {
-    const url = '/sourceNews';
-    return axiosClient.post(url, body);
-  };
-
-  deleteSourceNew = (id) => {
-    const url = `/sourceNews/${id}`;
-    return axiosClient.delete(url);
   };
 }
 const newsApi = new NewsApi();

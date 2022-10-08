@@ -17,10 +17,15 @@ import {
 import styles from './CollectionNewsEditor.module.scss';
 import classNames from 'classnames/bind';
 import { TreeNode } from 'antd/lib/tree-select';
-import { FileImageFilled, UploadOutlined } from '@ant-design/icons';
+import {
+  FileImageFilled,
+  PlusOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { CKEditor } from 'ckeditor4-react';
+import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -28,12 +33,50 @@ CollectionNewsEditor.propTypes = {};
 
 CollectionNewsEditor.defaultProps = {};
 
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
   const [form] = Form.useForm();
 
   function onEditorChange(event) {
     // console.log('data: ', event.editor.getData());
   }
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [fileList, setFileList] = useState([]);
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1)
+    );
+  };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
   return (
     <Modal
@@ -125,7 +168,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
                   // onChange={onChangeNewsType}
                 >
                   <TreeNode value='1' title='Tin tức'>
-                    <TreeNode value='1.1' title='Tin trong tỉnh'></TreeNode>
+                    <TreeNode value='1.1' title='Tin trong tỉnh' />
                     <TreeNode value='1.2' title='Chính sách mới' />
                     <TreeNode value='1.3' title='Hoạt động chỉ đạo điều hành' />
                   </TreeNode>
@@ -223,14 +266,27 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
-                listType='picture'
-                maxCount={1}
+                action='https://localhost:7122/api/newspost/file'
+                listType='picture-card'
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                // onOk={test}
               >
-                <Button type='primary' icon={<FileImageFilled />}>
-                  Chọn ảnh đại diện
-                </Button>
+                {fileList.length < 1 ? uploadButton : null}
               </Upload>
+              <Modal
+                open={previewOpen}
+                title={previewTitle}
+                footer={null}
+                onCancel={handleCancel}
+              >
+                <img
+                  alt='example'
+                  style={{ width: '100%' }}
+                  src={previewImage}
+                />
+              </Modal>
             </Col>
             <Col span={16}>
               <Form.Item
@@ -301,6 +357,11 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               ],
               extraPlugins: 'justify,font,colorbutton,forms',
               removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+              // filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
+              // filebrowserUploadUrl:
+              //   '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+              // filebrowserWindowWidth: '1000',
+              // filebrowserWindowHeight: '700',
               // cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
               // cloudServices_tokenUrl: 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt',
             }}
