@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -8,7 +7,7 @@ using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
 using Models.Constants;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 using News.API.Persistence;

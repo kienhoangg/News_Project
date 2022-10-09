@@ -7,7 +7,7 @@ using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
 using Models.Constants;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 using News.API.Persistence;
@@ -30,14 +30,14 @@ namespace News.API.Services
 
         public async Task DeleteCategoryNews(int id)
         {
-           var categoryNews = await GetByIdAsync(id);
+            var categoryNews = await GetByIdAsync(id);
             await DeleteAsync(categoryNews);
         }
 
 
         public async Task<CategoryNews> GetCategoryNews(int id)
         {
-            return await GetByIdAsync(id, x=>x.FieldNews);
+            return await GetByIdAsync(id, x => x.FieldNews);
         }
 
         public async Task<ApiSuccessResult<CategoryNewsDto>> GetCategoryNewsByPaging(CategoryNewsRequest categoryNewsRequest)
@@ -53,7 +53,7 @@ namespace News.API.Services
                                                                                              ?? 1, categoryNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, categoryNewsRequest.OrderBy, categoryNewsRequest.Direction);
 
             ApiSuccessResult<CategoryNewsDto>? result = new ApiSuccessResult<CategoryNewsDto>(paginationSet);
-            return result; 
+            return result;
         }
 
         public async Task UpdateCategoryNews(CategoryNews product)

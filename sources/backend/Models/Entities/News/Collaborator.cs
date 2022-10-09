@@ -1,6 +1,6 @@
 using Contracts.Domains;
 
-namespace Models.Entities.News
+namespace Models.Entities
 {
     public class Collaborator : EntityAuditBase<int>
     {

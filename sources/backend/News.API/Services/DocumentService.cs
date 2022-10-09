@@ -1,8 +1,9 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
+using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
 using Models.Constants;
 using Models.Dtos;
@@ -13,6 +14,7 @@ using News.API.Persistence;
 
 namespace News.API.Services
 {
+
     public class DocumentService : RepositoryBase<Document, long, NewsContext>, IDocumentService
     {
         private readonly IMapper _mapper;
@@ -22,41 +24,45 @@ namespace News.API.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public Task CreateDocument(Document product)
+        public async Task CreateDocument(Document document)
         {
-            throw new NotImplementedException();
+            await CreateAsync(document);
         }
 
-        public Task DeleteDocument(long id)
+        public async Task DeleteDocument(int id)
         {
-            throw new NotImplementedException();
+            var document = await GetByIdAsync(id);
+            await DeleteAsync(document);
         }
 
-        public Task<Document> GetDocument(long id)
+        public async Task<Document> GetDocument(int id)
         {
-            throw new NotImplementedException();
+            return await GetByIdAsync(id);
         }
 
-        public async Task<ApiSuccessResult<DocumentDto>> GetDocumentsByPaging(DocumentRequest documentRequest, int currentPage)
+        public async Task<ApiSuccessResult<DocumentDto>> GetDocumentByPaging(DocumentRequest documentRequest, params Expression<Func<Document, object>>[] includeProperties)
         {
-            int pageSize = CommonConstants.PAGE_SIZE;
             var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
 
             if (!string.IsNullOrEmpty(documentRequest.Keyword))
             {
-                query = FindByCondition((x => x.Name.Contains(documentRequest.Keyword)));
+                query = query.Where((x => x.Code.Contains(documentRequest.Keyword)));
             }
-            var mappingQuery = query.ProjectTo<DocumentDto>(_mapper.ConfigurationProvider);
-            var paginationSet = await mappingQuery.PaginatedListAsync(currentPage, pageSize);
-
-            var result = new ApiSuccessResult<DocumentDto>(paginationSet);
+            PagedResult<Document>? sourcePaging = await query.PaginatedListAsync(documentRequest.CurrentPage
+                                                                                             ?? 1, documentRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentRequest.OrderBy, documentRequest.Direction);
+            var lstDto = _mapper.Map<List<DocumentDto>>(sourcePaging.Results);
+            var paginationSet = new PagedResult<DocumentDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
+            ApiSuccessResult<DocumentDto>? result = new(paginationSet);
             return result;
         }
 
-        public Task UpdateDocument(Document product)
+        public async Task UpdateDocument(Document product)
         {
-            throw new NotImplementedException();
+            await UpdateAsync(product);
         }
     }
 }
-

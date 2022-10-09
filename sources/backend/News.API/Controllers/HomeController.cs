@@ -4,7 +4,7 @@ using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Dtos.Home;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 
@@ -66,9 +66,9 @@ namespace News.API.Controllers
             }
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()
-                    {
-                        NewsHots = lstHotNews.PagedData.Results.ToList(),
-                        NewsSectionDto =
+                {
+                    NewsHots = lstHotNews.PagedData.Results.ToList(),
+                    NewsSectionDto =
                             new NewsSectionDto()
                             {
                                 CategoryNews =
@@ -79,7 +79,7 @@ namespace News.API.Controllers
                                             .GetCategoryNews(categoryNewsId)),
                                 Data = lstNormalNews.PagedData.Results.ToList()
                             }
-                    });
+                });
 
             // Get CategoryNews with 5 normal news
             return Ok(result);

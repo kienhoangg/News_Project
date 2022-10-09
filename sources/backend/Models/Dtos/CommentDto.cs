@@ -1,5 +1,5 @@
 using Contracts.Domains;
-using Models.Entities.News;
+using Models.Entities;
 
 namespace Models.Dtos
 {

@@ -7,16 +7,16 @@ using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
 using Models.Constants;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 using News.API.Persistence;
 
 namespace News.API.Services
 {
-    public class CollaboratorService: RepositoryBase<Collaborator, int, NewsContext>, ICollaboratorService
+    public class CollaboratorService : RepositoryBase<Collaborator, int, NewsContext>, ICollaboratorService
     {
-          private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
         public CollaboratorService(IMapper mapper, NewsContext dbContext,
             IUnitOfWork<NewsContext> unitOfWork) : base(dbContext, unitOfWork)
         {
@@ -30,7 +30,7 @@ namespace News.API.Services
 
         public async Task DeleteCollaborator(int id)
         {
-           var collaborator = await GetByIdAsync(id);
+            var collaborator = await GetByIdAsync(id);
             await DeleteAsync(collaborator);
         }
 
@@ -49,10 +49,10 @@ namespace News.API.Services
             }
             IQueryable<CollaboratorDto>? mappingQuery = query.ProjectTo<CollaboratorDto>(_mapper.ConfigurationProvider);
             PagedResult<CollaboratorDto>? paginationSet = await mappingQuery.PaginatedListAsync(collaboratorRequest.CurrentPage
-                                                                                             ?? 1, collaboratorRequest.PageSize ?? CommonConstants.PAGE_SIZE,collaboratorRequest.OrderBy, collaboratorRequest.Direction);
+                                                                                             ?? 1, collaboratorRequest.PageSize ?? CommonConstants.PAGE_SIZE, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
 
             ApiSuccessResult<CollaboratorDto>? result = new(paginationSet);
-            return result; 
+            return result;
         }
 
         public async Task UpdateCollaborator(Collaborator product)

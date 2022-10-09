@@ -7,7 +7,7 @@ using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 
@@ -159,8 +159,8 @@ namespace News.API.Controllers
                     .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
 
             var newsPost = _mapper.Map<NewsPost>(newsPostDto);
-            newsPost.Avatar = newsPostDto.Avatar;
-            newsPost.FilePath = newsPostDto.FilePath;
+            newsPost.Avatar = avartarPath;
+            newsPost.FilePath = fileAttachmentPath;
             await _newsPostService.CreateNewsPost(newsPost);
             var result = _mapper.Map<NewsPostDto>(newsPost);
             return Ok(result);
@@ -232,7 +232,8 @@ namespace News.API.Controllers
             }
 
             var updatedNewsPost = _mapper.Map(newsPostDto, newsPost);
-            updatedNewsPost.Avatar = newsPostDto.Avatar;
+            updatedNewsPost.Avatar = avartarPath;
+            updatedNewsPost.FilePath = fileAttachmentPath;
             var resultUpdate =
                 await _newsPostService.UpdateNewsPost(updatedNewsPost);
 

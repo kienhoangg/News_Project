@@ -1,5 +1,3 @@
-using Models.Entities.News;
-
 namespace Models.Dtos.Home
 {
     public class NewsSectionDto

@@ -1,7 +1,7 @@
 using System.Collections;
 using Contracts.Domains;
 
-namespace Models.Entities.News
+namespace Models.Entities
 {
     public class NewsPost : EntityAuditBase<long>
     {

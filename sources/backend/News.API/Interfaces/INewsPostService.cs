@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 
 namespace News.API.Interfaces

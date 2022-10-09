@@ -1,6 +1,4 @@
 using Contracts.Domains;
-using Microsoft.AspNetCore.Http;
-using Models.Entities.News;
 
 namespace Models.Dtos
 {
