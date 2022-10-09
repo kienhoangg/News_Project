@@ -55,8 +55,8 @@ function NewsCategoryPage(props) {
     try {
       const response = await newsApi.getNewsCategoryAll(objFilter);
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       openNotification('Lấy  danh mục thất bại', '', NotificationType.ERROR);
