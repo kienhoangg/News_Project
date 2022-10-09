@@ -34,27 +34,27 @@ function NewsCategoryTableData(props) {
 
   const columns = [
     {
-      key: 'categoryNewsName',
+      key: 'CategoryNewsName',
       dataIndex: 'CategoryNewsName',
       title: 'Tiêu đề',
-      render: (_, { id, categoryNewsName }) => (
+      render: (_, { id, CategoryNewsName }) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            handleOnClickTitle({ id, categoryNewsName });
+            handleOnClickTitle({ id, CategoryNewsName });
           }}
         >
-          {categoryNewsName}
+          {CategoryNewsName}
         </div>
       ),
-      sorter: (a, b) => a.categoryNewsName - b.categoryNewsName,
+      sorter: (a, b) => a.CategoryNewsName - b.CategoryNewsName,
     },
     {
-      key: 'order',
-      dataIndex: 'order',
+      key: 'Order',
+      dataIndex: 'Order',
       title: 'Số thứ tự',
-      render: (order) => <>{order}</>,
-      sorter: (a, b) => a.order - b.order,
+      render: (Order) => <>{Order}</>,
+      sorter: (a, b) => a.Order - b.Order,
       width: 100,
       align: 'right',
     },
@@ -104,7 +104,7 @@ function NewsCategoryTableData(props) {
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
-    return { ...item, CreatedDate: createdDate, key: item.id };
+    return { ...item, CreatedDate: createdDate, key: item.Id };
   });
 
   function handleChangeSourceNew(values) {
@@ -126,7 +126,7 @@ function NewsCategoryTableData(props) {
     if (!deleteCategoryNew) {
       return;
     }
-    deleteCategoryNew(values.id);
+    deleteCategoryNew(values.Id);
   };
 
   function handleOnClickStatus(values) {
@@ -138,7 +138,7 @@ function NewsCategoryTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
+      sorter.Order === 'ascend' ? Direction.ASC : Direction.DESC
     );
   };
 

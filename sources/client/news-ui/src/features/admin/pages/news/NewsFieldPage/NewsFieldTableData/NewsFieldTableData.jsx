@@ -48,7 +48,7 @@ function NewsFieldTableData(props) {
     if (!deleteFieldsNew) {
       return;
     }
-    deleteFieldsNew(values.id);
+    deleteFieldsNew(values.Id);
   };
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
@@ -62,41 +62,41 @@ function NewsFieldTableData(props) {
 
   const columns = [
     {
-      key: 'title',
-      dataIndex: 'title',
+      key: 'Title',
+      dataIndex: 'Title',
       title: 'Tiêu đề',
       render: (text) => <div>{text}</div>,
-      sorter: (a, b) => a.title - b.title,
+      sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: 'order',
-      dataIndex: 'order',
+      key: 'Order',
+      dataIndex: 'Order',
       title: 'Số thứ tự',
-      render: (order) => <>{order}</>,
-      sorter: (a, b) => a.order - b.order,
+      render: (Order) => <>{Order}</>,
+      sorter: (a, b) => a.Order - b.Order,
       width: 100,
       align: 'right',
     },
     {
-      key: 'factor',
-      dataIndex: 'factor',
+      key: 'Factor',
+      dataIndex: 'Factor',
       title: 'Hệ số',
-      render: (factor) => <>{factor}</>,
-      sorter: (a, b) => a.factor - b.factor,
+      render: (Factor) => <>{Factor}</>,
+      sorter: (a, b) => a.Factor - b.Factor,
       width: 100,
       align: 'right',
     },
     {
-      key: 'biggestFactor',
-      dataIndex: 'biggestFactor',
+      key: 'BiggestFactor',
+      dataIndex: 'BiggestFactor',
       title: 'Hệ số lớn nhất',
-      render: (biggestFactor) => <>{biggestFactor}</>,
-      sorter: (a, b) => a.biggestFactor - b.biggestFactor,
+      render: (BiggestFactor) => <>{BiggestFactor}</>,
+      sorter: (a, b) => a.BiggestFactor - b.BiggestFactor,
       width: 130,
       align: 'right',
     },
     {
-      key: 'status',
+      key: 'Status',
       dataIndex: 'Status',
       title: 'Trạng thái',
       align: 'center',
@@ -141,7 +141,7 @@ function NewsFieldTableData(props) {
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
-    return { ...item, CreatedDate: createdDate, key: item.id };
+    return { ...item, CreatedDate: createdDate, key: item.Id };
   });
 
   function handleOnClickStatus(values) {

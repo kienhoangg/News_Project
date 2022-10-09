@@ -159,8 +159,8 @@ namespace News.API.Controllers
                     .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
 
             var newsPost = _mapper.Map<NewsPost>(newsPostDto);
-            newsPost.Avatar = newsPostDto.Avatar;
-            newsPost.FilePath = newsPostDto.FilePath;
+            newsPost.Avatar = avartarPath;
+            newsPost.FilePath = fileAttachmentPath;
             await _newsPostService.CreateNewsPost(newsPost);
             var result = _mapper.Map<NewsPostDto>(newsPost);
             return Ok(result);

@@ -50,8 +50,8 @@ function NewsSourcePage(props) {
     try {
       const response = await newsApi.getNewsSourceAll(objFilter);
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);

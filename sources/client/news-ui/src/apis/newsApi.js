@@ -1,5 +1,4 @@
 import commonFunc from 'common/commonFunc';
-import convertHelper from 'helpers/convertHelper';
 import axiosClient from './axiosClient';
 import datafakeNews from './datafake/datafakeNews';
 
@@ -114,9 +113,12 @@ class NewsApi {
 
   insertNew = (body) => {
     const url = '/newsPost';
-    var formData = new FormData();
-    formData.append('JsonString', convertHelper.Serialize(body));
-    return axiosClient.post(url, formData);
+    return axiosClient.post(url, body, {
+      headers: {
+        Prefer: 'code=200, example=200GetReturn2Record',
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   };
 }
 const newsApi = new NewsApi();
