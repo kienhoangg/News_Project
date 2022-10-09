@@ -1,29 +1,30 @@
-import config from 'config/config.js';
-import AdminLayout from 'features/admin/layouts/AdminLayout/AdminLayout';
-import DocumentCategoryPage from 'features/admin/pages/documents/DocumentCategoryPage/DocumentCategoryPage';
-import DocumentFieldPage from 'features/admin/pages/documents/DocumentFieldPage/DocumentFieldPage';
-import DocumentListPage from 'features/admin/pages/documents/DocumentListPage/DocumentListPage.';
-import DocumentSignerPage from 'features/admin/pages/documents/DocumentSignerPage/DocumentSignerPage';
-import DocumentSourcePage from 'features/admin/pages/documents/DocumentSourcePage/DocumentSourcePage';
-import LoginPage from 'features/admin/pages/LoginPage/LoginPage';
-import ImageCategoryPage from 'features/admin/pages/media/ImageCategoryPage/ImageCategoryPage';
-import ImageListPage from 'features/admin/pages/media/ImageListPage/ImageListPage';
-import VideoCategoryPage from 'features/admin/pages/media/VideoCategoryPage/VideoCategoryPage';
-import VideoListPage from 'features/admin/pages/media/VideoListPage/VideoListPage';
-import NewsCategoryPage from 'features/admin/pages/news/NewsCategoryPage/NewsCategoryPage';
-import NewsCollaboratorsPage from 'features/admin/pages/news/NewsCollaboratorsPage/NewsCollaboratorsPage';
-import NewsCommentPage from 'features/admin/pages/news/NewsCommentPage/NewsCommentPage';
-import NewsFieldPage from 'features/admin/pages/news/NewsFieldPage/NewsFieldPage';
-import NewsHotPage from 'features/admin/pages/news/NewsHotPage/NewsHotPage';
-import NewsListPage from 'features/admin/pages/news/NewsListPage/NewsListPage';
-import NewsSourcePage from 'features/admin/pages/news/NewsSourcePage/NewsSourcePage';
-import QuestionCategoryPage from 'features/admin/pages/questions/QuestionCategoryPage/QuestionCategoryPage';
-import QuestionListPage from 'features/admin/pages/questions/QuestionListPage/QuestionListPage';
-import MenuPage from 'features/admin/pages/setup/MenuPage/MenuPage';
-import Home from 'features/Home/Home';
-import PublishedDocumentPage from 'features/visitor/PublishedDocumentPage/PublishedDocumentPage';
-import PublishedNewsListCategoryPage from 'features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage';
-import SearchPage from 'features/visitor/SearchPage/SearchPage';
+import config from "config/config.js";
+import AdminLayout from "features/admin/layouts/AdminLayout/AdminLayout";
+import DocumentCategoryPage from "features/admin/pages/documents/DocumentCategoryPage/DocumentCategoryPage";
+import DocumentFieldPage from "features/admin/pages/documents/DocumentFieldPage/DocumentFieldPage";
+import DocumentListPage from "features/admin/pages/documents/DocumentListPage/DocumentListPage.";
+import DocumentSignerPage from "features/admin/pages/documents/DocumentSignerPage/DocumentSignerPage";
+import DocumentSourcePage from "features/admin/pages/documents/DocumentSourcePage/DocumentSourcePage";
+import LoginPage from "features/admin/pages/LoginPage/LoginPage";
+import ImageCategoryPage from "features/admin/pages/media/ImageCategoryPage/ImageCategoryPage";
+import ImageListPage from "features/admin/pages/media/ImageListPage/ImageListPage";
+import VideoCategoryPage from "features/admin/pages/media/VideoCategoryPage/VideoCategoryPage";
+import VideoListPage from "features/admin/pages/media/VideoListPage/VideoListPage";
+import NewsCategoryPage from "features/admin/pages/news/NewsCategoryPage/NewsCategoryPage";
+import NewsCollaboratorsPage from "features/admin/pages/news/NewsCollaboratorsPage/NewsCollaboratorsPage";
+import NewsCommentPage from "features/admin/pages/news/NewsCommentPage/NewsCommentPage";
+import NewsFieldPage from "features/admin/pages/news/NewsFieldPage/NewsFieldPage";
+import NewsHotPage from "features/admin/pages/news/NewsHotPage/NewsHotPage";
+import NewsListPage from "features/admin/pages/news/NewsListPage/NewsListPage";
+import NewsSourcePage from "features/admin/pages/news/NewsSourcePage/NewsSourcePage";
+import QuestionCategoryPage from "features/admin/pages/questions/QuestionCategoryPage/QuestionCategoryPage";
+import QuestionListPage from "features/admin/pages/questions/QuestionListPage/QuestionListPage";
+import MenuPage from "features/admin/pages/setup/MenuPage/MenuPage";
+import Home from "features/Home/Home";
+import PublishedDocumentPage from "features/visitor/PublishedDocumentPage/PublishedDocumentPage";
+import PublishedNewsListCategoryPage from "features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage";
+import SearchPage from "features/visitor/SearchPage/SearchPage";
+import OperatingDocumentsPage from "features/visitor/OperatingDocumentsPage/OperatingDocumentsPage";
 
 // Public routes
 const publicRoutes = [
@@ -31,8 +32,14 @@ const publicRoutes = [
   // { path: config.routes.blog, component: BlogMainPage },
   { path: config.routes.publishedDocument, component: PublishedDocumentPage },
   { path: config.routes.publishedNewsPost, component: PublishedDocumentPage },
-  { path: config.routes.publishedNewsPostListCategory, component: PublishedNewsListCategoryPage },
-  { path: config.routes.publishedNewsPostCategory, component: PublishedNewsListCategoryPage },
+  {
+    path: config.routes.publishedNewsPostListCategory,
+    component: PublishedNewsListCategoryPage,
+  },
+  {
+    path: config.routes.publishedNewsPostCategory,
+    component: PublishedNewsListCategoryPage,
+  },
   { path: config.routes.search, component: SearchPage },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 
@@ -157,6 +164,10 @@ const publicRoutes = [
     path: config.routes.adminSetupMenu,
     component: MenuPage,
     layout: AdminLayout,
+  },
+  {
+    path: "tdba",
+    component: OperatingDocumentsPage,
   },
 
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
