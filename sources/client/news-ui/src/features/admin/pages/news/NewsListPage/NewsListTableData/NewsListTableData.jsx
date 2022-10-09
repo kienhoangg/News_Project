@@ -50,78 +50,70 @@ function NewsListTableData(props) {
 
   const columns = [
     {
-      key: 'title',
-      dataIndex: 'title',
+      key: 'Title',
+      dataIndex: 'Title',
       title: 'Tiêu đề',
-      render: (_, { id, title }) => (
+      render: (_, { id, Title }) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            handleOnClickTitle({ id, title });
+            handleOnClickTitle({ id, Title });
           }}
         >
-          {title}
+          {Title}
         </div>
       ),
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: 'createdDate',
-      dataIndex: 'CreatedDate',
+      key: 'PublishedDate',
+      dataIndex: 'PublishedDate',
       title: 'Ngày tạo',
-      width: 110,
-      sorter: (a, b) => a.createdDate - b.createdDate,
+      width: 200,
+      sorter: (a, b) => a.PublishedDate - b.PublishedDate,
+      render: (_, { PublishedDate }) => (
+        <div>
+          {PublishedDate.includes('0001')
+            ? '- - -'
+            : datetimeHelper.formatDatetimeToDateVN(PublishedDate)}
+        </div>
+      ),
     },
     {
       title: 'Thông tin',
-      dataIndex: 'Description',
-      key: 'description',
+      dataIndex: 'description',
+      key: 'Description',
       width: 200,
       sorter: (a, b) => true,
     },
     {
-      key: 'status',
-      dataIndex: 'status',
+      key: 'Status',
+      dataIndex: 'Status',
       title: 'Trạng thái',
       align: 'center',
       width: 100,
       sorter: (a, b) => true,
-      render: (_, { id, status }) => {
-        let color = status ? 'geekblue' : 'volcano';
-        let text = status ? 'Duyệt' : 'Hủy duyệt';
+      render: (_, { id, Status }) => {
+        let color = Status ? 'geekblue' : 'volcano';
+        let text = Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={id}
             style={{ cursor: 'pointer' }}
-            onClick={() => handleOnClickStatus({ id, status })}
+            onClick={() => handleOnClickStatus({ id, Status })}
           >
             {text}
           </Tag>
         );
       },
     },
-    {
-      key: 'action',
-      render: (_, { id, status }) => (
-        <Space size='middle'>
-          <Button
-            type='primary'
-            icon={<EditFilled />}
-            onClick={handleOnClickEditRow}
-          >
-            Sửa
-          </Button>
-        </Space>
-      ),
-      width: 100,
-    },
   ];
 
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.createdDate);
-    return { ...item, CreatedDate: createdDate, key: item.id };
+    return { ...item, CreatedDate: createdDate, key: item.Id };
   });
 
   function handleOnClickStatus(values) {

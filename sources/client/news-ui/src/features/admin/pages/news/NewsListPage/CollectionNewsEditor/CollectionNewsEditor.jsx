@@ -17,10 +17,18 @@ import {
 import styles from './CollectionNewsEditor.module.scss';
 import classNames from 'classnames/bind';
 import { TreeNode } from 'antd/lib/tree-select';
-import { FileImageFilled, UploadOutlined } from '@ant-design/icons';
+import {
+  FileImageFilled,
+  PlusOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { CKEditor } from 'ckeditor4-react';
+import { useState } from 'react';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
+import datetimeHelper from 'helpers/datetimeHelper';
 
 const cx = classNames.bind(styles);
 
@@ -28,12 +36,63 @@ CollectionNewsEditor.propTypes = {};
 
 CollectionNewsEditor.defaultProps = {};
 
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
+const dummyRequest = ({ file, onSuccess }) => {
+  setTimeout(() => {
+    onSuccess('ok');
+  }, 0);
+};
+
+const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
+
 function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
   const [form] = Form.useForm();
 
   function onEditorChange(event) {
     // console.log('data: ', event.editor.getData());
   }
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [fileList, setFileList] = useState([]);
+  const [fileListAttachment, setFileListAttachment] = useState([]);
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1)
+    );
+  };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
+  const handleChangeAttachment = ({ fileList: newFileList }) => {
+    setFileListAttachment(newFileList);
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
   return (
     <Modal
@@ -48,8 +107,10 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
         form
           .validateFields()
           .then((values) => {
-            form.resetFields();
             values.content = values.content?.editor?.getData();
+            const date =
+              values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+            const publishedDate = datetimeHelper.formatDatetimeToDate(date);
             const {
               category,
               title,
@@ -75,6 +136,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               AvatarTitle: avatarTitle,
               Description: description,
               Content: content,
+              PublishedDate: publishedDate,
             };
             if (field) {
               bodyData.FieldNews = { Id: parseInt(field) };
@@ -82,7 +144,35 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
             if (category) {
               bodyData.SourceNews = { id: parseInt(category) };
             }
-            onCreate(bodyData);
+            let body = { JsonString: bodyData };
+            if (fileList.length > 0) {
+              const file = fileList[0].originFileObj;
+              if (file.size > LIMIT_UP_LOAD_FILE) {
+                openNotification(
+                  'File ảnh đã lớn hơn 2MB',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              body.Avatar = file;
+            }
+            if (fileListAttachment.length > 0) {
+              const file = fileListAttachment[0].originFileObj;
+              if (file.size > LIMIT_UP_LOAD_FILE) {
+                openNotification(
+                  'File đính kèm đã lớn hơn 2MB',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              body.FileAttachment = file;
+            }
+            form.resetFields();
+            setFileList([]);
+            setFileListAttachment([]);
+            onCreate(body);
           })
           .catch((info) => {
             console.log('Validate Failed:', info);
@@ -125,7 +215,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
                   // onChange={onChangeNewsType}
                 >
                   <TreeNode value='1' title='Tin tức'>
-                    <TreeNode value='1.1' title='Tin trong tỉnh'></TreeNode>
+                    <TreeNode value='1.1' title='Tin trong tỉnh' />
                     <TreeNode value='1.2' title='Chính sách mới' />
                     <TreeNode value='1.3' title='Hoạt động chỉ đạo điều hành' />
                   </TreeNode>
@@ -156,7 +246,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
             </Col>
             <Col span={6}>
               <Form.Item
-                name='createdDate'
+                name='publishedDate'
                 label='Ngày tạo'
                 style={{ marginBottom: 0 }}
               >
@@ -223,14 +313,27 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
-                listType='picture'
-                maxCount={1}
+                listType='picture-card'
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                accept='.jpg,.png,.jpeg'
+                customRequest={dummyRequest}
               >
-                <Button type='primary' icon={<FileImageFilled />}>
-                  Chọn ảnh đại diện
-                </Button>
+                {fileList.length < 1 ? uploadButton : null}
               </Upload>
+              <Modal
+                open={previewOpen}
+                title={previewTitle}
+                footer={null}
+                onCancel={handleCancel}
+              >
+                <img
+                  alt='example'
+                  style={{ width: '100%' }}
+                  src={previewImage}
+                />
+              </Modal>
             </Col>
             <Col span={16}>
               <Form.Item
@@ -301,6 +404,11 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               ],
               extraPlugins: 'justify,font,colorbutton,forms',
               removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+              // filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
+              // filebrowserUploadUrl:
+              //   '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+              // filebrowserWindowWidth: '1000',
+              // filebrowserWindowHeight: '700',
               // cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
               // cloudServices_tokenUrl: 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt',
             }}
@@ -338,11 +446,15 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
                 listType='picture'
                 maxCount={1}
+                fileList={fileListAttachment}
+                onChange={handleChangeAttachment}
+                customRequest={dummyRequest}
               >
-                <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                {fileListAttachment.length < 1 ? (
+                  <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                ) : null}
               </Upload>
             </Col>
           </Row>

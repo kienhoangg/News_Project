@@ -9,6 +9,7 @@ import CollectionNewsEditor from './CollectionNewsEditor/CollectionNewsEditor';
 import NewsListMenuSearch from './NewsListMenuSearch/NewsListMenuSearch';
 import styles from './NewsListPage.module.scss';
 import NewsListTableData from './NewsListTableData/NewsListTableData';
+import convertHelper from 'helpers/convertHelper';
 
 const cx = classNames.bind(styles);
 
@@ -36,9 +37,16 @@ function NewsListPage(props) {
 
   const onCreate = async (values) => {
     try {
-      console.log('Received values of form: ', values);
+      var formData = new FormData();
+      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+      if (values.Avatar) {
+        formData.append('Avatar', values.Avatar);
+      }
+      if (values.FileAttachment) {
+        formData.append('FileAttachment', values.FileAttachment);
+      }
       setOpenCollectionEditor(false);
-      await newsApi.insertNew(values);
+      await newsApi.insertNew(formData);
       openNotification('Tạo mới tin thành công');
       fetchList();
     } catch (error) {
@@ -82,8 +90,8 @@ function NewsListPage(props) {
     try {
       const response = await newsApi.getNewsAll(objFilter);
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
