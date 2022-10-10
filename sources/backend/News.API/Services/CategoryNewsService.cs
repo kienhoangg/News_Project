@@ -34,7 +34,6 @@ namespace News.API.Services
             await DeleteAsync(categoryNews);
         }
 
-
         public async Task<CategoryNews> GetCategoryNews(int id)
         {
             return await GetByIdAsync(id, x => x.FieldNews);
@@ -52,7 +51,7 @@ namespace News.API.Services
             PagedResult<CategoryNewsDto>? paginationSet = await mappingQuery.PaginatedListAsync(categoryNewsRequest.CurrentPage
                                                                                              ?? 1, categoryNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, categoryNewsRequest.OrderBy, categoryNewsRequest.Direction);
 
-            ApiSuccessResult<CategoryNewsDto>? result = new ApiSuccessResult<CategoryNewsDto>(paginationSet);
+            ApiSuccessResult<CategoryNewsDto>? result = new(paginationSet);
             return result;
         }
 
@@ -62,4 +61,3 @@ namespace News.API.Services
         }
     }
 }
-
