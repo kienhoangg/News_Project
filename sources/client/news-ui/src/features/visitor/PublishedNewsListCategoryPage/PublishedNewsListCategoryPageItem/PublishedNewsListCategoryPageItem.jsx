@@ -23,7 +23,6 @@ PublishedNewsListCategoryPageItem.defaultProps = {
 function PublishedNewsListCategoryPageItem(props) {
     const { data, isFirst } = props;
     const { avatar, avatarTitle, title, publishedDate, description, id } = data;
-    console.log('PublishedNewsListCategoryPageItem', props);
 
     const componentFirst = (
         <Row gutter={8}>
