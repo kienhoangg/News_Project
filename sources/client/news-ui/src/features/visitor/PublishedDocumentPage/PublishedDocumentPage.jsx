@@ -60,9 +60,12 @@ function PublishedDocumentPage(props) {
             <ScrollToTop />
             <div className={cx('menu-items')}>
                 <Breadcrumb>
-                    <Breadcrumb.Item>
-                        <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>{data?.CategoryParentNews?.CategoryNewsName}</Link>
-                    </Breadcrumb.Item>
+                    {data?.CategoryParentNews?.Id && (
+                        <Breadcrumb.Item>
+                            <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>{data?.CategoryParentNews?.CategoryNewsName}</Link>
+                        </Breadcrumb.Item>
+                    )}
+
                     <Breadcrumb.Item>
                         <Link to={commonRender.renderLinkNewsCategory(data?.NewsPostDetail?.CategoryNews?.Id)}>{data?.NewsPostDetail?.CategoryNews?.CategoryNewsName}</Link>
                     </Breadcrumb.Item>

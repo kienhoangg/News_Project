@@ -4,15 +4,24 @@
         flex-direction: column;
         padding: 12px 0;
 
-        .title {
-            font-size: 16px;
-            padding: 12px 24px;
-            color: #fff;
-            background-color: #0066b3;
-            width: fit-content;
-            margin-left: 8px;
-            // margin-bottom: 12px;
-            // border-bottom: 2px solid #0066b3;
+        .title-container {
+            display: flex;
+
+            .title {
+                font-size: 16px;
+                padding: 8px 16px;
+                color: #fff;
+                background-color: #0066b3;
+                width: fit-content;
+                margin-left: 8px;
+            }
+
+            .right {
+                width: 40px;
+                float: left;
+                border-bottom: 40px solid #0066b3;
+                border-right: 40px solid transparent;
+            }
         }
 
         .divider {

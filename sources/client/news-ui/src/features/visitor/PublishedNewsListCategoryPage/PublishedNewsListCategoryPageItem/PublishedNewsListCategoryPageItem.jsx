@@ -12,18 +12,47 @@ const cx = classNames.bind(styles);
 
 PublishedNewsListCategoryPageItem.propTypes = {
     data: PropTypes.object,
+    isFirst: PropTypes.bool,
 };
 
-PublishedNewsListCategoryPageItem.defaultProps = {};
+PublishedNewsListCategoryPageItem.defaultProps = {
+    data: {},
+    isFirst: false,
+};
 
 function PublishedNewsListCategoryPageItem(props) {
-    const { data } = props;
+    const { data, isFirst } = props;
     const { avatar, avatarTitle, title, publishedDate, description, id } = data;
     console.log('PublishedNewsListCategoryPageItem', props);
 
+    const componentFirst = (
+        <Row gutter={8}>
+            <Col flex='160px'>{stringHelper.isNullOrEmpty(avatar) && <img src={avatar} alt={avatarTitle} width='100%' style={{ padding: '8px' }} />}</Col>
+            <Col flex='1'>
+                <div className={cx('content-right')}>
+                    <Link to={commonRender.renderLinkNewsDetail(id)} className={cx('title')}>
+                        {title}
+                    </Link>
+                    <div className={cx('date')}>{datetimeHelper.formatDateToDateVN(publishedDate)}</div>
+                    <div className={cx('description')}>{description}</div>
+                </div>
+            </Col>
+        </Row>
+    );
+
+    const componentDefault = (
+        <div className={cx('content-default')}>
+            <div className={cx('icon')}></div>
+            <Link to={commonRender.renderLinkNewsDetail(id)} className={cx('title')}>
+                {title}
+            </Link>
+        </div>
+    );
+
     return (
         <>
-            <Row gutter={8}>
+            {isFirst ? componentFirst : componentDefault}
+            {/* <Row gutter={8}>
                 <Col flex='160px'>{stringHelper.isNullOrEmpty(avatar) && <img src={avatar} alt={avatarTitle} width='100%' style={{ padding: '8px' }} />}</Col>
                 <Col flex='1'>
                     <div className={cx('content-right')}>
@@ -34,7 +63,7 @@ function PublishedNewsListCategoryPageItem(props) {
                         <div className={cx('description')}>{description}</div>
                     </div>
                 </Col>
-            </Row>
+            </Row> */}
         </>
     );
 }

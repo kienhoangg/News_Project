@@ -20,7 +20,7 @@ class PublishedNewsApi {
         return response;
     }
 
-    getCategoriesDataListPage() {
+    getFieldsDataListPage() {
         var response = datafakePublishedCategoryList;
         return response;
     }
