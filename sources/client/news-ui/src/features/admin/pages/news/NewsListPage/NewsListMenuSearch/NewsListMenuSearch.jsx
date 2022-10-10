@@ -22,7 +22,8 @@ NewsListMenuSearch.defaultProps = {
 };
 
 function NewsListMenuSearch(props) {
-  const { setOpenCollectionEditor, setTextSearch, setActionForm } = props;
+  const { setOpenCollectionEditor, setTextSearch, setActionForm, dataFilter } =
+    props;
   const [valueNewsType, setValuNewsType] = useState(undefined);
   const [keyword, setKeyword] = useState('');
 

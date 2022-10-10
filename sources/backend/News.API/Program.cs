@@ -33,8 +33,6 @@ try
 
     var app = builder.Build();
     app.UseInfrastructure();
-    
-
     app.MigrateDatabase<NewsContext>((
         context, _) =>
     {

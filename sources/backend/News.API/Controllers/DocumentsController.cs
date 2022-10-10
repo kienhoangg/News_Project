@@ -69,11 +69,9 @@ namespace News.API.Controllers
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
 
-            var documentDto =
-                _serializeService
-                    .Deserialize<DocumentDto>(documentUploadDto.JsonString);
 
-            var document = _mapper.Map<Document>(documentDto);
+            var document = _serializeService
+                    .Deserialize<Document>(documentUploadDto.JsonString);
             document.FilePath = fileAttachmentPath;
             await _documentService.CreateDocument(document);
 

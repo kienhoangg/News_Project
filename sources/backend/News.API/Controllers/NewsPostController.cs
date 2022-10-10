@@ -154,11 +154,10 @@ namespace News.API.Controllers
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
 
-            var newsPostDto =
+            var newsPost =
                 _serializeService
-                    .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
+                    .Deserialize<NewsPost>(newsPostUploadDto.JsonString);
 
-            var newsPost = _mapper.Map<NewsPost>(newsPostDto);
             newsPost.Avatar = avartarPath;
             newsPost.FilePath = fileAttachmentPath;
             await _newsPostService.CreateNewsPost(newsPost);
