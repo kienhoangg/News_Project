@@ -164,6 +164,7 @@ function NewsListPage(props) {
     <div className={cx('wrapper')}>
       <div className={cx('top')}>
         <NewsListMenuSearch
+          dataFilter={dataFilter}
           setOpenCollectionEditor={setOpenCollectionEditor}
           setActionForm={handleSetActionForm}
           setTextSearch={handleChangeTextSearch}
