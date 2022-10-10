@@ -6,6 +6,8 @@ const routes = {
   publishedNewsPostListCategory: '/news-posts/categories',
   publishedNewsPostCategory: '/news-posts/categories/:id',
   publishedNewsPost: '/news-posts/detail/:id',
+  publishedNewsPostPrint: '/news-posts/detail/print/:id',
+  publishedDocumentList: '/documents',
   search: '/search',
   notfound: '/notfound',
 

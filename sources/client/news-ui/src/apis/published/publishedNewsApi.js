@@ -14,6 +14,12 @@ class PublishedNewsApi {
         // var response = datafakePublisedNews.objectExample;
         // return response;
     };
+
+    getComments() {
+        var response = datafakePublishedCategoryList;
+        return response;
+    }
+
     getCategoriesDataListPage() {
         var response = datafakePublishedCategoryList;
         return response;

@@ -6,11 +6,14 @@ import { Button, Form, Input, Row } from 'antd';
 
 const cx = classNames.bind(styles);
 
-FormVisitorComment.propTypes = {};
+FormVisitorComment.propTypes = {
+    onFinish: PropTypes.func,
+};
 
 FormVisitorComment.defaultProps = {};
 
 function FormVisitorComment(props) {
+    const { onFinish } = props;
     const [form] = Form.useForm();
     const onReset = () => {
         form.resetFields();
@@ -20,7 +23,7 @@ function FormVisitorComment(props) {
             <Form
                 name='visitor-form'
                 form={form}
-                // onFinish={onFinish}
+                onFinish={onFinish}
                 // labelCol={{
                 //     span: 8,
                 // }}
@@ -45,7 +48,7 @@ function FormVisitorComment(props) {
                     }}
                 >
                     <Form.Item
-                        name='Họ và tên'
+                        name='name'
                         rules={[
                             {
                                 required: true,
