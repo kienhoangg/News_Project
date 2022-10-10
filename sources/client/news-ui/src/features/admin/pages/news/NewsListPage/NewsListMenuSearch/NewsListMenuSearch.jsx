@@ -57,6 +57,16 @@ function NewsListMenuSearch(props) {
     setTextSearch(keyword);
   };
 
+  const renderFieldNews = (
+    <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
+      {dataFilter?.fieldNews?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
   return (
     <div className={cx('wrapper')}>
       <Row gutter={16} style={{ marginBottom: 16 }}>
@@ -133,16 +143,7 @@ function NewsListMenuSearch(props) {
             <Option value='2'>Chưa được duyệt</Option>
           </Select>
         </Col>
-        <Col span={4}>
-          <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
-            <Option value='1'>Lĩnh vực 1</Option>
-            <Option value='2'>Lĩnh vực 2</Option>
-            <Option value='3'>Lĩnh vực 3</Option>
-            <Option value='4'>Lĩnh vực 4</Option>
-            <Option value='5'>Lĩnh vực 5</Option>
-            <Option value='6'>Lĩnh vực 6</Option>
-          </Select>
-        </Col>
+        <Col span={4}>{renderFieldNews}</Col>
         <Col span={4}>
           <Row justify='end'>
             <Button
