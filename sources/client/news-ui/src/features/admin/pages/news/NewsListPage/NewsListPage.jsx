@@ -17,6 +17,11 @@ NewsListPage.propTypes = {};
 
 NewsListPage.defaultProps = {};
 
+const filterAll = {
+  currentPage: 1,
+  pageSize: 9_999_999,
+};
+
 function NewsListPage(props) {
   const [newsData, setNewsData] = useState({});
   const [objFilter, setObjFilter] = useState({
@@ -32,6 +37,11 @@ function NewsListPage(props) {
   const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
     useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [dataFilter, setDataFilter] = useState({
+    categoryNews: [],
+    fieldNews: [],
+    sourceNews: [],
+  });
   const dataDetail = useRef({});
   const action = useRef('create');
 
@@ -123,10 +133,28 @@ function NewsListPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
+      getDataFilter();
       return;
     }
     fetchList();
   }, [objFilter]);
+
+  const getDataFilter = async () => {
+    const responseCategoryNews = newsApi.getNewsCategoryAll(filterAll);
+    const responseFieldNews = newsApi.getNewsFieldAll(filterAll);
+    const responseSourceNews = newsApi.getNewsSourceAll(filterAll);
+    Promise.all([
+      responseCategoryNews,
+      responseFieldNews,
+      responseSourceNews,
+    ]).then((values) => {
+      setDataFilter({
+        categoryNews: values[0]?.PagedData?.Results ?? [],
+        fieldNews: values[1]?.PagedData?.Results ?? [],
+        sourceNews: values[2]?.PagedData?.Results ?? [],
+      });
+    });
+  };
 
   const handleSetActionForm = (value) => {
     action.current = value;
@@ -152,6 +180,7 @@ function NewsListPage(props) {
         />
       </div>
       <CollectionNewsEditor
+        dataFilter={dataFilter}
         action={action.current}
         data={dataDetail.current}
         open={openCollectionEditor}

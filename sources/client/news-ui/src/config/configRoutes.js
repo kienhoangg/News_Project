@@ -3,9 +3,11 @@ const routes = {
   home: '/home',
   blog: '/blog',
   publishedDocument: '/document/:blogId',
-  publishedNewsPostListCategory: '/news-posts/categories',
-  publishedNewsPostCategory: '/news-posts/categories/:id',
+  publishedNewsPostListCategory: '/news-posts/fields',
+  publishedNewsPostCategory: '/news-posts/fields/:id',
   publishedNewsPost: '/news-posts/detail/:id',
+  publishedNewsPostPrint: '/news-posts/detail/print/:id',
+  publishedDocumentList: '/documents',
   search: '/search',
   notfound: '/notfound',
 

@@ -29,6 +29,7 @@ import { useState } from 'react';
 import { openNotification } from 'helpers/notification';
 import { NotificationType } from 'common/enum';
 import datetimeHelper from 'helpers/datetimeHelper';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -52,7 +53,14 @@ const dummyRequest = ({ file, onSuccess }) => {
 
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
-function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
+function CollectionNewsEditor({
+  open,
+  onCreate,
+  onCancel,
+  action,
+  data,
+  dataFilter,
+}) {
   const [form] = Form.useForm();
 
   function onEditorChange(event) {
@@ -94,6 +102,79 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
     </div>
   );
 
+  const renderFieldNews = (
+    <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
+      {dataFilter?.fieldNews?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const renderSourceNews = (
+    <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
+      {dataFilter?.sourceNews?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const renderCategoryNews = (
+    <TreeSelect
+      showSearch
+      style={{
+        width: '100%',
+      }}
+      // value={valueNewsType}
+      dropdownStyle={{
+        maxHeight: 400,
+        overflow: 'auto',
+      }}
+      placeholder='Chọn loại tin tức'
+      allowClear
+      treeDefaultExpandAll
+      // onChange={onChangeNewsType}
+    >
+      {list_to_tree().map((x) => (
+        <TreeNode value={x.Id} title={x.CategoryNewsName}>
+          {x.children.length > 0 &&
+            x.children.map((y) => (
+              <TreeNode value={y.Id} title={y.CategoryNewsName} />
+            ))}
+        </TreeNode>
+      ))}
+    </TreeSelect>
+  );
+
+  function list_to_tree(list = dataFilter?.categoryNews ?? []) {
+    if (list.length === 0) {
+      return [];
+    }
+    let map = {},
+      node,
+      roots = [],
+      i;
+
+    for (i = 0; i < list.length; i += 1) {
+      map[list[i].Id] = i; // initialize the map
+      list[i].children = []; // initialize the children
+    }
+
+    for (i = 0; i < list.length; i += 1) {
+      node = list[i];
+      if (node.ParentId && node.ParentId !== 0) {
+        // if you have dangling branches check that map[node.parentId] exists
+        list[map[node.ParentId]]?.children?.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+    return roots;
+  }
+
   return (
     <Modal
       open={open}
@@ -124,6 +205,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               description,
               content,
               field,
+              source,
             } = values;
             const bodyData = {
               Title: title,
@@ -139,10 +221,10 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               PublishedDate: publishedDate,
             };
             if (field) {
-              bodyData.FieldNews = { Id: parseInt(field) };
+              bodyData.FieldNewsId = parseInt(field);
             }
-            if (category) {
-              bodyData.SourceNews = { id: parseInt(category) };
+            if (source) {
+              bodyData.SourceNewsId = parseInt(source);
             }
             let body = { JsonString: bodyData };
             if (fileList.length > 0) {
@@ -197,39 +279,12 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
       >
         <Form.Item label='Danh mục'>
           <Row gutter={8}>
-            <Col span={4}>
+            <Col span={5}>
               <Form.Item style={{ marginBottom: 0 }} name='category'>
-                <TreeSelect
-                  showSearch
-                  style={{
-                    width: '100%',
-                  }}
-                  // value={valueNewsType}
-                  dropdownStyle={{
-                    maxHeight: 400,
-                    overflow: 'auto',
-                  }}
-                  placeholder='Chọn loại tin tức'
-                  allowClear
-                  treeDefaultExpandAll
-                  // onChange={onChangeNewsType}
-                >
-                  <TreeNode value='1' title='Tin tức'>
-                    <TreeNode value='1.1' title='Tin trong tỉnh' />
-                    <TreeNode value='1.2' title='Chính sách mới' />
-                    <TreeNode value='1.3' title='Hoạt động chỉ đạo điều hành' />
-                  </TreeNode>
-                  <TreeNode value='2' title='Tin tức 2'>
-                    <TreeNode value='2.2' title='Chính sách mới 2' />
-                    <TreeNode
-                      value='2.3'
-                      title='Hoạt động chỉ đạo điều hành 2'
-                    />
-                  </TreeNode>
-                </TreeSelect>
+                {renderCategoryNews}
               </Form.Item>
             </Col>
-            <Col span={14}>
+            <Col span={13}>
               <Form.Item
                 style={{ marginBottom: 0 }}
                 name='title'
@@ -421,23 +476,11 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
         >
           <Row gutter={16}>
             <Col span={6}>
-              <Form.Item name='field'>
-                <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
-                  <Option value='1'>Lĩnh vực 1</Option>
-                  <Option value='2'>Lĩnh vực 2</Option>
-                  <Option value='3'>Lĩnh vực 3</Option>
-                  <Option value='4'>Lĩnh vực 4</Option>
-                </Select>
-              </Form.Item>
+              <Form.Item name='field'>{renderFieldNews}</Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item name='source' label='Nguồn tin'>
-                <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
-                  <Option value='1'>Tin số 1</Option>
-                  <Option value='2'>Tin số 2</Option>
-                  <Option value='3'>Tin số 3</Option>
-                  <Option value='4'>Tin số 4</Option>
-                </Select>
+                {renderSourceNews}
               </Form.Item>
             </Col>
           </Row>
