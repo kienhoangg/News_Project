@@ -58,6 +58,17 @@ export const commonRender = {
     },
 
     /**
+    * Lấy link đường dần danh sách tin tức theo loại tin tức
+    * @param {string} id ID của loại tin tức
+    * @returns Đường dẫn chi tiết tin tức
+    */
+    renderMenuPage: (id) => {
+        var link = routes.publishedMenu.replace(":id", id);
+        return link;
+    },
+
+
+    /**
      * Hiển thị thông báo todo
      */
     showNotifiTodo: () => {

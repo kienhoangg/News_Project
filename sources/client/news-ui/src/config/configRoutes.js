@@ -1,13 +1,18 @@
 const routes = {
   root: '/',
-  home: '/home',
-  blog: '/blog',
+
   publishedDocument: '/document/:blogId',
-  publishedNewsPostListCategory: '/news-posts/fields',
-  publishedNewsPostCategory: '/news-posts/fields/:id',
+  publishedDocumentList: '/documents',
+
   publishedNewsPost: '/news-posts/detail/:id',
   publishedNewsPostPrint: '/news-posts/detail/print/:id',
-  publishedDocumentList: '/documents',
+
+  publishedNewsPostListCategory: '/news-posts/fields',
+  publishedNewsPostCategory: '/news-posts/fields/:id',
+
+  publishedIntroduce: '/introduce',
+  publishedMenu: '/menu/:id',
+
   search: '/search',
   notfound: '/notfound',
 

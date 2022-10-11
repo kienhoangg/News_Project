@@ -137,10 +137,11 @@ function PublishedDocumentPage(props) {
                         <div className={cx('content')}></div>
                         <div style={{ fontSize: fontSizeContainer }} dangerouslySetInnerHTML={{ __html: data?.NewsPostDetail.Content }}></div>
 
-                        <Row className={cx('content-footer')} justify='space-between'>
+                        {/* TODO: Lượt xem chi tiết bài viết */}
+                        {/* <Row className={cx('content-footer')} justify='space-between'>
                             <Col>{605} Lượt xem</Col>
                             <Col>{data?.NewsPostDetail?.SourceName}</Col>
-                        </Row>
+                        </Row> */}
                     </>
                 )}
             </div>

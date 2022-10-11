@@ -23,6 +23,8 @@ import MenuPage from 'features/admin/pages/setup/MenuPage/MenuPage';
 import Home from 'features/Home/Home';
 import PublishedDocumentPage from 'features/visitor/PublishedDocumentPage/PublishedDocumentPage';
 import PublishedDocumentPrintPage from 'features/visitor/PublishedDocumentPrintPage/PublishedDocumentPrintPage';
+import PublishedIntroducePage from 'features/visitor/PublishedIntroducePage/PublishedIntroducePage';
+import PublishedMenuPage from 'features/visitor/PublishedMenuPage/PublishedMenuPage';
 import PublishedNewsFieldPage from 'features/visitor/PublishedNewsFieldPage/PublishedNewsFieldPage';
 import PublishedNewsListCategoryPage from 'features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage';
 import PublishedNewsListDocumentPage from 'features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage';
@@ -40,7 +42,9 @@ const publicRoutes = [
 
   { path: config.routes.publishedDocumentList, component: PublishedNewsListDocumentPage },
 
+  { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
 
+  { path: config.routes.publishedMenu, component: PublishedMenuPage },
   { path: config.routes.search, component: SearchPage },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 
