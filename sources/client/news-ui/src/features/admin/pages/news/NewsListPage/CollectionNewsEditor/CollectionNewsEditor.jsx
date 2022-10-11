@@ -30,6 +30,7 @@ import { openNotification } from 'helpers/notification';
 import { NotificationType } from 'common/enum';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { useEffect } from 'react';
+import commonFunc from 'common/commonFunc';
 
 const cx = classNames.bind(styles);
 
@@ -122,6 +123,14 @@ function CollectionNewsEditor({
     </Select>
   );
 
+  const generateTree = (arrNode) => {
+    return arrNode.map((x) => (
+      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+        {x.children.length > 0 && generateTree(x.children)}
+      </TreeNode>
+    ));
+  };
+
   const renderCategoryNews = (
     <TreeSelect
       showSearch
@@ -138,42 +147,9 @@ function CollectionNewsEditor({
       treeDefaultExpandAll
       // onChange={onChangeNewsType}
     >
-      {list_to_tree().map((x) => (
-        <TreeNode value={x.Id} title={x.CategoryNewsName}>
-          {x.children.length > 0 &&
-            x.children.map((y) => (
-              <TreeNode value={y.Id} title={y.CategoryNewsName} />
-            ))}
-        </TreeNode>
-      ))}
+      {generateTree(commonFunc.list_to_tree(dataFilter?.categoryNews ?? []))}
     </TreeSelect>
   );
-
-  function list_to_tree(list = dataFilter?.categoryNews ?? []) {
-    if (list.length === 0) {
-      return [];
-    }
-    let map = {},
-      node,
-      roots = [],
-      i;
-
-    for (i = 0; i < list.length; i += 1) {
-      map[list[i].Id] = i; // initialize the map
-      list[i].children = []; // initialize the children
-    }
-
-    for (i = 0; i < list.length; i += 1) {
-      node = list[i];
-      if (node.ParentId && node.ParentId !== 0) {
-        // if you have dangling branches check that map[node.parentId] exists
-        list[map[node.ParentId]]?.children?.push(node);
-      } else {
-        roots.push(node);
-      }
-    }
-    return roots;
-  }
 
   return (
     <Modal
@@ -195,7 +171,6 @@ function CollectionNewsEditor({
             const {
               category,
               title,
-              createdDate,
               IsNewsHot,
               IsNewsVideo,
               IsDisplayTitle,
@@ -209,7 +184,6 @@ function CollectionNewsEditor({
             } = values;
             const bodyData = {
               Title: title,
-              PublishedDate: createdDate,
               IsHotNews: IsNewsHot,
               IsVideoNews: IsNewsVideo,
               IsShowTitle: IsDisplayTitle,
@@ -225,6 +199,9 @@ function CollectionNewsEditor({
             }
             if (source) {
               bodyData.SourceNewsId = parseInt(source);
+            }
+            if (category) {
+              bodyData.CategoryNewsId = parseInt(category);
             }
             let body = { JsonString: bodyData };
             if (fileList.length > 0) {

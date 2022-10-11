@@ -5,7 +5,7 @@ import datetimeHelper from "helpers/datetimeHelper";
 
 export const commonRenderTable = {
     showTableTotalPagination: (total, pageSize) => {
-        return `Tổng có ${total} bản ghi`;
+        return `Tổng có ${total} kết quả`;
     },
 
 }

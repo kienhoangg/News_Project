@@ -23,6 +23,7 @@ import MenuPage from 'features/admin/pages/setup/MenuPage/MenuPage';
 import Home from 'features/Home/Home';
 import PublishedDocumentPage from 'features/visitor/PublishedDocumentPage/PublishedDocumentPage';
 import PublishedDocumentPrintPage from 'features/visitor/PublishedDocumentPrintPage/PublishedDocumentPrintPage';
+import PublishedNewsFieldPage from 'features/visitor/PublishedNewsFieldPage/PublishedNewsFieldPage';
 import PublishedNewsListCategoryPage from 'features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage';
 import PublishedNewsListDocumentPage from 'features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage';
 import SearchPage from 'features/visitor/SearchPage/SearchPage';
@@ -35,7 +36,7 @@ const publicRoutes = [
   { path: config.routes.publishedNewsPost, component: PublishedDocumentPage },
   { path: config.routes.publishedNewsPostPrint, component: PublishedDocumentPrintPage, layout: null },
   { path: config.routes.publishedNewsPostListCategory, component: PublishedNewsListCategoryPage },
-  { path: config.routes.publishedNewsPostCategory, component: PublishedNewsListCategoryPage },
+  { path: config.routes.publishedNewsPostCategory, component: PublishedNewsFieldPage },
 
   { path: config.routes.publishedDocumentList, component: PublishedNewsListDocumentPage },
 
