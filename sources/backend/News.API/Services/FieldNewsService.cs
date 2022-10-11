@@ -14,9 +14,9 @@ using News.API.Persistence;
 
 namespace News.API.Services
 {
-    public class FieldNewsService: RepositoryBase<FieldNews, int, NewsContext>, IFieldNewsService
+    public class FieldNewsService : RepositoryBase<FieldNews, int, NewsContext>, IFieldNewsService
     {
-          private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
         public FieldNewsService(IMapper mapper, NewsContext dbContext,
             IUnitOfWork<NewsContext> unitOfWork) : base(dbContext, unitOfWork)
         {
@@ -30,7 +30,7 @@ namespace News.API.Services
 
         public async Task DeleteFieldNews(int id)
         {
-           var fieldNews = await GetByIdAsync(id);
+            var fieldNews = await GetByIdAsync(id);
             await DeleteAsync(fieldNews);
         }
 
@@ -41,8 +41,9 @@ namespace News.API.Services
 
         public async Task<ApiSuccessResult<FieldNewsDto>> GetFieldNewsByPaging(FieldNewsRequest fieldNewsRequest, params Expression<Func<FieldNews, object>>[] includeProperties)
         {
-             var query = FindAll();
-            if(includeProperties.ToList().Count > 0)
+            var query = FindAll();
+    
+            if (includeProperties.ToList().Count > 0)
             {
                 query = FindAll(includeProperties: includeProperties);
             }
@@ -51,12 +52,12 @@ namespace News.API.Services
             {
                 query = FindByCondition((x => x.Title.Contains(fieldNewsRequest.Keyword)));
             }
-            PagedResult<FieldNews>? sourcePaging= await query.PaginatedListAsync(fieldNewsRequest.CurrentPage
+            PagedResult<FieldNews>? sourcePaging = await query.PaginatedListAsync(fieldNewsRequest.CurrentPage
                                                                                              ?? 1, fieldNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, fieldNewsRequest.OrderBy, fieldNewsRequest.Direction);
-            var lstDto =  _mapper.Map<List<FieldNewsDto>>(sourcePaging.Results);
-           var paginationSet = new PagedResult<FieldNewsDto>(lstDto,sourcePaging.RowCount,sourcePaging.CurrentPage,sourcePaging.PageSize);
+            var lstDto = _mapper.Map<List<FieldNewsDto>>(sourcePaging.Results);
+            var paginationSet = new PagedResult<FieldNewsDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<FieldNewsDto>? result = new(paginationSet);
-            return result; 
+            return result;
         }
 
         public async Task UpdateFieldNews(FieldNews product)

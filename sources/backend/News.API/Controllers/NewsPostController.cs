@@ -57,6 +57,8 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+
+
         [HttpGet("published/{id:int}")]
         public async Task<IActionResult> GetPublishedNewsById([Required] int id)
         {
@@ -284,5 +286,15 @@ namespace News.API.Controllers
             if (fields == null) return NotFound();
             return Ok(fields.PagedData.Results);
         }
+
+
+        [HttpPost("published/fieldNews/{fieldNewsId:int}")]
+        public async Task<IActionResult> GetNewsPostCategoryEachFields([Required] int fieldNewsId, [FromBody] NewsPostRequest newsPostRequest)
+        {
+            var result = await _newsPostService.GetNewsPostCategoryEachFields(fieldNewsId, newsPostRequest);
+            return Ok(result);
+        }
     }
+
 }
+

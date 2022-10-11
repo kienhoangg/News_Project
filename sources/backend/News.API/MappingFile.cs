@@ -20,6 +20,7 @@ namespace News.API
             CreateMap<SourceNews, SourceNewsDto>().IgnoreAllNonExisting();
             CreateMap<SourceNewsDto, SourceNews>().IgnoreAllNonExisting();
             CreateMap<NewsPost, NewsPostDto>().IgnoreAllNonExisting();
+            CreateMap<NewsPost, NewsPostWithoutContentDto>().IgnoreAllNonExisting();
             CreateMap<NewsPostDto, NewsPost>().IgnoreAllNonExisting();
             CreateMap<Collaborator, CollaboratorDto>().IgnoreAllNonExisting();
             CreateMap<CollaboratorDto, Collaborator>().IgnoreAllNonExisting();

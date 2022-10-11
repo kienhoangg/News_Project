@@ -15,7 +15,7 @@ namespace News.API.Interfaces
                 params Expression<Func<NewsPost, object>>[] includeProperties
 
         );
-
+        Task<NewsPostCategoryEachFieldsDto> GetNewsPostCategoryEachFields(int fieldNewsid, NewsPostRequest newsPostRequest);
         Task<NewsPost>
         GetNewsPost(
 

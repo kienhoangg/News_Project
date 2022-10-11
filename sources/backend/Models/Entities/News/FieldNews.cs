@@ -11,7 +11,6 @@ namespace Models.Entities
         public decimal Factor { get; set; }
 
         public decimal BiggestFactor { get; set; }
-
         public virtual ICollection<NewsPost> NewsPosts { get; set; }
     }
 }
