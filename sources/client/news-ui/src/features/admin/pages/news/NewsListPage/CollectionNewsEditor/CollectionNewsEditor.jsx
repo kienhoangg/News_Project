@@ -38,20 +38,6 @@ CollectionNewsEditor.propTypes = {};
 
 CollectionNewsEditor.defaultProps = {};
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-
-const dummyRequest = ({ file, onSuccess }) => {
-  setTimeout(() => {
-    onSuccess('ok');
-  }, 0);
-};
-
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
 function CollectionNewsEditor({
@@ -78,7 +64,7 @@ function CollectionNewsEditor({
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+      file.preview = await commonFunc.getBase64(file.originFileObj);
     }
 
     setPreviewImage(file.url || file.preview);
@@ -350,7 +336,7 @@ function CollectionNewsEditor({
                 onPreview={handlePreview}
                 onChange={handleChange}
                 accept='.jpg,.png,.jpeg'
-                customRequest={dummyRequest}
+                customRequest={commonFunc.dummyRequest}
               >
                 {fileList.length < 1 ? uploadButton : null}
               </Upload>
@@ -470,7 +456,7 @@ function CollectionNewsEditor({
                 maxCount={1}
                 fileList={fileListAttachment}
                 onChange={handleChangeAttachment}
-                customRequest={dummyRequest}
+                customRequest={commonFunc.dummyRequest}
               >
                 {fileListAttachment.length < 1 ? (
                   <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
