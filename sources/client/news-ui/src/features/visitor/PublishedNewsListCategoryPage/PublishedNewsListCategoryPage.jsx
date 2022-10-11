@@ -39,20 +39,20 @@ function PublishedNewsListCategoryPage(props) {
             {Array.isArray(dataPage) &&
                 dataPage.map((item) => {
                     return (
-                        <div key={item.categoryId} className={cx('category-container')}>
+                        <div key={item.Id} className={cx('category-container')}>
                             <div className={cx('title-container')}>
-                                <Link to={commonRender.renderLinkNewsCategory(item.categoryId)} className={cx('title')}>
-                                    {item.categoryTitle}
+                                <Link to={commonRender.renderLinkNewsCategory(item.Id)} className={cx('title')}>
+                                    {item.Title}
                                 </Link>
                                 <span className={cx('right')}></span>
                             </div>
-                            <div style={{ border: '1px solid #0066b3', marginLeft: 8 }}></div>
+                            <div style={{ border: '1px solid #0066b3', marginLeft: 8, marginBottom: 8 }}></div>
 
-                            {Array.isArray(item?.items) &&
-                                item.items.map((dataItem, index) => {
+                            {Array.isArray(item?.NewsPosts) &&
+                                item.NewsPosts.map((dataItem, index) => {
                                     return (
                                         <>
-                                            <PublishedNewsListCategoryPageItem key={dataItem.id} data={dataItem} isFirst={index === 0} />
+                                            <PublishedNewsListCategoryPageItem key={dataItem.Id} data={dataItem} isFirst={index === 0} />
                                             <div className={cx('divider')}></div>
                                         </>
                                     );
