@@ -10,6 +10,11 @@ OperatingDocumentsPage.propTypes = {};
 
 OperatingDocumentsPage.defaultProps = {};
 
+/**
+ * Component hiển thị và tìm kiếm các văn bản
+ * @param {*} props
+ * @author TDBA (09/10/2022)
+ */
 function OperatingDocumentsPage(props) {
   const cx = classNames.bind(styles);
 
