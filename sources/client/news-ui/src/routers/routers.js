@@ -25,6 +25,8 @@ import PublishedDocumentPage from "features/visitor/PublishedDocumentPage/Publis
 import PublishedNewsListCategoryPage from "features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage";
 import SearchPage from "features/visitor/SearchPage/SearchPage";
 import OperatingDocumentsPage from "features/visitor/OperatingDocumentsPage/OperatingDocumentsPage";
+import OperatingDocumentsDetailPage from "features/visitor/OperatingDocumentsDetailPage/OperatingDocumentsDetailPage";
+import QuestionAndAnswerPage from "features/visitor/QuestionAndAnswerPage/QuestionAndAnswerPage";
 
 // Public routes
 const publicRoutes = [
@@ -167,7 +169,7 @@ const publicRoutes = [
   },
   {
     path: "tdba",
-    component: OperatingDocumentsPage,
+    component: QuestionAndAnswerPage,
   },
 
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
