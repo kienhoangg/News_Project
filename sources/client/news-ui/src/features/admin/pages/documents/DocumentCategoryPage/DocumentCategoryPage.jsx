@@ -52,7 +52,7 @@ function DocumentCategoryPage(props) {
    */
   const fetchCategoryList = async () => {
     try {
-      const response = await documentApi.getDocumentFieldAll(objFilter);
+      const response = await documentApi.getDocumentCategoryAll(objFilter);
 
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -82,9 +82,9 @@ function DocumentCategoryPage(props) {
       parentID = parseInt(values.parentId);
     }
     values = {
-      CategoryNewsName: values?.title,
+      Title: values?.title,
       Order: parseInt(values?.order ?? 0),
-      Keyword: values?.keyword,
+      Description: values?.description,
     };
     if (parentID) {
       values.ParentId = parentID;
@@ -98,7 +98,7 @@ function DocumentCategoryPage(props) {
    */
   const insertCategoryNews = async (values) => {
     try {
-      await documentApi.insertCategoryNews(values);
+      await documentApi.insertCategoryDocument(values);
       setIsModalOpen(false);
       fetchCategoryList();
       openNotification('Tạo mới loại văn bản thành công');
@@ -133,7 +133,7 @@ function DocumentCategoryPage(props) {
 
   const handleDeleteCategoryNew = async (id) => {
     try {
-      await documentApi.deleteCategoryNews(id);
+      await documentApi.deleteCategoryDocument(id);
       openNotification('Xóa loại văn bản thành công');
       fetchCategoryList();
     } catch (error) {
@@ -193,7 +193,7 @@ function DocumentCategoryPage(props) {
       }
 
       <div className={cx('top')}>
-        <DocumentCategoryPageSearch />
+        <DocumentCategoryPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-field-document')}>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
@@ -202,7 +202,11 @@ function DocumentCategoryPage(props) {
       </div>
       <Divider style={{ margin: '0' }} />
       <div className={cx('table-data')}>
-        <DocumentCategoryTableData data={newsData} />
+        <DocumentCategoryTableData
+          data={newsData}
+          setPagination={handleChangePagination}
+          deleteSourceNew={handleDeleteCategoryNew}
+        />
       </div>
     </div>
   );

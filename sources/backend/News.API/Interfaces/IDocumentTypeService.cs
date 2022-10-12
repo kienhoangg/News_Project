@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
-using Models.Dtos.Documents;
+using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
 

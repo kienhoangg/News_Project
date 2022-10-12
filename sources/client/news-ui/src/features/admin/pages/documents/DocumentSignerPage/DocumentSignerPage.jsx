@@ -75,9 +75,9 @@ function DocumentSignerPage(props) {
       parentID = parseInt(values.parentId);
     }
     values = {
-      CategoryNewsName: values?.title,
+      Title: values?.title,
       Order: parseInt(values?.order ?? 0),
-      Keyword: values?.keyword,
+      Description: values?.description,
     };
     if (parentID) {
       values.ParentId = parentID;
@@ -120,7 +120,7 @@ function DocumentSignerPage(props) {
     setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
   };
 
-  const handleDeleteCategoryNew = async (id) => {
+  const handleDeleteSourceNew = async (id) => {
     try {
       await documentApi.deleteSingerDocument(id);
       openNotification('Xóa người ký thành công');
@@ -182,7 +182,8 @@ function DocumentSignerPage(props) {
       }
 
       <div className={cx('top')}>
-        <DocumentSignerPageSearch />
+        <DocumentSignerPageSearch setTextSearch={handleChangeTextSearch} />
+
         <div className={cx('btn-add-signer-document')}>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
@@ -191,7 +192,11 @@ function DocumentSignerPage(props) {
       </div>
       <Divider style={{ margin: '0' }} />
       <div className={cx('table-data')}>
-        <DocumentSignerTableData data={newsData} />
+        <DocumentSignerTableData
+          data={newsData}
+          setPagination={handleChangePagination}
+          deleteSourceNew={handleDeleteSourceNew}
+        />
       </div>
     </div>
   );

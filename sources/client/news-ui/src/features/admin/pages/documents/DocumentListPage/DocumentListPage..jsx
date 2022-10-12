@@ -1,105 +1,120 @@
+import { FileAddFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {
-  Divider,
   Button,
-  Checkbox,
   Col,
   DatePicker,
+  Divider,
   Form,
   Input,
   Modal,
-  Radio,
   Row,
   Select,
   TreeSelect,
   Upload,
 } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { Option } from 'antd/lib/mentions';
+import { TreeNode } from 'antd/lib/tree-select';
 import documentApi from 'apis/documentApi';
+import { CKEditor } from 'ckeditor4-react';
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
+import commonFunc from 'common/commonFunc';
+import { Direction, NotificationType } from 'common/enum';
+import convertHelper from 'helpers/convertHelper';
+import datetimeHelper from 'helpers/datetimeHelper';
+import { openNotification } from 'helpers/notification';
+import { useEffect, useRef, useState } from 'react';
 import styles from './DocumentListPage.module.scss';
 import DocumentListPageSearch from './DocumentListPageSearch/DocumentListPageSearch';
 import DocumentListTableData from './DocumentListTableData/DocumentListTableData';
-import commonFunc from 'common/commonFunc';
-import { PlusOutlined, UploadOutlined, FileAddFilled } from '@ant-design/icons';
-import { Option } from 'antd/lib/mentions';
-import { TreeNode } from 'antd/lib/tree-select';
-import datetimeHelper from 'helpers/datetimeHelper';
-import { openNotification } from 'helpers/notification';
-import { NotificationType } from 'common/enum';
-import TextArea from 'antd/lib/input/TextArea';
-import { CKEditor } from 'ckeditor4-react';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
-const dataFilter = {};
 const cx = classNames.bind(styles);
 
 DocumentListPage.propTypes = {};
 
 DocumentListPage.defaultProps = {};
 
+const filterAll = {
+  currentPage: 1,
+  pageSize: 9_999_999,
+};
+
 function DocumentListPage(props) {
   const [newsData, setNewsData] = useState({});
+  const [objFilter, setObjFilter] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    direction: Direction.DESC,
+    orderBy: 'CreatedDate',
+    keyword: '',
+  });
+  const isFirstCall = useRef(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dataFilter, setDataFilter] = useState({
+    categoryAll: [],
+    sourceAll: [],
+    fieldAll: [],
+    singerAll: [],
+  });
+  const [fileListAttachment, setFileListAttachment] = useState([]);
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    const fetchProductList = async () => {
-      try {
-        const params = {
-          _page: 1,
-          _limit: 10,
-        };
-        const response = await documentApi.getDocumentAll(params);
-        setNewsData(response);
-      } catch (error) {
-        console.log('Failed to fetch list: ', error);
-      }
-    };
-    fetchProductList();
-  }, []);
+    if (isFirstCall.current) {
+      isFirstCall.current = false;
+      getDataFilter();
+      return;
+    }
+    fetchList();
+  }, [objFilter]);
 
-  const [form] = Form.useForm();
+  const fetchList = async () => {
+    try {
+      const response = await documentApi.getDocumentAll(objFilter);
+      setNewsData({
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
+      });
+    } catch (error) {
+      console.log('Failed to fetch list: ', error);
+    }
+  };
+
+  const getDataFilter = async () => {
+    // loại văn bản
+    const responseCategoryAll = documentApi.getDocumentCategoryAll(filterAll);
+    //Cơ quan ban hành
+    const responseSourceAll = documentApi.getDocumentSourceAll(filterAll);
+    //Lĩnh vực
+    const responseFieldAll = documentApi.getDocumentFieldAll(filterAll);
+    // Người ký
+    const responseSingerAll = documentApi.getDocumentSingerAll(filterAll);
+    Promise.all([
+      responseCategoryAll,
+      responseSourceAll,
+      responseFieldAll,
+      responseSingerAll,
+    ]).then((values) => {
+      setDataFilter({
+        categoryAll: values[0]?.PagedData?.Results ?? [],
+        sourceAll: values[1]?.PagedData?.Results ?? [],
+        fieldAll: values[2]?.PagedData?.Results ?? [],
+        singerAll: values[3]?.PagedData?.Results ?? [],
+      });
+    });
+  };
 
   function onEditorChange(event) {
     // console.log('data: ', event.editor.getData());
   }
 
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
-  const [fileList, setFileList] = useState([]);
-  const [fileListAttachment, setFileListAttachment] = useState([]);
-
-  const handleCancel = () => setPreviewOpen(false);
-
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await commonFunc.getBase64(file.originFileObj);
-    }
-
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1)
-    );
-  };
-
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
   const handleChangeAttachment = ({ fileList: newFileList }) => {
     setFileListAttachment(newFileList);
   };
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
   const renderFieldNews = (
     <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
-      {dataFilter?.fieldNews?.map((x) => (
+      {dataFilter?.fieldAll?.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
         </Option>
@@ -108,8 +123,18 @@ function DocumentListPage(props) {
   );
 
   const renderSourceNews = (
+    <Select placeholder='Loại văn bản' style={{ width: '100%' }}>
+      {dataFilter?.categoryAll?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const renderSingerNews = (
     <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
-      {dataFilter?.sourceNews?.map((x) => (
+      {dataFilter?.singerAll?.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
         </Option>
@@ -119,7 +144,7 @@ function DocumentListPage(props) {
 
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+      <TreeNode value={x.Id} title={x.Title} key={x.Id}>
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));
@@ -141,16 +166,62 @@ function DocumentListPage(props) {
       treeDefaultExpandAll
       // onChange={onChangeNewsType}
     >
-      {generateTree(commonFunc.list_to_tree(dataFilter?.categoryNews ?? []))}
+      {generateTree(commonFunc.list_to_tree(dataFilter?.sourceAll ?? []))}
     </TreeSelect>
   );
   const onCancel = () => {
     setIsModalOpen(false);
   };
-  const onCreate = () => {};
+  const onCreate = async (values) => {
+    try {
+      var formData = new FormData();
+      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+
+      if (values.FileAttachment) {
+        formData.append('FileAttachment', values.FileAttachment);
+      }
+      setIsModalOpen(false);
+      await documentApi.insertDocument(formData);
+      openNotification('Tạo mới tin thành công');
+      fetchList();
+    } catch (error) {
+      openNotification('Tạo mới tin thất bại', '', NotificationType.ERROR);
+    }
+  };
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  /**
+   * Thay đổi phân trang
+   */
+  const handleChangePagination = (
+    currentPage,
+    pageSize,
+    orderBy,
+    direction
+  ) => {
+    setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
+  };
+
+  const handleDeleteSourceNew = async (id) => {
+    try {
+      await documentApi.deleteDocument(id);
+      openNotification('Xóa nguồn tin thành công');
+      fetchList();
+    } catch (error) {
+      openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+    }
+  };
+
+  /**
+   * Sử lý thay đổi text search
+   * @param {*} textSearch Từ cần tìm
+   */
+  const handleChangeTextSearch = (textSearch) => {
+    setObjFilter({ ...objFilter, keyword: textSearch });
+  };
+
   return (
     <div className={cx('wrapper')}>
       <Modal
@@ -167,56 +238,36 @@ function DocumentListPage(props) {
             .then((values) => {
               values.content = values.content?.editor?.getData();
               const date =
-                values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
-              const publishedDate = datetimeHelper.formatDatetimeToDate(date);
+                values?.PublishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+              const publishedDate =
+                datetimeHelper.formatDatetimeToDateSerer(date);
               const {
-                category,
-                title,
-                IsNewsHot,
-                IsNewsVideo,
-                IsDisplayTitle,
-                IsDisplayAvatar,
-                IsComment,
-                avatarTitle,
-                description,
-                content,
-                field,
-                source,
+                Code,
+                Name,
+                DocumentDepartmentId,
+                DocumentFieldId,
+                DocumentSignPersonId,
+                DocumentTypeId,
               } = values;
               const bodyData = {
-                Title: title,
-                IsHotNews: IsNewsHot,
-                IsVideoNews: IsNewsVideo,
-                IsShowTitle: IsDisplayTitle,
-                IsShowAvatar: IsDisplayAvatar,
-                IsShowComment: IsComment,
-                AvatarTitle: avatarTitle,
-                Description: description,
-                Content: content,
+                Code,
+                Name,
                 PublishedDate: publishedDate,
               };
-              if (field) {
-                bodyData.FieldNewsId = parseInt(field);
+              if (DocumentDepartmentId) {
+                bodyData.DocumentDepartmentId = parseInt(DocumentDepartmentId);
               }
-              if (source) {
-                bodyData.SourceNewsId = parseInt(source);
+              if (DocumentFieldId) {
+                bodyData.DocumentFieldId = parseInt(DocumentFieldId);
               }
-              if (category) {
-                bodyData.CategoryNewsId = parseInt(category);
+              if (DocumentSignPersonId) {
+                bodyData.DocumentSignPersonId = parseInt(DocumentSignPersonId);
+              }
+              if (DocumentTypeId) {
+                bodyData.DocumentTypeId = parseInt(DocumentTypeId);
               }
               let body = { JsonString: bodyData };
-              if (fileList.length > 0) {
-                const file = fileList[0].originFileObj;
-                if (file.size > LIMIT_UP_LOAD_FILE) {
-                  openNotification(
-                    'File ảnh đã lớn hơn 2MB',
-                    '',
-                    NotificationType.ERROR
-                  );
-                  return;
-                }
-                body.Avatar = file;
-              }
+
               if (fileListAttachment.length > 0) {
                 const file = fileListAttachment[0].originFileObj;
                 if (file.size > LIMIT_UP_LOAD_FILE) {
@@ -230,7 +281,6 @@ function DocumentListPage(props) {
                 body.FileAttachment = file;
               }
               form.resetFields();
-              setFileList([]);
               setFileListAttachment([]);
               onCreate(body);
             })
@@ -248,20 +298,14 @@ function DocumentListPage(props) {
           // wrapperCol={{ span: 21 }}
           initialValues={{
             modifier: 'public',
-            IsNewsHot: false,
-            IsNewsVideo: false,
-            IsDisplayTitle: false,
-            IsDisplayAvatar: false,
-            IsComment: false,
           }}
         >
-          <Form.Item>
-            <Row gutter={8}>
-              <Col span={8}>
+          <Form.Item label='Số ký hiệu'>
+            <Row gutter={8} justify={'space-between'}>
+              <Col span={7}>
                 <Form.Item
                   style={{ marginBottom: 0 }}
-                  name='title'
-                  label='Số ký hiệu'
+                  name='Code'
                   rules={[
                     {
                       required: true,
@@ -272,64 +316,56 @@ function DocumentListPage(props) {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={7}>
                 <Form.Item
                   style={{ marginBottom: 0 }}
                   label='Cơ quan ban hành'
-                  name='category'
+                  name='DocumentDepartmentId'
                 >
                   {renderCategoryNews}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={7}>
                 <Form.Item
                   style={{ marginBottom: 0 }}
                   label='Lĩnh vực'
-                  name='category'
+                  name='DocumentFieldId'
                 >
-                  {renderCategoryNews}
+                  {renderFieldNews}
                 </Form.Item>
               </Col>
             </Row>
           </Form.Item>
 
-          <Form.Item>
-            <Row gutter={8}>
-              <Col span={8}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  label='Loại văn bản'
-                  name='category'
-                >
-                  {renderCategoryNews}
+          <Form.Item label='Loại văn bản'>
+            <Row gutter={8} justify={'space-between'}>
+              <Col span={7}>
+                <Form.Item style={{ marginBottom: 0 }} name='DocumentTypeId'>
+                  {renderSourceNews}
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={7}>
                 <Form.Item
-                  name='publishedDate'
+                  name='PublishedDate'
                   label='Ngày phát hành'
                   style={{ marginBottom: 0 }}
                 >
                   <DatePicker style={{ width: '100%' }} />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={7}>
                 <Form.Item
                   style={{ marginBottom: 0 }}
                   label='Người ký'
-                  name='category'
+                  name='DocumentSignPersonId'
                 >
-                  {renderCategoryNews}
+                  {renderSingerNews}
                 </Form.Item>
               </Col>
             </Row>
           </Form.Item>
 
-          <Form.Item
-            name='description'
-            label='Trích yếu'
-            style={{ marginBottom: 0 }}
-          >
+          <Form.Item name='Name' label='Trích yếu' style={{ marginBottom: 0 }}>
             <TextArea
               showCount
               style={{
@@ -337,7 +373,7 @@ function DocumentListPage(props) {
               }}
             />
           </Form.Item>
-          <Form.Item name='content' label='Nội dung'>
+          <Form.Item name='Content' label='Nội dung'>
             <CKEditor
               initData='<p>Nội dung</p>'
               // onInstanceReady={() => {
@@ -394,7 +430,7 @@ function DocumentListPage(props) {
           </Form.Item>
           <Form.Item name='lb-attachment' label='Tệp đính kèm'>
             <Row gutter={8}>
-              <Col span={8}>
+              <Col span={7}>
                 <Upload
                   listType='picture'
                   maxCount={1}
@@ -413,7 +449,7 @@ function DocumentListPage(props) {
       </Modal>
 
       <div className={cx('top')}>
-        <DocumentListPageSearch />
+        <DocumentListPageSearch setTextSearch={handleChangeTextSearch} />
         <div>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Tạo mới
@@ -422,7 +458,11 @@ function DocumentListPage(props) {
       </div>
       <Divider style={{ margin: '0' }} />
       <div className={cx('table-data')}>
-        <DocumentListTableData data={newsData} />
+        <DocumentListTableData
+          data={newsData}
+          setPagination={handleChangePagination}
+          deleteSourceNew={handleDeleteSourceNew}
+        />
       </div>
     </div>
   );
