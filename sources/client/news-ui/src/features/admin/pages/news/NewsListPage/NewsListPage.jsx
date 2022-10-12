@@ -9,12 +9,18 @@ import CollectionNewsEditor from './CollectionNewsEditor/CollectionNewsEditor';
 import NewsListMenuSearch from './NewsListMenuSearch/NewsListMenuSearch';
 import styles from './NewsListPage.module.scss';
 import NewsListTableData from './NewsListTableData/NewsListTableData';
+import convertHelper from 'helpers/convertHelper';
 
 const cx = classNames.bind(styles);
 
 NewsListPage.propTypes = {};
 
 NewsListPage.defaultProps = {};
+
+const filterAll = {
+  currentPage: 1,
+  pageSize: 9_999_999,
+};
 
 function NewsListPage(props) {
   const [newsData, setNewsData] = useState({});
@@ -31,14 +37,26 @@ function NewsListPage(props) {
   const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
     useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [dataFilter, setDataFilter] = useState({
+    categoryNews: [],
+    fieldNews: [],
+    sourceNews: [],
+  });
   const dataDetail = useRef({});
   const action = useRef('create');
 
   const onCreate = async (values) => {
     try {
-      console.log('Received values of form: ', values);
+      var formData = new FormData();
+      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+      if (values.Avatar) {
+        formData.append('Avatar', values.Avatar);
+      }
+      if (values.FileAttachment) {
+        formData.append('FileAttachment', values.FileAttachment);
+      }
       setOpenCollectionEditor(false);
-      await newsApi.insertNew(values);
+      await newsApi.insertNew(formData);
       openNotification('Tạo mới tin thành công');
       fetchList();
     } catch (error) {
@@ -82,8 +100,8 @@ function NewsListPage(props) {
     try {
       const response = await newsApi.getNewsAll(objFilter);
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
@@ -115,10 +133,28 @@ function NewsListPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
+      getDataFilter();
       return;
     }
     fetchList();
   }, [objFilter]);
+
+  const getDataFilter = async () => {
+    const responseCategoryNews = newsApi.getNewsCategoryAll(filterAll);
+    const responseFieldNews = newsApi.getNewsFieldAll(filterAll);
+    const responseSourceNews = newsApi.getNewsSourceAll(filterAll);
+    Promise.all([
+      responseCategoryNews,
+      responseFieldNews,
+      responseSourceNews,
+    ]).then((values) => {
+      setDataFilter({
+        categoryNews: values[0]?.PagedData?.Results ?? [],
+        fieldNews: values[1]?.PagedData?.Results ?? [],
+        sourceNews: values[2]?.PagedData?.Results ?? [],
+      });
+    });
+  };
 
   const handleSetActionForm = (value) => {
     action.current = value;
@@ -128,6 +164,7 @@ function NewsListPage(props) {
     <div className={cx('wrapper')}>
       <div className={cx('top')}>
         <NewsListMenuSearch
+          dataFilter={dataFilter}
           setOpenCollectionEditor={setOpenCollectionEditor}
           setActionForm={handleSetActionForm}
           setTextSearch={handleChangeTextSearch}
@@ -144,6 +181,7 @@ function NewsListPage(props) {
         />
       </div>
       <CollectionNewsEditor
+        dataFilter={dataFilter}
         action={action.current}
         data={dataDetail.current}
         open={openCollectionEditor}

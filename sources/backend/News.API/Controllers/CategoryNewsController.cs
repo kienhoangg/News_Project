@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 

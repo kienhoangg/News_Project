@@ -1,5 +1,4 @@
 using Contracts.Domains;
-using Models.Entities.News;
 
 namespace Models.Dtos
 {
@@ -9,7 +8,7 @@ namespace Models.Dtos
 
         public string CategoryNewsName { get; set; }
 
-        public int Order { get; set; }
+        public int? ParentId { get; set; }
 
         public string? Keyword { get; set; }
 

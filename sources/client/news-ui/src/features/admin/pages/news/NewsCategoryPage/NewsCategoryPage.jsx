@@ -1,4 +1,4 @@
-import { Divider, Form, Button, Input, Modal } from 'antd';
+import { Divider, Form, Button, Input, Modal, Select } from 'antd';
 import newsApi from 'apis/newsApi';
 import { useEffect, useRef, useState } from 'react';
 import NewsCategoryPageSearch from './NewsCategoryPageSearch/NewsCategoryPageSearch';
@@ -8,6 +8,8 @@ import classNames from 'classnames/bind';
 import AdminCollectionDetail from 'features/admin/components/AdminCollectionDetail/AdminCollectionDetail';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
+import { Option } from 'antd/lib/mentions';
+import { FileAddFilled } from '@ant-design/icons';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -20,7 +22,10 @@ NewsCategoryPage.propTypes = {};
 NewsCategoryPage.defaultProps = {};
 
 function NewsCategoryPage(props) {
-  const [newsData, setNewsData] = useState({});
+  const [newsData, setNewsData] = useState({
+    data: [],
+    total: 0,
+  });
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
@@ -54,9 +59,10 @@ function NewsCategoryPage(props) {
   const fetchCategoryList = async () => {
     try {
       const response = await newsApi.getNewsCategoryAll(objFilter);
+
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       openNotification('Lấy  danh mục thất bại', '', NotificationType.ERROR);
@@ -142,11 +148,18 @@ function NewsCategoryPage(props) {
    * @param {*} values Đối tượng submit form
    */
   const onFinish = (values) => {
+    let parentID = null;
+    if (values.parentId) {
+      parentID = parseInt(values.parentId);
+    }
     values = {
       CategoryNewsName: values?.title,
       Order: parseInt(values?.order ?? 0),
       Keyword: values?.keyword,
     };
+    if (parentID) {
+      values.ParentId = parentID;
+    }
     insertCategoryNews(values);
     form.resetFields();
   };
@@ -195,6 +208,16 @@ function NewsCategoryPage(props) {
     }
   };
 
+  const renderOption = (
+    <Select placeholder='Chọn cấp cha' style={{ width: '100%' }}>
+      {newsData?.data.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.CategoryNewsName}
+        </Option>
+      ))}
+    </Select>
+  );
+
   return (
     <div className={cx('wrapper')}>
       {
@@ -208,6 +231,9 @@ function NewsCategoryPage(props) {
         footer={null}
       >
         <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
+            {renderOption}
+          </Form.Item>
           <Form.Item
             name='title'
             label='Tiêu đề'
@@ -222,7 +248,7 @@ function NewsCategoryPage(props) {
           <Form.Item name='typeNews' label='Loại tin'>
             <Input placeholder='Nhập và chọn loại tin' />
           </Form.Item>
-          <Form.Item name='Keyword' label='Keyword'>
+          <Form.Item name='keyword' label='Keyword'>
             <Input placeholder='Nhập Keyword' />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -239,7 +265,7 @@ function NewsCategoryPage(props) {
       <div className={cx('top')}>
         <NewsCategoryPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-category-news')}>
-          <Button type='primary' onClick={showModal}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>

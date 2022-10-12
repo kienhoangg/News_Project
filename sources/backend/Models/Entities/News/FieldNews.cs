@@ -1,6 +1,6 @@
 using Contracts.Domains;
 
-namespace Models.Entities.News
+namespace Models.Entities
 {
     public class FieldNews : EntityAuditBase<int>
     {
@@ -11,7 +11,6 @@ namespace Models.Entities.News
         public decimal Factor { get; set; }
 
         public decimal BiggestFactor { get; set; }
-
         public virtual ICollection<NewsPost> NewsPosts { get; set; }
     }
 }

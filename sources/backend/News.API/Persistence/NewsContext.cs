@@ -1,10 +1,7 @@
-﻿using System;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Reflection;
 using Contracts.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Models.Entities;
-using Models.Entities.News;
 
 namespace News.API.Persistence
 {
@@ -29,6 +26,11 @@ namespace News.API.Persistence
 
         public DbSet<Comment> Comments { get; set; }
 
+        public DbSet<DocumentType> DocumentTypes { get; set; }
+        public DbSet<DocumentField> DocumentFields { get; set; }
+        public DbSet<DocumentDepartment> DocumentDepartments { get; set; }
+        public DbSet<DocumentSignPerson> DocumentSignPersons { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -49,26 +51,26 @@ namespace News.API.Persistence
                         e.State == EntityState.Deleted);
 
             foreach (var item in modified)
-            switch (item.State)
-            {
-                case EntityState.Added:
-                    if (item.Entity is IDateTracking addedEntity)
-                    {
-                        addedEntity.CreatedDate = DateTime.UtcNow;
-                        item.State = EntityState.Added;
-                    }
+                switch (item.State)
+                {
+                    case EntityState.Added:
+                        if (item.Entity is IDateTracking addedEntity)
+                        {
+                            addedEntity.CreatedDate = DateTime.UtcNow;
+                            item.State = EntityState.Added;
+                        }
 
-                    break;
-                case EntityState.Modified:
-                    Entry(item.Entity).Property("Id").IsModified = false;
-                    if (item.Entity is IDateTracking modifiedEntity)
-                    {
-                        modifiedEntity.LastModifiedDate = DateTime.UtcNow;
-                        item.State = EntityState.Modified;
-                    }
+                        break;
+                    case EntityState.Modified:
+                        Entry(item.Entity).Property("Id").IsModified = false;
+                        if (item.Entity is IDateTracking modifiedEntity)
+                        {
+                            modifiedEntity.LastModifiedDate = DateTime.UtcNow;
+                            item.State = EntityState.Modified;
+                        }
 
-                    break;
-            }
+                        break;
+                }
 
             return base.SaveChangesAsync(cancellationToken);
         }

@@ -16,5 +16,7 @@ namespace Models.Requests
         public DateTime? FromDate { get; set; }
 
         public DateTime? ToDate { get; set; }
+
+        public DateTime? TodayDate { get; set; }
     }
 }

@@ -1,6 +1,7 @@
+using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 
 namespace News.API.Interfaces
@@ -19,5 +20,7 @@ namespace News.API.Interfaces
         Task UpdateCategoryNews(CategoryNews categoryNews);
 
         Task DeleteCategoryNews(int id);
+
+        Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression);
     }
 }

@@ -7,6 +7,7 @@ import styles from './NewsFieldPage.module.scss';
 import classNames from 'classnames/bind';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
+import { FileAddFilled } from '@ant-design/icons';
 const { TextArea } = Input;
 
 const layout = {
@@ -51,8 +52,8 @@ function NewsFieldPage(props) {
     try {
       const response = await newsApi.getNewsFieldAll(objFilter);
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
@@ -173,7 +174,7 @@ function NewsFieldPage(props) {
       <div className={cx('top')}>
         <NewsFieldPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-field-news')}>
-          <Button type='primary' onClick={showModal}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>

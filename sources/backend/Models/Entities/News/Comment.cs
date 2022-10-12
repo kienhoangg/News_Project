@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.Domains;
 
-namespace Models.Entities.News
+namespace Models.Entities
 {
     public class Comment : EntityAuditBase<long>
     {

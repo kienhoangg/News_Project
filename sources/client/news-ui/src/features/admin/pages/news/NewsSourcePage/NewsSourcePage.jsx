@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './NewsSourcePage.module.scss';
 import NewsSourcePageSearch from './NewsSourcePageSearch/NewsSourcePageSearch';
 import NewsSourceTableData from './NewsSourceTableData/NewsSourceTableData';
+import { FileAddFilled } from '@ant-design/icons';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -50,8 +51,8 @@ function NewsSourcePage(props) {
     try {
       const response = await newsApi.getNewsSourceAll(objFilter);
       setNewsData({
-        data: response?.pagedData?.results ?? [],
-        total: response?.pagedData?.rowCount ?? 0,
+        data: response?.PagedData?.Results ?? [],
+        total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
@@ -167,7 +168,7 @@ function NewsSourcePage(props) {
       <div className={cx('top')}>
         <NewsSourcePageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-source-news')}>
-          <Button type='primary' onClick={showModal}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>

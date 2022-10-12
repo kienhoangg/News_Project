@@ -24,9 +24,8 @@ function PublishedNewsListCategoryPage(props) {
         const fetchHome = async () => {
             try {
                 const params = {};
-                const response = await publishedNewsApi.getCategoriesDataListPage(params);
+                const response = await publishedNewsApi.getFieldsDataListPage(params);
                 setDataPage(response);
-                console.log('PublishedNewsListCategoryPage', response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }
@@ -40,17 +39,20 @@ function PublishedNewsListCategoryPage(props) {
             {Array.isArray(dataPage) &&
                 dataPage.map((item) => {
                     return (
-                        <div key={item.categoryId} className={cx('category-container')}>
-                            <Link to={commonRender.renderLinkNewsCategory(item.categoryId)} className={cx('title')}>
-                                {item.categoryTitle}
-                            </Link>
-                            <div style={{ border: '1px solid #0066b3', marginLeft: 8 }}></div>
+                        <div key={item.Id} className={cx('category-container')}>
+                            <div className={cx('title-container')}>
+                                <Link to={commonRender.renderLinkNewsCategory(item.Id)} className={cx('title')}>
+                                    {item.Title}
+                                </Link>
+                                <span className={cx('right')}></span>
+                            </div>
+                            <div style={{ border: '1px solid #0066b3', marginLeft: 8, marginBottom: 8 }}></div>
 
-                            {Array.isArray(item?.items) &&
-                                item.items.map((dataItem) => {
+                            {Array.isArray(item?.NewsPosts) &&
+                                item.NewsPosts.map((dataItem, index) => {
                                     return (
                                         <>
-                                            <PublishedNewsListCategoryPageItem key={dataItem.id} data={dataItem} />
+                                            <PublishedNewsListCategoryPageItem key={dataItem.Id} data={dataItem} isFirst={index === 0} />
                                             <div className={cx('divider')}></div>
                                         </>
                                     );

@@ -6,46 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "Documents",
-			"item": [
-				{
-					"name": "Get documents by page",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "https://localhost:7122/api/documents?currentPage=2",
-							"protocol": "https",
-							"host": [
-								"localhost"
-							],
-							"port": "7122",
-							"path": [
-								"api",
-								"documents"
-							],
-							"query": [
-								{
-									"key": "currentPage",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Category News",
 			"item": [
 				{
@@ -243,7 +203,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:7122/api/fieldNews/5",
+							"raw": "https://localhost:7122/api/fieldNews/2",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -252,7 +212,7 @@
 							"path": [
 								"api",
 								"fieldNews",
-								"5"
+								"2"
 							]
 						}
 					},
@@ -303,6 +263,550 @@
 			]
 		},
 		{
+			"name": "Document Fields",
+			"item": [
+				{
+					"name": "Create document fields",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name\",\n     \"Order\" : 0,\n      \"Description\" : \"Test keyword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentFields",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentFields"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document fields by page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentFields/filter",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentFields",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update document fields",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name1\",\n     \"Order\" : 0,\n      \"Description\" : \"Test keyword1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentFields/5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentFields",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete document fields",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentFields/5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentFields",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document fields by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentFields/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentFields",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Document Types",
+			"item": [
+				{
+					"name": "Create document types",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name\",\n     \"Order\" : 0,\n      \"Keyword\" : \"Test keyword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentTypes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentTypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document types by page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentTypes/filter",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentTypes",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update document types",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name1\",\n     \"Order\" : 0,\n      \"Keyword\" : \"Test keyword1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentTypes/5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentTypes",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete documen types",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentTypes/8",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentTypes",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document types by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentTypes/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentTypes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Document Sign Persons",
+			"item": [
+				{
+					"name": "Create document sign persons",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name\",\n     \"Order\" : 0,\n      \"Keyword\" : \"Test keyword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentSignPersons",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentSignPersons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document sign persons by page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentSignPersons/filter",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentSignPersons",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update document sign persons",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name1\",\n     \"Order\" : 0,\n      \"Keyword\" : \"Test keyword1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentSignPersons/5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentSignPersons",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete documen sign persons",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentSignPersons/8",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentSignPersons",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document sign persons by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentSignPersons/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentSignPersons",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Document Departments",
+			"item": [
+				{
+					"name": "Create document departments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name\",\n     \"Order\" : 0,\n      \"Keyword\" : \"Test keyword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentDepartments",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentDepartments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document departments by page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentDepartments/filter",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentDepartments",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update document departments",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name1\",\n     \"Order\" : 0,\n      \"Keyword\" : \"Test keyword1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documentDepartments/5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentDepartments",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete documen departments",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentDepartments/8",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentDepartments",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get document departments by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documentDepartments/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documentDepartments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Source News",
 			"item": [
 				{
@@ -341,7 +845,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"OrderBy\":\"Title\",\n   \"Direction\":-1\n}",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -477,7 +981,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"OrderBy\":\"Title\",\n   \"Direction\":-1\n}",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"Direction\":-1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -614,8 +1118,7 @@
 								{
 									"key": "FileAttachment",
 									"type": "file",
-									"src": "/Users/htkien/Downloads/4feb140f34d8a655e1389b0d05758832.jpeg",
-									"disabled": true
+									"src": "/Users/htkien/Downloads/4feb140f34d8a655e1389b0d05758832.jpeg"
 								}
 							],
 							"options": {
@@ -646,7 +1149,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"OrderBy\":\"Title\",\n   \"Direction\":-1\n}",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"OrderBy\":\"Title\",\n   \"Direction\":-1\n \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -675,8 +1178,26 @@
 						"method": "PUT",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"Title\" : \"Test Name1111232323\",\n     \"Order\" : 0,\n      \"Description\" : \"Test keyword111\"\n}",
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Avatar",
+									"type": "file",
+									"src": "/Users/htkien/Downloads/b32d5e6f9b3126200826f63b0a061b1a.png",
+									"disabled": true
+								},
+								{
+									"key": "Id",
+									"value": "7",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "jsonString",
+									"value": "{\"Title\" : \"Test Name111\", \"IsHotNews\":1,\"Order\" : 0,\"Description\" : \"Test keyword\", \"Avatar\": \"/UploadFiles/Images/a11be3734622c70850665c89d44ae413_2339405919330.jpeg\"}",
+									"type": "text"
+								}
+							],
 							"options": {
 								"raw": {
 									"language": "json"
@@ -684,7 +1205,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:7122/api/newsPost/1",
+							"raw": "https://localhost:7122/api/newsPost/7",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -693,7 +1214,7 @@
 							"path": [
 								"api",
 								"newsPost",
-								"1"
+								"7"
 							]
 						}
 					},
@@ -726,7 +1247,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:7122/api/newsPost/3",
+							"raw": "https://localhost:7122/api/newsPost/1",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -735,7 +1256,7 @@
 							"path": [
 								"api",
 								"newsPost",
-								"3"
+								"1"
 							]
 						}
 					},
@@ -774,7 +1295,7 @@
 								{
 									"key": "Avatar",
 									"type": "file",
-									"src": "/Users/htkien/Downloads/5-1654591130-macbook-air-m2-engadget.jpeg"
+									"src": "/Users/htkien/Downloads/a11be3734622c70850665c89d44ae413.jpeg"
 								}
 							]
 						},
@@ -811,6 +1332,202 @@
 								"newsPost",
 								"published",
 								"fields"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Published News & Category By Fields",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"TodayDate\":\"2022-10-11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/newsPost/published/fieldNews/2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"newsPost",
+								"published",
+								"fieldNews",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Documents",
+			"item": [
+				{
+					"name": "Create documents",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/octet-stream",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Avatar",
+									"type": "file",
+									"src": "/Users/htkien/Downloads/307929732_392976186339348_5533785108695537122_n.jpg",
+									"disabled": true
+								},
+								{
+									"key": "jsonString",
+									"value": "{\"Code\" : \"Test Name\", \"Order\" : 0,\"Description\" : \"Test keyword\"}",
+									"type": "text"
+								},
+								{
+									"key": "FileAttachment",
+									"type": "file",
+									"src": "/Users/htkien/Downloads/485a34739d8bd362c8e2ae684aa5223a08447438 (1).html"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documents",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get documents by page",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"CurrentPage\": 1,\n   \"PageSize\":20,\n   \"OrderBy\":\"Title\",\n   \"Direction\":-1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documents/filter",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documents",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update documents",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\" : \"Test Name1111232323\",\n     \"Order\" : 0,\n      \"Description\" : \"Test keyword111\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/documents/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documents",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete documents",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documents/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documents",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get documents by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/api/documents/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"documents",
+								"3"
 							]
 						}
 					},

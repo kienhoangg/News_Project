@@ -1,21 +1,27 @@
-﻿using System;
-using Common.Interfaces;
+﻿using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
-using News.API.Persistence;
 
 namespace News.API.Interfaces
 {
-    public interface IDocumentService : IRepositoryBase<Document, long, NewsContext>
+    public interface IDocumentService
     {
-        Task<ApiSuccessResult<DocumentDto>> GetDocumentsByPaging(
-            DocumentRequest documentRequest, int currentPage);
-        Task<Document> GetDocument(long id);
-        Task CreateDocument(Document product);
-        Task UpdateDocument(Document product);
-        Task DeleteDocument(long id);
+        Task<ApiSuccessResult<DocumentDto>>
+        GetDocumentByPaging(
+
+                DocumentRequest documentFieldRequest,
+                params Expression<Func<Document, object>>[] includeProperties
+
+        );
+
+        Task<Document> GetDocument(int id);
+
+        Task CreateDocument(Document documentField);
+
+        Task UpdateDocument(Document documentField);
+
+        Task DeleteDocument(int id);
     }
 }
-

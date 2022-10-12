@@ -4,6 +4,7 @@ import styles from './SearchBar.module.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import { Col, Input, Row } from 'antd';
+import routes from 'config/configRoutes';
 const { Search } = Input;
 const cx = classNames.bind(styles);
 
@@ -30,7 +31,7 @@ function SearchBar(props) {
                 </Col>
                 <Col span={7}>
                     <div className={cx('btn-group')}>
-                        <Link className={cx('btn-item')} to={'/'}>
+                        <Link className={cx('btn-item')} to={routes.publishedIntroduce}>
                             Giới thiệu chung
                         </Link>
                         <Link className={cx('btn-item')} to={'/'}>

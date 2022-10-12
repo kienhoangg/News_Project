@@ -12,8 +12,8 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221006175242_SampleMigration")]
-    partial class SampleMigration
+    [Migration("20221009100934_SampleMigration1")]
+    partial class SampleMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,56 +24,7 @@ namespace News.API.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Models.Entities.Document", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTimeOffset?>("CreatedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTime>("ExpiredDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTimeOffset?>("LastModifiedDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PublishedDate")
-                        .HasColumnType("datetime");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Documents");
-                });
-
-            modelBuilder.Entity("Models.Entities.News.CategoryNews", b =>
+            modelBuilder.Entity("Models.Entities.CategoryNews", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -119,7 +70,7 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("CategoryNews");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.Collaborator", b =>
+            modelBuilder.Entity("Models.Entities.Collaborator", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -172,7 +123,7 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("Collaborators");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.Comment", b =>
+            modelBuilder.Entity("Models.Entities.Comment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -216,7 +167,241 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.FieldNews", b =>
+            modelBuilder.Entity("Models.Entities.Document", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("DocumentDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DocumentFieldId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DocumentSignPersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DocumentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ExpiredDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PublishedDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentDepartmentId");
+
+                    b.HasIndex("DocumentFieldId");
+
+                    b.HasIndex("DocumentSignPersonId");
+
+                    b.HasIndex("DocumentTypeId");
+
+                    b.ToTable("Documents");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentDepartment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentDepartments");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentField", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentFields");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentSignPerson", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentSignPersons");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocumentTypes");
+                });
+
+            modelBuilder.Entity("Models.Entities.FieldNews", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -260,7 +445,7 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("FieldNews");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.NewsPost", b =>
+            modelBuilder.Entity("Models.Entities.NewsPost", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -348,7 +533,7 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("NewsPosts");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.SourceNews", b =>
+            modelBuilder.Entity("Models.Entities.SourceNews", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -386,18 +571,18 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("SourceNews");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.CategoryNews", b =>
+            modelBuilder.Entity("Models.Entities.CategoryNews", b =>
                 {
-                    b.HasOne("Models.Entities.News.FieldNews", "FieldNews")
+                    b.HasOne("Models.Entities.FieldNews", "FieldNews")
                         .WithMany()
                         .HasForeignKey("FieldNews_SK_FK");
 
                     b.Navigation("FieldNews");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.Comment", b =>
+            modelBuilder.Entity("Models.Entities.Comment", b =>
                 {
-                    b.HasOne("Models.Entities.News.NewsPost", "NewsPost")
+                    b.HasOne("Models.Entities.NewsPost", "NewsPost")
                         .WithMany("Comments")
                         .HasForeignKey("NewsPostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,21 +591,48 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("NewsPost");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.NewsPost", b =>
+            modelBuilder.Entity("Models.Entities.Document", b =>
                 {
-                    b.HasOne("Models.Entities.News.CategoryNews", "CategoryNews")
+                    b.HasOne("Models.Entities.DocumentDepartment", "DocumentDepartment")
+                        .WithMany("Documents")
+                        .HasForeignKey("DocumentDepartmentId");
+
+                    b.HasOne("Models.Entities.DocumentField", "DocumentField")
+                        .WithMany("Documents")
+                        .HasForeignKey("DocumentFieldId");
+
+                    b.HasOne("Models.Entities.DocumentSignPerson", "DocumentSignPerson")
+                        .WithMany("Documents")
+                        .HasForeignKey("DocumentSignPersonId");
+
+                    b.HasOne("Models.Entities.DocumentType", "DocumentType")
+                        .WithMany("Documents")
+                        .HasForeignKey("DocumentTypeId");
+
+                    b.Navigation("DocumentDepartment");
+
+                    b.Navigation("DocumentField");
+
+                    b.Navigation("DocumentSignPerson");
+
+                    b.Navigation("DocumentType");
+                });
+
+            modelBuilder.Entity("Models.Entities.NewsPost", b =>
+                {
+                    b.HasOne("Models.Entities.CategoryNews", "CategoryNews")
                         .WithMany("NewsPosts")
                         .HasForeignKey("CategoryNewsId");
 
-                    b.HasOne("Models.Entities.News.Collaborator", "Collaborator")
+                    b.HasOne("Models.Entities.Collaborator", "Collaborator")
                         .WithMany("NewsPosts")
                         .HasForeignKey("CollaboratorId");
 
-                    b.HasOne("Models.Entities.News.FieldNews", "FieldNews")
+                    b.HasOne("Models.Entities.FieldNews", "FieldNews")
                         .WithMany("NewsPosts")
                         .HasForeignKey("FieldNewsId");
 
-                    b.HasOne("Models.Entities.News.SourceNews", "SourceNews")
+                    b.HasOne("Models.Entities.SourceNews", "SourceNews")
                         .WithMany("NewsPosts")
                         .HasForeignKey("SourceNewsId");
 
@@ -433,27 +645,47 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("SourceNews");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.CategoryNews", b =>
+            modelBuilder.Entity("Models.Entities.CategoryNews", b =>
                 {
                     b.Navigation("NewsPosts");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.Collaborator", b =>
+            modelBuilder.Entity("Models.Entities.Collaborator", b =>
                 {
                     b.Navigation("NewsPosts");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.FieldNews", b =>
+            modelBuilder.Entity("Models.Entities.DocumentDepartment", b =>
+                {
+                    b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentField", b =>
+                {
+                    b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentSignPerson", b =>
+                {
+                    b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("Models.Entities.DocumentType", b =>
+                {
+                    b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("Models.Entities.FieldNews", b =>
                 {
                     b.Navigation("NewsPosts");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.NewsPost", b =>
+            modelBuilder.Entity("Models.Entities.NewsPost", b =>
                 {
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("Models.Entities.News.SourceNews", b =>
+            modelBuilder.Entity("Models.Entities.SourceNews", b =>
                 {
                     b.Navigation("NewsPosts");
                 });

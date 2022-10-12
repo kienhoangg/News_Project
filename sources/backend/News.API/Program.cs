@@ -1,21 +1,38 @@
-﻿using Common.Logging;
+﻿using Common;
+using Common.Logging;
+using Microsoft.AspNetCore.Mvc;
 using News.API.Extensions;
 using News.API.Persistence;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(Serilogger.Configure);
 Log.Information("Start News API up");
 
+
 try
 {
     builder.Host.AddAppConfigurations();
     // Add services to the container.
     builder.Services.AddInfrastructure(builder.Configuration);
+    var services = builder.Services;
+    services.AddControllers(o =>
+    {
+        o.Filters.Add(new ResponseCacheAttribute() { NoStore = true, Location = ResponseCacheLocation.None });
+    })
+    .AddNewtonsoftJson(o =>
+    {
+        o.SerializerSettings.DateFormatHandling = Converter.JSONDateFormatHandling;
+        o.SerializerSettings.DateTimeZoneHandling = Converter.JSONDateTimeZoneHandling;
+        o.SerializerSettings.DateFormatString = Converter.JSONDateFormatString;
+        o.SerializerSettings.NullValueHandling = Converter.JSONNullValueHandling;
+        o.SerializerSettings.ReferenceLoopHandling = Converter.JSONReferenceLoopHandling;
+        o.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    });
 
     var app = builder.Build();
     app.UseInfrastructure();
-
     app.MigrateDatabase<NewsContext>((
         context, _) =>
     {

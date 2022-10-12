@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace News.API.Persistence.Migrations
 {
-    public partial class SampleMigration : Migration
+    public partial class SampleMigration1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,16 +35,14 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Documents",
+                name: "DocumentDepartments",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(250)", nullable: false),
-                    PublishedDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ExpiredDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
@@ -54,7 +52,70 @@ namespace News.API.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.PrimaryKey("PK_DocumentDepartments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentFields",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentFields", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentSignPersons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentSignPersons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,6 +158,54 @@ namespace News.API.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SourceNews", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Documents",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(250)", nullable: true),
+                    PublishedDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    ExpiredDate = table.Column<DateTime>(type: "datetime", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DocumentDepartmentId = table.Column<int>(type: "int", nullable: true),
+                    DocumentFieldId = table.Column<int>(type: "int", nullable: true),
+                    DocumentSignPersonId = table.Column<int>(type: "int", nullable: true),
+                    DocumentTypeId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documents_DocumentDepartments_DocumentDepartmentId",
+                        column: x => x.DocumentDepartmentId,
+                        principalTable: "DocumentDepartments",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Documents_DocumentFields_DocumentFieldId",
+                        column: x => x.DocumentFieldId,
+                        principalTable: "DocumentFields",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Documents_DocumentSignPersons_DocumentSignPersonId",
+                        column: x => x.DocumentSignPersonId,
+                        principalTable: "DocumentSignPersons",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Documents_DocumentTypes_DocumentTypeId",
+                        column: x => x.DocumentTypeId,
+                        principalTable: "DocumentTypes",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -218,6 +327,26 @@ namespace News.API.Persistence.Migrations
                 column: "NewsPostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Documents_DocumentDepartmentId",
+                table: "Documents",
+                column: "DocumentDepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_DocumentFieldId",
+                table: "Documents",
+                column: "DocumentFieldId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_DocumentSignPersonId",
+                table: "Documents",
+                column: "DocumentSignPersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_DocumentTypeId",
+                table: "Documents",
+                column: "DocumentTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NewsPosts_CategoryNewsId",
                 table: "NewsPosts",
                 column: "CategoryNewsId");
@@ -248,6 +377,18 @@ namespace News.API.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "NewsPosts");
+
+            migrationBuilder.DropTable(
+                name: "DocumentDepartments");
+
+            migrationBuilder.DropTable(
+                name: "DocumentFields");
+
+            migrationBuilder.DropTable(
+                name: "DocumentSignPersons");
+
+            migrationBuilder.DropTable(
+                name: "DocumentTypes");
 
             migrationBuilder.DropTable(
                 name: "CategoryNews");

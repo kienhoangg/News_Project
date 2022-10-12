@@ -24,6 +24,7 @@ namespace News.API.Extensions
                 {
                     options.JsonSerializerOptions.ReferenceHandler =
                         ReferenceHandler.IgnoreCycles;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 });
             services.AddCors();
             services
@@ -33,7 +34,7 @@ namespace News.API.Extensions
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.ConfigureProductDbContext (configuration);
+            services.ConfigureProductDbContext(configuration);
             services.AddInfrastructureServices();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingFile()));
             return services;
@@ -56,7 +57,7 @@ namespace News.API.Extensions
                             .GetConnectionString("DefaultConnectionString"),
                         builder =>
                             builder
-                                .MigrationsAssembly(typeof (NewsContext)
+                                .MigrationsAssembly(typeof(NewsContext)
                                     .Assembly
                                     .FullName));
                 });
@@ -67,24 +68,29 @@ namespace News.API.Extensions
         AddInfrastructureServices(this IServiceCollection services)
         {
             return services
-                .AddScoped(typeof (IRepositoryBase<,,>),
-                typeof (RepositoryBase<,,>))
-                .AddScoped(typeof (IUnitOfWork<>), typeof (UnitOfWork<>))
-                .AddScoped(typeof (ISerializeService),
-                typeof (SerializeService))
-                .AddScoped(typeof (IDocumentService), typeof (DocumentService))
-                .AddScoped(serviceType: typeof (ICategoryNewsService),
-                typeof (CategoryNewsService))
-                .AddScoped(serviceType: typeof (IFieldNewsService),
-                typeof (FieldNewsService))
-                .AddScoped(serviceType: typeof (ISourceNewsService),
-                typeof (SourceNewsService))
-                .AddScoped(serviceType: typeof (INewsPostService),
-                typeof (NewsPostService))
-                .AddScoped(serviceType: typeof (ICollaboratorService),
-                typeof (CollaboratorService))
-                .AddScoped(serviceType: typeof (ICommentService),
-                typeof (CommentService));
+                .AddScoped(typeof(IRepositoryBase<,,>),
+                typeof(RepositoryBase<,,>))
+                .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+                .AddScoped(typeof(ISerializeService),
+                typeof(SerializeService))
+                .AddScoped(typeof(IDocumentService), typeof(DocumentService))
+                .AddScoped(serviceType: typeof(ICategoryNewsService),
+                typeof(CategoryNewsService))
+                .AddScoped(serviceType: typeof(IFieldNewsService),
+                typeof(FieldNewsService))
+                .AddScoped(serviceType: typeof(ISourceNewsService),
+                typeof(SourceNewsService))
+                .AddScoped(serviceType: typeof(INewsPostService),
+                typeof(NewsPostService))
+                .AddScoped(serviceType: typeof(ICollaboratorService),
+                typeof(CollaboratorService))
+                .AddScoped(serviceType: typeof(ICommentService),
+                typeof(CommentService))
+                 .AddScoped(serviceType: typeof(IDocumentFieldService),
+                typeof(DocumentFieldService)).AddScoped(serviceType: typeof(IDocumentTypeService),
+                typeof(DocumentTypeService)).AddScoped(serviceType: typeof(IDocumentDepartmentService),
+                typeof(DocumentDepartmentService)).AddScoped(serviceType: typeof(IDocumentSignPersonService),
+                typeof(DocumentSignPersonService));
         }
     }
 }

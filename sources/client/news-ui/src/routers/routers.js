@@ -22,11 +22,13 @@ import QuestionListPage from "features/admin/pages/questions/QuestionListPage/Qu
 import MenuPage from "features/admin/pages/setup/MenuPage/MenuPage";
 import Home from "features/Home/Home";
 import PublishedDocumentPage from "features/visitor/PublishedDocumentPage/PublishedDocumentPage";
+import PublishedDocumentPrintPage from "features/visitor/PublishedDocumentPrintPage/PublishedDocumentPrintPage";
+import PublishedIntroducePage from "features/visitor/PublishedIntroducePage/PublishedIntroducePage";
+import PublishedMenuPage from "features/visitor/PublishedMenuPage/PublishedMenuPage";
+import PublishedNewsFieldPage from "features/visitor/PublishedNewsFieldPage/PublishedNewsFieldPage";
 import PublishedNewsListCategoryPage from "features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage";
+import PublishedNewsListDocumentPage from "features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage";
 import SearchPage from "features/visitor/SearchPage/SearchPage";
-import OperatingDocumentsPage from "features/visitor/OperatingDocumentsPage/OperatingDocumentsPage";
-import OperatingDocumentsDetailPage from "features/visitor/OperatingDocumentsDetailPage/OperatingDocumentsDetailPage";
-import QuestionAndAnswerPage from "features/visitor/QuestionAndAnswerPage/QuestionAndAnswerPage";
 
 // Public routes
 const publicRoutes = [
@@ -35,13 +37,27 @@ const publicRoutes = [
   { path: config.routes.publishedDocument, component: PublishedDocumentPage },
   { path: config.routes.publishedNewsPost, component: PublishedDocumentPage },
   {
+    path: config.routes.publishedNewsPostPrint,
+    component: PublishedDocumentPrintPage,
+    layout: null,
+  },
+  {
     path: config.routes.publishedNewsPostListCategory,
     component: PublishedNewsListCategoryPage,
   },
   {
     path: config.routes.publishedNewsPostCategory,
-    component: PublishedNewsListCategoryPage,
+    component: PublishedNewsFieldPage,
   },
+
+  {
+    path: config.routes.publishedDocumentList,
+    component: PublishedNewsListDocumentPage,
+  },
+
+  { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
+
+  { path: config.routes.publishedMenu, component: PublishedMenuPage },
   { path: config.routes.search, component: SearchPage },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 

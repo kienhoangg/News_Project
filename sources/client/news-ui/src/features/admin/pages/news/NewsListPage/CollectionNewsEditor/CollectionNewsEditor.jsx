@@ -26,6 +26,11 @@ import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { CKEditor } from 'ckeditor4-react';
 import { useState } from 'react';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
+import datetimeHelper from 'helpers/datetimeHelper';
+import { useEffect } from 'react';
+import commonFunc from 'common/commonFunc';
 
 const cx = classNames.bind(styles);
 
@@ -33,15 +38,16 @@ CollectionNewsEditor.propTypes = {};
 
 CollectionNewsEditor.defaultProps = {};
 
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
-function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
+function CollectionNewsEditor({
+  open,
+  onCreate,
+  onCancel,
+  action,
+  data,
+  dataFilter,
+}) {
   const [form] = Form.useForm();
 
   function onEditorChange(event) {
@@ -52,12 +58,13 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
+  const [fileListAttachment, setFileListAttachment] = useState([]);
 
   const handleCancel = () => setPreviewOpen(false);
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+      file.preview = await commonFunc.getBase64(file.originFileObj);
     }
 
     setPreviewImage(file.url || file.preview);
@@ -71,11 +78,63 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
     setFileList(newFileList);
   };
 
+  const handleChangeAttachment = ({ fileList: newFileList }) => {
+    setFileListAttachment(newFileList);
+  };
+
   const uploadButton = (
     <div>
       <PlusOutlined />
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
+  );
+
+  const renderFieldNews = (
+    <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
+      {dataFilter?.fieldNews?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const renderSourceNews = (
+    <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
+      {dataFilter?.sourceNews?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const generateTree = (arrNode) => {
+    return arrNode.map((x) => (
+      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+        {x.children.length > 0 && generateTree(x.children)}
+      </TreeNode>
+    ));
+  };
+
+  const renderCategoryNews = (
+    <TreeSelect
+      showSearch
+      style={{
+        width: '100%',
+      }}
+      // value={valueNewsType}
+      dropdownStyle={{
+        maxHeight: 400,
+        overflow: 'auto',
+      }}
+      placeholder='Chọn loại tin tức'
+      allowClear
+      treeDefaultExpandAll
+      // onChange={onChangeNewsType}
+    >
+      {generateTree(commonFunc.list_to_tree(dataFilter?.categoryNews ?? []))}
+    </TreeSelect>
   );
 
   return (
@@ -91,12 +150,13 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
         form
           .validateFields()
           .then((values) => {
-            form.resetFields();
             values.content = values.content?.editor?.getData();
+            const date =
+              values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+            const publishedDate = datetimeHelper.formatDatetimeToDate(date);
             const {
               category,
               title,
-              createdDate,
               IsNewsHot,
               IsNewsVideo,
               IsDisplayTitle,
@@ -106,10 +166,10 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               description,
               content,
               field,
+              source,
             } = values;
             const bodyData = {
               Title: title,
-              PublishedDate: createdDate,
               IsHotNews: IsNewsHot,
               IsVideoNews: IsNewsVideo,
               IsShowTitle: IsDisplayTitle,
@@ -118,14 +178,46 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
               AvatarTitle: avatarTitle,
               Description: description,
               Content: content,
+              PublishedDate: publishedDate,
             };
             if (field) {
-              bodyData.FieldNews = { Id: parseInt(field) };
+              bodyData.FieldNewsId = parseInt(field);
+            }
+            if (source) {
+              bodyData.SourceNewsId = parseInt(source);
             }
             if (category) {
-              bodyData.SourceNews = { id: parseInt(category) };
+              bodyData.CategoryNewsId = parseInt(category);
             }
-            onCreate(bodyData);
+            let body = { JsonString: bodyData };
+            if (fileList.length > 0) {
+              const file = fileList[0].originFileObj;
+              if (file.size > LIMIT_UP_LOAD_FILE) {
+                openNotification(
+                  'File ảnh đã lớn hơn 2MB',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              body.Avatar = file;
+            }
+            if (fileListAttachment.length > 0) {
+              const file = fileListAttachment[0].originFileObj;
+              if (file.size > LIMIT_UP_LOAD_FILE) {
+                openNotification(
+                  'File đính kèm đã lớn hơn 2MB',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              body.FileAttachment = file;
+            }
+            form.resetFields();
+            setFileList([]);
+            setFileListAttachment([]);
+            onCreate(body);
           })
           .catch((info) => {
             console.log('Validate Failed:', info);
@@ -150,39 +242,12 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
       >
         <Form.Item label='Danh mục'>
           <Row gutter={8}>
-            <Col span={4}>
+            <Col span={5}>
               <Form.Item style={{ marginBottom: 0 }} name='category'>
-                <TreeSelect
-                  showSearch
-                  style={{
-                    width: '100%',
-                  }}
-                  // value={valueNewsType}
-                  dropdownStyle={{
-                    maxHeight: 400,
-                    overflow: 'auto',
-                  }}
-                  placeholder='Chọn loại tin tức'
-                  allowClear
-                  treeDefaultExpandAll
-                  // onChange={onChangeNewsType}
-                >
-                  <TreeNode value='1' title='Tin tức'>
-                    <TreeNode value='1.1' title='Tin trong tỉnh' />
-                    <TreeNode value='1.2' title='Chính sách mới' />
-                    <TreeNode value='1.3' title='Hoạt động chỉ đạo điều hành' />
-                  </TreeNode>
-                  <TreeNode value='2' title='Tin tức 2'>
-                    <TreeNode value='2.2' title='Chính sách mới 2' />
-                    <TreeNode
-                      value='2.3'
-                      title='Hoạt động chỉ đạo điều hành 2'
-                    />
-                  </TreeNode>
-                </TreeSelect>
+                {renderCategoryNews}
               </Form.Item>
             </Col>
-            <Col span={14}>
+            <Col span={13}>
               <Form.Item
                 style={{ marginBottom: 0 }}
                 name='title'
@@ -199,7 +264,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
             </Col>
             <Col span={6}>
               <Form.Item
-                name='createdDate'
+                name='publishedDate'
                 label='Ngày tạo'
                 style={{ marginBottom: 0 }}
               >
@@ -266,12 +331,12 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                action='https://localhost:7122/api/newspost/file'
                 listType='picture-card'
                 fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
-                // onOk={test}
+                accept='.jpg,.png,.jpeg'
+                customRequest={commonFunc.dummyRequest}
               >
                 {fileList.length < 1 ? uploadButton : null}
               </Upload>
@@ -374,23 +439,11 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
         >
           <Row gutter={16}>
             <Col span={6}>
-              <Form.Item name='field'>
-                <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
-                  <Option value='1'>Lĩnh vực 1</Option>
-                  <Option value='2'>Lĩnh vực 2</Option>
-                  <Option value='3'>Lĩnh vực 3</Option>
-                  <Option value='4'>Lĩnh vực 4</Option>
-                </Select>
-              </Form.Item>
+              <Form.Item name='field'>{renderFieldNews}</Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item name='source' label='Nguồn tin'>
-                <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
-                  <Option value='1'>Tin số 1</Option>
-                  <Option value='2'>Tin số 2</Option>
-                  <Option value='3'>Tin số 3</Option>
-                  <Option value='4'>Tin số 4</Option>
-                </Select>
+                {renderSourceNews}
               </Form.Item>
             </Col>
           </Row>
@@ -399,11 +452,15 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data }) {
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                action='https://www.mocky.io/v2/5cc8019d300000980a055e76'
                 listType='picture'
                 maxCount={1}
+                fileList={fileListAttachment}
+                onChange={handleChangeAttachment}
+                customRequest={commonFunc.dummyRequest}
               >
-                <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                {fileListAttachment.length < 1 ? (
+                  <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                ) : null}
               </Upload>
             </Col>
           </Row>

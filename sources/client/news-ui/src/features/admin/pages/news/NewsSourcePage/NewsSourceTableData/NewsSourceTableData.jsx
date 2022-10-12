@@ -36,32 +36,32 @@ function NewsSourceTableData(props) {
 
   const columns = [
     {
-      key: 'title',
-      dataIndex: 'title',
+      key: 'Title',
+      dataIndex: 'Title',
       title: 'Tiêu đề',
       render: (text) => <div>{text}</div>,
-      sorter: (a, b) => a.title - b.title,
+      sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: 'order',
-      dataIndex: 'order',
+      key: 'Order',
+      dataIndex: 'Order',
       title: 'Số thứ tự',
-      render: (order) => <a>{order}</a>,
-      sorter: (a, b) => a.order - b.order,
+      render: (Order) => <a>{Order}</a>,
+      sorter: (a, b) => a.Order - b.Order,
       width: 100,
       align: 'right',
     },
     {
-      key: 'description',
-      dataIndex: 'description',
+      key: 'Description',
+      dataIndex: 'Description',
       title: 'Mô tả',
       render: (Description) => <a>{Description}</a>,
       sorter: (a, b) => a.Description - b.Description,
       width: 200,
     },
     {
-      key: 'status',
-      dataIndex: 'status',
+      key: 'Status',
+      dataIndex: 'Status',
       title: 'Trạng thái',
       align: 'center',
       width: 100,
@@ -109,7 +109,7 @@ function NewsSourceTableData(props) {
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.createdDate);
-    return { ...item, createdDate: createdDate, key: item.id };
+    return { ...item, createdDate: createdDate, key: item.Id };
   });
 
   function handleChangeSourceNew(values) {
@@ -131,7 +131,7 @@ function NewsSourceTableData(props) {
     if (!deleteSourceNew) {
       return;
     }
-    deleteSourceNew(values.id);
+    deleteSourceNew(values.Id);
   };
 
   function handleOnClickStatus(values) {

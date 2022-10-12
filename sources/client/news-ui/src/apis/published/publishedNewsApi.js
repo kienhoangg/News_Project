@@ -3,6 +3,7 @@
 import axiosClient from "apis/axiosClient";
 import datafakePublisedNews from "apis/datafake/datafakePublisedNews";
 import datafakePublishedCategoryList from "apis/datafake/datafakePublishedCategoryList";
+import datafakePublishedDocument from "apis/datafake/datafakePublishedDocument";
 
 class PublishedNewsApi {
     getData = (params) => {
@@ -14,8 +15,28 @@ class PublishedNewsApi {
         // var response = datafakePublisedNews.objectExample;
         // return response;
     };
-    getCategoriesDataListPage() {
+
+    getComments() {
         var response = datafakePublishedCategoryList;
+        return response;
+    }
+
+    getFieldsDataListPage() {
+        let url = `/newsPost/published/fields`;
+        return axiosClient.get(url, {});
+
+        var response = datafakePublishedCategoryList;
+        // return response;
+    }
+
+    getFieldsDataPage(currentPage, date) {
+        var response = {
+            data: {
+                field: datafakePublishedDocument.field,
+                category: datafakePublishedDocument.category
+            },
+            total: 20
+        }
         return response;
     }
 }

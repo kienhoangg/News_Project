@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
-using Models.Entities.News;
+using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 
@@ -70,7 +70,7 @@ namespace News.API.Controllers
             var updatedCollaborator =
                 _mapper.Map(collaboratorDto, Collaborator);
             await _collaboratorService.UpdateCollaborator(updatedCollaborator);
-            
+
             var result = _mapper.Map<CollaboratorDto>(updatedCollaborator);
             return Ok(result);
         }
