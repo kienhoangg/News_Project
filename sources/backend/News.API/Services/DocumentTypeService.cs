@@ -6,7 +6,7 @@ using Infrastructure.Mappings;
 using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
 using Models.Constants;
-using Models.Dtos.Documents;
+using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;

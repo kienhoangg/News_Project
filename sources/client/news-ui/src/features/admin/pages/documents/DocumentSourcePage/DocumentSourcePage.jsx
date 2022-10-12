@@ -80,9 +80,9 @@ function DocumentSourcePage(props) {
       parentID = parseInt(values.parentId);
     }
     values = {
-      CategoryNewsName: values?.title,
+      Title: values?.title,
       Order: parseInt(values?.order ?? 0),
-      Keyword: values?.keyword,
+      Description: values?.description,
     };
     if (parentID) {
       values.ParentId = parentID;
@@ -96,7 +96,7 @@ function DocumentSourcePage(props) {
    */
   const insertCategoryNews = async (values) => {
     try {
-      await documentApi.insertSingerDocument(values);
+      await documentApi.insertSourceDocument(values);
       setIsModalOpen(false);
       fetchProductList();
       openNotification('Tạo mới cơ quan ban hành thành công');
@@ -129,9 +129,9 @@ function DocumentSourcePage(props) {
     setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
   };
 
-  const handleDeleteCategoryNew = async (id) => {
+  const handleDeleteSourceNew = async (id) => {
     try {
-      await documentApi.deleteSingerDocument(id);
+      await documentApi.deleteSourceDocument(id);
       openNotification('Xóa cơ quan ban hành thành công');
       fetchProductList();
     } catch (error) {
@@ -195,7 +195,7 @@ function DocumentSourcePage(props) {
       }
 
       <div className={cx('top')}>
-        <DocumentSourcePageSearch />
+        <DocumentSourcePageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-signer-document')}>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
@@ -204,7 +204,11 @@ function DocumentSourcePage(props) {
       </div>
       <Divider style={{ margin: '0' }} />
       <div className={cx('table-data')}>
-        <DocumentSourceTableData data={newsData} />
+        <DocumentSourceTableData
+          data={newsData}
+          setPagination={handleChangePagination}
+          deleteSourceNew={handleDeleteSourceNew}
+        />
       </div>
     </div>
   );

@@ -82,9 +82,9 @@ function DocumentFieldPage(props) {
       parentID = parseInt(values.parentId);
     }
     values = {
-      CategoryNewsName: values?.title,
+      Title: values?.title,
       Order: parseInt(values?.order ?? 0),
-      Keyword: values?.keyword,
+      Description: values?.description,
     };
     if (parentID) {
       values.ParentId = parentID;
@@ -98,7 +98,7 @@ function DocumentFieldPage(props) {
    */
   const insertCategoryNews = async (values) => {
     try {
-      await documentApi.insertCategoryNews(values);
+      await documentApi.insertFieldDocument(values);
       setIsModalOpen(false);
       fetchCategoryList();
       openNotification('Tạo mới lĩnh vực thành công');
@@ -129,7 +129,7 @@ function DocumentFieldPage(props) {
 
   const handleDeleteCategoryNew = async (id) => {
     try {
-      await documentApi.deleteCategoryNews(id);
+      await documentApi.deleteFieldDocument(id);
       openNotification('Xóa lĩnh vực thành công');
       fetchCategoryList();
     } catch (error) {
@@ -189,7 +189,7 @@ function DocumentFieldPage(props) {
       }
 
       <div className={cx('top')}>
-        <DocumentFieldPageSearch />
+        <DocumentFieldPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-field-document')}>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
@@ -198,7 +198,11 @@ function DocumentFieldPage(props) {
       </div>
       <Divider style={{ margin: '0' }} />
       <div className={cx('table-data')}>
-        <DocumentFieldTableData data={newsData} />
+        <DocumentFieldTableData
+          data={newsData}
+          setPagination={handleChangePagination}
+          deleteSourceNew={handleDeleteCategoryNew}
+        />
       </div>
     </div>
   );
