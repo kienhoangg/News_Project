@@ -20,8 +20,6 @@ BlogSection.propTypes = {
 function BlogSection(props) {
     const { newsHots, onHover, dataPreview } = props;
 
-    const firstHot = Array.isArray(newsHots) ? newsHots[0] : undefined;
-
     return (
         <div className={cx('wrapper')}>
             <Row className='h-100'>

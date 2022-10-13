@@ -19,21 +19,8 @@ function BlogSectionShortList(props) {
             <div className={cx('items')}>
                 {Array.isArray(listData) &&
                     listData.map((item) => {
-                        return <BlogSectionShortListItem onHover={onHover} data={item} key={item?.id} />;
+                        return <BlogSectionShortListItem onHover={onHover} data={item} key={item?.Id} />;
                     })}
-
-                {/* <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem />
-                <BlogSectionShortListItem /> */}
             </div>
         </div>
     );
