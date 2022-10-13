@@ -25,19 +25,29 @@ class PublishedNewsApi {
         let url = `/newsPost/published/fields`;
         return axiosClient.get(url, {});
 
-        var response = datafakePublishedCategoryList;
+        // var response = datafakePublishedCategoryList;
         // return response;
     }
 
-    getFieldsDataPage(currentPage, date) {
-        var response = {
-            data: {
-                field: datafakePublishedDocument.field,
-                category: datafakePublishedDocument.category
-            },
-            total: 20
+    getFieldsDataPage(params) {
+        const { id, currentPage, date } = params;
+        const url = `/newsPost/published/fieldNews/${id}`;
+        const body = {
+            "CurrentPage": currentPage,
+            "PageSize": 6,
+            // "TodayDate": "2022-10-11"
         }
-        return response;
+
+        return axiosClient.post(url, body);
+
+        // var response = {
+        //     data: {
+        //         field: datafakePublishedDocument.field,
+        //         category: datafakePublishedDocument.category
+        //     },
+        //     total: 20
+        // }
+        // return response;
     }
 }
 const publishedNewsApi = new PublishedNewsApi();
