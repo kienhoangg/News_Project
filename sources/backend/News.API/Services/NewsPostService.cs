@@ -110,7 +110,7 @@ namespace News.API.Services
                 query = query.Where(x => x.PublishedDate <= tomorrow &&
                  x.PublishedDate >= today);
             }
-            if (newsPostRequest.ListNewsPostId.Count > 0)
+            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
             {
                 query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
             }
