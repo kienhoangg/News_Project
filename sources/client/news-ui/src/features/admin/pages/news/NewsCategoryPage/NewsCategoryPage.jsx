@@ -9,6 +9,7 @@ import AdminCollectionDetail from 'features/admin/components/AdminCollectionDeta
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import { Option } from 'antd/lib/mentions';
+import { FileAddFilled } from '@ant-design/icons';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -264,7 +265,7 @@ function NewsCategoryPage(props) {
       <div className={cx('top')}>
         <NewsCategoryPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-category-news')}>
-          <Button type='primary' onClick={showModal}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>

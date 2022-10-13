@@ -22,8 +22,11 @@ class PublishedNewsApi {
     }
 
     getFieldsDataListPage() {
+        let url = `/newsPost/published/fields`;
+        return axiosClient.get(url, {});
+
         var response = datafakePublishedCategoryList;
-        return response;
+        // return response;
     }
 
     getFieldsDataPage(currentPage, date) {

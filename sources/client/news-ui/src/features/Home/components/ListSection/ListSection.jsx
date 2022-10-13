@@ -23,42 +23,42 @@ ListSection.defaultProps = {
 
 const LIST_BUTON = [
     {
-        href: '/',
-        label: 'ĐIỀU ƯỚC QUỐC TẾ',
-        image: Images.LIST_BUTTON_ITEM,
+        Href: '/',
+        Label: 'ĐIỀU ƯỚC QUỐC TẾ',
+        Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        href: '/',
-        label: 'PHỔ BIẾN PHÁP LUẬT',
-        image: Images.LIST_BUTTON_ITEM,
+        Href: '/',
+        Label: 'PHỔ BIẾN PHÁP LUẬT',
+        Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        href: '/',
-        label: 'HÒM THƯ GÓP Ý',
-        image: Images.LIST_BUTTON_ITEM,
+        Href: '/',
+        Label: 'HÒM THƯ GÓP Ý',
+        Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        href: '/',
-        label: 'ĐÁNH GIÁ SỰ PHỤC VỤ CỦA CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC',
-        image: Images.LIST_BUTTON_ITEM,
+        Href: '/',
+        Label: 'ĐÁNH GIÁ SỰ PHỤC VỤ CỦA CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC',
+        Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        href: '/',
-        label: 'THÔNG TIN CÔNG KHAI',
-        image: Images.LIST_BUTTON_ITEM,
+        Href: '/',
+        Label: 'THÔNG TIN CÔNG KHAI',
+        Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        href: '/',
-        label: 'THÔNG TIN CẦN BIẾT',
-        image: Images.LIST_BUTTON_ITEM,
+        Href: '/',
+        Label: 'THÔNG TIN CẦN BIẾT',
+        Image: Images.LIST_BUTTON_ITEM,
     },
 ];
 
 const LIST_DOCUMENT = [
-    { href: '/', title: '1758/QĐ-BTTTT', date: '2022-09-30T13:54:50.005Z', description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 3' },
-    { href: '/', title: '1752/QĐ-BTTTT', date: '2022-09-29T13:54:50.005Z', description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 2' },
-    { href: '/', title: '1751/QĐ-BTTTT', date: '2022-09-28T13:54:50.005Z', description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 1' },
-    { href: '/', title: '1753/QĐ-BTTTT', date: '2022-09-28T13:54:50.005Z', description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 1' },
+    { Href: '/', Title: '1758/QĐ-BTTTT', Date: '2022-09-30T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 3' },
+    { Href: '/', Title: '1752/QĐ-BTTTT', Date: '2022-09-29T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 2' },
+    { Href: '/', Title: '1751/QĐ-BTTTT', Date: '2022-09-28T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 1' },
+    { Href: '/', Title: '1753/QĐ-BTTTT', Date: '2022-09-28T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 1' },
 ];
 
 const LIST_NEWS = [
@@ -74,17 +74,17 @@ const LIST_NEWS = [
 
 function ListSection(props) {
     const { data } = props;
-    const { categoryNews, data: items } = data;
+    const { CategoryNews, Data: items } = data;
     if (Array.isArray(items) && items.length > 1) {
         for (let i = 1; i < items.length; i++) {
-            items[i].avatar = '';
+            items[i].Avatar = '';
         }
     }
     return (
         <Row gutter={16} className={cx('wrapper')}>
             <Col span={8}>
                 {LIST_BUTON.map((item) => {
-                    return <ListSectionButton href={item.href} imageName={item.image} key={item.label} label={item.label} />;
+                    return <ListSectionButton href={item.Href} imageName={item.Image} key={item.Label} label={item.Label} />;
                 })}
             </Col>
             <Col span={8}>
@@ -100,7 +100,7 @@ function ListSection(props) {
                     </Row>
                     <div className={cx('list-document-content')}>
                         {LIST_DOCUMENT.map((item) => {
-                            return <ListSectionDocument title={item.title} date={item.date} key={item.title} description={item.description} href={item.href} />;
+                            return <ListSectionDocument title={item.Title} date={item.Date} key={item.Title} description={item.Description} href={item.Href} />;
                         })}
                     </div>
                 </div>
@@ -113,11 +113,11 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         <div className={cx('title-news')}>
                             <div className={cx('divider')}></div>
-                            <Link to={commonRender.renderLinkNewsCategory(categoryNews?.id)}>{categoryNews?.categoryNewsName}</Link>
+                            <Link to={commonRender.renderLinkNewsCategory(CategoryNews?.Id)}>{CategoryNews?.CategoryNewsName}</Link>
                         </div>
                         {Array.isArray(items) &&
                             items.map((item) => {
-                                return <ListSectionNews title={item.title} key={item.id} avatar={item.avatar} href={commonRender.renderLinkNewsDetail(item.id)} />;
+                                return <ListSectionNews title={item.Title} key={item.Id} avatar={item.Avatar} href={commonRender.renderLinkNewsDetail(item.Id)} />;
                             })}
                     </div>
                 </div>

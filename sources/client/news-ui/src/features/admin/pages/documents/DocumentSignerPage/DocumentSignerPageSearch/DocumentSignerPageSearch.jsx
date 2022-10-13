@@ -1,35 +1,65 @@
-import { FileAddFilled, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row } from "antd";
-import classNames from "classnames/bind";
-import styles from "./DocumentSignerPageSearch.module.scss";
+import { FileAddFilled, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row } from 'antd';
+import classNames from 'classnames/bind';
+import styles from './DocumentSignerPageSearch.module.scss';
+import { useState } from 'react';
+import { PropTypes } from 'prop-types';
 
 const cx = classNames.bind(styles);
 
-DocumentSignerPageSearch.propTypes = {};
+DocumentSignerPageSearch.propTypes = {
+  /**
+   * Func giúp Component bố gọi để thiết lập từ khóa cần tìm
+   */
+  setTextSearch: PropTypes.func,
+};
 
-DocumentSignerPageSearch.defaultProps = {};
+DocumentSignerPageSearch.defaultProps = {
+  setTextSearch: () => {},
+};
 
 function DocumentSignerPageSearch(props) {
+  const { setTextSearch } = props;
+  const [keyword, setKeyword] = useState('');
+
+  /**
+   * Sử lý sự kiện bấp search
+   */
+  const handleOnclickButtonSearch = () => {
+    if (!setTextSearch) {
+      return;
+    }
+    setTextSearch(keyword);
+  };
+
+  /**
+   * Set từ khóa cần tìm để lấy lại danh sách
+   * @param {*} event Sự kiên thay đổi
+   */
+  const handleChange = (event) => {
+    const textSearch = event?.target?.value?.trim() ?? '';
+    setKeyword(textSearch);
+    // TODO: Xóa nếu bỏ search trong lúc gõ
+    setTextSearch(textSearch);
+  };
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Row gutter={16} style={{ marginBottom: 0 }}>
         <Col span={8}>
-          <Input style={{ width: "100%" }} placeholder="Từ khóa tìm kiếm" />
+          <Input
+            style={{ width: '100%' }}
+            onChange={handleChange}
+            placeholder='Từ khóa tìm kiếm'
+          />
         </Col>
         <Col span={2}>
-          <Row justify="start">
-            <Button type="default" icon={<SearchOutlined />}>
-              Tìm kiếm
-            </Button>
-          </Row>
-        </Col>
-        <Col span={14}>
-          <Row justify="end">
+          <Row justify='start'>
             <Button
-              type="primary"
-              icon={<FileAddFilled />}
+              type='default'
+              onClick={() => handleOnclickButtonSearch()}
+              icon={<SearchOutlined />}
             >
-              Tạo mới
+              Tìm kiếm
             </Button>
           </Row>
         </Col>
