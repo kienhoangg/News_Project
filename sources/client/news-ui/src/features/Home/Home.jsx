@@ -34,7 +34,6 @@ function Home(props) {
     }, []);
 
     function handleOnHoverNewPreview(values) {
-        console.log('values', values);
         if (values?.isEnter) {
             setNewsPreview(values);
         } else {

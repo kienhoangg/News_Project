@@ -19,7 +19,6 @@ BlogSection.propTypes = {
 };
 
 function BlogSection(props) {
-    console.log('BlogSection', props);
     const { newsHots, onHover, dataPreview, documentHots } = props;
 
     return (

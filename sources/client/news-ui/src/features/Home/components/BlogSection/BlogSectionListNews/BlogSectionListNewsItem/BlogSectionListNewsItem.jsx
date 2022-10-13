@@ -15,7 +15,6 @@ BlogSectionListNewsItem.defaultProps = {};
 function BlogSectionListNewsItem(props) {
     const { DocumentData } = props;
     const { Id, Code, Name } = DocumentData;
-    console.log('BlogSectionListNewsItem', props);
 
     return (
         <Link className={cx('wrapper')} underline='none' to={commonRender.renderLinkNewsDetail(Id)} color='inherit'>
