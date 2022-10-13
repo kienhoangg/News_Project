@@ -1,24 +1,27 @@
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import styles from './BlogSectionListNewsItem.module.scss';
+import PropTypes from 'prop-types';
+import commonRender from 'common/commonRender';
 
 const cx = classNames.bind(styles);
 
-BlogSectionListNewsItem.propTypes = {};
+BlogSectionListNewsItem.propTypes = {
+    DocumentData: PropTypes.object,
+};
 
 BlogSectionListNewsItem.defaultProps = {};
 
 function BlogSectionListNewsItem(props) {
-    const data = {
-        href: '/',
-        label: 'Thúc đẩy chuyển đổi số phục vụ cho học tập suốt đời sau đại dịch COVID-19',
-    };
+    const { DocumentData } = props;
+    const { Id, Code, Name } = DocumentData;
+    console.log('BlogSectionListNewsItem', props);
 
     return (
-        <Link className={cx('wrapper')} underline='none' to={data.href} color='inherit'>
+        <Link className={cx('wrapper')} underline='none' to={commonRender.renderLinkNewsDetail(Id)} color='inherit'>
             {/* <FiberManualRecordIcon fontSize='small' /> */}
             <div className={cx('content')}>
-                {data.label} <span className={cx('badge-new')}>new</span>
+                <div className={cx('icon')}></div> {Name} <span className={cx('badge-new')}>new</span>
             </div>
         </Link>
     );

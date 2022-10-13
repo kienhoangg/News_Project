@@ -13,12 +13,14 @@ const cx = classNames.bind(styles);
 
 BlogSection.propTypes = {
     newsHots: PropTypes.array,
+    documentHots: PropTypes.array,
     onHover: PropTypes.func,
     dataPreview: PropTypes.object,
 };
 
 function BlogSection(props) {
-    const { newsHots, onHover, dataPreview } = props;
+    console.log('BlogSection', props);
+    const { newsHots, onHover, dataPreview, documentHots } = props;
 
     return (
         <div className={cx('wrapper')}>
@@ -43,7 +45,7 @@ function BlogSection(props) {
                 <Col span={6} className={cx('blog-right') + ' h-100'}>
                     <div className={cx('container')}>
                         <div className={cx('list-news')}>
-                            <BlogSectionListNews />
+                            <BlogSectionListNews DocumentHots={documentHots} />
                         </div>
                         <div className={cx('map')}>
                             <img src='https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoDoc/bandoyb.gif' alt='' height={'100%'} width='100%' />

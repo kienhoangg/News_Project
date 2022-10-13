@@ -14,11 +14,12 @@ import commonRender from 'common/commonRender';
 const cx = classNames.bind(styles);
 
 ListSection.propTypes = {
-    data: PropTypes.object,
+    dataNews: PropTypes.object,
+    dataDocuments: PropTypes.object,
 };
 
 ListSection.defaultProps = {
-    data: {},
+    dataNews: {},
 };
 
 const LIST_BUTON = [
@@ -54,13 +55,6 @@ const LIST_BUTON = [
     },
 ];
 
-const LIST_DOCUMENT = [
-    { Href: '/', Title: '1758/QĐ-BTTTT', Date: '2022-09-30T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 3' },
-    { Href: '/', Title: '1752/QĐ-BTTTT', Date: '2022-09-29T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 2' },
-    { Href: '/', Title: '1751/QĐ-BTTTT', Date: '2022-09-28T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 1' },
-    { Href: '/', Title: '1753/QĐ-BTTTT', Date: '2022-09-28T13:54:50.005Z', Description: 'Quy định chức năng, nhiêm vụ, quyền hạn và cơ cấu tổ chức của vụ tổ chức cán bộ 1' },
-];
-
 const LIST_NEWS = [
     { href: '/', title: 'Tỉnh Hậu Giang tổ chức hội thi tuyên truyền lưu động về an toàn giao thông', avatar: Images.DEMO_AVATAR_1 },
     { href: '/', title: 'Thái Nguyên: Thúc đẩy chuyển đổi số trong ngành kiếm sát', avatar: '' },
@@ -73,8 +67,8 @@ const LIST_NEWS = [
 // imageName: PropTypes.any,
 
 function ListSection(props) {
-    const { data } = props;
-    const { CategoryNews, Data: items } = data;
+    const { dataNews, dataDocuments } = props;
+    const { CategoryNews, Data: items } = dataNews;
     if (Array.isArray(items) && items.length > 1) {
         for (let i = 1; i < items.length; i++) {
             items[i].Avatar = '';
@@ -99,9 +93,10 @@ function ListSection(props) {
                         </Col>
                     </Row>
                     <div className={cx('list-document-content')}>
-                        {LIST_DOCUMENT.map((item) => {
-                            return <ListSectionDocument title={item.Title} date={item.Date} key={item.Title} description={item.Description} href={item.Href} />;
-                        })}
+                        {dataDocuments &&
+                            dataDocuments.Data.map((item) => {
+                                return <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkNewsDetail(item.Id)} />;
+                            })}
                     </div>
                 </div>
             </Col>
