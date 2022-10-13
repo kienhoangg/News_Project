@@ -57,7 +57,6 @@ function PublishedNewsListDocumentPage(props) {
                     _limit: 10,
                 };
                 const response = await publishedDocumentApi.getData(params);
-                console.log('PublishedNewsListDocumentPage data', response);
 
                 setData(response);
             } catch (error) {

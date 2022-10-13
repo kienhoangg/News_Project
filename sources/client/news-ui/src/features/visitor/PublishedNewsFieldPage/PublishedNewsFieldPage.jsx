@@ -30,7 +30,6 @@ function PublishedNewsFieldPage(props) {
                 const params = { currentPage: pagingIndex };
                 const response = await publishedNewsApi.getFieldsDataPage(params);
                 setDataPageFullPage(response);
-                console.log('PublishedNewsFieldPage', response);
                 // setDataPage(response?.data);
                 // setDataTotal(response?.total);
                 dataPage.current = response?.data?.category;
