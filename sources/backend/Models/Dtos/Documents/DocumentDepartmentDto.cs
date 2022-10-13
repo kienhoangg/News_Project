@@ -1,6 +1,6 @@
 using Contracts.Domains;
 
-namespace Models.Dtos.Documents
+namespace Models.Dtos
 {
     public class DocumentDepartmentDto : DtoBase
     {

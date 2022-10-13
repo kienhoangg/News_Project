@@ -25,11 +25,14 @@ namespace News.API.Persistence
         public DbSet<Document> Documents { get; set; }
 
         public DbSet<Comment> Comments { get; set; }
-
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<QuestionCategory> QuestionCategories { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<DocumentField> DocumentFields { get; set; }
         public DbSet<DocumentDepartment> DocumentDepartments { get; set; }
         public DbSet<DocumentSignPerson> DocumentSignPersons { get; set; }
+        public DbSet<StaticInfo> StaticInfos { get; set; }
+        public DbSet<StaticCategory> StaticCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

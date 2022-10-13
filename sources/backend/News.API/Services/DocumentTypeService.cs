@@ -5,6 +5,7 @@ using Infrastructure.Implements;
 using Infrastructure.Mappings;
 using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
+using Microsoft.EntityFrameworkCore;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
@@ -38,6 +39,11 @@ namespace News.API.Services
         public async Task<DocumentType> GetDocumentType(int id)
         {
             return await GetByIdAsync(id);
+        }
+
+        public async Task<List<DocumentType>> GetAllDocumentTypes()
+        {
+            return await FindAll().ToListAsync();
         }
 
         public async Task<ApiSuccessResult<DocumentTypeDto>> GetDocumentTypeByPaging(DocumentTypeRequest documentFieldRequest, params Expression<Func<DocumentType, object>>[] includeProperties)

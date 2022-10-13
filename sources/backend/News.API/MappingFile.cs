@@ -1,8 +1,6 @@
-﻿using System.Data.Common;
-using AutoMapper;
+﻿using AutoMapper;
 using Infrastructure.Mappings;
 using Models.Dtos;
-using Models.Dtos.Documents;
 using Models.Entities;
 
 namespace News.API
@@ -34,6 +32,14 @@ namespace News.API
             CreateMap<DocumentDepartmentDto, DocumentDepartment>().IgnoreAllNonExisting();
             CreateMap<DocumentSignPerson, DocumentSignPersonDto>().IgnoreAllNonExisting();
             CreateMap<DocumentSignPersonDto, DocumentSignPerson>().IgnoreAllNonExisting();
+            CreateMap<Question, QuestionDto>().IgnoreAllNonExisting();
+            CreateMap<QuestionDto, Question>().IgnoreAllNonExisting();
+            CreateMap<QuestionCategory, QuestionCategoryDto>().IgnoreAllNonExisting();
+            CreateMap<QuestionCategoryDto, QuestionCategory>().IgnoreAllNonExisting();
+            CreateMap<StaticCategory, StaticCategoryDto>().IgnoreAllNonExisting();
+            CreateMap<StaticCategoryDto, StaticCategory>().IgnoreAllNonExisting();
+            CreateMap<StaticInfo, StaticInfoDto>().IgnoreAllNonExisting();
+            CreateMap<StaticInfoDto, StaticInfo>().IgnoreAllNonExisting();
         }
     }
 }

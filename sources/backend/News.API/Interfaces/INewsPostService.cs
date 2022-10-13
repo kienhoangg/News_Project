@@ -29,5 +29,6 @@ namespace News.API.Interfaces
         Task<int> UpdateNewsPost(NewsPost newsPost);
 
         Task<int> DeleteNewsPost(long id);
+        Task UpdateManyNewsPostDto(List<long> lstNewsPostId);
     }
 }

@@ -42,7 +42,7 @@ namespace News.API.Services
         public async Task<ApiSuccessResult<FieldNewsDto>> GetFieldNewsByPaging(FieldNewsRequest fieldNewsRequest, params Expression<Func<FieldNews, object>>[] includeProperties)
         {
             var query = FindAll();
-    
+
             if (includeProperties.ToList().Count > 0)
             {
                 query = FindAll(includeProperties: includeProperties);
@@ -50,7 +50,7 @@ namespace News.API.Services
 
             if (!string.IsNullOrEmpty(fieldNewsRequest.Keyword))
             {
-                query = FindByCondition((x => x.Title.Contains(fieldNewsRequest.Keyword)));
+                query = query.Where((x => x.Title.Contains(fieldNewsRequest.Keyword)));
             }
             PagedResult<FieldNews>? sourcePaging = await query.PaginatedListAsync(fieldNewsRequest.CurrentPage
                                                                                              ?? 1, fieldNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, fieldNewsRequest.OrderBy, fieldNewsRequest.Direction);

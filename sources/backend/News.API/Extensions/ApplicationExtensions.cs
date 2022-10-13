@@ -9,6 +9,7 @@ namespace News.API.Extensions
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseStaticFiles();
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseRouting();
 

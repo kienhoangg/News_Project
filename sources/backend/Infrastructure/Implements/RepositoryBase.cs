@@ -106,7 +106,7 @@ namespace Infrastructure.Implements
             T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
-             await SaveChangesAsync();
+            await SaveChangesAsync();
             return entity.Id;
         }
 
@@ -114,7 +114,7 @@ namespace Infrastructure.Implements
             IEnumerable<T> entities)
         {
             await _dbContext.Set<T>().AddRangeAsync(entities);
-             await SaveChangesAsync();
+            await SaveChangesAsync();
             return entities.Select(x => x.Id).ToList();
         }
 
@@ -129,13 +129,14 @@ namespace Infrastructure.Implements
 
             _dbContext.Entry(exist).CurrentValues.SetValues(entity);
             return await SaveChangesAsync();
-         
+
         }
 
-        public Task UpdateListAsync(
+        public async Task UpdateListAsync(
             IEnumerable<T> entities)
         {
-            return _dbContext.Set<T>().AddRangeAsync(entities);
+            _dbContext.Set<T>().UpdateRange(entities);
+            await SaveChangesAsync();
         }
 
         public void Delete(T entity) => _dbContext.Set<T>().Remove(entity);

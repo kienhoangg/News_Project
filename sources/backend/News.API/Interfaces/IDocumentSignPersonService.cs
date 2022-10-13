@@ -23,5 +23,6 @@ namespace News.API.Interfaces
         Task UpdateDocumentSignPerson(DocumentSignPerson documentSignPerson);
 
         Task DeleteDocumentSignPerson(int id);
+        Task<List<DocumentSignPerson>> GetAllDocumentSignPersons();
     }
 }

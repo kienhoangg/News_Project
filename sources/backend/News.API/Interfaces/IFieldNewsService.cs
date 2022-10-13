@@ -18,9 +18,9 @@ namespace News.API.Interfaces
 
         Task<FieldNews> GetFieldNews(int id);
 
-        Task CreateFieldNews(FieldNews FieldNews);
+        Task CreateFieldNews(FieldNews fieldNews);
 
-        Task UpdateFieldNews(FieldNews FieldNews);
+        Task UpdateFieldNews(FieldNews fieldNews);
 
         Task DeleteFieldNews(int id);
     }

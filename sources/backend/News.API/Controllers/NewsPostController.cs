@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using AutoMapper;
@@ -175,6 +178,16 @@ namespace News.API.Controllers
 
             var result = _mapper.Map<NewsPostDto>(newsPost);
             return Ok(result);
+        }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+       UpdateManyNewsPostDto(
+          List<long> lstNewsPostId
+       )
+        {
+            await _newsPostService.UpdateManyNewsPostDto(lstNewsPostId);
+            return NoContent();
         }
 
         [HttpPut("{id:long}")]

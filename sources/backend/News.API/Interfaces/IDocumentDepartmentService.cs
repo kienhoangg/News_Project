@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
-using Models.Dtos.Documents;
+using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
 
@@ -23,5 +23,6 @@ namespace News.API.Interfaces
         Task UpdateDocumentDepartment(DocumentDepartment documentType);
 
         Task DeleteDocumentDepartment(int id);
+        Task<List<DocumentDepartment>> GetAllDocumentDepartments();
     }
 }

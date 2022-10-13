@@ -23,5 +23,7 @@ namespace News.API.Interfaces
         Task UpdateDocumentType(DocumentType documentType);
 
         Task DeleteDocumentType(int id);
+
+        Task<List<DocumentType>> GetAllDocumentTypes();
     }
 }
