@@ -5,9 +5,9 @@ using Infrastructure.Implements;
 using Infrastructure.Mappings;
 using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
+using Microsoft.EntityFrameworkCore;
 using Models.Constants;
 using Models.Dtos;
-using Models.Dtos.Documents;
 using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
@@ -39,6 +39,11 @@ namespace News.API.Services
         public async Task<DocumentSignPerson> GetDocumentSignPerson(int id)
         {
             return await GetByIdAsync(id);
+        }
+
+        public async Task<List<DocumentSignPerson>> GetAllDocumentSignPersons()
+        {
+            return await FindAll().ToListAsync();
         }
 
         public async Task<ApiSuccessResult<DocumentSignPersonDto>> GetDocumentSignPersonByPaging(DocumentSignPersonRequest documentSignPersonRequest, params Expression<Func<DocumentSignPerson, object>>[] includeProperties)

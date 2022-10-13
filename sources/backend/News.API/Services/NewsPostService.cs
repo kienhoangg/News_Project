@@ -110,8 +110,12 @@ namespace News.API.Services
                 query = query.Where(x => x.PublishedDate <= tomorrow &&
                  x.PublishedDate >= today);
             }
+            if (newsPostRequest.ListNewsPostId.Count > 0)
+            {
+                query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
+            }
             PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
-                                                                                              ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE, newsPostRequest.OrderBy, newsPostRequest.Direction);
+                                                                                              ?? 0, newsPostRequest.PageSize ?? 0, newsPostRequest.OrderBy, newsPostRequest.Direction);
             var lstDto = _mapper.Map<List<NewsPostDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<NewsPostDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<NewsPostDto>? result = new(paginationSet);
@@ -162,6 +166,11 @@ namespace News.API.Services
                 query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&
                  x.PublishedDate >= newsPostRequest.ToDate.Value);
             }
+
+            if (newsPostRequest.ListNewsPostId.Count > 0)
+            {
+                query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
+            }
             PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
                                                                                               ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE, newsPostRequest.OrderBy, newsPostRequest.Direction);
             var lstDto = _mapper.Map<List<NewsPostWithoutContentDto>>(sourcePaging.Results);
@@ -173,6 +182,16 @@ namespace News.API.Services
         public async Task<int> UpdateNewsPost(NewsPost product)
         {
             return await UpdateAsync(product);
+        }
+
+        public async Task UpdateManyNewsPostDto(List<long> lstNewsPostId)
+        {
+            var lstNewsPostDto = (await GetNewsPostByPaging(new NewsPostRequest()
+            {
+                ListNewsPostId = lstNewsPostId
+            })).PagedData.Results.ToList();
+            lstNewsPostDto.ForEach(x => x.IsHotNews = true);
+            await UpdateListAsync(_mapper.Map<List<NewsPost>>(lstNewsPostDto));
         }
     }
 }

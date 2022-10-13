@@ -50,12 +50,21 @@ namespace Infrastructure.Shared.Paging
                     source
                         .OrderByDescending(LinqUltilities.ToLambda<T>(orderBy));
             }
-            var items =
-                await source
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
+            var items = new List<T>();
+            if (pageNumber == 0 && pageSize == 0)
+            {
+                items =
+                               await source
+                                   .ToListAsync();
+            }
+            else
+            {
+                items =
+                               await source
+                                   .Skip((pageNumber - 1) * pageSize)
+                                   .Take(pageSize)
+                                   .ToListAsync();
+            }
             return new PagedResult<T>(items, count, pageNumber, pageSize);
         }
     }

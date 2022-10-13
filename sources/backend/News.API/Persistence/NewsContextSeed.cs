@@ -1,4 +1,5 @@
-﻿using Models.Entities;
+﻿using Common.Enums;
+using Models.Entities;
 using ILogger = Serilog.ILogger;
 namespace News.API.Persistence
 {
@@ -34,6 +35,16 @@ namespace News.API.Persistence
                 newsContext.AddRange(GetDocuments());
             }
 
+            if (!newsContext.QuestionCategories.Any())
+            {
+                newsContext.AddRange(GetQuestionCategory());
+            }
+
+            if (!newsContext.StaticCategories.Any())
+            {
+                newsContext.AddRange(GetStaticCategory());
+            }
+
             //   if (!newsContext.NewsPosts.Any())
             // {
             //     newsContext.AddRange(GetNewsPost());
@@ -45,13 +56,14 @@ namespace News.API.Persistence
                 newsContext.AddRange(GetCategoryParentsNews());
                 await newsContext.SaveChangesAsync();
             }
-            if (!newsContext.NewsPosts.Any())
-            {
-                newsContext.AddRange(GetNewsPostV2());
-            }
             if (!newsContext.FieldNews.Any())
             {
                 newsContext.AddRange(GetFieldNews());
+                await newsContext.SaveChangesAsync();
+            }
+            if (!newsContext.NewsPosts.Any())
+            {
+                newsContext.AddRange(GetNewsPostV2());
             }
             //  if (!newsContext.SourceNews.Any())
             // {
@@ -63,6 +75,26 @@ namespace News.API.Persistence
             logger.Information(
                 "Seeded data for News DB associated with context {DbContextName}",
                 nameof(NewsContext));
+        }
+
+        private static IEnumerable<StaticCategory> GetStaticCategory()
+        {
+            return new List<StaticCategory>()
+            {
+               new StaticCategory(){
+                  Title = "HTML",
+                  Statics = new List<StaticInfo>(){
+                     new StaticInfo(){
+                        Title = "UBND Tỉnh",
+                        Content = "<div>Hello</div>",
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                     }
+                  },
+                     CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+               }
+            };
         }
 
         private static IEnumerable<FieldNews> GetFieldNews()
@@ -257,7 +289,127 @@ namespace News.API.Persistence
                    }
             };
         }
-
+        private static IEnumerable<QuestionCategory> GetQuestionCategory()
+        {
+            return new List<QuestionCategory>
+            {
+               new QuestionCategory(){
+                  Title= "Chính sách",
+                  Questions = new List<Question>(){
+                     new Question(){
+                        Title = "Hỏi đáp về thủ tục mở cơ sở kinh doanh tại tỉnh Yên Bái",
+                        AskedPersonName = "Nguyễn Văn Tuấn",
+                        Address = "Số 27C đường số 12, phường Hiệp Bình Phước, thành phố Thủ Đức, thành phố Hồ Chí Minh",
+                        Phone = "0888778964",
+                        Email = "mayhutamkosmen@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "Chào quý cơ quan! Công ty Cổ phần Kosmen chúng tôi đang có kế hoạch",
+                        IsNoticed = false,
+                        QuestionStatus = QuestionStatus.APPROVED_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 30
+                     },new Question(){
+                        Title = "Đất 50 năm",
+                        AskedPersonName = "Trần Thị Lâm",
+                        Address = "Thôn Mình Thành- xã Tuy Lộc- Yên Bái",
+                        Phone = "0974942905",
+                        Email = "mayhutamkosmen@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "ôi ở xã Tuy Lộc, thành phố Yên Bái. Hiện nay tôi đang ở trên diện tích đất của bố mẹ c",
+                        IsNoticed = true,
+                        QuestionStatus = QuestionStatus.NEW_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 20
+                     },new Question(){
+                        Title = "Hỗ trợ các trường hợp F1 cách ly tại nhà trước ngày 31/12/2021",
+                        AskedPersonName = "Chu Thị Phượng",
+                        Address = "Thôn Thanh Lương - xã Tân Thịnh - Thành phố Yên Bái",
+                        Phone = "0372317775",
+                        Email = "chuphuongmt1d11@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "heo Quyết định số 23/2021/QĐ-TTg ngày 07/7/2021 được hỗ trợ tiền ăn với số tiền hỗ trợ là 80.000đ/ngày. Sau khi hoàn thành cách ly, gia đình tôi được hướng dẫn làm hồ sơ",
+                        IsNoticed = false,
+                        QuestionStatus = QuestionStatus.NEW_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 50
+                     },new Question(){
+                        Title = "Cột bơm xăng mọc lên trái phép tại địa bàn huyện Lục Yên, tỉnh Yên Bái",
+                        AskedPersonName = "Nguyễn Văn Sáng",
+                        Address = "Số 27C đường số 12, phường Hiệp Bình Phước, thành phố Thủ Đức, thành phố Hồ Chí Minh",
+                        Phone = "0888778964",
+                        Email = "mayhutamkosmen@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "Hiện nay, trên địa bàn huyện Lục Yên, tỉnh Yên Bái xảy",
+                        IsNoticed = true,
+                        QuestionStatus = QuestionStatus.WAITING_ANSWER_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 30
+                     }
+                  }
+               }, new QuestionCategory(){
+                  Title= "Giáo dục",
+                  Questions = new List<Question>(){
+                     new Question(){
+                        Title = "Xin Giấy Phép Mở Trại Chăn Nuôi",
+                        AskedPersonName = "Trần Hoàng Phát",
+                        Address = "312 Nguyễn Văn Cừ",
+                        Phone = "0888778964",
+                        Email = "traigaminhtri@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "Tôi hiện nay đang ở Hà Nội, muốn về tỉnh Yên Bái để phát triển kinh d",
+                        IsNoticed = false,
+                        QuestionStatus = QuestionStatus.APPROVED_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 66
+                     },new Question(){
+                        Title = "Thăng hạng",
+                        AskedPersonName = "Vũ Thị Thanh Vân",
+                        Address = "Thị Trấn Trạm Tấu",
+                        Phone = "0988179490",
+                        Email = "mayhutamkosmen@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "Tôi xin hỏi cơ quan chức năng một việc như sau:Bản ",
+                        IsNoticed = true,
+                        QuestionStatus = QuestionStatus.NEW_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 22
+                     },new Question(){
+                        Title = "Hỏi về diện tích tích chênh lệch thực tế nhiều hơn so với giấy chứng nhận quyền sử dụng đất và nghĩa vụ thuế phải nộp",
+                        AskedPersonName = "Phùng Quang Hưng",
+                        Address = "ngõ 50 tổ 9 đường hòa bình phường Nguyễn Thái Học. TP Yên Bái",
+                        Phone = "0983284786",
+                        Email = "phungquanghungyb88@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "ên tôi là Phùng Quang Hưng, sinh ngày 28/5/1988. Địa chỉ: Ngõ 50",
+                        IsNoticed = true,
+                        QuestionStatus = QuestionStatus.WAITING_ANSWER_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 77
+                     },new Question(){
+                        Title = "Mở chi nhánh công ty thu mua phế liệu tại Yên Bá",
+                        AskedPersonName = "Nguyễn Đức",
+                        Address = "Hà Nội",
+                        Phone = "0958767889",
+                        Email = "mayhutamkosmen@gmail.com",
+                        AnswerDate = DateTime.Now,
+                        QuestionContent = "Chúng tôi là Công ty Thịnh Phát chuyên về dịch vụ thu mua phế liệu cho các xưởng sản x",
+                        IsNoticed = true,
+                        QuestionStatus = QuestionStatus.WAITING_APPROVED_QUESTION,
+                           CreatedBy = "SystemAdmin",
+                      LastModifiedBy ="SystemAdmin",
+                        Views = 49
+                     }
+                  }
+               }
+            };
+        }
 
         private static IEnumerable<NewsPost> GetNewsPost()
         {
@@ -422,7 +574,7 @@ namespace News.API.Persistence
                       CategoryNewsName = "Tin Tức",
                       Order = 0,
                       ParentId = 0,
-                          FieldNews_SK_FK = 1,
+
                       CreatedBy = "SystemAdmin",
                       LastModifiedBy ="SystemAdmin",
                    },
@@ -431,7 +583,7 @@ namespace News.API.Persistence
                       CategoryNewsName = "Dư địa chí YB",
                       Order = 0,
                       ParentId = 0,
-                         FieldNews_SK_FK = 1,
+
                       CreatedBy = "SystemAdmin",
                       LastModifiedBy ="SystemAdmin",
                    },
@@ -440,7 +592,7 @@ namespace News.API.Persistence
                       CategoryNewsName = "Tin giao thông",
                       Order = 0,
                       ParentId = 0,
-                       FieldNews_SK_FK = 2,
+
                       CreatedBy = "SystemAdmin",
                       LastModifiedBy ="SystemAdmin",
                    },
@@ -464,7 +616,6 @@ namespace News.API.Persistence
                       CategoryNewsName = "Tin trong tỉnh",
                       Order = 0,
                       ParentId = 1,
-                       FieldNews_SK_FK = 1,
                       CreatedBy = "SystemAdmin",
                       LastModifiedBy ="SystemAdmin",
                    },
@@ -473,7 +624,6 @@ namespace News.API.Persistence
                       CategoryNewsName = "Tin Sở ngành địa phương",
                       Order = 0,
                       ParentId = 1,
-                       FieldNews_SK_FK = 2,
                       CreatedBy = "SystemAdmin",
                       LastModifiedBy ="SystemAdmin",
                    },

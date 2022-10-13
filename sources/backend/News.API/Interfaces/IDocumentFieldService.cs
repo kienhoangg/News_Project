@@ -23,5 +23,6 @@ namespace News.API.Interfaces
         Task UpdateDocumentField(DocumentField documentField);
 
         Task DeleteDocumentField(int id);
+        Task<List<DocumentField>> GetAllDocumentFields();
     }
 }

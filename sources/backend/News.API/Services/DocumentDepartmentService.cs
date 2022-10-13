@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using Common.Interfaces;
@@ -5,8 +6,9 @@ using Infrastructure.Implements;
 using Infrastructure.Mappings;
 using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
+using Microsoft.EntityFrameworkCore;
 using Models.Constants;
-using Models.Dtos.Documents;
+using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
@@ -38,6 +40,11 @@ namespace News.API.Services
         public async Task<DocumentDepartment> GetDocumentDepartment(int id)
         {
             return await GetByIdAsync(id);
+        }
+
+        public async Task<List<DocumentDepartment>> GetAllDocumentDepartments()
+        {
+            return await FindAll().ToListAsync();
         }
 
         public async Task<ApiSuccessResult<DocumentDepartmentDto>> GetDocumentDepartmentByPaging(DocumentDepartmentRequest documentDepartmentRequest, params Expression<Func<DocumentDepartment, object>>[] includeProperties)

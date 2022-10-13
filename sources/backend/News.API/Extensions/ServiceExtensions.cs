@@ -1,9 +1,12 @@
-﻿using System.Reflection;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 using Common.Interfaces;
-using FluentValidation;
+using Common.Shared.DTOs.Configurations;
+using Infrastructure.Extensions;
 using Infrastructure.Implements;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using News.API.Interfaces;
 using News.API.Persistence;
 using News.API.Services;
@@ -12,6 +15,48 @@ namespace News.API.Extensions
 {
     public static class ServiceExtensions
     {
+
+        internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
+       IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection(nameof(JwtSettings))
+                .Get<JwtSettings>();
+            services.AddSingleton(jwtSettings);
+
+            return services;
+        }
+
+        internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
+        {
+            var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
+            if (settings == null || string.IsNullOrEmpty(settings.Key))
+                throw new ArgumentNullException($"{nameof(JwtSettings)} is not configured properly");
+
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = false
+            };
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.SaveToken = true;
+                x.RequireHttpsMetadata = false;
+                x.TokenValidationParameters = tokenValidationParameters;
+            });
+
+            return services;
+        }
         public static IServiceCollection
         AddInfrastructure(
             this IServiceCollection services,
@@ -90,7 +135,11 @@ namespace News.API.Extensions
                 typeof(DocumentFieldService)).AddScoped(serviceType: typeof(IDocumentTypeService),
                 typeof(DocumentTypeService)).AddScoped(serviceType: typeof(IDocumentDepartmentService),
                 typeof(DocumentDepartmentService)).AddScoped(serviceType: typeof(IDocumentSignPersonService),
-                typeof(DocumentSignPersonService));
+                typeof(DocumentSignPersonService)).AddScoped(serviceType: typeof(IQuestionService),
+                typeof(QuestionService)).AddScoped(serviceType: typeof(IQuestionCategoryService),
+                typeof(QuestionCategoryService)).AddScoped(serviceType: typeof(IStaticInfoService),
+                typeof(StaticInfoService)).AddScoped(serviceType: typeof(IStaticCategoryService),
+                typeof(StaticCategoryService));
         }
     }
 }

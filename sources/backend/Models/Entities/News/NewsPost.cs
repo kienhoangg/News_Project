@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel;
 using Contracts.Domains;
 
 namespace Models.Entities
@@ -30,6 +31,9 @@ namespace Models.Entities
         public string? Description { get; set; }
 
         public string? Content { get; set; }
+
+        [DefaultValue(0)]
+        public int Views { get; set; }
 
         public int? CollaboratorId { get; set; }
 

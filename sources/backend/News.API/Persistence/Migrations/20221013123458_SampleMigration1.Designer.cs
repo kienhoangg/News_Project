@@ -12,7 +12,7 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221009100934_SampleMigration1")]
+    [Migration("20221013123458_SampleMigration1")]
     partial class SampleMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -520,6 +520,9 @@ namespace News.API.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Views")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryNewsId");
@@ -531,6 +534,129 @@ namespace News.API.Persistence.Migrations
                     b.HasIndex("SourceNewsId");
 
                     b.ToTable("NewsPosts");
+                });
+
+            modelBuilder.Entity("Models.Entities.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AnswerContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("AnswerDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AnswerPersonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AskedPersonName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Department")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsNoticed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("QuestionCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("QuestionContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("QuestionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("QuestionStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionCategoryId");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("Models.Entities.QuestionCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuestionCategories");
                 });
 
             modelBuilder.Entity("Models.Entities.SourceNews", b =>
@@ -569,6 +695,99 @@ namespace News.API.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SourceNews");
+                });
+
+            modelBuilder.Entity("Models.Entities.StaticCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StaticCategories");
+                });
+
+            modelBuilder.Entity("Models.Entities.StaticInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Descritpion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StaticCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StaticCategoryId");
+
+                    b.ToTable("StaticInfos");
                 });
 
             modelBuilder.Entity("Models.Entities.CategoryNews", b =>
@@ -645,6 +864,24 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("SourceNews");
                 });
 
+            modelBuilder.Entity("Models.Entities.Question", b =>
+                {
+                    b.HasOne("Models.Entities.QuestionCategory", "QuestionCategory")
+                        .WithMany("Questions")
+                        .HasForeignKey("QuestionCategoryId");
+
+                    b.Navigation("QuestionCategory");
+                });
+
+            modelBuilder.Entity("Models.Entities.StaticInfo", b =>
+                {
+                    b.HasOne("Models.Entities.StaticCategory", "StaticCategory")
+                        .WithMany("Statics")
+                        .HasForeignKey("StaticCategoryId");
+
+                    b.Navigation("StaticCategory");
+                });
+
             modelBuilder.Entity("Models.Entities.CategoryNews", b =>
                 {
                     b.Navigation("NewsPosts");
@@ -685,9 +922,19 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("Comments");
                 });
 
+            modelBuilder.Entity("Models.Entities.QuestionCategory", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
             modelBuilder.Entity("Models.Entities.SourceNews", b =>
                 {
                     b.Navigation("NewsPosts");
+                });
+
+            modelBuilder.Entity("Models.Entities.StaticCategory", b =>
+                {
+                    b.Navigation("Statics");
                 });
 #pragma warning restore 612, 618
         }

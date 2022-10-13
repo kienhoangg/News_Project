@@ -16,6 +16,8 @@ namespace News.API.Controllers
         private readonly INewsPostService _newsPostService;
 
         private readonly ICategoryNewsService _categoryNewsService;
+        private readonly IDocumentService _documentService;
+        private readonly IQuestionService _questionService;
 
         private readonly ISerializeService _serializeService;
 
@@ -26,12 +28,30 @@ namespace News.API.Controllers
             ISerializeService serializeService,
             IMapper mapper,
             ICategoryNewsService categoryNewsService
-        )
+,
+            IDocumentService documentService,
+            IQuestionService questionService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
             _mapper = mapper;
             _categoryNewsService = categoryNewsService;
+            _documentService = documentService;
+            _questionService = questionService;
+        }
+
+        [HttpGet("documents/master")]
+        public async Task<IActionResult> GetMasterDataDocument()
+        {
+            var result = await _documentService.GetMasterDataDocument();
+            return Ok(result);
+        }
+
+        [HttpGet("question")]
+        public async Task<IActionResult> GetQuestionAnswer()
+        {
+            var result = await _questionService.GetQuestionHome();
+            return Ok(result);
         }
 
         [HttpGet]
