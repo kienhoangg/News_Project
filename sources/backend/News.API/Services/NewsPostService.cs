@@ -167,7 +167,7 @@ namespace News.API.Services
                  x.PublishedDate >= newsPostRequest.ToDate.Value);
             }
 
-            if (newsPostRequest.ListNewsPostId.Count > 0)
+            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
             {
                 query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
             }
