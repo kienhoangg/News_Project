@@ -3,12 +3,14 @@ using System.Security.Claims;
 using System.Text;
 using Common.Shared.DTOs.Configurations;
 using Common.Shared.DTOs.Identity;
+using Contracts.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Implements
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
+        private string _role = "";
         private readonly JwtSettings _jwtSettings;
 
         public TokenService(JwtSettings jwtSettings)
@@ -18,6 +20,7 @@ namespace Infrastructure.Implements
 
         public TokenResponse GetToken(TokenRequest request)
         {
+            _role = request.role ?? "Admin";
             var token = GenerateJwt();
             var result = new TokenResponse(token);
             return result;
@@ -30,7 +33,7 @@ namespace Infrastructure.Implements
         {
             var claims = new[]
             {
-            new Claim("Role", "Admin")
+            new Claim("Role", _role)
         };
             var token = new JwtSecurityToken(
                 claims: claims,

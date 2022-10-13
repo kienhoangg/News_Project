@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using Common.Extensions;
@@ -183,9 +184,10 @@ namespace News.API.Controllers
         [HttpPut("")]
         public async Task<IActionResult>
        UpdateManyNewsPostDto(
-          List<long> lstNewsPostId
+         [FromBody] List<long> lstNewsPostId
        )
         {
+            //  var lstNewsPostId = strNewsPostId.Split(',').Select(long.Parse).ToList();
             await _newsPostService.UpdateManyNewsPostDto(lstNewsPostId);
             return NoContent();
         }

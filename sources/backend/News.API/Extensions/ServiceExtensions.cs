@@ -2,11 +2,13 @@
 using System.Text.Json.Serialization;
 using Common.Interfaces;
 using Common.Shared.DTOs.Configurations;
+using Contracts.Interfaces;
 using Infrastructure.Extensions;
 using Infrastructure.Implements;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using News.API.Authorization;
 using News.API.Interfaces;
 using News.API.Persistence;
 using News.API.Services;
@@ -19,6 +21,8 @@ namespace News.API.Extensions
         internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services,
        IConfiguration configuration)
         {
+
+
             var jwtSettings = configuration.GetSection(nameof(JwtSettings))
                 .Get<JwtSettings>();
             services.AddSingleton(jwtSettings);
@@ -139,7 +143,8 @@ namespace News.API.Extensions
                 typeof(QuestionService)).AddScoped(serviceType: typeof(IQuestionCategoryService),
                 typeof(QuestionCategoryService)).AddScoped(serviceType: typeof(IStaticInfoService),
                 typeof(StaticInfoService)).AddScoped(serviceType: typeof(IStaticCategoryService),
-                typeof(StaticCategoryService));
+                typeof(StaticCategoryService)).AddTransient(serviceType: typeof(ITokenService),
+                typeof(TokenService)).AddScoped<IJwtUtils, JwtUtils>();
         }
     }
 }
