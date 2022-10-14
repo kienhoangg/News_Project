@@ -82,6 +82,7 @@ namespace News.API.Controllers
                     .GetNewsPostByPaging(new NewsPostRequest()
                     {
                         PageSize = 8,
+                        CurrentPage = 1,
                         CategoryNewsId = newsPost.CategoryNewsId,
                         OrderBy = "Order"
                     });
@@ -184,11 +185,11 @@ namespace News.API.Controllers
         [HttpPut("")]
         public async Task<IActionResult>
        UpdateManyNewsPostDto(
-         [FromBody] List<long> lstNewsPostId
+         [FromBody] NewsPostUpdateManyDto newsPostUpdateManyDto
        )
         {
             //  var lstNewsPostId = strNewsPostId.Split(',').Select(long.Parse).ToList();
-            await _newsPostService.UpdateManyNewsPostDto(lstNewsPostId);
+            await _newsPostService.UpdateManyNewsPostDto(newsPostUpdateManyDto.NewsPostIds, newsPostUpdateManyDto.Value.Value, newsPostUpdateManyDto.Field.Value);
             return NoContent();
         }
 
