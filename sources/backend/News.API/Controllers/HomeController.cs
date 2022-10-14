@@ -72,7 +72,7 @@ namespace News.API.Controllers
             // Get 5 hot news
             var hotNewsRequets =
                 new NewsPostRequest()
-                { PageSize = 10, OrderBy = "Order", IsHotNews = true };
+                { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsHotNews = true };
 
             var lstHotNews =
                 await _newsPostService.GetNewsPostByPaging(hotNewsRequets);
@@ -81,21 +81,30 @@ namespace News.API.Controllers
                 new NewsPostRequest()
                 {
                     PageSize = 5,
+                    CurrentPage = 1,
                     OrderBy = "Order",
                     CategoryNewsId = categoryNewsId
                 };
 
             var lstNormalNews =
                 await _newsPostService.GetNewsPostByPaging(normalNews);
-
+            var lstDocuments =
+                           (await _documentService.GetDocumentByPaging(new DocumentRequest()
+                           {
+                               PageSize = 15,
+                               CurrentPage = 1,
+                               OrderBy = "Order",
+                               Direction = -1
+                           })).PagedData.Results.ToList();
             if (
                 lstHotNews.PagedData.Results.Count <= 0 &&
-                lstNormalNews.PagedData.Results.Count <= 0
+                lstNormalNews.PagedData.Results.Count <= 0 && lstDocuments.Count <= 0
             )
             {
                 return NotFound(new ApiErrorResult<NewsPost
                 >("Not found any news"));
             }
+            int index = lstDocuments.Count / 2 + 1;
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()
                 {
@@ -110,7 +119,9 @@ namespace News.API.Controllers
                                         >(await _categoryNewsService
                                             .GetCategoryNews(categoryNewsId)),
                                 Data = lstNormalNews.PagedData.Results.ToList()
-                            }
+                            },
+                    DocumentHots = lstDocuments.GetRange(0, index),
+                    DocumentSectionDto = lstDocuments.GetRange(index, lstDocuments.Count - index)
                 });
 
             // Get CategoryNews with 5 normal news
