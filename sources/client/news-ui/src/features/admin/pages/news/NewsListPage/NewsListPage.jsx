@@ -123,8 +123,14 @@ function NewsListPage(props) {
    * Sử lý thay đổi text search
    * @param {*} textSearch Từ cần tìm
    */
-  const handleChangeTextSearch = (textSearch) => {
-    setObjFilter({ ...objFilter, keyword: textSearch });
+  const handleChangeFilterNews = (filterNews) => {
+    if (!filterNews?.fromDate) {
+      delete objFilter.fromDate;
+    }
+    if (!filterNews?.toDate) {
+      delete objFilter.toDate;
+    }
+    setObjFilter({ ...objFilter, ...filterNews });
   };
 
   /**
@@ -167,7 +173,7 @@ function NewsListPage(props) {
           dataFilter={dataFilter}
           setOpenCollectionEditor={setOpenCollectionEditor}
           setActionForm={handleSetActionForm}
-          setTextSearch={handleChangeTextSearch}
+          setFilterNews={handleChangeFilterNews}
         />
       </div>
       <Divider style={{ margin: '0' }} />

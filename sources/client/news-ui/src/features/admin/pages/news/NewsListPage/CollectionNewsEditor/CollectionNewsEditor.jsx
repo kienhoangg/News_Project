@@ -48,7 +48,6 @@ function CollectionNewsEditor({
   data,
   dataFilter,
 }) {
-  console.log(dataFilter);
   const [form] = Form.useForm();
 
   function onEditorChange(event) {
@@ -84,10 +83,7 @@ function CollectionNewsEditor({
   };
 
   const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
+    <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
   );
 
   const renderFieldNews = (
@@ -333,16 +329,17 @@ function CollectionNewsEditor({
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                listType='picture-card'
+                listType='picture'
+                maxCount={1}
                 fileList={fileList}
-                onPreview={handlePreview}
+                // onPreview={handlePreview}
                 onChange={handleChange}
                 accept='.jpg,.png,.jpeg'
                 customRequest={commonFunc.dummyRequest}
               >
                 {fileList.length < 1 ? uploadButton : null}
               </Upload>
-              <Modal
+              {/* <Modal
                 open={previewOpen}
                 title={previewTitle}
                 footer={null}
@@ -353,7 +350,7 @@ function CollectionNewsEditor({
                   style={{ width: '100%' }}
                   src={previewImage}
                 />
-              </Modal>
+              </Modal> */}
             </Col>
             <Col span={16}>
               <Form.Item
@@ -424,13 +421,6 @@ function CollectionNewsEditor({
               ],
               extraPlugins: 'justify,font,colorbutton,forms',
               removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
-              // filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
-              // filebrowserUploadUrl:
-              //   '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-              // filebrowserWindowWidth: '1000',
-              // filebrowserWindowHeight: '700',
-              // cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
-              // cloudServices_tokenUrl: 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt',
             }}
           />
         </Form.Item>

@@ -10,6 +10,7 @@ import { FileAddFilled } from '@ant-design/icons';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import NewsHotTableDataPopUp from './NewsHotTableDataPopUp/NewsHotTableDataPopUp';
+import NewsHotPageSearchPopup from './NewsHotPageSearchPopUp/NewsHotPageSearchPopUp';
 
 const cx = classNames.bind(styles);
 
@@ -17,10 +18,16 @@ NewsHotPage.propTypes = {};
 
 NewsHotPage.defaultProps = {};
 
+const NewsPostTypeUpdate = {
+  IS_HOT_NEWS: 0,
+  STATUS: 1,
+};
+
 function NewsHotPage(props) {
   const [newsData, setNewsData] = useState({});
   const [newsDataPopUp, setNewsDataPopUp] = useState({});
   const isFirstCall = useRef(true);
+  const isChangePopUpNew = useRef(false);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
@@ -28,6 +35,14 @@ function NewsHotPage(props) {
     orderBy: 'CreatedDate',
     keyword: '',
     IsHotNews: true,
+  });
+  const [objFilterPopUp, setObjFilterPopUp] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    direction: Direction.DESC,
+    orderBy: 'CreatedDate',
+    keyword: '',
+    IsHotNews: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeRowKey, setChangeRowKey] = useState();
@@ -58,18 +73,30 @@ function NewsHotPage(props) {
     currentPage,
     pageSize,
     orderBy,
-    direction
+    direction,
+    type
   ) => {
-    setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
+    if (type === 'hotnews') {
+      setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
+    } else {
+      isChangePopUpNew.current = true;
+      setObjFilterPopUp({
+        ...objFilterPopUp,
+        currentPage,
+        pageSize,
+        orderBy,
+        direction,
+      });
+    }
   };
 
   const handleDeleteSourceNew = async (id) => {
     try {
-      await newsApi.deleteSourceNew(id);
-      openNotification('Xóa nguồn tin thành công');
+      await newsApi.deleteHotNew(id);
+      openNotification('Xóa tin nổi bật thành công');
       fetchProductList();
     } catch (error) {
-      openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+      openNotification('Xóa tin nổi bật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -79,14 +106,28 @@ function NewsHotPage(props) {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    fetchProductList();
   };
+  useEffect(() => {
+    if (!isChangePopUpNew.current) {
+      return;
+    }
+    fetchProductListPopUp();
+  }, [objFilterPopUp]);
 
   const fetchProductListPopUp = async () => {
     try {
-      const response = await newsApi.getNewsAll({
-        ...objFilter,
-        IsHotNews: false,
-      });
+      const response = await newsApi.getNewsAll(objFilterPopUp);
+      if (
+        response?.PagedData?.Results?.length === 0 &&
+        objFilterPopUp.currentPage > 1
+      ) {
+        setObjFilterPopUp({
+          ...objFilterPopUp,
+          currentPage: objFilterPopUp.currentPage - 1,
+        });
+        return;
+      }
       setNewsDataPopUp({
         data: response?.PagedData?.Results ?? [],
         total: response?.PagedData?.RowCount ?? 0,
@@ -102,8 +143,17 @@ function NewsHotPage(props) {
 
   const updateHotNews = async () => {
     try {
+      if (!changeRowKey) {
+        openNotification(
+          'Chưa chọn tin để cập nhật',
+          '',
+          NotificationType.ERROR
+        );
+      }
       await newsApi.updateHotNews({
-        lstNewsPostId: changeRowKey,
+        NewsPostIds: changeRowKey,
+        Value: true,
+        Field: NewsPostTypeUpdate.IS_HOT_NEWS,
       });
       fetchProductListPopUp();
     } catch (error) {
@@ -114,6 +164,20 @@ function NewsHotPage(props) {
   const handleChangeRowKey = (value) => {
     setChangeRowKey(value);
   };
+
+  /**
+   * Sử lý thay đổi text search
+   * @param {*} textSearch Từ cần tìm
+   */
+  const handleChangeTextSearch = (textSearch, type) => {
+    if (type === 'hotnews') {
+      setObjFilter({ ...objFilter, keyword: textSearch });
+    } else {
+      isChangePopUpNew.current = true;
+      setObjFilterPopUp({ ...objFilterPopUp, keyword: textSearch });
+    }
+  };
+
   return (
     <div className={cx('wrapper')}>
       <Modal
@@ -125,7 +189,7 @@ function NewsHotPage(props) {
         width={'70vw'}
       >
         <div className={cx('top')}>
-          <NewsHotPageSearch />
+          <NewsHotPageSearchPopup setTextSearch={handleChangeTextSearch} />
         </div>
         <Divider style={{ marginBottom: '12px' }} />
         <div className={cx('table-data')}>
@@ -139,7 +203,7 @@ function NewsHotPage(props) {
       </Modal>
 
       <div className={cx('top')}>
-        <NewsHotPageSearch />
+        <NewsHotPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-source-news')}>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới

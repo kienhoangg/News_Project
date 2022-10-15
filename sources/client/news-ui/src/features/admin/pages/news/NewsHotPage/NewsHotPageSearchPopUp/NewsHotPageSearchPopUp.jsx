@@ -1,16 +1,16 @@
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Input, Row } from 'antd';
 import classNames from 'classnames/bind';
-import styles from './NewsHotPageSearch.module.scss';
+// import styles from './NewsHotTableDataPopUp.module.scss';
 import { useState } from 'react';
 
-const cx = classNames.bind(styles);
+// const cx = classNames.bind(styles);
 
-NewsHotPageSearch.propTypes = {};
+NewsHotPageSearchPopup.propTypes = {};
 
-NewsHotPageSearch.defaultProps = {};
+NewsHotPageSearchPopup.defaultProps = {};
 
-function NewsHotPageSearch(props) {
+function NewsHotPageSearchPopup(props) {
   const { setTextSearch } = props;
   const [keyword, setKeyword] = useState('');
 
@@ -21,7 +21,7 @@ function NewsHotPageSearch(props) {
     if (!setTextSearch) {
       return;
     }
-    setTextSearch(keyword, 'hotnews');
+    setTextSearch(keyword, 'hotnewsPopup');
   };
 
   /**
@@ -32,11 +32,11 @@ function NewsHotPageSearch(props) {
     const textSearch = event?.target?.value?.trim() ?? '';
     setKeyword(textSearch);
     // TODO: Xóa nếu bỏ search trong lúc gõ
-    setTextSearch(textSearch, 'hotnews');
+    setTextSearch(textSearch, 'hotnewsPopup');
   };
-
+  //className={cx('wrapper')}
   return (
-    <div className={cx('wrapper')}>
+    <div>
       <Row gutter={16} style={{ marginBottom: 0 }}>
         <Col span={8}>
           <Input
@@ -61,4 +61,4 @@ function NewsHotPageSearch(props) {
   );
 }
 
-export default NewsHotPageSearch;
+export default NewsHotPageSearchPopup;

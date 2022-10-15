@@ -6,6 +6,8 @@ import { Button, Col, DatePicker, Input, Row, Select, TreeSelect } from 'antd';
 import { TreeNode } from 'antd/lib/tree-select';
 import { Option } from 'antd/lib/mentions';
 import { FileAddFilled, SearchOutlined } from '@ant-design/icons';
+import commonFunc from 'common/commonFunc';
+import datetimeHelper from 'helpers/datetimeHelper';
 
 const cx = classNames.bind(styles);
 
@@ -14,22 +16,21 @@ NewsListMenuSearch.propTypes = {
   /**
    * Func giúp Component bố gọi để thiết lập từ khóa cần tìm
    */
-  setTextSearch: PropTypes.func,
+  setFilterNews: PropTypes.func,
 };
 
 NewsListMenuSearch.defaultProps = {
-  setTextSearch: () => {},
+  setFilterNews: () => {},
 };
 
 function NewsListMenuSearch(props) {
-  const { setOpenCollectionEditor, setTextSearch, setActionForm, dataFilter } =
+  const { setOpenCollectionEditor, setFilterNews, setActionForm, dataFilter } =
     props;
-  const [valueNewsType, setValuNewsType] = useState(undefined);
+  const [objFilterNews, setObjFilterNews] = useState(undefined);
   const [keyword, setKeyword] = useState('');
 
-  const onChangeNewsType = (newValue) => {
-    console.log(newValue);
-    setValuNewsType(newValue);
+  const onChangeCategoryNews = (categoryNewsId) => {
+    setObjFilterNews({ ...objFilterNews, categoryNewsId });
   };
 
   const handleOnclickCreate = () => {
@@ -41,24 +42,35 @@ function NewsListMenuSearch(props) {
   };
 
   const handleChangeTextSearch = (event) => {
-    const textSearch = event?.target?.value?.trim() ?? '';
-    setKeyword(textSearch);
-    // TODO: Xóa nếu bỏ search trong lúc gõ
-    setTextSearch(textSearch);
+    const keyword = event?.target?.value?.trim() ?? '';
+    setObjFilterNews({ ...objFilterNews, keyword });
+
+    // setKeyword(textSearch);
+    // // TODO: Xóa nếu bỏ search trong lúc gõ
+    // setTextSearch(textSearch);
   };
 
   /**
    * Sử lý sự kiện bấp search
    */
   const handleOnclickButtonSearch = () => {
-    if (!setTextSearch) {
+    if (!setFilterNews) {
       return;
     }
-    setTextSearch(keyword);
+    setFilterNews(objFilterNews);
+  };
+
+  const handleChangeFieldNews = (fieldNewsId) => {
+    setObjFilterNews({ ...objFilterNews, fieldNewsId });
   };
 
   const renderFieldNews = (
-    <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
+    <Select
+      placeholder='Lĩnh vực'
+      style={{ width: '100%' }}
+      allowClear={true}
+      onChange={handleChangeFieldNews}
+    >
       {dataFilter?.fieldNews?.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
@@ -67,67 +79,93 @@ function NewsListMenuSearch(props) {
     </Select>
   );
 
+  const generateTree = (arrNode) => {
+    return arrNode.map((x) => (
+      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+        {x.children.length > 0 && generateTree(x.children)}
+      </TreeNode>
+    ));
+  };
+  const renderCategoryNews = (
+    <TreeSelect
+      showSearch
+      style={{
+        width: '100%',
+      }}
+      value={objFilterNews?.type}
+      dropdownStyle={{
+        maxHeight: 400,
+        overflow: 'auto',
+      }}
+      placeholder='Chọn loại tin tức'
+      allowClear
+      treeDefaultExpandAll
+      onChange={onChangeCategoryNews}
+    >
+      {generateTree(commonFunc.list_to_tree(dataFilter?.categoryNews ?? []))}
+    </TreeSelect>
+  );
+
+  const handleChangeSourceNews = (collaboratorId) => {
+    setObjFilterNews({ ...objFilterNews, collaboratorId });
+  };
+
+  const renderTypeNews = (
+    <Select
+      placeholder='Phân loại tin'
+      style={{ width: '100%' }}
+      allowClear={true}
+      onChange={handleChangeSourceNews}
+    >
+      {dataFilter?.sourceNews?.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const handleFromDate = (e, type) => {
+    const date = (e?._d ?? '0001-01-01 00:00:00.0000000') + '';
+    if (date.includes('0001')) {
+      const filter = { ...objFilterNews };
+      delete filter[type];
+      setObjFilterNews({ ...filter });
+      return;
+    }
+    const dateConvert = datetimeHelper.formatDatetimeToDateSerer(date);
+    setObjFilterNews({ ...objFilterNews, [type]: dateConvert });
+  };
+
+  const handleStatus = (value) => {
+    // setObjFilterNews({ ...objFilterNews, statusNews: value });
+  };
+
   return (
     <div className={cx('wrapper')}>
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={4}>
-          <TreeSelect
-            showSearch
-            style={{
-              width: '100%',
-            }}
-            value={valueNewsType}
-            dropdownStyle={{
-              maxHeight: 400,
-              overflow: 'auto',
-            }}
-            placeholder='Chọn loại tin tức'
-            allowClear
-            treeDefaultExpandAll
-            onChange={onChangeNewsType}
-          >
-            <TreeNode value='1' title='Tin tức'>
-              <TreeNode value='1.1' title='Tin trong tỉnh' />
-              <TreeNode value='1.2' title='Chính sách mới' />
-              <TreeNode value='1.3' title='Hoạt động chỉ đạo điều hành' />
-            </TreeNode>
-            <TreeNode value='2' title='Tin tức 2'>
-              <TreeNode value='2.2' title='Chính sách mới 2' />
-              <TreeNode value='2.3' title='Hoạt động chỉ đạo điều hành 2' />
-            </TreeNode>
-          </TreeSelect>
-        </Col>
-        <Col span={4}>
+      <Row gutter={16} style={{ marginBottom: 16 }} justify={'space-between'}>
+        <Col span={6}>
           <Input
             placeholder='Từ khóa tìm kiếm'
             onChange={handleChangeTextSearch}
           />
         </Col>
-        <Col span={4}>
-          <DatePicker placeholder='Từ ngày' style={{ width: '100%' }} />
-        </Col>
-        <Col span={4}>
-          <DatePicker placeholder='Đến ngày' style={{ width: '100%' }} />
-        </Col>
-        <Col span={4}>
-          <Select placeholder='Phân loại tin' style={{ width: '100%' }}>
-            <Option value='1'>Tin số 1</Option>
-            <Option value='2'>Tin số 2</Option>
-            <Option value='3'>Tin số 3</Option>
-            <Option value='4'>Tin số 4</Option>
-          </Select>
-        </Col>
-        <Col span={4}>
+        <Col span={6}>{renderCategoryNews}</Col>
+
+        <Col span={6}>{renderTypeNews}</Col>
+
+        <Col span={6}>{renderFieldNews}</Col>
+        {/* <Col span={4}>
           <Select placeholder='Biên tập viên' style={{ width: '100%' }}>
             <Option value='1'>Biên tập viên 1</Option>
             <Option value='2'>Biên tập viên 2</Option>
             <Option value='3'>Biên tập viên 3</Option>
             <Option value='4'>Biên tập viên 4</Option>
           </Select>
-        </Col>
+        </Col> */}
       </Row>
-      <Row gutter={16}>
-        <Col span={4}>
+      <Row gutter={16} justify={'space-between'}>
+        {/* <Col span={4}>
           <Select placeholder='Cộng tác viên' style={{ width: '100%' }}>
             <Option value='1'>Cộng tác viên 1</Option>
             <Option value='2'>Cộng tác viên 2</Option>
@@ -136,38 +174,58 @@ function NewsListMenuSearch(props) {
             <Option value='5'>Cộng tác viên 5</Option>
             <Option value='6'>Cộng tác viên 6</Option>
           </Select>
-        </Col>
-        <Col span={4}>
-          <Select placeholder='Trạng thái tin' style={{ width: '100%' }}>
-            <Option value='1'>Đã duyệt</Option>
-            <Option value='2'>Chưa được duyệt</Option>
+        </Col> */}
+        <Col span={5}>
+          <Select
+            allowClear={true}
+            placeholder='Trạng thái tin'
+            style={{ width: '100%' }}
+            onChange={handleStatus}
+          >
+            <Option value={1}>Đã duyệt</Option>
+            <Option value={2}>Chưa được duyệt</Option>
           </Select>
         </Col>
-        <Col span={4}>{renderFieldNews}</Col>
-        <Col span={4}>
-          <Row justify='end'>
-            <Button
-              type='default'
-              icon={<SearchOutlined />}
-              onClick={handleOnclickButtonSearch}
-            >
-              Tìm kiếm
-            </Button>
+        <Col span={5}>
+          <DatePicker
+            placeholder='Từ ngày'
+            style={{ width: '100%' }}
+            onChange={(e) => handleFromDate(e, 'fromDate')}
+          />
+        </Col>
+        <Col span={5}>
+          <DatePicker
+            placeholder='Đến ngày'
+            style={{ width: '100%' }}
+            onChange={(e) => handleFromDate(e, 'toDate')}
+          />
+        </Col>
+        <Col span={9}>
+          <Row>
+            <Col span={6}>
+              <Button
+                type='default'
+                icon={<SearchOutlined />}
+                onClick={handleOnclickButtonSearch}
+              >
+                Tìm kiếm
+              </Button>
+            </Col>
+            <Col span={6}>
+              <Button
+                type='primary'
+                style={{ width: '100%', marginLeft: 16 }}
+                icon={<FileAddFilled />}
+                onClick={handleOnclickCreate}
+              >
+                Tạo mới
+              </Button>
+            </Col>
           </Row>
         </Col>
-        <Col span={4}>
+        {/* <Col span={4}>
           <Button type='default'>Kho ảnh</Button>
-        </Col>
-        <Col span={4}>
-          <Button
-            type='primary'
-            style={{ width: '100%' }}
-            icon={<FileAddFilled />}
-            onClick={handleOnclickCreate}
-          >
-            Tạo mới
-          </Button>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );
