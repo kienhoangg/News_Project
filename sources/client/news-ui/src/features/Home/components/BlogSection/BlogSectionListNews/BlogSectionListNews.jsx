@@ -14,7 +14,6 @@ BlogSectionListNews.propTypes = {
 BlogSectionListNews.defaultProps = {};
 
 function BlogSectionListNews(props) {
-    console.log('BlogSectionListNews', props);
     const { DocumentHots } = props;
 
     return (
@@ -28,9 +27,9 @@ function BlogSectionListNews(props) {
                 {Array.isArray(DocumentHots) &&
                     DocumentHots.map((item, index) => {
                         return (
-                            <>
-                                <BlogSectionListNewsItem DocumentData={item} key={index} />
-                            </>
+                            <div key={item?.Id}>
+                                <BlogSectionListNewsItem DocumentData={item} />
+                            </div>
                         );
                     })}
             </div>
