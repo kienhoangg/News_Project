@@ -6,27 +6,18 @@ class NewsApi {
   getNewsAll = (body) => {
     const url = '/newsPost/filter';
     return axiosClient.post(url, body);
-
-    // var response = commonFunc.generateFakeData(
-    //   20,
-    //   50,
-    //   datafakeNews.news.objectExample
-    // );
-    // return response;
+  };
+  updateHotNews = (body) => {
+    const url = '/newsPost';
+    return axiosClient.put(url, body);
   };
 
   getNewsById = (params) => {
-    // const url = '/news';
-    // return axiosClient.get(url, { params });
-
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(datafakeNews.news.objectExample);
       });
     }, 2000);
-
-    // var response = datafakeNews.news.objectExample;
-    // return response;
   };
 
   getNewsHotAll = (params) => {
