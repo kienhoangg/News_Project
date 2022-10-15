@@ -108,7 +108,7 @@ namespace News.API.Extensions
                             builder
                                 .MigrationsAssembly(typeof(NewsContext)
                                     .Assembly
-                                    .FullName));
+                                    .FullName).UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
                 });
             return services;
         }

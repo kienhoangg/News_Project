@@ -56,9 +56,9 @@ namespace News.API.Services
             await DeleteAsync(document);
         }
 
-        public async Task<Document> GetDocument(int id)
+        public async Task<Document> GetDocument(int id, params Expression<Func<Document, object>>[] includeProperties)
         {
-            return await GetByIdAsync(id);
+            return await GetByIdAsync(id, includeProperties);
         }
 
         public async Task<ApiSuccessResult<DocumentDto>> GetDocumentByPaging(DocumentRequest documentRequest, params Expression<Func<Document, object>>[] includeProperties)
