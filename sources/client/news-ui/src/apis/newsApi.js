@@ -11,6 +11,10 @@ class NewsApi {
     const url = '/newsPost';
     return axiosClient.put(url, body);
   };
+  deleteHotNew = (id) => {
+    const url = `/newsPost/${id}`;
+    return axiosClient.delete(url);
+  };
 
   getNewsById = (params) => {
     return new Promise((resolve, reject) => {
@@ -18,15 +22,6 @@ class NewsApi {
         resolve(datafakeNews.news.objectExample);
       });
     }, 2000);
-  };
-
-  getNewsHotAll = (params) => {
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeNews.news.objectExample
-    );
-    return response;
   };
 
   getNewsCommentAll = (params) => {
