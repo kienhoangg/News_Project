@@ -12,7 +12,7 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221013123458_SampleMigration1")]
+    [Migration("20221015122640_SampleMigration1")]
     partial class SampleMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -443,6 +443,47 @@ namespace News.API.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FieldNews");
+                });
+
+            modelBuilder.Entity("Models.Entities.Menu", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menus");
                 });
 
             modelBuilder.Entity("Models.Entities.NewsPost", b =>

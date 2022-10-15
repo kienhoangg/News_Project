@@ -40,6 +40,8 @@ namespace News.API
             CreateMap<StaticCategoryDto, StaticCategory>().IgnoreAllNonExisting();
             CreateMap<StaticInfo, StaticInfoDto>().IgnoreAllNonExisting();
             CreateMap<StaticInfoDto, StaticInfo>().IgnoreAllNonExisting();
+            CreateMap<Menu, MenuDto>().IgnoreAllNonExisting();
+            CreateMap<MenuDto, Menu>().IgnoreAllNonExisting();
         }
     }
 }

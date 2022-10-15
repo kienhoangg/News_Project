@@ -33,6 +33,7 @@ namespace News.API.Persistence
         public DbSet<DocumentSignPerson> DocumentSignPersons { get; set; }
         public DbSet<StaticInfo> StaticInfos { get; set; }
         public DbSet<StaticCategory> StaticCategories { get; set; }
+        public DbSet<Menu> Menus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

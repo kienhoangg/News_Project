@@ -73,6 +73,31 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Code.Contains(documentRequest.Keyword)));
             }
+            if (!string.IsNullOrEmpty(documentRequest.Title))
+            {
+                query = query.Where((x => x.Name.Contains(documentRequest.Title)));
+            }
+            if (documentRequest.DocumentDepartmentId.HasValue)
+            {
+                query = query.Where(x => x.DocumentDepartmentId == documentRequest.DocumentDepartmentId.Value);
+            }
+            if (documentRequest.DocumentFieldId.HasValue)
+            {
+                query = query.Where(x => x.DocumentFieldId == documentRequest.DocumentFieldId.Value);
+            }
+            if (documentRequest.DocumentSignPersonId.HasValue)
+            {
+                query = query.Where(x => x.DocumentSignPersonId == documentRequest.DocumentSignPersonId.Value);
+            }
+            if (documentRequest.DocumentTypeId.HasValue)
+            {
+                query = query.Where(x => x.DocumentTypeId == documentRequest.DocumentTypeId.Value);
+            }
+            if (documentRequest.FromDate.HasValue && documentRequest.ToDate.HasValue)
+            {
+                query = query.Where(x => x.PublishedDate <= documentRequest.FromDate.Value &&
+                 x.PublishedDate >= documentRequest.ToDate.Value);
+            }
             PagedResult<Document>? sourcePaging = await query.PaginatedListAsync(documentRequest.CurrentPage
                                                                                              ?? 1, documentRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentRequest.OrderBy, documentRequest.Direction);
             var lstDto = _mapper.Map<List<DocumentDto>>(sourcePaging.Results);

@@ -49,6 +49,14 @@ namespace News.API.Persistence
             // {
             //     newsContext.AddRange(GetNewsPost());
             // }
+
+            if (!newsContext.Menus.Any())
+            {
+                newsContext.AddRange(GetParentMenus());
+                await newsContext.SaveChangesAsync();
+                newsContext.AddRange(GetMenus());
+                await newsContext.SaveChangesAsync();
+            }
             if (!newsContext.CategoryNews.Any())
             {
                 newsContext.AddRange(GetCategoryNews());
@@ -93,6 +101,63 @@ namespace News.API.Persistence
                   },
                      CreatedBy = "SystemAdmin",
                       LastModifiedBy ="SystemAdmin",
+               }
+            };
+        }
+
+        private static IEnumerable<Menu> GetMenus()
+        {
+            return new List<Menu>()
+            {
+               new Menu(){
+                  Title = "Tỉnh Uỷ",
+                  Url = "http://localhost:3000/page/1",
+                  ParentId = 3
+               },new Menu(){
+                  Title = "Đoàn ĐBQH",
+                  Url = "http://localhost:3000/page/2",
+                  ParentId = 3
+               },
+               new Menu(){
+                  Title = "HĐND tỉnh",
+                  Url = "http://localhost:3000/page/3",
+                  ParentId = 3
+               },new Menu(){
+                  Title = "Lịch tiếp công dân",
+                  Url = "http://localhost:3000/page/4",
+                  ParentId = 4
+               },new Menu(){
+                  Title = "Kết quả giải quyết khiếu nại",
+                  Url = "http://localhost:3000/page/5",
+                  ParentId = 4
+               }
+            };
+        }
+        private static IEnumerable<Menu> GetParentMenus()
+        {
+            return new List<Menu>()
+            {
+               new Menu(){
+                  Title = "Trang chủ",
+                  Url = "http://localhost:3000/page/6",
+                  ParentId = 0
+               },new Menu(){
+                  Title = "Giới thiệu",
+                  Url = "http://localhost:3000/page/7",
+                  ParentId = 0
+               },
+               new Menu(){
+                  Title = "Tổ chức bộ máy",
+                  Url = "http://localhost:3000/page/8",
+                  ParentId = 0
+               },new Menu(){
+                  Title = "Công dân",
+                  Url = "http://localhost:3000/page/9",
+                  ParentId = 0
+               },new Menu(){
+                  Title = "Doanh nghiệp",
+                  Url = "http://localhost:3000/page/10",
+                  ParentId = 0
                }
             };
         }
