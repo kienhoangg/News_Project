@@ -15,7 +15,7 @@ const cx = classNames.bind(styles);
 
 ListSection.propTypes = {
     dataNews: PropTypes.object,
-    dataDocuments: PropTypes.object,
+    dataDocuments: PropTypes.array,
 };
 
 ListSection.defaultProps = {
@@ -93,8 +93,8 @@ function ListSection(props) {
                         </Col>
                     </Row>
                     <div className={cx('list-document-content')}>
-                        {dataDocuments &&
-                            dataDocuments.Data.map((item) => {
+                        {Array.isArray(dataDocuments) &&
+                            dataDocuments.map((item) => {
                                 return <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkNewsDetail(item.Id)} />;
                             })}
                     </div>

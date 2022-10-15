@@ -34,8 +34,8 @@ function PublishedMenuPage(props) {
             {Array.isArray(dataPage) &&
                 dataPage.map((menuData, index) => {
                     return (
-                        <div>
-                            <Row key={index} className={cx('container')} gutter={[16, 16]}>
+                        <div key={index}>
+                            <Row className={cx('container')} gutter={[16, 16]}>
                                 <Col span={24}>
                                     <div className={cx('title-container')}>
                                         <h2 className={cx('title')}>{menuData?.Title}</h2>
