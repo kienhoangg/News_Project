@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Logging;
+using Common.Shared.DTOs.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using News.API.Extensions;
 using News.API.Persistence;
@@ -13,10 +14,14 @@ Log.Information("Start News API up");
 
 try
 {
+
     builder.Host.AddAppConfigurations();
     // Add services to the container.
+
+    builder.Services.AddConfigurationSettings(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     var services = builder.Services;
+    services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
     services.AddControllers(o =>
     {
         o.Filters.Add(new ResponseCacheAttribute() { NoStore = true, Location = ResponseCacheLocation.None });

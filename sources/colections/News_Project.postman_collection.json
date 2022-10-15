@@ -1221,6 +1221,35 @@
 					"response": []
 				},
 				{
+					"name": "Update many news post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"NewsPostIds\": [2,3],\n    \"Value\": false, \n    \"Field\": 1 // 0: update hot news, 1: update status\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/api/newsPost",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"api",
+								"newsPost"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete news post",
 					"request": {
 						"method": "DELETE",

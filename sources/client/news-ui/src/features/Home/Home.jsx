@@ -34,7 +34,6 @@ function Home(props) {
     }, []);
 
     function handleOnHoverNewPreview(values) {
-        console.log('values', values);
         if (values?.isEnter) {
             setNewsPreview(values);
         } else {
@@ -45,7 +44,7 @@ function Home(props) {
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <SearchBar />
-                <BlogSection newsHots={homeData?.Data?.NewsHots} dataPreview={newsPreview} onHover={handleOnHoverNewPreview} />
+                <BlogSection documentHots={homeData?.Data?.DocumentHots} newsHots={homeData?.Data?.NewsHots} dataPreview={newsPreview} onHover={handleOnHoverNewPreview} />
 
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>
@@ -63,7 +62,7 @@ function Home(props) {
                     </Col>
                 </Row>
                 <MediaBlogSection />
-                <ListSection data={homeData?.Data?.NewsSectionDto} />
+                <ListSection dataNews={homeData?.Data?.NewsSectionDto} dataDocuments={homeData?.Data?.DocumentSectionDto} />
                 <ConnectionSection />
             </div>
         </div>

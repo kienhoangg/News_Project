@@ -22,7 +22,6 @@ function PublishedMenuPage(props) {
                 const params = {};
                 const response = await homeApi.getMenuPageData(params);
                 setDataPage(response);
-                console.log('PublishedMenuPage', response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }

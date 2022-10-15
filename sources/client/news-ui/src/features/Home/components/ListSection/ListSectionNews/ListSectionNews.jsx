@@ -15,8 +15,10 @@ ListSectionNews.propTypes = {
 ListSectionNews.defaultProps = {};
 
 function ListSectionNews(props) {
-    const { title, href, avatar } = props;
-
+    let { title, href, avatar } = props;
+    if (title?.length > 100) {
+        title = title?.slice(0, 100) + '...';
+    }
     return (
         <Link className={cx('wrapper')} to={href}>
             {stringHelper.isNullOrEmpty(avatar) && <img src={avatar} alt='img' />}

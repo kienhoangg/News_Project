@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using System.Threading.Tasks.Dataflow;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -54,7 +56,6 @@ namespace News.API.Services
 
         public async Task<NewsPost> GetNewsPost(long id, params Expression<Func<NewsPost, object>>[] includeProperties)
         {
-            var lstInclude = new Expression<Func<NewsPost, object>>[] { (x => x.FieldNews), (x => x.SourceNews), (x => x.CategoryNews) };
             return await GetByIdAsync(id, includeProperties);
         }
 
@@ -110,7 +111,7 @@ namespace News.API.Services
                 query = query.Where(x => x.PublishedDate <= tomorrow &&
                  x.PublishedDate >= today);
             }
-            if (newsPostRequest.ListNewsPostId.Count > 0)
+            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
             {
                 query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
             }
@@ -167,7 +168,7 @@ namespace News.API.Services
                  x.PublishedDate >= newsPostRequest.ToDate.Value);
             }
 
-            if (newsPostRequest.ListNewsPostId.Count > 0)
+            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
             {
                 query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
             }
@@ -184,13 +185,29 @@ namespace News.API.Services
             return await UpdateAsync(product);
         }
 
-        public async Task UpdateManyNewsPostDto(List<long> lstNewsPostId)
+        public async Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, NewsPostTypeUpdate newsPostTypeUpdate)
         {
             var lstNewsPostDto = (await GetNewsPostByPaging(new NewsPostRequest()
             {
                 ListNewsPostId = lstNewsPostId
             })).PagedData.Results.ToList();
-            lstNewsPostDto.ForEach(x => x.IsHotNews = true);
+            var action = new Action<NewsPostDto>(x => x.IsHotNews = value);
+            if (newsPostTypeUpdate == NewsPostTypeUpdate.STATUS)
+            {
+                switch (value)
+                {
+                    case true:
+                        action = new Action<NewsPostDto>(x => x.Status = Status.Enabled);
+                        break;
+                    case false:
+                        action = new Action<NewsPostDto>(x => x.Status = Status.Disabled);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            lstNewsPostDto.ForEach(action);
             await UpdateListAsync(_mapper.Map<List<NewsPost>>(lstNewsPostDto));
         }
     }

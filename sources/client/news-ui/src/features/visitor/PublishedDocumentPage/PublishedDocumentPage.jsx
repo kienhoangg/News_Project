@@ -35,7 +35,7 @@ function PublishedDocumentPage(props) {
                 const params = { id };
                 const response = await publishedNewsApi.getData(params);
                 setData(response);
-                console.log('PublishedDocumentPage', id, response);
+                setDateFilter(response?.NewsPostDetail.PublishedDate);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }

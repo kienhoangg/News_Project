@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -29,6 +30,6 @@ namespace News.API.Interfaces
         Task<int> UpdateNewsPost(NewsPost newsPost);
 
         Task<int> DeleteNewsPost(long id);
-        Task UpdateManyNewsPostDto(List<long> lstNewsPostId);
+        Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, NewsPostTypeUpdate newsPostTypeUpdate);
     }
 }

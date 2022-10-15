@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
 using Common.Extensions;
@@ -81,6 +82,7 @@ namespace News.API.Controllers
                     .GetNewsPostByPaging(new NewsPostRequest()
                     {
                         PageSize = 8,
+                        CurrentPage = 1,
                         CategoryNewsId = newsPost.CategoryNewsId,
                         OrderBy = "Order"
                     });
@@ -183,10 +185,11 @@ namespace News.API.Controllers
         [HttpPut("")]
         public async Task<IActionResult>
        UpdateManyNewsPostDto(
-          List<long> lstNewsPostId
+         [FromBody] NewsPostUpdateManyDto newsPostUpdateManyDto
        )
         {
-            await _newsPostService.UpdateManyNewsPostDto(lstNewsPostId);
+            //  var lstNewsPostId = strNewsPostId.Split(',').Select(long.Parse).ToList();
+            await _newsPostService.UpdateManyNewsPostDto(newsPostUpdateManyDto.NewsPostIds, newsPostUpdateManyDto.Value.Value, newsPostUpdateManyDto.Field.Value);
             return NoContent();
         }
 

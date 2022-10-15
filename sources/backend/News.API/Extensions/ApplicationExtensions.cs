@@ -11,6 +11,7 @@ namespace News.API.Extensions
             app.UseSwaggerUI();
             app.UseStaticFiles();
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
             app.UseRouting();
 
             // app.UseHttpsRedirection(); //for production only
