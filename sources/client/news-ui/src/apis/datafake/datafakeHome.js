@@ -241,64 +241,64 @@ export const datafakeLayoutData =
                     Id: '2.1',
                     Name: 'Tỉnh ủy',
                     IsHome: false,
-                    Url: routes.publishedMenu.replace(":id", "1"),
+                    Url: routes.publishedStaticPage.replace(":id", "1"),
                     Items: [
                         {
                             Id: '2.1.1',
                             Name: "Tỉnh ủy Yên bái",
-                            Url: routes.publishedMenu.replace(":id", "1"),
+                            Url: routes.publishedStaticPage.replace(":id", "1"),
                             Items: [
                                 {
                                     Id: '2.1.1.1',
                                     Name: "Thường trực tỉnh ủy",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.1.2',
                                     Name: "Ban thường vụ Tỉnh ủy",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.1.3',
                                     Name: "Ban Chấp hành Đảng bộ tỉnh",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 }
                             ]
                         },
                         {
                             Id: '2.1.2',
                             Name: "CÁC BAN ĐẢNG",
-                            Url: routes.publishedMenu.replace(":id", "1"),
+                            Url: routes.publishedStaticPage.replace(":id", "1"),
                             Items: [
                                 {
                                     Id: '2.1.2.1',
                                     Name: "Văn phòng Tỉnh ủy",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.2.2',
                                     Name: "Ủy Ban Kiểm tra Tỉnh ủy",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.2.3',
                                     Name: "Ban Nội chính Tỉnh uỷ",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.2.4',
                                     Name: "Các Đảng ủy trực thuộc",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.2.4',
                                     Name: "Ban Tổ chức Tỉnh ủy",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 },
                                 {
                                     Id: '2.1.2.4',
                                     Name: "Ban Tuyên giáo Tỉnh ủy",
-                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                    Url: routes.publishedStaticPage.replace(":id", "1"),
                                 }
                             ]
                         },
@@ -308,13 +308,13 @@ export const datafakeLayoutData =
                     Id: '2.2',
                     Name: 'UBND Huyện',
                     IsHome: false,
-                    Url: routes.publishedMenu.replace(":id", "1")
+                    Url: routes.publishedStaticPage.replace(":id", "1")
                 },
                 {
                     Id: '2.3',
                     Name: 'Sở ban ngành',
                     IsHome: false,
-                    Url: routes.publishedMenu.replace(":id", "1")
+                    Url: routes.publishedStaticPage.replace(":id", "1")
                 }
             ]
         },

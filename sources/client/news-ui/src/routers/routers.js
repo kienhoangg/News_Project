@@ -44,7 +44,7 @@ const publicRoutes = [
 
   { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
 
-  { path: config.routes.publishedMenu, component: PublishedMenuPage },
+  { path: config.routes.publishedStaticPage, component: PublishedMenuPage },
   { path: config.routes.search, component: SearchPage },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 

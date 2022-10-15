@@ -1,8 +1,8 @@
 const routes = {
   root: '/',
 
-  publishedDocument: '/document/:blogId',
-  publishedDocumentList: '/documents',
+  // publishedDocument: '/document/:blogId',
+  // publishedDocumentList: '/documents',
 
   publishedNewsPost: '/news-posts/detail/:id',
   publishedNewsPostPrint: '/news-posts/detail/print/:id',
@@ -10,8 +10,11 @@ const routes = {
   publishedNewsPostListCategory: '/news-posts/fields',
   publishedNewsPostCategory: '/news-posts/fields/:id',
 
+  publishedDocumentDetail: '/documents/:id',
+  publishedNewsPostList: '/documents',
+
   publishedIntroduce: '/introduce',
-  publishedMenu: '/menu/:id',
+  publishedStaticPage: '/page/:id', //Giành cho menu
 
   search: '/search',
   notfound: '/notfound',
