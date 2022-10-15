@@ -1,13 +1,15 @@
 import axiosClient from "apis/axiosClient";
-import { datafakeIntroduce, datafakeMenuPageData } from "apis/datafake/datafakeHome";
+import datafakeHome, { datafakeIntroduce, datafakeMenuPageData } from "apis/datafake/datafakeHome";
 
 class HomeApi {
     getData = (params) => {
-        const url = '/home';
-        return axiosClient.get(url, {});
+        // const url = '/home';
+        // return axiosClient.get(url, {});
 
-        // var response = datafakeHome;
-        // return response;
+        var response = {
+            Data: datafakeHome
+        };
+        return response;
     };
 
 

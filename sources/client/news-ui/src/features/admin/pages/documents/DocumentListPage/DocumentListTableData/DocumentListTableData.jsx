@@ -1,100 +1,148 @@
-import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { Button, Space, Table, Tag } from 'antd';
+import {
+  DeleteFilled,
+  EditFilled,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Button, Space, Table, Tag, Modal } from 'antd';
 import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
 import classNames from 'classnames/bind';
 import styles from './DocumentListTableData.module.scss';
+import { Direction } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
 DocumentListTableData.propTypes = {};
 
-DocumentListTableData.defaultProps = {};
+DocumentListTableData.defaultProps = {
+  setPagination: () => {},
+  deleteSourceNew: () => {},
+};
 
 function DocumentListTableData(props) {
-    const { data } = props;
+  const { data, setPagination, deleteSourceNew } = props;
 
-    const columns = [
-        {
-            key: 'title',
-            dataIndex: 'Title',
-            title: 'Tiêu đề',
-            render: (text) => <a>{text}</a>,
-            sorter: (a, b) => a.title - b.title,
-        },
-        {
-            key: 'Shotcut',
-            dataIndex: 'Shotcut',
-            title: 'Trích yếu',
-            render: (text) => <div>{text}</div>,
-            sorter: (a, b) => a.Shotcut - b.Shotcut,
-        },
-        {
-            key: 'PublishedDate',
-            dataIndex: 'PublishedDate',
-            title: 'Ngày ban hành',
-            width: 130,
-            align: 'center',
-            sorter: (a, b) => a.PublishedDate - b.PublishedDate,
-        },
-        {
-            key: 'status',
-            dataIndex: 'Status',
-            title: 'Trạng thái',
-            align: 'center',
-            width: 100,
-            sorter: (a, b) => true,
-            render: (_, { Id, Status }) => {
-                let color = Status ? 'geekblue' : 'volcano';
-                let text = Status ? 'Duyệt' : 'Hủy duyệt';
-                return (
-                    <Tag color={color} key={Id} style={{ cursor: 'pointer' }} onClick={() => handleOnClickStatus({ Id, Status })}>
-                        {text}
-                    </Tag>
-                );
-            },
-        },
-        {
-            key: 'action',
-            render: (_, record) => (
-                <Space size='middle'>
-                    <Button type='primary' icon={<EditFilled />}>
-                        Sửa
-                    </Button>
-                    <Button type='ghost' danger icon={<DeleteFilled />}>
-                        Xóa
-                    </Button>
-                </Space>
-            ),
-            width: 120,
-        },
-    ];
+  const columns = [
+    {
+      key: 'Code',
+      dataIndex: 'Code',
+      title: 'Tiêu đề',
+      render: (text) => <a>{text}</a>,
+      sorter: (a, b) => a.Code - b.Code,
+    },
+    {
+      key: 'Name',
+      dataIndex: 'Name',
+      title: 'Trích yếu',
+      render: (text) => <div>{text}</div>,
+      sorter: (a, b) => a.Name - b.Name,
+    },
+    {
+      key: 'PublishedDate',
+      dataIndex: 'PublishedDate',
+      title: 'Ngày ban hành',
+      width: 130,
+      align: 'center',
+      sorter: (a, b) => a.PublishedDate - b.PublishedDate,
+    },
+    {
+      key: 'status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
+      width: 100,
+      sorter: (a, b) => true,
+      render: (_, { Id, Status }) => {
+        let color = Status ? 'geekblue' : 'volcano';
+        let text = Status ? 'Duyệt' : 'Hủy duyệt';
+        return (
+          <Tag
+            color={color}
+            key={Id}
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleOnClickStatus({ Id, Status })}
+          >
+            {text}
+          </Tag>
+        );
+      },
+    },
+    {
+      key: 'action',
+      render: (_, record) => (
+        <Space size='middle'>
+          <Button type='primary' icon={<EditFilled />}>
+            Sửa
+          </Button>
+          <Button
+            type='ghost'
+            danger
+            icon={<DeleteFilled />}
+            onClick={() => handleDeleteSourceNew(record)}
+          >
+            Xóa
+          </Button>
+        </Space>
+      ),
+      width: 120,
+    },
+  ];
 
-    let dataItems = data?.data ?? [];
-    dataItems = dataItems.map((item) => {
-        var PublishedDate = datetimeHelper.formatDateToDateVN(item.PublishedDate);
-        return { ...item, PublishedDate: PublishedDate, key: item.Key };
+  let dataItems = data?.data ?? [];
+  dataItems = dataItems.map((item) => {
+    var PublishedDate = datetimeHelper.formatDateToDateVN(item.PublishedDate);
+    return { ...item, PublishedDate: PublishedDate, key: item.Key };
+  });
+
+  function handleDeleteSourceNew(values) {
+    return Modal.confirm({
+      title: 'Xóa nguồn tin',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      onOk: () => deleteSourceNewCustom(values),
     });
+  }
 
-    function handleOnClickStatus(values) {
-        // console.log(values);
+  const deleteSourceNewCustom = (values) => {
+    if (!deleteSourceNew) {
+      return;
     }
+    deleteSourceNew(values.Id);
+  };
 
-    return (
-        <div className={cx('wrapper')}>
-            <Table
-                columns={columns}
-                pagination={{
-                    defaultPageSize: 10,
-                    showSizeChanger: true,
-                    pageSizeOptions: [10, 20, 30],
-                    showTotal: () => commonRenderTable.showTableTotalPagination(data?.total ?? 0),
-                }}
-                dataSource={dataItems}
-                size='small'
-            />
-        </div>
+  function handleOnClickStatus(values) {
+    // console.log(values);
+  }
+
+  const handleOnchangeTable = (pagination, filters, sorter, extra) => {
+    setPagination(
+      pagination.current,
+      pagination.pageSize,
+      sorter.columnKey,
+      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
     );
+  };
+  return (
+    <div className={cx('wrapper')}>
+      <Table
+        onChange={handleOnchangeTable}
+        columns={columns}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          pageSizeOptions: [10, 20, 30],
+          total: data?.total,
+
+          showTotal: () =>
+            commonRenderTable.showTableTotalPagination(data?.total ?? 0),
+        }}
+        dataSource={dataItems}
+        size='small'
+      />
+    </div>
+  );
 }
 
 export default DocumentListTableData;

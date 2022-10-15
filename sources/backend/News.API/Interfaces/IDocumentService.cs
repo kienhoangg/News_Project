@@ -23,5 +23,6 @@ namespace News.API.Interfaces
         Task UpdateDocument(Document documentField);
 
         Task DeleteDocument(int id);
+        Task<DocumentsMasterDataDto> GetMasterDataDocument();
     }
 }

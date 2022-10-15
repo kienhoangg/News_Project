@@ -26,6 +26,15 @@ const datetimeHelper = {
       }
     } catch (error) {}
   },
+
+  formatDatetimeToDateSerer(input) {
+    try {
+      if (input) {
+        let value = moment(input).format(constant.DATETIME_FORMAT_SERVER);
+        return value;
+      }
+    } catch (error) {}
+  },
 };
 
 export default datetimeHelper;

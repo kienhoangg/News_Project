@@ -3,6 +3,16 @@
     padding: 8px 4px;
     font-style: italic;
 
+    .icon {
+        width: 5px;
+        height: 5px;
+        min-width: 5px;
+        min-height: 5px;
+        background-color: #5a5656;
+        display: inline-block;
+        margin-bottom: 2px;
+    }
+
     > svg {
         margin-right: 4px;
         margin-top: 4px;

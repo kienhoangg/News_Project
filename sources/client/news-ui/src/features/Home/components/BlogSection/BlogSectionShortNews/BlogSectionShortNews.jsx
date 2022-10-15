@@ -13,7 +13,7 @@ BlogSectionShortNews.propTypes = {
 
 function BlogSectionShortNews(props) {
     const { data } = props;
-    const { id, title, avatar, avatarTitle, description } = data;
+    const { Id, Title, Avatar, AvatarTitle, Description } = data;
 
     // const data = {
     //     link: '/document/123456789',
@@ -24,11 +24,11 @@ function BlogSectionShortNews(props) {
 
     return (
         <div className={cx('wrapper')}>
-            <Link to={commonRender.renderLinkNewsDetail(id)} underline='none' color='inherit'>
-                <h3 style={{ fontSize: 14 }}>{title}</h3>
+            <Link to={commonRender.renderLinkNewsDetail(Id)} underline='none' color='inherit'>
+                <h3 style={{ fontSize: 14 }}>{Title}</h3>
             </Link>
-            <img src={avatar} alt={avatarTitle} width={'100%'} />
-            <div className={cx('content')}>{description?.slice(0, 200)}...</div>
+            <img src={Avatar} alt={AvatarTitle} width={'100%'} />
+            <div className={cx('content')}>{Description?.slice(0, 200)}...</div>
         </div>
     );
 }

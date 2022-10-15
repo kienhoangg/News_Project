@@ -141,6 +141,27 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "QuestionCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SourceNews",
                 columns: table => new
                 {
@@ -158,6 +179,27 @@ namespace News.API.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SourceNews", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaticCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaticCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -236,6 +278,74 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Questions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AskedPersonName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsNoticed = table.Column<bool>(type: "bit", nullable: false),
+                    QuestionContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AnswerContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QuestionStatus = table.Column<int>(type: "int", nullable: false),
+                    AnswerPersonName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AnswerDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    QuestionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Views = table.Column<int>(type: "int", nullable: false),
+                    QuestionCategoryId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Questions_QuestionCategories_QuestionCategoryId",
+                        column: x => x.QuestionCategoryId,
+                        principalTable: "QuestionCategories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StaticInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descritpion = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StaticCategoryId = table.Column<int>(type: "int", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaticInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StaticInfos_StaticCategories_StaticCategoryId",
+                        column: x => x.StaticCategoryId,
+                        principalTable: "StaticCategories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "NewsPosts",
                 columns: table => new
                 {
@@ -253,6 +363,7 @@ namespace News.API.Persistence.Migrations
                     AvatarTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Views = table.Column<int>(type: "int", nullable: false),
                     CollaboratorId = table.Column<int>(type: "int", nullable: true),
                     FieldNewsId = table.Column<int>(type: "int", nullable: true),
                     SourceNewsId = table.Column<int>(type: "int", nullable: true),
@@ -365,6 +476,16 @@ namespace News.API.Persistence.Migrations
                 name: "IX_NewsPosts_SourceNewsId",
                 table: "NewsPosts",
                 column: "SourceNewsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Questions_QuestionCategoryId",
+                table: "Questions",
+                column: "QuestionCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StaticInfos_StaticCategoryId",
+                table: "StaticInfos",
+                column: "StaticCategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -374,6 +495,12 @@ namespace News.API.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Documents");
+
+            migrationBuilder.DropTable(
+                name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "StaticInfos");
 
             migrationBuilder.DropTable(
                 name: "NewsPosts");
@@ -389,6 +516,12 @@ namespace News.API.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "DocumentTypes");
+
+            migrationBuilder.DropTable(
+                name: "QuestionCategories");
+
+            migrationBuilder.DropTable(
+                name: "StaticCategories");
 
             migrationBuilder.DropTable(
                 name: "CategoryNews");

@@ -18,7 +18,7 @@ BlogSectionShortListItem.defaultProps = {
 
 function BlogSectionShortListItem(props) {
     const { className, data, onHover } = props;
-    const { id, title, avatar, avatarTitle, description } = data;
+    const { Id, Title, Avatar, AvatarTitle, Description } = data;
 
     // const data = {
     //     href: '/document/123456789',
@@ -35,11 +35,11 @@ function BlogSectionShortListItem(props) {
             }}
             className={cx('wrapper') + ` ${className}`}
             underline='none'
-            to={commonRender.renderLinkNewsDetail(id)}
+            to={commonRender.renderLinkNewsDetail(Id)}
             color='inherit'
         >
             <div className={cx('news-hot-icon')}></div>
-            <div className={cx('content')}>{title}</div>
+            <div className={cx('content')}>{Title}</div>
         </Link>
     );
 }

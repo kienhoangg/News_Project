@@ -25,6 +25,7 @@ namespace Models.Dtos
         public string? Description { get; set; }
 
         public string? Content { get; set; }
+        public int? Views { get; set; }
 
         public string? FilePath { get; set; }
 

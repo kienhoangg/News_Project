@@ -18,5 +18,6 @@ namespace Models.Requests
         public DateTime? ToDate { get; set; }
 
         public DateTime? TodayDate { get; set; }
+        public List<long> ListNewsPostId { get; set; }
     }
 }

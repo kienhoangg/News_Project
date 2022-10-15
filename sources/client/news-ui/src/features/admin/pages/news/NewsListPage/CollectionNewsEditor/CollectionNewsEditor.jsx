@@ -48,6 +48,7 @@ function CollectionNewsEditor({
   data,
   dataFilter,
 }) {
+  console.log(dataFilter);
   const [form] = Form.useForm();
 
   function onEditorChange(event) {
@@ -153,7 +154,8 @@ function CollectionNewsEditor({
             values.content = values.content?.editor?.getData();
             const date =
               values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
-            const publishedDate = datetimeHelper.formatDatetimeToDate(date);
+            const publishedDate =
+              datetimeHelper.formatDatetimeToDateSerer(date);
             const {
               category,
               title,

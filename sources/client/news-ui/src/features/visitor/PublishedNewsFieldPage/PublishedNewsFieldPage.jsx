@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
 import commonRender, { commonRenderTable } from 'common/commonRender';
 import PublishedNewsListCategoryPageItem from '../PublishedNewsListCategoryPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import { Pagination } from 'antd';
 
@@ -18,6 +18,7 @@ PublishedNewsFieldPage.defaultProps = {};
 function PublishedNewsFieldPage(props) {
     // const [dataPage, setDataPage] = useState();
     const [dataPageFullPage, setDataPageFullPage] = useState();
+    let { id } = useParams();
     // const [dataTotal, setDataTotal] = useState(0);
     const dataPage = useRef(null);
     const dataTotal = useRef(1);
@@ -27,14 +28,14 @@ function PublishedNewsFieldPage(props) {
     useEffect(() => {
         const fetchHome = async () => {
             try {
-                const params = { currentPage: pagingIndex };
+                const params = { currentPage: pagingIndex, id: id };
                 const response = await publishedNewsApi.getFieldsDataPage(params);
                 setDataPageFullPage(response);
-                console.log('PublishedNewsFieldPage', response);
                 // setDataPage(response?.data);
                 // setDataTotal(response?.total);
-                dataPage.current = response?.data?.category;
-                dataTotal.current = response?.total;
+                console.log('PublishedNewsFieldPage', response);
+                dataPage.current = response?.CategoryNews;
+                dataTotal.current = response?.NewsPosts.RowCount;
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }
@@ -53,15 +54,15 @@ function PublishedNewsFieldPage(props) {
                 <>
                     <div key={dataPage.current.categoryId} className={cx('category-container')}>
                         <div className={cx('title-container')}>
-                            <Link to={commonRender.renderLinkNewsCategory(dataPage.current.categoryTitle)} className={cx('title')}>
-                                {dataPage.current?.categoryTitle}
+                            <Link to={commonRender.renderLinkNewsCategory(dataPage.current.FieldNews.Id)} className={cx('title')}>
+                                {dataPage.current?.CategoryNewsName} / {dataPage.current?.FieldNews.Title}
                             </Link>
                             <span className={cx('right')}></span>
                         </div>
                         <div style={{ border: '1px solid #0066b3', marginLeft: 8 }}></div>
 
-                        {Array.isArray(dataPage.current?.items) &&
-                            dataPage.current.items.map((dataItem, index) => {
+                        {Array.isArray(dataPageFullPage?.NewsPosts?.Results) &&
+                            dataPageFullPage.NewsPosts.Results.map((dataItem, index) => {
                                 return (
                                     <>
                                         <PublishedNewsListCategoryPageItem key={index} data={dataItem} isFirst={true} />
