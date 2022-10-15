@@ -63,7 +63,7 @@ export const commonRender = {
     * @returns Đường dẫn chi tiết tin tức
     */
     renderMenuPage: (id) => {
-        var link = routes.publishedMenu.replace(":id", id);
+        var link = routes.publishedStaticPage.replace(":id", id);
         return link;
     },
 

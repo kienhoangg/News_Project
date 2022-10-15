@@ -108,7 +108,7 @@ namespace News.API.Extensions
                             builder
                                 .MigrationsAssembly(typeof(NewsContext)
                                     .Assembly
-                                    .FullName));
+                                    .FullName).UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
                 });
             return services;
         }
@@ -143,7 +143,8 @@ namespace News.API.Extensions
                 typeof(QuestionService)).AddScoped(serviceType: typeof(IQuestionCategoryService),
                 typeof(QuestionCategoryService)).AddScoped(serviceType: typeof(IStaticInfoService),
                 typeof(StaticInfoService)).AddScoped(serviceType: typeof(IStaticCategoryService),
-                typeof(StaticCategoryService)).AddTransient(serviceType: typeof(ITokenService),
+                typeof(StaticCategoryService)).AddScoped(serviceType: typeof(IMenuService),
+                typeof(MenuService)).AddTransient(serviceType: typeof(ITokenService),
                 typeof(TokenService)).AddScoped<IJwtUtils, JwtUtils>();
         }
     }

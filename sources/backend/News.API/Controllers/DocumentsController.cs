@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using AutoMapper;
 using Common.Extensions;
 using Common.Interfaces;
@@ -82,7 +83,14 @@ namespace News.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDocumentById([Required] int id)
         {
-            Document? document = await _documentService.GetDocument(id);
+            var lstInclude =
+             new Expression<Func<Document, object>>[] {
+                    (x => x.DocumentDepartment),
+                    (x => x.DocumentField),
+                    (x => x.DocumentSignPerson),
+                     (x => x.DocumentType)
+             };
+            Document? document = await _documentService.GetDocument(id, lstInclude);
             if (document == null) return NotFound();
 
             var result = _mapper.Map<DocumentDto>(document);

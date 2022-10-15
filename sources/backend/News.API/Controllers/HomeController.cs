@@ -24,6 +24,7 @@ namespace News.API.Controllers
         private readonly ICategoryNewsService _categoryNewsService;
         private readonly IDocumentService _documentService;
         private readonly IQuestionService _questionService;
+        private readonly IMenuService _menuService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
@@ -38,7 +39,8 @@ namespace News.API.Controllers
             IDocumentService documentService,
             IQuestionService questionService,
             ITokenService tokenService,
-            IJwtUtils jwtUtils)
+            IJwtUtils jwtUtils,
+            IMenuService menuService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -48,6 +50,7 @@ namespace News.API.Controllers
             _questionService = questionService;
             _tokenService = tokenService;
             _jwtUtils = jwtUtils;
+            _menuService = menuService;
         }
 
         [HttpGet("documents/master")]
@@ -64,11 +67,18 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("menu")]
+        public async Task<IActionResult> GetHomeMenu()
+        {
+            var result = await _menuService.GetHomeMenu();
+            return Ok(result);
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var jwtToken = _jwtUtils.GenerateJwtToken(RoleCode.PUBLIC.ToString());
+
             // Get 5 hot news
             var hotNewsRequets =
                 new NewsPostRequest()
@@ -125,7 +135,8 @@ namespace News.API.Controllers
                 });
 
             // Get CategoryNews with 5 normal news
-            return Ok(result);
+            var jwtToken = _jwtUtils.GenerateJwtToken(RoleCode.PUBLIC.ToString());
+            return Ok(new { result, token = jwtToken });
         }
     }
 }
