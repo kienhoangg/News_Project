@@ -1,3 +1,5 @@
+import routes from "config/configRoutes";
+
 const datafakeHome = {
     "NewsHots": [
         {
@@ -220,6 +222,125 @@ const datafakeHome = {
         ]
     },
 }
+
+export const datafakeLayoutData =
+    [
+        {
+            Id: '1',
+            Name: 'Trang chủ',
+            IsHome: true,
+            Url: '/',
+            Items: []
+        },
+        {
+            Id: '2',
+            Name: 'QLVB điều hành',
+            IsHome: false,
+            Items: [
+                {
+                    Id: '2.1',
+                    Name: 'Tỉnh ủy',
+                    IsHome: false,
+                    Url: routes.publishedMenu.replace(":id", "1"),
+                    Items: [
+                        {
+                            Id: '2.1.1',
+                            Name: "Tỉnh ủy Yên bái",
+                            Url: routes.publishedMenu.replace(":id", "1"),
+                            Items: [
+                                {
+                                    Id: '2.1.1.1',
+                                    Name: "Thường trực tỉnh ủy",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.1.2',
+                                    Name: "Ban thường vụ Tỉnh ủy",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.1.3',
+                                    Name: "Ban Chấp hành Đảng bộ tỉnh",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                }
+                            ]
+                        },
+                        {
+                            Id: '2.1.2',
+                            Name: "CÁC BAN ĐẢNG",
+                            Url: routes.publishedMenu.replace(":id", "1"),
+                            Items: [
+                                {
+                                    Id: '2.1.2.1',
+                                    Name: "Văn phòng Tỉnh ủy",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.2.2',
+                                    Name: "Ủy Ban Kiểm tra Tỉnh ủy",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.2.3',
+                                    Name: "Ban Nội chính Tỉnh uỷ",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.2.4',
+                                    Name: "Các Đảng ủy trực thuộc",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.2.4',
+                                    Name: "Ban Tổ chức Tỉnh ủy",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                },
+                                {
+                                    Id: '2.1.2.4',
+                                    Name: "Ban Tuyên giáo Tỉnh ủy",
+                                    Url: routes.publishedMenu.replace(":id", "1"),
+                                }
+                            ]
+                        },
+                    ]
+                },
+                {
+                    Id: '2.2',
+                    Name: 'UBND Huyện',
+                    IsHome: false,
+                    Url: routes.publishedMenu.replace(":id", "1")
+                },
+                {
+                    Id: '2.3',
+                    Name: 'Sở ban ngành',
+                    IsHome: false,
+                    Url: routes.publishedMenu.replace(":id", "1")
+                }
+            ]
+        },
+        {
+            Id: '3',
+            Name: 'Thư điện tử',
+            IsHome: false,
+            Url: '/',
+            Items: []
+        },
+        {
+            Id: '4',
+            Name: 'Danh bạ điện thoại',
+            IsHome: false,
+            Url: '/',
+            Items: []
+        },
+        {
+            Id: '5',
+            Name: 'Liên hệ',
+            IsHome: false,
+            Url: '/',
+            Items: []
+        },
+    ]
+    ;
 
 export const datafakeIntroduce = {
     Title: "Khái quát về xã Đông Cuông",
