@@ -4,6 +4,7 @@ namespace Models.Entities
 {
     public class StaticInfo : EntityAuditBase<int>
     {
+   
         public string Title { get; set; }
         public string? Descritpion { get; set; }
         public string? Content { get; set; }

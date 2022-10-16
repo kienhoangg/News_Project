@@ -17,10 +17,12 @@ namespace News.API.Services
     public class PhotoCategoryService : RepositoryBase<PhotoCategory, int, NewsContext>, IPhotoCategoryService
     {
         private readonly IMapper _mapper;
+        private readonly IPhotoService _photoService;
         public PhotoCategoryService(IMapper mapper, NewsContext dbContext,
-            IUnitOfWork<NewsContext> unitOfWork) : base(dbContext, unitOfWork)
+            IUnitOfWork<NewsContext> unitOfWork, IPhotoService photoService) : base(dbContext, unitOfWork)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _photoService = photoService;
         }
 
         public async Task CreatePhotoCategory(PhotoCategory photoCategory)
@@ -55,6 +57,26 @@ namespace News.API.Services
             PagedResult<PhotoCategory>? sourcePaging = await query.PaginatedListAsync(photoCategoryRequest.CurrentPage
                                                                                              ?? 1, photoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoCategoryRequest.OrderBy, photoCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<PhotoCategoryDto>>(sourcePaging.Results);
+            foreach (var item in lstDto)
+            {
+                var photo = (await _photoService.GetPhotoByPaging(new PhotoRequest()
+                {
+                    CurrentPage = 1,
+                    PageSize = 1,
+                    PhotoCategoryId = item.Id
+                })).PagedData.Results.ToList().FirstOrDefault();
+                if (photo != null && !String.IsNullOrEmpty(photo.ImagePath))
+                {
+                    if (photo.ImagePath.Contains(";;"))
+                    {
+                        item.Avatar = photo.ImagePath.Split(";;")[0];
+                    }
+                    else
+                    {
+                        item.Avatar = photo.ImagePath;
+                    }
+                }
+            }
             var paginationSet = new PagedResult<PhotoCategoryDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<PhotoCategoryDto>? result = new(paginationSet);
             return result;

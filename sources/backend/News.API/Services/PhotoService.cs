@@ -52,6 +52,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(photoRequest.Keyword)));
             }
+            if (photoRequest.PhotoCategoryId.HasValue)
+            {
+                query = query.Where(x => x.PhotoCategoryId == photoRequest.PhotoCategoryId.Value);
+            }
             PagedResult<Photo>? sourcePaging = await query.PaginatedListAsync(photoRequest.CurrentPage
                                                                                              ?? 1, photoRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoRequest.OrderBy, photoRequest.Direction);
             var lstDto = _mapper.Map<List<PhotoDto>>(sourcePaging.Results);

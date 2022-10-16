@@ -1,6 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Extensions;
+using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -12,16 +16,18 @@ namespace News.API.Controllers
     public class StaticInfosController : ControllerBase
     {
         private readonly IStaticInfoService _staticInfoService;
-
+        private readonly ISerializeService _serializeService;
         private readonly IMapper _mapper;
 
         public StaticInfosController(
             IStaticInfoService staticInfoService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _staticInfoService = staticInfoService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -35,10 +41,39 @@ namespace News.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult>
-        CreateStaticInfoDto([FromBody] StaticInfoDto staticInfoDto)
+      CreateStaticInfoDto([FromForm] StaticInfoUploadDto staticInfoUploadDto)
         {
-            var staticInfo = _mapper.Map<StaticInfo>(staticInfoDto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<StaticInfo
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            // Upload file attachment if exist
+            if (staticInfoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await staticInfoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+
+            var staticInfo = _serializeService
+                    .Deserialize<StaticInfo>(staticInfoUploadDto.JsonString);
+            staticInfo.FilePath = fileAttachmentPath;
             await _staticInfoService.CreateStaticInfo(staticInfo);
+
             var result = _mapper.Map<StaticInfoDto>(staticInfo);
             return Ok(result);
         }
