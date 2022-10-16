@@ -54,6 +54,11 @@ const LIST_BUTON = [
         Label: 'THÔNG TIN CẦN BIẾT',
         Image: Images.LIST_BUTTON_ITEM,
     },
+    {
+        Href: routes.publishedQuestions,
+        Label: 'Hỏi đáp',
+        Image: Images.LIST_BUTTON_ITEM,
+    },
 ];
 
 const LIST_NEWS = [
