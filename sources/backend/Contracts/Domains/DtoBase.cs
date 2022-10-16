@@ -10,5 +10,6 @@ namespace Contracts.Domains
         public DateTimeOffset? LastModifiedDate { get; set; }
 
         public Status Status { get; set; }
+        public int? Order { get; set; }
     }
 }
