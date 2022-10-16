@@ -16,6 +16,10 @@ const {
   ClusterOutlined,
   SettingOutlined,
   MenuOutlined,
+  HighlightOutlined,
+  ProfileOutlined,
+  AuditOutlined,
+  UnorderedListOutlined,
 } = require('@ant-design/icons');
 
 const adminMenu = [
@@ -201,6 +205,25 @@ const adminMenu = [
         label: 'Menu hệ thống',
         icon: <MenuOutlined />,
         to: routes.adminSetupMenu,
+      },
+    ],
+  },
+  {
+    key: 'static',
+    label: 'Thông tin tĩnh',
+    icon: <HighlightOutlined />,
+    children: [
+      {
+        key: 'static-category',
+        label: 'Danh mục tĩnh',
+        icon: <UnorderedListOutlined />,
+        to: routes.staticCategory,
+      },
+      {
+        key: 'static-content',
+        label: 'Nội dung tĩnh',
+        icon: <AuditOutlined />,
+        to: routes.staticContent,
       },
     ],
   },

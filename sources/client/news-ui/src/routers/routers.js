@@ -30,6 +30,7 @@ import PublishedNewsFieldPage from 'features/visitor/PublishedNewsFieldPage/Publ
 import PublishedNewsListCategoryPage from 'features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage';
 import PublishedNewsListDocumentPage from 'features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage';
 import SearchPage from 'features/visitor/SearchPage/SearchPage';
+import StaticContentListPage from './../features/admin/pages/staticInfor/StaticContent/StaticContentListPage';
 
 // Public routes
 const publicRoutes = [
@@ -37,11 +38,24 @@ const publicRoutes = [
   // { path: config.routes.blog, component: BlogMainPage },
   { path: config.routes.publishedDocument, component: PublishedDocumentPage },
   { path: config.routes.publishedNewsPost, component: PublishedDocumentPage },
-  { path: config.routes.publishedNewsPostPrint, component: PublishedDocumentPrintPage, layout: null },
-  { path: config.routes.publishedNewsPostListCategory, component: PublishedNewsListCategoryPage },
-  { path: config.routes.publishedNewsPostCategory, component: PublishedNewsFieldPage },
+  {
+    path: config.routes.publishedNewsPostPrint,
+    component: PublishedDocumentPrintPage,
+    layout: null,
+  },
+  {
+    path: config.routes.publishedNewsPostListCategory,
+    component: PublishedNewsListCategoryPage,
+  },
+  {
+    path: config.routes.publishedNewsPostCategory,
+    component: PublishedNewsFieldPage,
+  },
 
-  { path: config.routes.publishedDocumentList, component: PublishedNewsListDocumentPage },
+  {
+    path: config.routes.publishedDocumentList,
+    component: PublishedNewsListDocumentPage,
+  },
 
   { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
 
@@ -171,6 +185,16 @@ const publicRoutes = [
   {
     path: config.routes.adminSetupMenu,
     component: MenuPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.staticContent,
+    component: StaticContentListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.staticCategory,
+    component: StaticContentListPage,
     layout: AdminLayout,
   },
 

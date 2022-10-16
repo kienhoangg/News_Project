@@ -57,6 +57,9 @@ const routes = {
 
   adminSetupMenu: '/admin/setup/menu',
 
+  staticContent: '/admin/static/content',
+  staticCategory: '/admin/static/category',
+
   //Test
   test: '/test',
 };

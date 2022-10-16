@@ -2,6 +2,7 @@ namespace Models.Dtos
 {
     public class StaticInfoDto
     {
+        public int? Id { get; set; }
         public string Title { get; set; }
         public string? Descritpion { get; set; }
         public string? Content { get; set; }
