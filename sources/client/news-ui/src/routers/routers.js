@@ -21,6 +21,7 @@ import QuestionCategoryPage from "features/admin/pages/questions/QuestionCategor
 import QuestionListPage from "features/admin/pages/questions/QuestionListPage/QuestionListPage";
 import MenuPage from "features/admin/pages/setup/MenuPage/MenuPage";
 import Home from "features/Home/Home";
+import AlbumImageDetailPage from "features/visitor/ImageListPage/AlbumImageDetailPage";
 import PublishedDocumentPage from "features/visitor/PublishedDocumentPage/PublishedDocumentPage";
 import PublishedDocumentPrintPage from "features/visitor/PublishedDocumentPrintPage/PublishedDocumentPrintPage";
 import PublishedEvaluatePage from "features/visitor/PublishedEvaluatePage/PublishedEvaluatePage";
@@ -30,6 +31,10 @@ import PublishedNewsFieldPage from "features/visitor/PublishedNewsFieldPage/Publ
 import PublishedNewsListCategoryPage from "features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage";
 import PublishedNewsListDocumentPage from "features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage";
 import SearchPage from "features/visitor/SearchPage/SearchPage";
+import OperatingDocumentsPage from "features/visitor/OperatingDocumentsPage/OperatingDocumentsPage";
+import OperatingDocumentsDetailPage from "features/visitor/OperatingDocumentsDetailPage/OperatingDocumentsDetailPage";
+import QuestionAndAnswerPage from "features/visitor/QuestionAndAnswerPage/QuestionAndAnswerPage";
+import LibVideoListPage from "features/visitor/VideoListPage/LibVideoListPage";
 
 // Public routes
 const publicRoutes = [
@@ -49,11 +54,6 @@ const publicRoutes = [
   {
     path: config.routes.publishedNewsPostCategory,
     component: PublishedNewsFieldPage,
-  },
-
-  {
-    path: config.routes.publishedDocumentList,
-    component: PublishedNewsListDocumentPage,
   },
 
   { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
@@ -190,8 +190,20 @@ const publicRoutes = [
     layout: AdminLayout,
   },
   {
-    path: "tdba",
+    path: config.routes.publishedDocumentList,
+    component: OperatingDocumentsPage,
+  },
+  {
+    path: config.routes.publishedDocumentDetail,
+    component: OperatingDocumentsDetailPage,
+  },
+  {
+    path: config.routes.publishedQuestions,
     component: QuestionAndAnswerPage,
+  },
+  {
+    path: config.routes.publishedPhotos,
+    component: AlbumImageDetailPage,
   },
 
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },

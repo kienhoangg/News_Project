@@ -1,6 +1,10 @@
 .question-and-answer-page {
     display: flex;
 
+    button {
+        border: none;
+    }
+
     &__left {
         width: 240px;
 
@@ -156,6 +160,8 @@
                     display: flex;
                     align-items: center;
 
+
+
                     &:nth-child(2) {
                         .question-and-answer-page__right__body__mid__row__input {
                             margin-left: 46px;
@@ -224,6 +230,21 @@
                                 border-radius: 3px;
                                 border: 1px solid #ababab !important;
                                 box-shadow: none !important;
+                            }
+                        }
+
+                        &__cancel-upload-file {
+                            margin-top: 10px;
+
+                            button {
+                                width: 50px;
+                                height: 20px;
+                                background-color: red;
+                                color: #ffffff;
+                                outline: none;
+                                margin-right: 10px;
+                                border-radius: 3px;
+                                cursor: pointer;
                             }
                         }
 

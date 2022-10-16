@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./operatingDocumentsDetailPage.scss";
 import IconDot from "../../../assets/icons/Icon-dot.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import IconPDF from "../../../assets/icons/icon-pdf.png";
+import axiosClient from "apis/axiosClient";
+import moment from "moment";
+import ScrollToTop from "components/ScrollToTop/ScrollToTop";
 
 OperatingDocumentsDetailPage.propTypes = {};
 
@@ -15,9 +18,16 @@ OperatingDocumentsDetailPage.defaultProps = {};
  * @author TDBA (09/10/2022)
  */
 function OperatingDocumentsDetailPage(props) {
+  const location = useLocation();
+  const { id } = useParams();
+
   const elListItemRunningRef = useRef(""); // Ref tham chiếu tới phần tử chưa danh sách item
   const scrollTo = useRef(0); // Lưu vị trí scroll
   const setIntervalRef = useRef(null); // Lưu tham chiếu tới setinterval để clear
+
+  const [documentDetail, setDocumentDetail] = useState({}); // Chi tiết tài liệu
+  const [listDocuments, setListDocuments] = useState([]); // Danh sách văn bản
+
   /**
    * Thêm dự kiện tự động scroll
    * @author TDBA (09/10/2022)
@@ -38,8 +48,45 @@ function OperatingDocumentsDetailPage(props) {
     }, 100);
   };
 
+  useEffect(() => {
+    callApiGetDetailDocument();
+    callApiGetDocumentByFilter();
+  }, []);
+
+  /**
+   * Lấy chi tiết văn bản theo id
+   * @author TDBA (15/10/2022)
+   */
+  const callApiGetDetailDocument = async () => {
+    try {
+      const res = await axiosClient.get("/documents/" + id);
+      setDocumentDetail(res);
+    } catch (err) {}
+  };
+
+  const PAGE_SIZE = 20;
+
+  /**
+   * Thực hiện gọi API lấy danh sách văn bản
+   * @author TDBA (15/10/2022)
+   */
+  const callApiGetDocumentByFilter = async () => {
+    try {
+      let body = {
+        pageSize: PAGE_SIZE,
+        currentPage: 1,
+        direction: -1,
+        orderBy: "CreatedDate",
+      };
+
+      const res = await axiosClient.post("/documents/filter", body);
+      setListDocuments(res?.PagedData?.Results || []);
+    } catch (error) {}
+  };
+
   return (
     <div className="operating-documents-detail-page">
+      <ScrollToTop />
       <div className="operating-documents-detail-page__left">
         <div className="operating-documents-detail-page__left__header">
           <div
@@ -52,15 +99,13 @@ function OperatingDocumentsDetailPage(props) {
         <div className="operating-documents-detail-page__left__body">
           <div className="operating-documents-detail-page__left__body__table">
             <div className="operating-documents-detail-page__left__body__table__title">
-              Ông văn về việc thực hiện Quyết định số 942/QĐ-TTg ngày 05/8/2022
-              của Thủ tướng Chính phủ về việc phê duyệt Kế hoạch hành động giảm
-              phát thải khí mê-tan đến năm 2030
+              {documentDetail?.Name}
             </div>
             <table className="operating-documents-detail-page__left__body__table__content">
               <tbody>
                 <tr>
                   <td>Số ký hiệu</td>
-                  <td>3365/UBND-NLN</td>
+                  <td>{documentDetail?.Code}</td>
                 </tr>
                 <tr>
                   <td>Nội dung</td>
@@ -68,27 +113,25 @@ function OperatingDocumentsDetailPage(props) {
                 </tr>
                 <tr>
                   <td>Loại văn bản</td>
-                  <td>Quyết định</td>
+                  <td>{documentDetail?.DocumentType?.Title}</td>
                 </tr>
                 <tr>
                   <td>Cơ quan ban hành</td>
-                  <td>UBND Tỉnh</td>
-                </tr>
-                <tr>
-                  <td>Nội dung</td>
-                  <td></td>
+                  <td>{documentDetail?.DocumentDepartment?.Title}</td>
                 </tr>
                 <tr>
                   <td>Lĩnh vực</td>
-                  <td></td>
+                  <td>{documentDetail?.DocumentField?.Title}</td>
                 </tr>
                 <tr>
                   <td>Người ký</td>
-                  <td>Trần Huy Tuấn</td>
+                  <td>{documentDetail?.DocumentSignPerson?.Title}</td>
                 </tr>
                 <tr>
                   <td>Ngày ban hành</td>
-                  <td>03/10/2022</td>
+                  <td>
+                    {moment(documentDetail?.PublishedDate).format("DD/MM/YYYY")}
+                  </td>
                 </tr>
                 <tr>
                   <td>Tệp đính kèm</td>
@@ -97,7 +140,9 @@ function OperatingDocumentsDetailPage(props) {
                       className={
                         "operating-documents-detail-page__left__body__table__content__icon-pdf"
                       }
-                      href="/"
+                      href={
+                        window.location.origin + "/" + documentDetail?.FilePath
+                      }
                     >
                       <img
                         style={{
@@ -106,7 +151,11 @@ function OperatingDocumentsDetailPage(props) {
                         }}
                         src={IconPDF}
                       />
-                      1735-QD-UBND.signed.pdf
+                      {
+                        documentDetail?.FilePath?.split("/")?.[
+                          documentDetail?.FilePath?.split("/").length - 1
+                        ]
+                      }
                     </a>
                   </td>
                 </tr>
@@ -119,53 +168,21 @@ function OperatingDocumentsDetailPage(props) {
               Các văn bản khác
             </div>
             <div className="operating-documents-detail-page__left__body__list-document__wrap-list">
-              <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row">
-                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__dot">
-                  <img src={IconDot} />
+              {listDocuments?.map((item) => (
+                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row">
+                  <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__dot">
+                    <img src={IconDot} />
+                  </div>
+                  <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__title">
+                    <a href={"/documents/" + item?.Id}>{item?.Name}</a>
+                  </div>
                 </div>
-                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__title">
-                  <Link to={"/"}>
-                    Thông báo Kết luận của đồng chí Nguyễn Thế Phước - Phó Chủ
-                    tịch Thường trực Ủy ban nhân dân tỉnh tại buổi làm việc về
-                    tiến độ triển khai và xử lý những vướng mắc liên quan của dự
-                    án Đường nối Quốc lộ 32 với đường cao tốc Nội Bài - Lào Cai
-                    (IC15)
-                  </Link>
-                </div>
-              </div>
-              <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row">
-                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__dot">
-                  <img src={IconDot} />
-                </div>
-                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__title">
-                  <Link to={"/"}>
-                    Thông báo Kết luận của đồng chí Nguyễn Thế Phước - Phó Chủ
-                    tịch Thường trực Ủy ban nhân dân tỉnh tại buổi làm việc về
-                    tiến độ triển khai và xử lý những vướng mắc liên quan của dự
-                    án Đường nối Quốc lộ 32 với đường cao tốc Nội Bài - Lào Cai
-                    (IC15)
-                  </Link>
-                </div>
-              </div>
-              <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row">
-                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__dot">
-                  <img src={IconDot} />
-                </div>
-                <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__title">
-                  <Link to={"/"}>
-                    Thông báo Kết luận của đồng chí Nguyễn Thế Phước - Phó Chủ
-                    tịch Thường trực Ủy ban nhân dân tỉnh tại buổi làm việc về
-                    tiến độ triển khai và xử lý những vướng mắc liên quan của dự
-                    án Đường nối Quốc lộ 32 với đường cao tốc Nội Bài - Lào Cai
-                    (IC15)
-                  </Link>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
           <div className="operating-documents-detail-page__left__body__view-all-document">
-            <Link to={"/"}>Xem toàn bộ văn bản tại đây >></Link>
+            <Link to={"/documents"}>Xem toàn bộ văn bản tại đây {">>"}</Link>
           </div>
         </div>
       </div>
@@ -197,100 +214,27 @@ function OperatingDocumentsDetailPage(props) {
             onMouseEnter={() => clearInterval(setIntervalRef.current)}
             onMouseLeave={() => setEventAutoScroll()}
           >
-            <div
-              className={
-                "operating-documents-detail-page__right__row__list-item-running__item"
-              }
-            >
-              <a
-                href="/"
+            {listDocuments?.map((item) => (
+              <div
                 className={
-                  "operating-documents-detail-page__right__row__list-item-running__item__href"
+                  "operating-documents-detail-page__right__row__list-item-running__item"
                 }
               >
-                <span
+                <a
+                  href={`/documents/${item?.Id}`}
                   className={
-                    "operating-documents-detail-page__right__row__list-item-running__item__href__dot"
+                    "operating-documents-detail-page__right__row__list-item-running__item__href"
                   }
-                ></span>
-                <span>
-                  Đây là một đoạn văn bản dài vãi đái Đây là một đoạn văn bản
-                  dài vãi đái Đây là một đoạn văn bản dài vãi đái Đây là một
-                  đoạn văn bản dài vãi đái
-                </span>
-              </a>
-            </div>
-
-            <div
-              className={
-                "operating-documents-detail-page__right__row__list-item-running__item"
-              }
-            >
-              <a
-                href="/"
-                className={
-                  "operating-documents-detail-page__right__row__list-item-running__item__href"
-                }
-              >
-                <span
-                  className={
-                    "operating-documents-detail-page__right__row__list-item-running__item__href__dot"
-                  }
-                ></span>
-                <span>
-                  Đây là một đoạn văn bản dài vãi đái Đây là một đoạn văn bản
-                  dài vãi đái Đây là một đoạn văn bản dài vãi đái Đây là một
-                  đoạn văn bản dài vãi đái
-                </span>
-              </a>
-            </div>
-
-            <div
-              className={
-                "operating-documents-detail-page__right__row__list-item-running__item"
-              }
-            >
-              <a
-                href="/"
-                className={
-                  "operating-documents-detail-page__right__row__list-item-running__item__href"
-                }
-              >
-                <span
-                  className={
-                    "operating-documents-detail-page__right__row__list-item-running__item__href__dot"
-                  }
-                ></span>
-                <span>
-                  Đây là một đoạn văn bản dài vãi đái Đây là một đoạn văn bản
-                  dài vãi đái Đây là một đoạn văn bản dài vãi đái Đây là một
-                  đoạn văn bản dài vãi đái
-                </span>
-              </a>
-            </div>
-            <div
-              className={
-                "operating-documents-detail-page__right__row__list-item-running__item"
-              }
-            >
-              <a
-                href="/"
-                className={
-                  "operating-documents-detail-page__right__row__list-item-running__item__href"
-                }
-              >
-                <span
-                  className={
-                    "operating-documents-detail-page__right__row__list-item-running__item__href__dot"
-                  }
-                ></span>
-                <span>
-                  Đây là một đoạn văn bản dài vãi đái Đây là một đoạn văn bản
-                  dài vãi đái Đây là một đoạn văn bản dài vãi đái Đây là một
-                  đoạn văn bản dài vãi đái
-                </span>
-              </a>
-            </div>
+                >
+                  <span
+                    className={
+                      "operating-documents-detail-page__right__row__list-item-running__item__href__dot"
+                    }
+                  ></span>
+                  <span>{item?.Name}</span>
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </div>
