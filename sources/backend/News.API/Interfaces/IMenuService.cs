@@ -24,5 +24,6 @@ namespace News.API.Interfaces
 
         Task DeleteMenu(int id);
         Task<List<HomeMenuDto>> GetHomeMenu();
+        Task<List<HomeAdminDto>> GetAdminMenu();
     }
 }
