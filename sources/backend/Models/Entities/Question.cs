@@ -24,6 +24,7 @@ namespace Models.Entities
         public DateTime? QuestionDate { get; set; }
         [DefaultValue(0)]
         public int Views { get; set; }
+        public int? QuestionCategoryId { get; set; }
         public QuestionCategory? QuestionCategory { get; set; }
     }
 }

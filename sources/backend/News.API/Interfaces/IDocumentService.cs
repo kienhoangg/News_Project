@@ -16,7 +16,7 @@ namespace News.API.Interfaces
 
         );
 
-        Task<Document> GetDocument(int id);
+        Task<Document> GetDocument(int id, params Expression<Func<Document, object>>[] includeProperties);
 
         Task CreateDocument(Document documentField);
 
