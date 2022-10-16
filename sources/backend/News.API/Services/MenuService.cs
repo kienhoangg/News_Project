@@ -44,13 +44,17 @@ namespace News.API.Services
             var result = new List<HomeMenuDto>();
             var lstRootMenu = (await GetMenuByPaging(new MenuRequest()
             {
-                ParentId = 0
+                ParentId = 0,
+                OrderBy = "Order",
+                Direction = 1
             })).PagedData.Results.ToList();
             foreach (var item in lstRootMenu)
             {
                 var lstChildMenu = (await GetMenuByPaging(new MenuRequest()
                 {
-                    ParentId = item.Id
+                    ParentId = item.Id,
+                    OrderBy = "Order",
+                    Direction = 1
                 })).PagedData.Results.ToList();
                 item.MenuChildren = lstChildMenu;
                 var homeMenuDto = new HomeMenuDto()
