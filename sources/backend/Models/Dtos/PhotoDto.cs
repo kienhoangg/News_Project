@@ -1,12 +1,13 @@
 using Contracts.Domains;
 
-namespace Models.Entities
+namespace Models.Dtos
 {
-    public class Photo : EntityAuditBase<int>
+    public class PhotoDto : DtoBase
     {
+        public int? Id { get; set; }
         public string Title { get; set; }
         public int? PhotoCategoryId { get; set; }
-        public PhotoCategory? PhotoCategory { get; set; }
+        public PhotoCategoryDto? PhotoCategory { get; set; }
         public string? ImagePath { get; set; }
     }
 }
