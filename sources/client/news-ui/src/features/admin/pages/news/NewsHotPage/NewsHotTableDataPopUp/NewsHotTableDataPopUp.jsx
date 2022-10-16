@@ -4,6 +4,7 @@ import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
 import classNames from 'classnames/bind';
 import styles from './NewsHotTableDataPopUp.module.scss';
+import { Direction } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
@@ -12,7 +13,7 @@ NewsHotTableDataPopUp.propTypes = {};
 NewsHotTableDataPopUp.defaultProps = {};
 
 function NewsHotTableDataPopUp(props) {
-  const { data, changeRowKey } = props;
+  const { data, setPagination, changeRowKey } = props;
 
   const columns = [
     {
@@ -56,11 +57,19 @@ function NewsHotTableDataPopUp(props) {
   function handleOnClickStatus(values) {
     // console.log(values);
   }
-
+  const handleOnchangeTable = (pagination, filters, sorter, extra) => {
+    setPagination(
+      pagination.current,
+      pagination.pageSize,
+      sorter.columnKey,
+      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
+    );
+  };
   return (
     <div className={cx('wrapper')}>
       <Table
         columns={columns}
+        onChange={handleOnchangeTable}
         rowSelection={rowSelection}
         pagination={{
           defaultPageSize: 10,

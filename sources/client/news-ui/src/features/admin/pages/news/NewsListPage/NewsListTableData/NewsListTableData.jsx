@@ -75,7 +75,7 @@ function NewsListTableData(props) {
         <div>
           {PublishedDate.includes('0001')
             ? '- - -'
-            : datetimeHelper.formatDatetimeToDateVN(PublishedDate)}
+            : datetimeHelper.formatDateToDateVN(PublishedDate)}
         </div>
       ),
     },
