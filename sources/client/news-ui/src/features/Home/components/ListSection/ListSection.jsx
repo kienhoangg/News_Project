@@ -87,7 +87,7 @@ function ListSection(props) {
                     <Row gutter={0} className={cx('list-card')}>
                         <Col span={12}>Dạng văn bản</Col>
                         <Col span={12}>
-                            <Link className={cx('search-right')} to='/'>
+                            <Link className={cx('search-right')} to={routes.publishedDocumentList}>
                                 <span style={{ fontSize: 13, marginRight: 4 }}>Tìm kiếm văn bản</span>
                                 <SearchOutlined color='#fff' />
                             </Link>
@@ -111,7 +111,7 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         <div className={cx('title-news')}>
                             <div className={cx('divider')}></div>
-                            <Link to={routes.publishedDocumentList}>{CategoryNews?.CategoryNewsName}</Link>
+                            <Link to={commonRender.renderLinkNewsCategory(CategoryNews?.Id)}>{CategoryNews?.CategoryNewsName}</Link>
                         </div>
                         {Array.isArray(items) &&
                             items.map((item) => {
