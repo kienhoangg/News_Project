@@ -2,11 +2,11 @@ import axiosClient from './axiosClient';
 
 class SetupAPI {
   getMenuAll = (body) => {
-    const url = '/home/menu';
-    return axiosClient.get(url);
+    const url = '/menus/filter';
+    return axiosClient.post(url, body);
   };
   insertMenu = (body) => {
-    const url = '/home/menu';
+    const url = '/menus';
     return axiosClient.post(url, body);
   };
   deleteMenu = (id) => {
