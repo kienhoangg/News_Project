@@ -8,6 +8,7 @@ import './Navbar.scss';
 import NavBarButtonItem from './NavBarButtonItem/NavBarButtonItem';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { envDomainClient } from 'common/enviroments';
 
 Navbar.propTypes = {
     menuDatas: PropTypes.array,
@@ -29,13 +30,13 @@ function Navbar(props) {
         items = menuDatas.map((dataLevel1) => {
             var itemDateLevel2 = dataLevel1?.Items?.map((item) => {
                 return {
-                    label: item.Name,
+                    label: item.Title,
                     key: item.Id,
                 };
             });
 
             let result = {
-                label: dataLevel1.Name,
+                label: dataLevel1.Title,
                 key: dataLevel1.Id,
                 icon: dataLevel1?.isHome ? <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} /> : '',
             };
@@ -43,7 +44,8 @@ function Navbar(props) {
             if (Array.isArray(dataLevel1?.Items) && dataLevel1?.Items.length > 0) {
                 result.children = itemDateLevel2;
             }
-            if (dataLevel1?.IsHome) {
+            if (dataLevel1?.Title.toLowerCase() == 'trang chủ') {
+                // if (dataLevel1?.IsHome) {
                 result.icon = <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />;
             }
             return result;
@@ -62,7 +64,10 @@ function Navbar(props) {
 
         if (select) {
             if (select?.IsHome) navigate('/');
-            if (select?.Url) navigate(select.Url);
+            if (select?.Url) {
+                console.log('envDomainClient', envDomainClient);
+                navigate(select.Url.replace(envDomainClient, ''));
+            }
         }
     }
 

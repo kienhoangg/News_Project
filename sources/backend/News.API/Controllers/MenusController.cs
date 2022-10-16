@@ -33,6 +33,15 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult>
+       GetHomeAdmin()
+        {
+            var result =
+                await _menuService.GetAdminMenu();
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult>
         CreateMenuDto([FromBody] MenuDto menuDto)

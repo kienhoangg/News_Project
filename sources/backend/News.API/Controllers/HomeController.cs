@@ -136,7 +136,7 @@ namespace News.API.Controllers
 
             // Get CategoryNews with 5 normal news
             var jwtToken = _jwtUtils.GenerateJwtToken(RoleCode.PUBLIC.ToString());
-            return Ok(new { result, token = jwtToken });
+            return Ok(result);
         }
     }
 }

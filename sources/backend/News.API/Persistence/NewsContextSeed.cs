@@ -111,24 +111,24 @@ namespace News.API.Persistence
             {
                new Menu(){
                   Title = "Tỉnh Uỷ",
-                  Url = "http://localhost:3000/page/1",
+                  Url = "/page/1",
                   ParentId = 3
                },new Menu(){
                   Title = "Đoàn ĐBQH",
-                  Url = "http://localhost:3000/page/2",
+                  Url = "/page/2",
                   ParentId = 3
                },
                new Menu(){
                   Title = "HĐND tỉnh",
-                  Url = "http://localhost:3000/page/3",
+                  Url = "/page/3",
                   ParentId = 3
                },new Menu(){
                   Title = "Lịch tiếp công dân",
-                  Url = "http://localhost:3000/page/4",
+                  Url = "/page/4",
                   ParentId = 4
                },new Menu(){
                   Title = "Kết quả giải quyết khiếu nại",
-                  Url = "http://localhost:3000/page/5",
+                  Url = "/page/5",
                   ParentId = 4
                }
             };
@@ -139,24 +139,24 @@ namespace News.API.Persistence
             {
                new Menu(){
                   Title = "Trang chủ",
-                  Url = "http://localhost:3000/page/6",
+                  Url = "/page/6",
                   ParentId = 0
                },new Menu(){
                   Title = "Giới thiệu",
-                  Url = "http://localhost:3000/page/7",
+                  Url = "/page/7",
                   ParentId = 0
                },
                new Menu(){
                   Title = "Tổ chức bộ máy",
-                  Url = "http://localhost:3000/page/8",
+                  Url = "/page/8",
                   ParentId = 0
                },new Menu(){
                   Title = "Công dân",
-                  Url = "http://localhost:3000/page/9",
+                  Url = "/page/9",
                   ParentId = 0
                },new Menu(){
                   Title = "Doanh nghiệp",
-                  Url = "http://localhost:3000/page/10",
+                  Url = "/page/10",
                   ParentId = 0
                }
             };

@@ -47,7 +47,7 @@ function DefaultLayout({ children }) {
             <div className={cx('container')}>
                 {/* <div>Lượt view: {viewCount}</div> */}
                 <Banner />
-                <Navbar menuDatas={layoutData?.Menu} />
+                <Navbar menuDatas={layoutData} />
                 <div className={cx('content')}>{children}</div>
                 <FooterSection />
             </div>
