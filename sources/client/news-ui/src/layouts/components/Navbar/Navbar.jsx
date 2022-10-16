@@ -44,7 +44,6 @@ function Navbar(props) {
             if (Array.isArray(dataLevel1?.Items) && dataLevel1?.Items.length > 0) {
                 result.children = itemDateLevel2;
             }
-            console.log(dataLevel1?.Title.toLowerCase());
             if (dataLevel1?.Title.toLowerCase() == 'trang chủ') {
                 // if (dataLevel1?.IsHome) {
                 result.icon = <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />;
