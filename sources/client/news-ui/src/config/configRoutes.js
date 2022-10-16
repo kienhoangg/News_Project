@@ -11,12 +11,16 @@ const routes = {
   publishedNewsPostCategory: '/news-posts/fields/:id',
 
   publishedDocumentDetail: '/documents/:id',
-  publishedNewsPostList: '/documents',
+  publishedDocumentList: '/documents',
 
   publishedIntroduce: '/introduce',
   publishedStaticPage: '/page/:id', //Giành cho menu
 
   publishedEvaluatePage: '/evaluate', //Giành cho menu
+
+  publishedQuestions: '/questions',
+  publishedPhotos: '/media/photos', //QueryPrams: ?albumid=1
+  publishedVideos: '/media/videos',
 
   search: '/search',
   notfound: '/notfound',
@@ -52,6 +56,9 @@ const routes = {
   adminConnectionList: '/admin/connection/list',
 
   adminSetupMenu: '/admin/setup/menu',
+
+  staticContent: '/admin/static/content',
+  staticCategory: '/admin/static/category',
 
   //Test
   test: '/test',

@@ -54,6 +54,11 @@ const LIST_BUTON = [
         Label: 'THÔNG TIN CẦN BIẾT',
         Image: Images.LIST_BUTTON_ITEM,
     },
+    {
+        Href: routes.publishedQuestions,
+        Label: 'Hỏi đáp',
+        Image: Images.LIST_BUTTON_ITEM,
+    },
 ];
 
 const LIST_NEWS = [
@@ -87,7 +92,7 @@ function ListSection(props) {
                     <Row gutter={0} className={cx('list-card')}>
                         <Col span={12}>Dạng văn bản</Col>
                         <Col span={12}>
-                            <Link className={cx('search-right')} to='/'>
+                            <Link className={cx('search-right')} to={routes.publishedDocumentList}>
                                 <span style={{ fontSize: 13, marginRight: 4 }}>Tìm kiếm văn bản</span>
                                 <SearchOutlined color='#fff' />
                             </Link>
@@ -96,7 +101,9 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         {Array.isArray(dataDocuments) &&
                             dataDocuments.map((item) => {
-                                return <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkNewsDetail(item.Id)} />;
+                                return (
+                                    <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkDocumentDetail(item.Id)} />
+                                );
                             })}
                     </div>
                 </div>
