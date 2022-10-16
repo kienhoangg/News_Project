@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+import routes from 'config/configRoutes';
 import Images from '../../../../common/images';
 import styles from './MediaBlogSection.module.scss';
 import MediaBlogSectionBanner from './MediaBlogSectionBanner/MediaBlogSectionBanner';
@@ -18,10 +19,10 @@ function MediaBlogSection(props) {
                     <MediaBlogSectionButton href={'/'} size='large' label='MULTIMEDIA' imageName={Images.MULTIMEDIA} />
                 </div>
                 <div className={cx('navbar-right')}>
-                    <MediaBlogSectionButton href={'/'} size='small' label='Video' imageName={Images.VIDEO} />
+                    <MediaBlogSectionButton href={routes.publishedVideos} size='small' label='Video' imageName={Images.VIDEO} />
                     <MediaBlogSectionButton href={'/'} size='small' label='Radio News' imageName={Images.RADIO} />
                     <MediaBlogSectionButton href={'/'} size='small' label='Infographics' imageName={Images.INFOGRAPHICS} />
-                    <MediaBlogSectionButton href={'/'} size='small' label='Photos' imageName={Images.PHOTO} />
+                    <MediaBlogSectionButton href={routes.publishedPhotos} size='small' label='Photos' imageName={Images.PHOTO} />
                 </div>
             </div>
             <div className={cx('carousel')}>

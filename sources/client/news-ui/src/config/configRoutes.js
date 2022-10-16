@@ -18,6 +18,10 @@ const routes = {
 
   publishedEvaluatePage: '/evaluate', //Giành cho menu
 
+  publishedQuestions: '/questions',
+  publishedPhotos: '/media/photos',
+  publishedVideos: '/media/videos',
+
   search: '/search',
   notfound: '/notfound',
 
