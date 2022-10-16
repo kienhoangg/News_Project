@@ -13,13 +13,13 @@ class HomeApi {
     };
 
     getLayoutData = (params) => {
-        // const url = '/home';
-        // return axiosClient.get(url, {});
+        const url = '/home/menu';
+        return axiosClient.get(url, {});
 
-        var response = {
-            Menu: datafakeLayoutData
-        };
-        return response;
+        // var response = {
+        //     Menu: datafakeLayoutData
+        // };
+        // return response;
     };
 
 
