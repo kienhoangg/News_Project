@@ -10,6 +10,7 @@ import ListSectionDocument from './ListSectionDocument/ListSectionDocument';
 import { Link } from 'react-router-dom';
 import ListSectionNews from './ListSectionNews/ListSectionNews';
 import commonRender from 'common/commonRender';
+import routes from 'config/configRoutes';
 
 const cx = classNames.bind(styles);
 
@@ -39,7 +40,7 @@ const LIST_BUTON = [
         Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        Href: '/',
+        Href: routes.publishedEvaluatePage,
         Label: 'ĐÁNH GIÁ SỰ PHỤC VỤ CỦA CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC',
         Image: Images.LIST_BUTTON_ITEM,
     },

@@ -32,8 +32,8 @@ const commonFunc = {
   },
 
   /**
-   * Convert mảng thành tree
-   * @param {*} list Danh sách cần convert thành tree
+   * Convert mảng thành tree view
+   * @param {*} list Danh sách cần convert thành tree view
    * @returns Tree dạng: {Parent, Children: []}
    */
   list_to_tree: (list) => {
@@ -52,8 +52,10 @@ const commonFunc = {
 
     for (i = 0; i < list.length; i += 1) {
       node = list[i];
+      node.key = node?.Id;
       if (node.ParentId && node.ParentId !== 0) {
         // if you have dangling branches check that map[node.parentId] exists
+        node.isLeaf = true;
         list[map[node.ParentId]]?.children?.push(node);
       } else {
         roots.push(node);
