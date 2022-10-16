@@ -34,6 +34,8 @@ namespace News.API.Persistence
         public DbSet<StaticInfo> StaticInfos { get; set; }
         public DbSet<StaticCategory> StaticCategories { get; set; }
         public DbSet<Menu> Menus { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<PhotoCategory> PhotoCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

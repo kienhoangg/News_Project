@@ -42,6 +42,10 @@ namespace News.API
             CreateMap<StaticInfoDto, StaticInfo>().IgnoreAllNonExisting();
             CreateMap<Menu, MenuDto>().IgnoreAllNonExisting();
             CreateMap<MenuDto, Menu>().IgnoreAllNonExisting();
+            CreateMap<Photo, PhotoDto>().IgnoreAllNonExisting();
+            CreateMap<PhotoDto, Photo>().IgnoreAllNonExisting();
+            CreateMap<PhotoCategory, PhotoCategoryDto>().IgnoreAllNonExisting();
+            CreateMap<PhotoCategoryDto, PhotoCategory>().IgnoreAllNonExisting();
             CreateMap<MenuDto, MenuAdminDto>().AfterMap((src, dest) => src.Id = dest.Key)
                 .AfterMap((src, dest) => src.ParentId = dest.IsLeaf)
                 .IgnoreAllNonExisting();

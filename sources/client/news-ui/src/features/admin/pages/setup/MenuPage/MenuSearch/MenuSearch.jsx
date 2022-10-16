@@ -15,18 +15,25 @@ MenuSearch.propTypes = {
    * Func giúp Component bố gọi để thiết lập từ khóa cần tìm
    */
   setFilterNews: PropTypes.func,
+
+  dataMenu: PropTypes.array,
 };
 
 MenuSearch.defaultProps = {
   setFilterNews: () => {},
+  dataMenu: [],
 };
 
 function MenuSearch(props) {
-  const { setOpenCollectionEditor, setActionForm, dataMenu } = props;
+  const { setOpenCollectionEditor, changeParent, dataMenu } = props;
   const [objFilterNews, setObjFilterNews] = useState();
 
   const onChangeCategoryNews = (categoryNewsId) => {
     setObjFilterNews(categoryNewsId);
+    if (!changeParent) {
+      return;
+    }
+    changeParent(categoryNewsId);
   };
 
   const generateTree = (arrNode) => {
@@ -36,6 +43,12 @@ function MenuSearch(props) {
       </TreeNode>
     ));
   };
+
+  const getParent = () => {
+    const _dataMenu = [...dataMenu];
+    return _dataMenu.filter((x) => x.ParentId === 0);
+  };
+
   const renderMenu = (
     <TreeSelect
       showSearch
@@ -49,10 +62,10 @@ function MenuSearch(props) {
       }}
       placeholder='Chọn menu'
       allowClear
-      treeDefaultExpandAll
+      treeDefaultExpandAll={false}
       onChange={onChangeCategoryNews}
     >
-      {generateTree(commonFunc.list_to_tree(dataMenu ?? []))}
+      {generateTree(commonFunc.list_to_tree(dataMenu))}
     </TreeSelect>
   );
 

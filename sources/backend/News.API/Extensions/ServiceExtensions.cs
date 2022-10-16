@@ -144,7 +144,9 @@ namespace News.API.Extensions
                 typeof(QuestionCategoryService)).AddScoped(serviceType: typeof(IStaticInfoService),
                 typeof(StaticInfoService)).AddScoped(serviceType: typeof(IStaticCategoryService),
                 typeof(StaticCategoryService)).AddScoped(serviceType: typeof(IMenuService),
-                typeof(MenuService)).AddTransient(serviceType: typeof(ITokenService),
+                typeof(MenuService)).AddScoped(serviceType: typeof(IPhotoCategoryService),
+                typeof(PhotoCategoryService)).AddScoped(serviceType: typeof(IPhotoService),
+                typeof(PhotoService)).AddTransient(serviceType: typeof(ITokenService),
                 typeof(TokenService)).AddScoped<IJwtUtils, JwtUtils>();
         }
     }

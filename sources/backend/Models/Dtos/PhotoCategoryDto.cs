@@ -1,13 +1,13 @@
-using System.Collections;
 using Contracts.Domains;
 
-namespace Models.Entities
+namespace Models.Dtos
 {
-    public class PhotoCategory : EntityAuditBase<int>
+    public class PhotoCategoryDto : DtoBase
     {
+        public int? Id { get; set; }
         public string Title { get; set; }
         public int? ParentId { get; set; }
         public string? Description { get; set; }
-        public ICollection<Photo> Photos { get; set; }
+        public ICollection<PhotoDto> Photos { get; set; }
     }
 }
