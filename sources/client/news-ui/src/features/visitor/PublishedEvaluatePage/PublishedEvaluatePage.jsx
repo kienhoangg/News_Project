@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './PublishedEvaluatePage.module.scss';
 import classNames from 'classnames/bind';
 import { Button, Radio, Row, Space } from 'antd';
+import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 
 const cx = classNames.bind(styles);
 
@@ -46,6 +47,7 @@ function PublishedEvaluatePage(props) {
 
     return (
         <div className={cx('wrapper')}>
+            <ScrollToTop />
             <Row className={cx('banner')}>
                 <div className={cx('banner-content')}>
                     <h3>Đánh giá sự phục vụ cơ quan nhà nước xã Đông Cuông</h3>
