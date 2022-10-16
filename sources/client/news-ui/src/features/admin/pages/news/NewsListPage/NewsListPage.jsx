@@ -91,7 +91,7 @@ function NewsListPage(props) {
       const params = { Id: values?.Id };
       return await newsApi.getNewsById(params);
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
     }
   };
