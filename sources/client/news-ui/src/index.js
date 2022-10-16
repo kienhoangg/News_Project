@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import App from './App';
-import store from './app/store';
-import GlobalStyles from './components/GlobalStyles/GlobalStyles';
-import reportWebVitals from './reportWebVitals';
-import { ConfigProvider } from 'antd';
-import frVN from 'antd/es/locale/vi_VN';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import App from "./App";
+import store from "./app/store";
+import GlobalStyles from "./components/GlobalStyles/GlobalStyles";
+import reportWebVitals from "./reportWebVitals";
+import { ConfigProvider } from "antd";
+import frVN from "antd/es/locale/vi_VN";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
