@@ -97,7 +97,7 @@ function NewsListMenuSearch(props) {
         maxHeight: 400,
         overflow: 'auto',
       }}
-      placeholder='Chọn loại tin tức'
+      placeholder='Danh mục tin'
       allowClear
       treeDefaultExpandAll
       onChange={onChangeCategoryNews}
@@ -112,7 +112,7 @@ function NewsListMenuSearch(props) {
 
   const renderSourceNews = (
     <Select
-      placeholder='Phân loại tin'
+      placeholder='Nguồn tin'
       style={{ width: '100%' }}
       allowClear={true}
       onChange={handleChangeSourceNews}
