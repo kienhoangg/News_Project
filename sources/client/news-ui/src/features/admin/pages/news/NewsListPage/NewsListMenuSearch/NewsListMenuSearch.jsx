@@ -106,11 +106,11 @@ function NewsListMenuSearch(props) {
     </TreeSelect>
   );
 
-  const handleChangeSourceNews = (collaboratorId) => {
-    setObjFilterNews({ ...objFilterNews, collaboratorId });
+  const handleChangeSourceNews = (sourceNewsId) => {
+    setObjFilterNews({ ...objFilterNews, sourceNewsId });
   };
 
-  const renderTypeNews = (
+  const renderSourceNews = (
     <Select
       placeholder='Phân loại tin'
       style={{ width: '100%' }}
@@ -152,7 +152,7 @@ function NewsListMenuSearch(props) {
         </Col>
         <Col span={6}>{renderCategoryNews}</Col>
 
-        <Col span={6}>{renderTypeNews}</Col>
+        <Col span={6}>{renderSourceNews}</Col>
 
         <Col span={6}>{renderFieldNews}</Col>
         {/* <Col span={4}>

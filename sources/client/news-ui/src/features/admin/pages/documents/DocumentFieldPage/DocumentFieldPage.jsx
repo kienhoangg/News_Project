@@ -138,10 +138,14 @@ function DocumentFieldPage(props) {
   };
 
   const renderOption = (
-    <Select placeholder='Chọn cấp cha' style={{ width: '100%' }}>
+    <Select
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
+      allowClear={true}
+    >
       {newsData?.data.map((x) => (
         <Option value={x.Id} key={x.Id}>
-          {x.CategoryNewsName}
+          {x.Title}
         </Option>
       ))}
     </Select>
