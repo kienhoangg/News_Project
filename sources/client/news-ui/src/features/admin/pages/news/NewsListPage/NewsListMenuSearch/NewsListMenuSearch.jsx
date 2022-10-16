@@ -97,7 +97,7 @@ function NewsListMenuSearch(props) {
         maxHeight: 400,
         overflow: 'auto',
       }}
-      placeholder='Chọn loại tin tức'
+      placeholder='Danh mục tin'
       allowClear
       treeDefaultExpandAll
       onChange={onChangeCategoryNews}
@@ -106,13 +106,13 @@ function NewsListMenuSearch(props) {
     </TreeSelect>
   );
 
-  const handleChangeSourceNews = (collaboratorId) => {
-    setObjFilterNews({ ...objFilterNews, collaboratorId });
+  const handleChangeSourceNews = (sourceNewsId) => {
+    setObjFilterNews({ ...objFilterNews, sourceNewsId });
   };
 
-  const renderTypeNews = (
+  const renderSourceNews = (
     <Select
-      placeholder='Phân loại tin'
+      placeholder='Nguồn tin'
       style={{ width: '100%' }}
       allowClear={true}
       onChange={handleChangeSourceNews}
@@ -152,7 +152,7 @@ function NewsListMenuSearch(props) {
         </Col>
         <Col span={6}>{renderCategoryNews}</Col>
 
-        <Col span={6}>{renderTypeNews}</Col>
+        <Col span={6}>{renderSourceNews}</Col>
 
         <Col span={6}>{renderFieldNews}</Col>
         {/* <Col span={4}>
