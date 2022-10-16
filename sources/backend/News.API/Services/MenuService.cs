@@ -56,6 +56,7 @@ namespace News.API.Services
                 var homeMenuDto = new HomeMenuDto()
                 {
                     Id = item.Id,
+                    Title = item.Title,
                     Url = item.Url,
                     IsRootMenu = item.ParentId == 0 ? true : false,
                     Items = lstChildMenu
