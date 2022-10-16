@@ -35,6 +35,7 @@ import OperatingDocumentsPage from "features/visitor/OperatingDocumentsPage/Oper
 import OperatingDocumentsDetailPage from "features/visitor/OperatingDocumentsDetailPage/OperatingDocumentsDetailPage";
 import QuestionAndAnswerPage from "features/visitor/QuestionAndAnswerPage/QuestionAndAnswerPage";
 import LibVideoListPage from "features/visitor/VideoListPage/LibVideoListPage";
+import StaticContentListPage from "features/admin/pages/staticInfor/StaticContent/StaticContentListPage";
 
 // Public routes
 const publicRoutes = [
