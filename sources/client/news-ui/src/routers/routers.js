@@ -23,6 +23,7 @@ import MenuPage from "features/admin/pages/setup/MenuPage/MenuPage";
 import Home from "features/Home/Home";
 import PublishedDocumentPage from "features/visitor/PublishedDocumentPage/PublishedDocumentPage";
 import PublishedDocumentPrintPage from "features/visitor/PublishedDocumentPrintPage/PublishedDocumentPrintPage";
+import PublishedEvaluatePage from "features/visitor/PublishedEvaluatePage/PublishedEvaluatePage";
 import PublishedIntroducePage from "features/visitor/PublishedIntroducePage/PublishedIntroducePage";
 import PublishedMenuPage from "features/visitor/PublishedMenuPage/PublishedMenuPage";
 import PublishedNewsFieldPage from "features/visitor/PublishedNewsFieldPage/PublishedNewsFieldPage";
@@ -59,6 +60,11 @@ const publicRoutes = [
 
   { path: config.routes.publishedStaticPage, component: PublishedMenuPage },
   { path: config.routes.search, component: SearchPage },
+
+  {
+    path: config.routes.publishedEvaluatePage,
+    component: PublishedEvaluatePage,
+  },
   // { path: config.routes.notfound, component: NotFound, layout: null },
 
   // //Admin

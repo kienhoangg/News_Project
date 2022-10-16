@@ -57,6 +57,13 @@ namespace News.API.Persistence
                 newsContext.AddRange(GetMenus());
                 await newsContext.SaveChangesAsync();
             }
+            if (!newsContext.Photos.Any())
+            {
+                newsContext.AddRange(GetParentPhotoCateogries());
+                await newsContext.SaveChangesAsync();
+                newsContext.AddRange(GetPhotoCateogries());
+                await newsContext.SaveChangesAsync();
+            }
             if (!newsContext.CategoryNews.Any())
             {
                 newsContext.AddRange(GetCategoryNews());
@@ -111,25 +118,78 @@ namespace News.API.Persistence
             {
                new Menu(){
                   Title = "Tỉnh Uỷ",
-                  Url = "http://localhost:3000/page/1",
+                  Url = "/page/1",
                   ParentId = 3
                },new Menu(){
                   Title = "Đoàn ĐBQH",
-                  Url = "http://localhost:3000/page/2",
+                  Url = "/page/2",
                   ParentId = 3
                },
                new Menu(){
                   Title = "HĐND tỉnh",
-                  Url = "http://localhost:3000/page/3",
+                  Url = "/page/3",
                   ParentId = 3
                },new Menu(){
                   Title = "Lịch tiếp công dân",
-                  Url = "http://localhost:3000/page/4",
+                  Url = "/page/4",
                   ParentId = 4
                },new Menu(){
                   Title = "Kết quả giải quyết khiếu nại",
-                  Url = "http://localhost:3000/page/5",
+                  Url = "/page/5",
                   ParentId = 4
+               }
+            };
+        }
+
+        private static IEnumerable<PhotoCategory> GetParentPhotoCateogries()
+        {
+            return new List<PhotoCategory>()
+            {
+               new PhotoCategory()
+               {
+                  Title = "Danh mục 1",
+                  Photos = new List<Photo>(){
+                     new Photo(){
+                        Title = "7",
+                        ImagePath = "https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/HinhAnh/Attachments/251/5.JPG;;https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/HinhAnh/Attachments/260/1.JPG;;https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/HinhAnh/Attachments/259/4.JPG"
+                     },  new Photo(){
+                        Title = "8",
+                        ImagePath = "https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/H…hments/265/chungnhandautuxaydungTTTM%20HOASEN.JPG;;https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/H…hAnh/Attachments/263/duaFLC%20di%20khao%20sat.JPG"
+                     }
+                  }
+               }, new PhotoCategory()
+               {
+                  Title = "Danh mục 2",
+                  Photos = new List<Photo>(){
+                     new Photo(){
+                        Title = "10",
+                        ImagePath = "https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/H…%20chu%20tich%20va%20thu%20ky%20dai%20hoi%207.JPG"
+                     },  new Photo(){
+                        Title = "9",
+                        ImagePath = "https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/H…hments/265/chungnhandautuxaydungTTTM%20HOASEN.JPG;;https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/H…/244/anh%2024%20trao%20doi%20voi%20dai%20bieu.JPG"
+                     }
+                  }
+               }
+            };
+        }
+
+        private static IEnumerable<PhotoCategory> GetPhotoCateogries()
+        {
+            return new List<PhotoCategory>()
+            {
+               new PhotoCategory()
+               {
+                  Title = "Danh mục 1.1",
+                  ParentId = 1,
+                  Photos = new List<Photo>(){
+                     new Photo(){
+                        Title = "23",
+                        ImagePath = "https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/HinhAnh/Attachments/271/DSC_0810.JPG;;https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/HinhAnh/Attachments/274/IMG_1913.JPG"
+                     },  new Photo(){
+                        Title = "44",
+                        ImagePath = "https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/HinhAnh/Attachments/234/ve%20dep%20thac2.jpg;;https://yenbai.gov.vn/noidung/hinhanhvideo/Lists/H…BA%20L%E1%BB%87%20-%20V%C5%A9%20Chi%E1%BA%BFn.jpg"
+                     }
+                  }
                }
             };
         }
@@ -139,24 +199,24 @@ namespace News.API.Persistence
             {
                new Menu(){
                   Title = "Trang chủ",
-                  Url = "http://localhost:3000/page/6",
+                  Url = "/page/6",
                   ParentId = 0
                },new Menu(){
                   Title = "Giới thiệu",
-                  Url = "http://localhost:3000/page/7",
+                  Url = "/page/7",
                   ParentId = 0
                },
                new Menu(){
                   Title = "Tổ chức bộ máy",
-                  Url = "http://localhost:3000/page/8",
+                  Url = "/page/8",
                   ParentId = 0
                },new Menu(){
                   Title = "Công dân",
-                  Url = "http://localhost:3000/page/9",
+                  Url = "/page/9",
                   ParentId = 0
                },new Menu(){
                   Title = "Doanh nghiệp",
-                  Url = "http://localhost:3000/page/10",
+                  Url = "/page/10",
                   ParentId = 0
                }
             };

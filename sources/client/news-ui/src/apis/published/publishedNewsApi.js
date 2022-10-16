@@ -4,6 +4,7 @@ import axiosClient from "apis/axiosClient";
 import datafakePublisedNews from "apis/datafake/datafakePublisedNews";
 import datafakePublishedCategoryList from "apis/datafake/datafakePublishedCategoryList";
 import datafakePublishedDocument from "apis/datafake/datafakePublishedDocument";
+import moment from "moment";
 
 class PublishedNewsApi {
     getData = (params) => {
@@ -30,12 +31,16 @@ class PublishedNewsApi {
     }
 
     getFieldsDataPage(params) {
-        const { id, currentPage, date } = params;
+        const { id, currentPage, todayDate } = params;
         const url = `/newsPost/published/fieldNews/${id}`;
         const body = {
             "CurrentPage": currentPage,
             "PageSize": 6,
-            // "TodayDate": "2022-10-11"
+        }
+
+        if (todayDate) {
+            const formatDateApi = "YYYY-MM-DD";
+            body.TodayDate = moment(todayDate, "DD/MM/YYYY").format(formatDateApi);
         }
 
         return axiosClient.post(url, body);

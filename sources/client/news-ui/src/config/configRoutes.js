@@ -11,10 +11,12 @@ const routes = {
   publishedNewsPostCategory: '/news-posts/fields/:id',
 
   publishedDocumentDetail: '/documents/:id',
-  publishedNewsPostList: '/documents',
+  publishedDocumentList: '/documents',
 
   publishedIntroduce: '/introduce',
   publishedStaticPage: '/page/:id', //Giành cho menu
+
+  publishedEvaluatePage: '/evaluate', //Giành cho menu
 
   search: '/search',
   notfound: '/notfound',

@@ -10,6 +10,7 @@ import ListSectionDocument from './ListSectionDocument/ListSectionDocument';
 import { Link } from 'react-router-dom';
 import ListSectionNews from './ListSectionNews/ListSectionNews';
 import commonRender from 'common/commonRender';
+import routes from 'config/configRoutes';
 
 const cx = classNames.bind(styles);
 
@@ -39,7 +40,7 @@ const LIST_BUTON = [
         Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        Href: '/',
+        Href: routes.publishedEvaluatePage,
         Label: 'ĐÁNH GIÁ SỰ PHỤC VỤ CỦA CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC',
         Image: Images.LIST_BUTTON_ITEM,
     },
@@ -86,7 +87,7 @@ function ListSection(props) {
                     <Row gutter={0} className={cx('list-card')}>
                         <Col span={12}>Dạng văn bản</Col>
                         <Col span={12}>
-                            <Link className={cx('search-right')} to='/'>
+                            <Link className={cx('search-right')} to={routes.publishedDocumentList}>
                                 <span style={{ fontSize: 13, marginRight: 4 }}>Tìm kiếm văn bản</span>
                                 <SearchOutlined color='#fff' />
                             </Link>
@@ -95,7 +96,9 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         {Array.isArray(dataDocuments) &&
                             dataDocuments.map((item) => {
-                                return <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkNewsDetail(item.Id)} />;
+                                return (
+                                    <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkDocumentDetail(item.Id)} />
+                                );
                             })}
                     </div>
                 </div>

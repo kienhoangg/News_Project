@@ -67,11 +67,20 @@ export const commonRender = {
         return link;
     },
 
+    /**
+    * Lấy link đường dần chi tiết tin tức theo id
+    * @param {string} id ID của tin tức
+    * @returns Đường dẫn chi tiết tin tức
+    */
+    renderLinkDocumentDetail: (id) => {
+        var link = routes.publishedDocumentDetail.replace(":id", id);
+        return link;
+    },
 
     /**
      * Hiển thị thông báo todo
      */
-    showNotifiTodo: () => {
+    showNotifyTodo: () => {
         notification.open({
             message: 'Thông báo',
             description: 'Tính năng đang được thi công',

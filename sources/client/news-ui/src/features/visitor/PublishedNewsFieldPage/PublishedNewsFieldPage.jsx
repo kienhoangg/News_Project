@@ -5,9 +5,10 @@ import classNames from 'classnames/bind';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
 import commonRender, { commonRenderTable } from 'common/commonRender';
 import PublishedNewsListCategoryPageItem from '../PublishedNewsListCategoryPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import { Pagination } from 'antd';
+import stringHelper from 'helpers/stringHelper';
 
 const cx = classNames.bind(styles);
 
@@ -17,8 +18,11 @@ PublishedNewsFieldPage.defaultProps = {};
 
 function PublishedNewsFieldPage(props) {
     // const [dataPage, setDataPage] = useState();
-    const [dataPageFullPage, setDataPageFullPage] = useState();
     let { id } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    let dateFilter = searchParams.get('date');
+
+    const [dataPageFullPage, setDataPageFullPage] = useState();
     // const [dataTotal, setDataTotal] = useState(0);
     const dataPage = useRef(null);
     const dataTotal = useRef(1);
@@ -29,6 +33,10 @@ function PublishedNewsFieldPage(props) {
         const fetchHome = async () => {
             try {
                 const params = { currentPage: pagingIndex, id: id };
+                if (dateFilter) {
+                    params.todayDate = dateFilter;
+                }
+
                 const response = await publishedNewsApi.getFieldsDataPage(params);
                 setDataPageFullPage(response);
                 // setDataPage(response?.data);

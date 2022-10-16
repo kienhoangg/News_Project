@@ -113,7 +113,7 @@ function DocumentListPage(props) {
   };
 
   const renderFieldNews = (
-    <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
+    <Select placeholder='Lĩnh vực' style={{ width: '100%' }} allowClear={true}>
       {dataFilter?.fieldAll?.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
@@ -123,7 +123,11 @@ function DocumentListPage(props) {
   );
 
   const renderSourceNews = (
-    <Select placeholder='Loại văn bản' style={{ width: '100%' }}>
+    <Select
+      placeholder='Loại văn bản'
+      style={{ width: '100%' }}
+      allowClear={true}
+    >
       {dataFilter?.categoryAll?.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
@@ -133,7 +137,7 @@ function DocumentListPage(props) {
   );
 
   const renderSingerNews = (
-    <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
+    <Select placeholder='Nguồn tin' style={{ width: '100%' }} allowClear={true}>
       {dataFilter?.singerAll?.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}

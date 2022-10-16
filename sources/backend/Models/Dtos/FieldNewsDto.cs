@@ -10,8 +10,6 @@ namespace Models.Dtos
 
         public string? Description { get; set; }
 
-        public int Order { get; set; }
-
         public decimal Factor { get; set; }
 
         public decimal BiggestFactor { get; set; }

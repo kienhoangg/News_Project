@@ -1,14 +1,10 @@
 using Contracts.Domains;
 
-namespace Models.Dtos
+namespace Models.Entities
 {
-    public class SourceNewsDto : DtoBase
+    public class VideoCategory : EntityAuditBase<int>
     {
-        public int Id { get; set; }
-
         public string Title { get; set; }
-
-
         public string? Description { get; set; }
     }
 }

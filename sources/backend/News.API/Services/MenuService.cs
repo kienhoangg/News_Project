@@ -71,6 +71,36 @@ namespace News.API.Services
             return result;
         }
 
+        public async Task<List<HomeAdminDto>> GetAdminMenu()
+        {
+            var result = new List<HomeAdminDto>();
+            var lstRootMenu = (await GetMenuByPaging(new MenuRequest()
+            {
+                ParentId = 0,
+                OrderBy = "Order",
+                Direction = 1
+            })).PagedData.Results.ToList();
+            foreach (var item in lstRootMenu)
+            {
+                var lstChildMenu = (await GetMenuByPaging(new MenuRequest()
+                {
+                    ParentId = item.Id,
+                    OrderBy = "Order",
+                    Direction = 1
+                })).PagedData.Results.ToList();
+                var homeMenuDto = new HomeAdminDto()
+                {
+                    Key = item.Id,
+                    Title = item.Title,
+                    Url = item.Url,
+                    Children = _mapper.Map<List<MenuAdminDto>>(lstChildMenu)
+                };
+                result.Add(homeMenuDto);
+            }
+
+            return result;
+        }
+
         public async Task<ApiSuccessResult<MenuDto>> GetMenuByPaging(MenuRequest menuRequest, params Expression<Func<Menu, object>>[] includeProperties)
         {
             var query = FindAll();

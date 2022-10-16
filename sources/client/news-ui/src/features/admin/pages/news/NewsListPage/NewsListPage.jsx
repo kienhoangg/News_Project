@@ -20,6 +20,8 @@ NewsListPage.defaultProps = {};
 const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
+  direction: Direction.DESC,
+  orderBy: 'CreatedDate',
 };
 
 function NewsListPage(props) {
@@ -91,7 +93,7 @@ function NewsListPage(props) {
       const params = { Id: values?.Id };
       return await newsApi.getNewsById(params);
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
     }
   };
