@@ -17,7 +17,7 @@ function BlogSectionListNewsItem(props) {
     const { Id, Code, Name } = DocumentData;
 
     return (
-        <Link className={cx('wrapper')} underline='none' to={commonRender.renderLinkNewsDetail(Id)} color='inherit'>
+        <Link className={cx('wrapper')} underline='none' to={commonRender.renderLinkDocumentDetail(Id)} color='inherit'>
             {/* <FiberManualRecordIcon fontSize='small' /> */}
             <div className={cx('content')}>
                 <div className={cx('icon')}></div> {Name} <span className={cx('badge-new')}>new</span>

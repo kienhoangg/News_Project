@@ -26,7 +26,7 @@ function PublishedDocumentPage(props) {
     const [data, setData] = useState();
     const [fontSizeContainer, setFontSizeContainer] = useState(13);
 
-    const [dateFilter, setDateFilter] = useState(moment());
+    const [dateFilter, setDateFilter] = useState();
 
     //Lấy dữ liệu chi tiết
     useEffect(() => {
@@ -35,7 +35,7 @@ function PublishedDocumentPage(props) {
                 const params = { id };
                 const response = await publishedNewsApi.getData(params);
                 setData(response);
-                setDateFilter(response?.NewsPostDetail.PublishedDate);
+                setDateFilter(moment(response?.NewsPostDetail.PublishedDate));
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }
@@ -104,7 +104,7 @@ function PublishedDocumentPage(props) {
                                                 size='small'
                                                 icon={<SoundOutlined />}
                                                 onClick={() => {
-                                                    commonRender.showNotifiTodo();
+                                                    commonRender.showNotifyTodo();
                                                 }}
                                             >
                                                 Đọc bài viết
@@ -176,7 +176,7 @@ function PublishedDocumentPage(props) {
             </Row>
             <Row align='end' style={{ marginTop: 8 }}>
                 <Col>
-                    <DatePicker defaultValue={dateFilter} format={constant.DATE_FORMAT_VN} onChange={handleOnChangeDateFilter} />
+                    {dateFilter && <DatePicker defaultValue={dateFilter} format={constant.DATE_FORMAT_VN} onChange={handleOnChangeDateFilter} />}
                     <Button style={{ marginLeft: 8 }}>
                         <Link to={commonRender.renderLinkNewsField(data?.CategoryParentNews?.Id, dateFilter)}>Xem</Link>
                     </Button>

@@ -96,7 +96,9 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         {Array.isArray(dataDocuments) &&
                             dataDocuments.map((item) => {
-                                return <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkNewsDetail(item.Id)} />;
+                                return (
+                                    <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkDocumentDetail(item.Id)} />
+                                );
                             })}
                     </div>
                 </div>
@@ -109,7 +111,7 @@ function ListSection(props) {
                     <div className={cx('list-document-content')}>
                         <div className={cx('title-news')}>
                             <div className={cx('divider')}></div>
-                            <Link to={commonRender.renderLinkNewsCategory(CategoryNews?.Id)}>{CategoryNews?.CategoryNewsName}</Link>
+                            <Link to={routes.publishedDocumentList}>{CategoryNews?.CategoryNewsName}</Link>
                         </div>
                         {Array.isArray(items) &&
                             items.map((item) => {
