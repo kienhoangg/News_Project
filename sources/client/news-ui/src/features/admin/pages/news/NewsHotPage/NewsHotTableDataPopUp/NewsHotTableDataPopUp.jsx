@@ -33,6 +33,7 @@ function NewsHotTableDataPopUp(props) {
       render: (CreatedDate) => <>{CreatedDate}</>,
     },
   ];
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       //   console.log(`selectedRowKeys: ${selectedRowKeys}`);
@@ -48,6 +49,7 @@ function NewsHotTableDataPopUp(props) {
       //   console.log(`selectedRowKeys: ${selected}`);
     },
   };
+
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);

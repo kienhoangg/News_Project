@@ -37,6 +37,8 @@ DocumentListPage.defaultProps = {};
 const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
+  direction: Direction.DESC,
+  orderBy: 'CreatedDate',
 };
 
 function DocumentListPage(props) {
