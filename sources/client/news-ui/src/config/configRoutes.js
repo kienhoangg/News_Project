@@ -19,7 +19,7 @@ const routes = {
   publishedEvaluatePage: '/evaluate', //Giành cho menu
 
   publishedQuestions: '/questions',
-  publishedPhotos: '/media/photos',
+  publishedPhotos: '/media/photos', //QueryPrams: ?albumid=1
   publishedVideos: '/media/videos',
 
   search: '/search',
