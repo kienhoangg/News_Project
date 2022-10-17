@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './PublishedEvaluatePage.module.scss';
 import classNames from 'classnames/bind';
-import { Button, Radio, Row, Space } from 'antd';
+import { Button, Modal, Radio, Row, Space } from 'antd';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
 
 const cx = classNames.bind(styles);
 
@@ -11,39 +12,95 @@ PublishedEvaluatePage.propTypes = {};
 
 PublishedEvaluatePage.defaultProps = {};
 
+const dataFakeChart = [
+    {
+        name: 'Rất hài lòng',
+        value: '53%',
+        'Bình chọn': 53,
+        fill: 'rgb(169,255,150)',
+    },
+    {
+        name: 'Hài lòng',
+        value: '42%',
+        'Bình chọn': 42,
+        fill: 'rgb(255,188,117)',
+    },
+    {
+        name: 'Chấp nhận được',
+        value: '3%',
+        'Bình chọn': 3,
+        fill: 'rgb(128,133,233)',
+    },
+    {
+        name: 'Không hài lòng',
+        value: '0%',
+        'Bình chọn': 0,
+        fill: 'rgb(241,92,128)',
+    },
+    {
+        name: 'Không thể chấp nhận được',
+        value: '0%',
+        'Bình chọn': 0,
+        fill: 'rgb(253,236,109)',
+    },
+];
+
 function PublishedEvaluatePage(props) {
     // const [value, setValue] = useState(1);
     // const onChange = (e) => {
     //     console.log('radio checked', e.target.value);
     //     setValue(e.target.value);
     // };
+    const [openModelResult, setOpenModelResult] = useState(false);
+    const [dataChartResult, setDataChartResult] = useState([]);
 
     const listQuestions = [
         {
             Id: 1,
-            Title: 'Đánh giá về mức độ chấp hành chính sách nhà nước',
+            Title: 'Văn phòng UBND tỉnh Thừa Thiên Huế',
         },
         {
             Id: 1,
-            Title: 'Đánh giá về mức độ chấp hành chính sách nhà nước',
+            Title: 'Sở Tài nguyên và Môi trường',
         },
         {
             Id: 1,
-            Title: 'Đánh giá về mức độ chấp hành chính sách nhà nước',
+            Title: 'Sở ngoại vụ',
         },
         {
             Id: 1,
-            Title: 'Đánh giá về mức độ chấp hành chính sách nhà nước',
+            Title: 'Sở văn hóa và thể thao',
         },
         {
             Id: 1,
-            Title: 'Đánh giá về mức độ chấp hành chính sách nhà nước',
+            Title: 'Sở xây dựng',
         },
         {
             Id: 1,
-            Title: 'Đánh giá về mức độ chấp hành chính sách nhà nước',
+            Title: 'Sở công thương',
+        },
+        {
+            Id: 1,
+            Title: 'Sở khoa học và công nghệ',
+        },
+        {
+            Id: 1,
+            Title: 'Sở Lao động - Thương binh và xã hội',
+        },
+        {
+            Id: 1,
+            Title: 'Sở Tư pháp',
+        },
+        {
+            Id: 1,
+            Title: 'Sở Du lịch',
         },
     ];
+
+    function handleOnClickResult(id) {
+        setDataChartResult(dataFakeChart);
+        setOpenModelResult(true);
+    }
 
     return (
         <div className={cx('wrapper')}>
@@ -83,7 +140,7 @@ function PublishedEvaluatePage(props) {
                                 <Button type='primary' size='small'>
                                     Bình chọn
                                 </Button>
-                                <Button type='primary' size='small'>
+                                <Button type='primary' size='small' onClick={() => handleOnClickResult(item.Id)}>
                                     Kết quả
                                 </Button>
                             </div>
@@ -91,6 +148,43 @@ function PublishedEvaluatePage(props) {
                     );
                     return component;
                 })}
+
+            {/* Model kết quả*/}
+            <Modal
+                title='Kết quả đánh giá'
+                centered
+                open={openModelResult}
+                onOk={() => setOpenModelResult(false)}
+                cancelButtonProps={{
+                    style: {
+                        display: 'none',
+                    },
+                }}
+                // onCancel={() => setOpenModelResult(false)}
+                width={900}
+            >
+                <div className={cx('result-container')}>
+                    <div className={cx('result-title')}>ĐÁNH GIÁ CHẤT LƯỢNG PHỤC VỤ CỦA TỪNG CƠ QUAN CHUYÊN MÔN</div>
+                    <div className={cx('result-description')}>
+                        <div>Kết quả bình chọn</div>
+                        <div>Thanh tra tỉnh</div>
+                    </div>
+                    <div className={cx('result-chart')}>
+                        <BarChart width={800} height={250} data={dataChartResult} barSize={60}>
+                            {/* <CartesianGrid strokeDasharray='3 3' /> */}
+                            <XAxis dataKey='name' />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey='Bình chọn' fill='#8884d8'>
+                                <LabelList dataKey='value' position='top' fill='#000' />
+                            </Bar>
+                            {/* <Bar dataKey='uv' fill='#82ca9d' /> */}
+                        </BarChart>
+                    </div>
+                    <div className={cx('result-total')}>Tổng cộng có 241 lượt bình chọn</div>
+                </div>
+            </Modal>
         </div>
     );
 }
