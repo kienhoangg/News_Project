@@ -10,6 +10,7 @@ namespace Models.Dtos.Home
 
         public List<DocumentDto> DocumentHots { get; set; }
         public List<DocumentDto> DocumentSectionDto { get; set; }
+        public List<PhotoDto> Images { get; set; }
         public string PublicToken { get; set; }
     }
 }

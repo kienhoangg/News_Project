@@ -1,17 +1,20 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 using Common.Interfaces;
+using Common.Shared.Configurations;
 using Common.Shared.DTOs.Configurations;
 using Contracts.Interfaces;
 using Infrastructure.Extensions;
 using Infrastructure.Implements;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using News.API.Authorization;
 using News.API.Interfaces;
 using News.API.Persistence;
 using News.API.Services;
+using StackExchange.Redis;
 
 namespace News.API.Extensions
 {
@@ -26,6 +29,9 @@ namespace News.API.Extensions
             var jwtSettings = configuration.GetSection(nameof(JwtSettings))
                 .Get<JwtSettings>();
             services.AddSingleton(jwtSettings);
+            var cacheSettings = configuration.GetSection(nameof(CacheSettings))
+           .Get<CacheSettings>();
+            services.AddSingleton(cacheSettings);
 
             return services;
         }
@@ -113,6 +119,19 @@ namespace News.API.Extensions
             return services;
         }
 
+        public static void ConfigureRedis(this IServiceCollection services)
+        {
+            var settings = services.GetOptions<CacheSettings>(nameof(CacheSettings));
+            if (string.IsNullOrEmpty(settings.ConnectionString))
+                throw new ArgumentNullException("Redis Connection string is not configured.");
+            services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(settings.ConnectionString));
+            //Redis Configuration
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = settings.ConnectionString;
+            });
+        }
+
         private static IServiceCollection
         AddInfrastructureServices(this IServiceCollection services)
         {
@@ -135,6 +154,8 @@ namespace News.API.Extensions
                 typeof(CollaboratorService))
                 .AddScoped(serviceType: typeof(ICommentService),
                 typeof(CommentService))
+                  .AddScoped(serviceType: typeof(ICacheService),
+                typeof(CacheService))
                  .AddScoped(serviceType: typeof(IDocumentFieldService),
                 typeof(DocumentFieldService)).AddScoped(serviceType: typeof(IDocumentTypeService),
                 typeof(DocumentTypeService)).AddScoped(serviceType: typeof(IDocumentDepartmentService),

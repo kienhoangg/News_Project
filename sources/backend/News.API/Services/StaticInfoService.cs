@@ -60,9 +60,9 @@ namespace News.API.Services
             return result;
         }
 
-        public async Task UpdateStaticInfo(StaticInfo product)
+        public async Task<int> UpdateStaticInfo(StaticInfo product)
         {
-            await UpdateAsync(product);
+            return await UpdateAsync(product);
         }
     }
 }

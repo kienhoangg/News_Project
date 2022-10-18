@@ -20,7 +20,7 @@ namespace News.API.Interfaces
 
         Task CreateStaticInfo(StaticInfo staticInfo);
 
-        Task UpdateStaticInfo(StaticInfo staticInfo);
+        Task<int> UpdateStaticInfo(StaticInfo staticInfo);
 
         Task DeleteStaticInfo(int id);
     }
