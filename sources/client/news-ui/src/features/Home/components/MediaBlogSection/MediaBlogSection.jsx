@@ -4,14 +4,19 @@ import Images from '../../../../common/images';
 import styles from './MediaBlogSection.module.scss';
 import MediaBlogSectionBanner from './MediaBlogSectionBanner/MediaBlogSectionBanner';
 import MediaBlogSectionButton from './MediaBlogSectionButton/MediaBlogSectionButton';
+import PropTypes from 'prop-types';
 
 const cx = classNames.bind(styles);
 
-MediaBlogSection.propTypes = {};
+MediaBlogSection.propTypes = {
+    AlbumImages: PropTypes.array,
+};
 
 MediaBlogSection.defaultProps = {};
 
 function MediaBlogSection(props) {
+    const { AlbumImages } = props;
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('navbar')}>
@@ -26,7 +31,7 @@ function MediaBlogSection(props) {
                 </div>
             </div>
             <div className={cx('carousel')}>
-                <MediaBlogSectionBanner />
+                <MediaBlogSectionBanner AlbumImages={AlbumImages} />
             </div>
         </div>
     );
