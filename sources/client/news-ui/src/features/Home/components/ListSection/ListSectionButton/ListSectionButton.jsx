@@ -22,7 +22,7 @@ function ListSectionButton(props) {
     return (
         <Link className={cx('btn-wrapper')} underline='none' to={href}>
             {/* <img src={imageName} alt='' height={40} style={{ marginRight: 16 }} /> */}
-            <FontAwesomeIcon icon={faBriefcase} size={70} />
+            <FontAwesomeIcon icon={faBriefcase} />
             <span style={{ fontSize: 18, marginLeft: 16 }}>{label}</span>
         </Link>
     );

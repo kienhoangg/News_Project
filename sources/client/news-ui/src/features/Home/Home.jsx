@@ -61,7 +61,7 @@ function Home(props) {
                         </div>
                     </Col>
                 </Row>
-                <MediaBlogSection />
+                <MediaBlogSection AlbumImages={homeData?.Data?.Images} />
                 <ListSection dataNews={homeData?.Data?.NewsSectionDto} dataDocuments={homeData?.Data?.DocumentSectionDto} />
                 <ConnectionSection />
             </div>
