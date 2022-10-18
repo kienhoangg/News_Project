@@ -61,6 +61,8 @@ namespace News.API.Controllers
                 }
             }
             string fileAttachmentPath = "";
+            var document = _serializeService
+                  .Deserialize<Document>(documentUploadDto.JsonString);
             // Upload file attachment if exist
             if (documentUploadDto.FileAttachment != null)
             {
@@ -69,10 +71,6 @@ namespace News.API.Controllers
                         .FileAttachment
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
-
-
-            var document = _serializeService
-                    .Deserialize<Document>(documentUploadDto.JsonString);
             document.FilePath = fileAttachmentPath;
             await _documentService.CreateDocument(document);
 

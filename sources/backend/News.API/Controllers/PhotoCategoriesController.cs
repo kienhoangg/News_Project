@@ -60,6 +60,8 @@ namespace News.API.Controllers
                 }
             }
             string fileAttachmentPath = "";
+            var photoCategory = _serializeService
+              .Deserialize<PhotoCategory>(photoCategoryUploadDto.JsonString);
             // Upload file attachment if exist
             if (photoCategoryUploadDto.FileAttachment != null)
             {
@@ -68,10 +70,6 @@ namespace News.API.Controllers
                         .FileAttachment
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
-
-
-            var photoCategory = _serializeService
-                    .Deserialize<PhotoCategory>(photoCategoryUploadDto.JsonString);
             photoCategory.FilePath = fileAttachmentPath;
             await _photoCategoryService.CreatePhotoCategory(photoCategory);
 

@@ -1,6 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Extensions;
+using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -14,14 +18,16 @@ namespace News.API.Controllers
         private readonly IPhotoService _photoService;
 
         private readonly IMapper _mapper;
-
+        private readonly ISerializeService _serializeService;
         public PhotosController(
             IPhotoService photoService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _photoService = photoService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -35,10 +41,39 @@ namespace News.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult>
-        CreatePhotoDto([FromBody] PhotoDto photoDto)
+         CreatePhotoDto([FromForm] PhotoUploadDto photoUploadDto)
         {
-            var photo = _mapper.Map<Photo>(photoDto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Photo
+                    >(lstErrorString));
+                }
+            }
+            var photo = _serializeService
+         .Deserialize<Photo>(photoUploadDto.JsonString);
+            string fileAttachmentPath = "";
+            // Upload file attachment if exist
+            if (photoUploadDto.FileAttachment != null)
+            {
+                List<string> lstStringFile = new List<string>();
+                foreach (var item in photoUploadDto.FileAttachment)
+                {
+                    lstStringFile.Add(await item.UploadFile(CommonConstants.FILE_ATTACHMENT_PATH));
+                }
+                fileAttachmentPath = String.Join(";;", lstStringFile.ToArray());
+            }
+            photo.ImagePath = fileAttachmentPath;
             await _photoService.CreatePhoto(photo);
+
             var result = _mapper.Map<PhotoDto>(photo);
             return Ok(result);
         }

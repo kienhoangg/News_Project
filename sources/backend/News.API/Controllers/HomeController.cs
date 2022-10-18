@@ -4,6 +4,7 @@ using Common.Shared.Constants;
 using Contracts.Interfaces;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Dtos.Home;
 using Models.Entities;
@@ -17,6 +18,7 @@ namespace News.API.Controllers
     [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
+        private readonly AccessCounter _counter = AccessCounter.GetInstance();
         private readonly INewsPostService _newsPostService;
         private IJwtUtils _jwtUtils;
         private readonly ICategoryNewsService _categoryNewsService;
@@ -81,6 +83,7 @@ namespace News.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            _counter.Increase();
             // Get 5 hot news
             var hotNewsRequets =
                 new NewsPostRequest()
@@ -141,7 +144,8 @@ namespace News.API.Controllers
                             },
                     DocumentHots = lstDocuments.GetRange(0, index),
                     DocumentSectionDto = lstDocuments.GetRange(index, lstDocuments.Count - index),
-                    Images = lstImages
+                    Images = lstImages,
+                    AccessCounter = _counter.GetValue()
                 });
 
 
