@@ -22,6 +22,8 @@ import styles from './StaticCategoryListPage.module.scss';
 import StaticCategoryPageSearch from './StaticCategoryPageSearch/StaticCategoryPageSearch';
 import StaticCategoryTableData from './StaticCategoryTableData/StaticCategoryTableData';
 import TextArea from 'antd/lib/input/TextArea';
+import { Select } from 'antd';
+import { Option } from 'antd/lib/mentions';
 
 const cx = classNames.bind(styles);
 
@@ -140,31 +142,19 @@ function StaticCategoryListPage(props) {
   const showModal = () => {
     setIsModalOpen(true);
   };
-  const generateTree = (arrNode) => {
-    return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.Title} key={x.Id}>
-        {x.children.length > 0 && generateTree(x.children)}
-      </TreeNode>
-    ));
-  };
+
   const renderStaticCategoryId = (
-    <TreeSelect
-      showSearch
-      style={{
-        width: '100%',
-      }}
-      // value={valueNewsType}
-      dropdownStyle={{
-        maxHeight: 400,
-        overflow: 'auto',
-      }}
-      placeholder='Chọn danh mục cấp cha'
-      allowClear
-      treeDefaultExpandAll
-      // onChange={onChangeNewsType}
+    <Select
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
+      allowClear={true}
     >
-      {generateTree(commonFunc.list_to_tree(newsData ?? []))}
-    </TreeSelect>
+      {newsData?.data.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
   );
 
   /**
