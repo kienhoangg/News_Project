@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import styles from './ListSectionButton.module.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBridge, faBriefcase, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
@@ -19,8 +21,9 @@ function ListSectionButton(props) {
 
     return (
         <Link className={cx('btn-wrapper')} underline='none' to={href}>
-            <img src={imageName} alt='' height={40} style={{ marginRight: 16 }} />
-            <span style={{ fontSize: 18 }}>{label}</span>
+            {/* <img src={imageName} alt='' height={40} style={{ marginRight: 16 }} /> */}
+            <FontAwesomeIcon icon={faBriefcase} />
+            <span style={{ fontSize: 18, marginLeft: 16 }}>{label}</span>
         </Link>
     );
 }

@@ -18,6 +18,14 @@ class InforStaticAPI {
     const url = '/StaticCategories/filter';
     return axiosClient.post(url, body);
   };
+  insertCategory = (body) => {
+    const url = '/StaticCategories';
+    return axiosClient.post(url, body);
+  };
+  deleteCategory = (id) => {
+    const url = `/StaticCategories/${id}`;
+    return axiosClient.delete(url);
+  };
 }
 const inforStaticAPI = new InforStaticAPI();
 export default inforStaticAPI;

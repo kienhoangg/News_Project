@@ -1,16 +1,24 @@
-import { FileAddFilled, SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Input, Row } from 'antd';
+import styles from './StaticCategoryPageSearch.module.scss';
 import classNames from 'classnames/bind';
-import styles from './ImageCategoryPageSearch.module.scss';
 import { useState } from 'react';
+import { PropTypes } from 'prop-types';
 
 const cx = classNames.bind(styles);
 
-ImageCategoryPageSearch.propTypes = {};
+StaticCategoryPageSearch.propTypes = {
+  /**
+   * Func giúp Component bố gọi để thiết lập từ khóa cần tìm
+   */
+  setTextSearch: PropTypes.func,
+};
 
-ImageCategoryPageSearch.defaultProps = {};
+StaticCategoryPageSearch.defaultProps = {
+  setTextSearch: () => {},
+};
 
-function ImageCategoryPageSearch(props) {
+function StaticCategoryPageSearch(props) {
   const { setTextSearch } = props;
   const [keyword, setKeyword] = useState('');
 
@@ -61,4 +69,4 @@ function ImageCategoryPageSearch(props) {
   );
 }
 
-export default ImageCategoryPageSearch;
+export default StaticCategoryPageSearch;

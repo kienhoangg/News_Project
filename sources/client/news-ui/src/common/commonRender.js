@@ -58,6 +58,19 @@ export const commonRender = {
     },
 
     /**
+    * Lấy link đường dần photo/album ảnh
+    * @param {string} id ID của loại tin tức
+    * @returns Đường dẫn chi tiết tin tức
+    */
+    renderLinkPhotos: (id = undefined) => {
+        var link = routes.publishedPhotos;
+        if (id) {
+            link = link + `?albumid=${id}`;
+        }
+        return link;
+    },
+
+    /**
     * Lấy link đường dần danh sách tin tức theo loại tin tức
     * @param {string} id ID của loại tin tức
     * @returns Đường dẫn chi tiết tin tức

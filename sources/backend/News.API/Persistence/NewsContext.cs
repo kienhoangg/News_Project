@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Contracts.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Models.Entities;
 
 namespace News.API.Persistence
@@ -79,6 +80,21 @@ namespace News.API.Persistence
                 }
 
             return base.SaveChangesAsync(cancellationToken);
+        }
+    }
+
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<NewsContext>
+    {
+        public NewsContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<NewsContext>();
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json").Build();
+            var connectionString = configuration.GetConnectionString("DefaultConnectionString");
+            optionsBuilder.UseSqlServer(connectionString);
+            return new NewsContext(optionsBuilder.Options);
         }
     }
 }

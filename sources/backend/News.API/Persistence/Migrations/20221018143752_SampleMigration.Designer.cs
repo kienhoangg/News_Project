@@ -12,8 +12,8 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221015122640_SampleMigration1")]
-    partial class SampleMigration1
+    [Migration("20221018143752_SampleMigration")]
+    partial class SampleMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -577,6 +577,93 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("NewsPosts");
                 });
 
+            modelBuilder.Entity("Models.Entities.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PhotoCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoCategoryId");
+
+                    b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("Models.Entities.PhotoCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PhotoCategories");
+                });
+
             modelBuilder.Entity("Models.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -905,6 +992,15 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("SourceNews");
                 });
 
+            modelBuilder.Entity("Models.Entities.Photo", b =>
+                {
+                    b.HasOne("Models.Entities.PhotoCategory", "PhotoCategory")
+                        .WithMany("Photos")
+                        .HasForeignKey("PhotoCategoryId");
+
+                    b.Navigation("PhotoCategory");
+                });
+
             modelBuilder.Entity("Models.Entities.Question", b =>
                 {
                     b.HasOne("Models.Entities.QuestionCategory", "QuestionCategory")
@@ -961,6 +1057,11 @@ namespace News.API.Persistence.Migrations
             modelBuilder.Entity("Models.Entities.NewsPost", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Models.Entities.PhotoCategory", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("Models.Entities.QuestionCategory", b =>

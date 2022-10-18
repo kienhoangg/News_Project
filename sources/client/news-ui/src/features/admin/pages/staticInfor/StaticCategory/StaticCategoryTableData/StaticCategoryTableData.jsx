@@ -4,39 +4,52 @@ import {
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Space, Table, Tag, Modal } from 'antd';
+import PropTypes from 'prop-types';
 import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
+import styles from './StaticCategoryTableData.module.scss';
 import classNames from 'classnames/bind';
-import styles from './ImageCategoryTableData.module.scss';
 import { Direction } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
-ImageCategoryTableData.propTypes = {};
+StaticCategoryTableData.propTypes = {
+  data: PropTypes.shape({
+    Title: PropTypes.string,
+    OrderNumber: PropTypes.number,
+    Status: PropTypes.bool,
+  }),
+  onClickShowRowDetail: PropTypes.func,
+};
 
-ImageCategoryTableData.defaultProps = {};
+StaticCategoryTableData.defaultProps = {};
 
-function ImageCategoryTableData(props) {
+function StaticCategoryTableData(props) {
   const { data, onClickShowRowDetail, setPagination, deleteCategoryNew } =
     props;
+
+  const handleOnClickTitle = (values) => {
+    if (onClickShowRowDetail) onClickShowRowDetail(values);
+  };
 
   const columns = [
     {
       key: 'Title',
       dataIndex: 'Title',
       title: 'Tiêu đề',
-      render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.Title - b.Title,
+      render: (_, { id, Title }) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            handleOnClickTitle({ id, Title });
+          }}
+        >
+          {Title}
+        </div>
+      ),
+      sorter: (a, b) => a.CategoryNewsName - b.CategoryNewsName,
     },
-    {
-      key: 'Order',
-      dataIndex: 'Order',
-      title: 'Số thứ tự',
-      render: (Order) => <>{Order}</>,
-      sorter: (a, b) => a.Order - b.Order,
-      width: 100,
-      align: 'right',
-    },
+
     {
       key: 'status',
       dataIndex: 'Status',
@@ -61,11 +74,11 @@ function ImageCategoryTableData(props) {
     },
     {
       key: 'action',
+      // title: 'Xóa',
+      align: 'center',
+      width: 100,
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
-            Sửa
-          </Button>
           <Button
             type='ghost'
             danger
@@ -82,17 +95,17 @@ function ImageCategoryTableData(props) {
 
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
-    var PublishedDate = datetimeHelper.formatDateToDateVN(item.PublishedDate);
-    return { ...item, PublishedDate: PublishedDate, key: item.Id };
+    var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
+    return { ...item, CreatedDate: createdDate, key: item.Id };
   });
 
-  function handleOnClickStatus(values) {
-    // console.log(values);
+  function handleChangeSourceNew(values) {
+    console.log(values);
   }
 
   function handleDeleteCategoryNew(values) {
     return Modal.confirm({
-      title: 'Xóa danh mục hình ảnh',
+      title: 'Xóa danh mục tin',
       icon: <ExclamationCircleOutlined />,
       content: 'Bạn có chắc chắn xóa không?',
       okText: 'Xóa',
@@ -108,6 +121,10 @@ function ImageCategoryTableData(props) {
     deleteCategoryNew(values.Id);
   };
 
+  function handleOnClickStatus(values) {
+    // console.log(values);
+  }
+
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
     setPagination(
       pagination.current,
@@ -116,10 +133,28 @@ function ImageCategoryTableData(props) {
       sorter.Order === 'ascend' ? Direction.ASC : Direction.DESC
     );
   };
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      // if (!changeRowKey) {
+      //   return;
+      // }
+      // changeRowKey(selectedRowKeys);
+    },
+    onSelect: (record, selected, selectedRows) => {
+      //   console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      //   console.log(`selectedRowKeys: ${selected}`);
+    },
+  };
+
   return (
     <div className={cx('wrapper')}>
       <Table
         columns={columns}
+        // rowSelection={rowSelection}
         onChange={handleOnchangeTable}
         pagination={{
           defaultPageSize: 10,
@@ -136,4 +171,4 @@ function ImageCategoryTableData(props) {
   );
 }
 
-export default ImageCategoryTableData;
+export default StaticCategoryTableData;

@@ -142,7 +142,9 @@ namespace News.API.Controllers
 
             string avartarPath = "";
             string fileAttachmentPath = "";
-
+            var newsPost =
+                          _serializeService
+                              .Deserialize<NewsPost>(newsPostUploadDto.JsonString);
             // Upload file avatar if exist
             if (newsPostUploadDto.Avatar != null)
             {
@@ -160,11 +162,6 @@ namespace News.API.Controllers
                         .FileAttachment
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
-
-            var newsPost =
-                _serializeService
-                    .Deserialize<NewsPost>(newsPostUploadDto.JsonString);
-
             newsPost.Avatar = avartarPath;
             newsPost.FilePath = fileAttachmentPath;
             await _newsPostService.CreateNewsPost(newsPost);
