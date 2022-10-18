@@ -2,10 +2,111 @@
     width: calc(100%);
     margin-top: 10px;
 
+    &__popup-preview {
+        width: 600px;
+        height: 520px;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background-color: #00000050;
+        left: 0px;
+        top: 0px;
+        z-index: 1000;
+
+        &__wrap {
+            width: 600px;
+            height: 520px;
+            background-color: #ffffff;
+            margin-left: calc((100% - 600px) / 2);
+            margin-top: 40px;
+            border-radius: 5px;
+            overflow: hidden;
+
+            &__header {
+                padding-left: 10px;
+                padding-right: 10px;
+                width: 100%;
+                height: 53px;
+                background-color: #428bca;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                span {
+                    font-size: 15px;
+                    color: #ffffff;
+                }
+
+                div {
+                    width: 15px;
+                    height: 15px;
+                    cursor: pointer;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: fill;
+                    }
+                }
+            }
+
+            &__body {
+                width: 100%;
+                height: calc(100% - 53px * 2);
+                padding: 10px;
+
+                & div {
+                    width: 100%;
+                    height: 100%;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+            }
+
+            &__fotter {
+                width: 100%;
+                height: 53px;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                padding-right: 10px;
+                border-top: 1px solid #bbbbbb;
+
+                button {
+                    width: 83px;
+                    height: 34px;
+                    border-radius: 3px;
+                    border: 1px solid #bbbbbb;
+                    outline: none;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
     &__top {
         width: 100%;
-        display: flex;
-        justify-items: center;
+
+        &__title {
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: max-content;
+            background-color: #0066B3;
+            padding: 8px;
+            margin-bottom: 10px;
+            margin-left: 10px;
+
+            b {
+                color: #ffffff;
+                font-size: 13px;
+            }
+        }
 
         &__wrap-caroucel {
             width: 600px;

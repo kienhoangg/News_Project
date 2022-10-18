@@ -7,9 +7,12 @@ import { Pagination } from "antd";
 import ScrollToTop from "components/ScrollToTop/ScrollToTop";
 import axiosClient from "apis/axiosClient";
 import { useLocation } from "react-router-dom";
+import IconClose from "../../../assets/icons/close.png";
 
 export default function AlbumImageDetailPage() {
   const isFirstRender = useRef(true);
+  const setTimeoutRef = useRef();
+  const [urlImageSelected, setUrlImageSelected] = useState("");
 
   const [dataUrlImage, setDataUrlImage] = useState([]);
   const [indexImageCaroucel, setIndexImageCaroucel] = useState(0);
@@ -27,6 +30,26 @@ export default function AlbumImageDetailPage() {
   useEffect(() => {
     callApiGetListAlbum();
   }, [paging]);
+
+  /**
+   * Xét event tự động next ảnh
+   * @author TDBA (18/10/2022)
+   */
+  useEffect(() => {
+    dataUrlImage?.length && setEventAutoNextImage();
+  }, [dataUrlImage, indexImageCaroucel]);
+
+  /**
+   * Thêm event tự động next ảnh
+   * @author TDBA (17/10/2022)
+   */
+  const setEventAutoNextImage = () => {
+    clearInterval(setTimeoutRef.current);
+
+    setTimeoutRef.current = setTimeout(() => {
+      handleNextRightCaroucel();
+    }, 2000);
+  };
 
   /**
    * Gọi API lấy chi danh sách album
@@ -64,9 +87,14 @@ export default function AlbumImageDetailPage() {
 
       setDataUrlImage(
         res?.ImagePath?.split(";;")?.map((val) => {
-          if (val?.indexOf("https://") === 0 || val?.indexOf("http://") === 0)
-            return val;
-          else return window.location.origin + val;
+          const url = val;
+          if (val?.indexOf("https://") !== 0 && val?.indexOf("http://") !== 0)
+            url = window.location.origin + val;
+
+          return {
+            title: "abc",
+            url: url,
+          };
         })
       );
       setIndexImageCaroucel(0);
@@ -100,9 +128,37 @@ export default function AlbumImageDetailPage() {
   return (
     <div className="album-image-detail-page">
       <ScrollToTop />
+      {urlImageSelected ? (
+        <div className="album-image-detail-page__popup-preview">
+          <div className="album-image-detail-page__popup-preview__wrap">
+            <div className="album-image-detail-page__popup-preview__wrap__header">
+              <span>Hình ảnh nahạy cảm</span>
+              <div onClick={() => setUrlImageSelected("")}>
+                <img src={IconClose} />
+              </div>
+            </div>
+            <div className="album-image-detail-page__popup-preview__wrap__body">
+              <div>
+                <img src={urlImageSelected} />
+              </div>
+            </div>
+            <div className="album-image-detail-page__popup-preview__wrap__fotter">
+              <button onClick={() => setUrlImageSelected("")}>Thoát</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <div className="album-image-detail-page__top">
+        <div className="album-image-detail-page__top__title">
+          <b>ABC</b>
+        </div>
         <div className="album-image-detail-page__top__wrap-caroucel">
-          <Caroucel data={dataUrlImage} indexItem={indexImageCaroucel} />
+          <Caroucel
+            data={dataUrlImage}
+            indexItem={indexImageCaroucel}
+            onClickImage={(item) => setUrlImageSelected(item?.url)}
+          />
           <div className="album-image-detail-page__top__wrap-caroucel__mini">
             <Caroucel
               data={dataUrlImage}
@@ -112,13 +168,18 @@ export default function AlbumImageDetailPage() {
           </div>
           <div
             className="album-image-detail-page__top__wrap-caroucel__button-next-left"
-            onClick={handleNextLeftCaroucel}
+            onClick={() => {
+              handleNextLeftCaroucel();
+            }}
           >
             <img src={IconArrowRight} />
           </div>
           <div
             className="album-image-detail-page__top__wrap-caroucel__button-next-right"
-            onClick={handleNextRightCaroucel}
+            onClick={() => {
+              handleNextRightCaroucel();
+              clearInterval(setTimeoutRef.current);
+            }}
           >
             <img src={IconArrowRight} />
           </div>

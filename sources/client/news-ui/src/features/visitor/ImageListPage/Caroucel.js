@@ -6,7 +6,7 @@ import "./caroucel.scss";
  * @author TDBA (15/10/2022)
  */
 function Caroucel(props) {
-  const { data, indexItem, marginLeftItem } = props;
+  const { data, indexItem, marginLeftItem, onClickImage } = props;
 
   return (
     <div className="caroucel">
@@ -18,7 +18,7 @@ function Caroucel(props) {
             left: `calc(-100% * ${indexItem} + ${marginLeftItem || 0}px )`,
           }}
         >
-          {data?.map((url, index) => (
+          {data?.map((item, index) => (
             <div
               className={`caroucel__wrap__list__item ${
                 index === indexItem ? "caroucel__wrap__list__item--focus" : ""
@@ -26,8 +26,9 @@ function Caroucel(props) {
               style={{
                 marginLeft: marginLeftItem || 0,
               }}
+              onClick={() => onClickImage && onClickImage(item)}
             >
-              <img src={url} />
+              <img src={item?.url} />
             </div>
           ))}
         </div>
