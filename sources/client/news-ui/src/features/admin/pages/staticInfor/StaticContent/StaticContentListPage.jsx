@@ -215,11 +215,11 @@ function StaticContentListPage(props) {
             .validateFields()
             .then((values) => {
               values.content = values.content?.editor?.getData();
-
-              const { Title, Descritpion, StaticCategoryId } = values;
+              const { Title, Descritpion, StaticCategoryId, content } = values;
               const bodyData = {
                 Title,
                 Descritpion,
+                content,
               };
               if (StaticCategoryId) {
                 bodyData.StaticCategoryId = parseInt(StaticCategoryId);
