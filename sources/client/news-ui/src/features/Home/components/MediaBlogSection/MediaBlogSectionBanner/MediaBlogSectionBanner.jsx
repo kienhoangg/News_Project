@@ -62,7 +62,7 @@ function MediaBlogSectionBanner(props) {
                                 }}
                                 style={{ cursor: 'pointer' }}
                             >
-                                <LazyLoadImage effect='blur' src={image.ImageUrl} alt={image.Name} height={440} />
+                                <LazyLoadImage effect='blur' src={image.ImageUrl} alt={image.Name} height={440} width={1000} />
                             </div>
                         );
                     })}
