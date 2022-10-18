@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace News.API.Persistence.Migrations
 {
-    public partial class SampleMigration1 : Migration
+    public partial class SampleMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -162,6 +162,28 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PhotoCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PhotoCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "QuestionCategories",
                 columns: table => new
                 {
@@ -295,6 +317,32 @@ namespace News.API.Persistence.Migrations
                         name: "FK_CategoryNews_FieldNews_FieldNews_SK_FK",
                         column: x => x.FieldNews_SK_FK,
                         principalTable: "FieldNews",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhotoCategoryId = table.Column<int>(type: "int", nullable: true),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Photos_PhotoCategories_PhotoCategoryId",
+                        column: x => x.PhotoCategoryId,
+                        principalTable: "PhotoCategories",
                         principalColumn: "Id");
                 });
 
@@ -499,6 +547,11 @@ namespace News.API.Persistence.Migrations
                 column: "SourceNewsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Photos_PhotoCategoryId",
+                table: "Photos",
+                column: "PhotoCategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_QuestionCategoryId",
                 table: "Questions",
                 column: "QuestionCategoryId");
@@ -521,6 +574,9 @@ namespace News.API.Persistence.Migrations
                 name: "Menus");
 
             migrationBuilder.DropTable(
+                name: "Photos");
+
+            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
@@ -540,6 +596,9 @@ namespace News.API.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "DocumentTypes");
+
+            migrationBuilder.DropTable(
+                name: "PhotoCategories");
 
             migrationBuilder.DropTable(
                 name: "QuestionCategories");

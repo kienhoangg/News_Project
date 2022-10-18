@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Models.Dtos
 {
-    public class StaticInfoUploadDto
+    public class PhotoCategoryUploadDto
     {
         public int? Id { get; set; }
 
-        [AllowedExtensions("err", new string[] { ".jpg", ".png" })]
-        public IFormFile? Avatar { get; set; }
-
+        [AllowedSize("err file size", 2 * 1024 * 1024)]
         public IFormFile? FileAttachment { get; set; }
 
         public string? JsonString { get; set; }

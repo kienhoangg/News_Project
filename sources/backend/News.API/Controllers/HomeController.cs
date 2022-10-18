@@ -1,9 +1,7 @@
 using AutoMapper;
 using Common.Interfaces;
 using Common.Shared.Constants;
-using Common.Shared.DTOs.Identity;
 using Contracts.Interfaces;
-using Infrastructure.Identity.Authorization;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
@@ -25,9 +23,12 @@ namespace News.API.Controllers
         private readonly IDocumentService _documentService;
         private readonly IQuestionService _questionService;
         private readonly IMenuService _menuService;
+        private readonly IPhotoService _photoService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
+
+
         private readonly IMapper _mapper;
 
         public HomeController(
@@ -40,7 +41,8 @@ namespace News.API.Controllers
             IQuestionService questionService,
             ITokenService tokenService,
             IJwtUtils jwtUtils,
-            IMenuService menuService)
+            IMenuService menuService,
+            IPhotoService photoService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -51,6 +53,7 @@ namespace News.API.Controllers
             _tokenService = tokenService;
             _jwtUtils = jwtUtils;
             _menuService = menuService;
+            _photoService = photoService;
         }
 
         [HttpGet("documents/master")]
@@ -78,7 +81,6 @@ namespace News.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-
             // Get 5 hot news
             var hotNewsRequets =
                 new NewsPostRequest()
@@ -114,6 +116,13 @@ namespace News.API.Controllers
                 return NotFound(new ApiErrorResult<NewsPost
                 >("Not found any news"));
             }
+            var lstImages = (await _photoService.GetPhotoByPaging(new PhotoRequest()
+            {
+                CurrentPage = 1,
+                PageSize = 15,
+                OrderBy = "Order",
+                Direction = 1
+            }, x => x.PhotoCategory)).PagedData.Results.ToList();
             int index = lstDocuments.Count / 2 + 1;
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()
@@ -131,11 +140,11 @@ namespace News.API.Controllers
                                 Data = lstNormalNews.PagedData.Results.ToList()
                             },
                     DocumentHots = lstDocuments.GetRange(0, index),
-                    DocumentSectionDto = lstDocuments.GetRange(index, lstDocuments.Count - index)
+                    DocumentSectionDto = lstDocuments.GetRange(index, lstDocuments.Count - index),
+                    Images = lstImages
                 });
 
-            // Get CategoryNews with 5 normal news
-            var jwtToken = _jwtUtils.GenerateJwtToken(RoleCode.PUBLIC.ToString());
+
             return Ok(result);
         }
     }

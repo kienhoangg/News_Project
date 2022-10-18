@@ -1,7 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Extensions;
+using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -13,16 +17,18 @@ namespace News.API.Controllers
     public class PhotoCategoriesController : ControllerBase
     {
         private readonly IPhotoCategoryService _photoCategoryService;
-
+        private readonly ISerializeService _serializeService;
         private readonly IMapper _mapper;
 
         public PhotoCategoriesController(
             IPhotoCategoryService photoCategoryService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService = null)
         {
             _photoCategoryService = photoCategoryService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -36,10 +42,39 @@ namespace News.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult>
-        CreatePhotoCategoryDto([FromBody] PhotoCategoryDto photoCategoryDto)
+      CreatePhotoCategoryDto([FromForm] PhotoCategoryUploadDto photoCategoryUploadDto)
         {
-            var photoCategory = _mapper.Map<PhotoCategory>(photoCategoryDto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<PhotoCategory
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            // Upload file attachment if exist
+            if (photoCategoryUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await photoCategoryUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+
+            var photoCategory = _serializeService
+                    .Deserialize<PhotoCategory>(photoCategoryUploadDto.JsonString);
+            photoCategory.FilePath = fileAttachmentPath;
             await _photoCategoryService.CreatePhotoCategory(photoCategory);
+
             var result = _mapper.Map<PhotoCategoryDto>(photoCategory);
             return Ok(result);
         }

@@ -20,6 +20,7 @@ try
 
     builder.Services.AddConfigurationSettings(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.ConfigureRedis();
     var services = builder.Services;
     services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
     services.AddControllers(o =>
