@@ -42,7 +42,6 @@ function ImageCategoryPage(props) {
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -159,7 +158,7 @@ function ImageCategoryPage(props) {
     <div className={cx('wrapper')}>
       <Modal
         open={isModalOpen}
-        title='Tạo mới danh mục tĩnh'
+        title='Tạo mới danh mục hình ảnh'
         okText='Thêm mới'
         cancelText='Thoát'
         onCancel={onCancel}
