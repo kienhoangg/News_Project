@@ -21,6 +21,7 @@ const routes = {
   publishedQuestions: '/questions',
   publishedPhotos: '/media/photos', //QueryPrams: ?albumid=1
   publishedVideos: '/media/videos',
+  publishedQuestionsDetail: '/questions/:id',
 
   search: '/search',
   notfound: '/notfound',

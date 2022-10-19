@@ -37,6 +37,7 @@ import QuestionAndAnswerPage from 'features/visitor/QuestionAndAnswerPage/Questi
 import LibVideoListPage from 'features/visitor/VideoListPage/LibVideoListPage';
 import StaticContentListPage from 'features/admin/pages/staticInfor/StaticContent/StaticContentListPage';
 import StaticCategoryListPage from 'features/admin/pages/staticInfor/StaticCategory/StaticCategoryListPage';
+import QuestionDetailPage from 'features/visitor/QuestionDetailPage/QuestionDetailPage';
 
 // Public routes
 const publicRoutes = [
@@ -217,6 +218,11 @@ const publicRoutes = [
     path: config.routes.staticCategory,
     component: StaticCategoryListPage,
     layout: AdminLayout,
+  },
+
+  {
+    path: config.routes.publishedQuestionsDetail,
+    component: QuestionDetailPage,
   },
 
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
