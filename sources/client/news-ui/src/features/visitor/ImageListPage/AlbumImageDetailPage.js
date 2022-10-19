@@ -12,9 +12,9 @@ import IconClose from "../../../assets/icons/close.png";
 export default function AlbumImageDetailPage() {
   const isFirstRender = useRef(true);
   const setTimeoutRef = useRef();
-  const [urlImageSelected, setUrlImageSelected] = useState("");
+  const [urlImageSelected, setUrlImageSelected] = useState();
 
-  const [dataUrlImage, setDataUrlImage] = useState([]);
+  const [albumDetail, setAlbumDetail] = useState([]);
   const [indexImageCaroucel, setIndexImageCaroucel] = useState(0);
   const [paging, setPaging] = useState(1);
 
@@ -36,8 +36,8 @@ export default function AlbumImageDetailPage() {
    * @author TDBA (18/10/2022)
    */
   useEffect(() => {
-    dataUrlImage?.length && setEventAutoNextImage();
-  }, [dataUrlImage, indexImageCaroucel]);
+    albumDetail?.images?.length && setEventAutoNextImage();
+  }, [albumDetail?.images, indexImageCaroucel]);
 
   /**
    * Thêm event tự động next ảnh
@@ -83,22 +83,31 @@ export default function AlbumImageDetailPage() {
    */
   const getDetailAlbum = async (idAlbum) => {
     try {
-      const res = await axiosClient.get("/photos/" + idAlbum);
+      const res = await axiosClient.get("/photocategories/" + idAlbum);
 
-      setDataUrlImage(
-        res?.ImagePath?.split(";;")?.map((val) => {
+      const images = [];
+      res?.Photos?.map((item)=>{
+        const arrayUrl = item?.ImagePath?.split(";;")?.map((val) => {
           const url = val;
           if (val?.indexOf("https://") !== 0 && val?.indexOf("http://") !== 0)
             url = window.location.origin + val;
 
           return {
-            title: "abc",
             url: url,
+            title: item?.Title
           };
-        })
-      );
+        });
+        
+        images.push(...arrayUrl)
+      })
+
+      setAlbumDetail({
+        title: res?.Title,
+        images: images
+      })
+
       setIndexImageCaroucel(0);
-    } catch (err) {}
+    } catch (error) {}
   };
 
   /**
@@ -109,7 +118,7 @@ export default function AlbumImageDetailPage() {
     if (indexImageCaroucel > 0) {
       setIndexImageCaroucel(indexImageCaroucel - 1);
     } else {
-      setIndexImageCaroucel(dataUrlImage?.length - 1);
+      setIndexImageCaroucel(albumDetail?.images?.length - 1);
     }
   };
 
@@ -118,7 +127,7 @@ export default function AlbumImageDetailPage() {
    * @author TDBA (15/10/2022)
    */
   const handleNextRightCaroucel = () => {
-    if (indexImageCaroucel < dataUrlImage?.length - 1) {
+    if (indexImageCaroucel < albumDetail?.images?.length - 1) {
       setIndexImageCaroucel(indexImageCaroucel + 1);
     } else {
       setIndexImageCaroucel(0);
@@ -132,18 +141,18 @@ export default function AlbumImageDetailPage() {
         <div className="album-image-detail-page__popup-preview">
           <div className="album-image-detail-page__popup-preview__wrap">
             <div className="album-image-detail-page__popup-preview__wrap__header">
-              <span>Hình ảnh nahạy cảm</span>
-              <div onClick={() => setUrlImageSelected("")}>
+              <span>{urlImageSelected?.title}</span>
+              <div onClick={() => setUrlImageSelected()}>
                 <img src={IconClose} />
               </div>
             </div>
             <div className="album-image-detail-page__popup-preview__wrap__body">
               <div>
-                <img src={urlImageSelected} />
+                <img src={urlImageSelected?.url} />
               </div>
             </div>
             <div className="album-image-detail-page__popup-preview__wrap__fotter">
-              <button onClick={() => setUrlImageSelected("")}>Thoát</button>
+              <button onClick={() => setUrlImageSelected()}>Thoát</button>
             </div>
           </div>
         </div>
@@ -151,17 +160,17 @@ export default function AlbumImageDetailPage() {
 
       <div className="album-image-detail-page__top">
         <div className="album-image-detail-page__top__title">
-          <b>ABC</b>
+          <b>{albumDetail?.title || "Album ảnh"}</b>
         </div>
         <div className="album-image-detail-page__top__wrap-caroucel">
           <Caroucel
-            data={dataUrlImage}
+            data={albumDetail?.images}
             indexItem={indexImageCaroucel}
-            onClickImage={(item) => setUrlImageSelected(item?.url)}
+            onClickImage={(item) => setUrlImageSelected(item)}
           />
           <div className="album-image-detail-page__top__wrap-caroucel__mini">
             <Caroucel
-              data={dataUrlImage}
+              data={albumDetail?.images}
               indexItem={indexImageCaroucel}
               marginLeftItem={5}
             />
