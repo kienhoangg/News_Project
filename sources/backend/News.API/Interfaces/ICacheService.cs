@@ -4,7 +4,7 @@ namespace News.API.Interfaces
 {
     public interface ICacheService
     {
-        Task SetCacheAsync(string keys, string value, DistributedCacheEntryOptions options);
+        Task SetCacheAsync(string keys, string value, DistributedCacheEntryOptions options = null);
 
         Task<int> GetCountKeys();
     }

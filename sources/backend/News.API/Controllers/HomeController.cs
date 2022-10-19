@@ -26,6 +26,7 @@ namespace News.API.Controllers
         private readonly IQuestionService _questionService;
         private readonly IMenuService _menuService;
         private readonly IPhotoService _photoService;
+        private readonly ICacheService _cacheService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
@@ -44,7 +45,8 @@ namespace News.API.Controllers
             ITokenService tokenService,
             IJwtUtils jwtUtils,
             IMenuService menuService,
-            IPhotoService photoService)
+            IPhotoService photoService,
+            ICacheService cacheService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -56,6 +58,7 @@ namespace News.API.Controllers
             _jwtUtils = jwtUtils;
             _menuService = menuService;
             _photoService = photoService;
+            _cacheService = cacheService;
         }
 
         [HttpGet("documents/master")]
@@ -63,6 +66,17 @@ namespace News.API.Controllers
         {
             var result = await _documentService.GetMasterDataDocument();
             return Ok(result);
+        }
+        [HttpPost("visitor/tracking")]
+        public async Task<IActionResult> TrackingVisitor(VisitorTrackingDto visitorTrackingDto)
+        {
+            string clientId = visitorTrackingDto.ClientId;
+            if (!String.IsNullOrEmpty(visitorTrackingDto.ClientId))
+            {
+                await _cacheService.SetCacheAsync(clientId, DateTime.Now.ToString("HHmmssfffffff"));
+                return Ok(await _cacheService.GetCountKeys());
+            }
+            return NotFound();
         }
 
         [HttpGet("question")]
@@ -145,7 +159,8 @@ namespace News.API.Controllers
                     DocumentHots = lstDocuments.GetRange(0, index),
                     DocumentSectionDto = lstDocuments.GetRange(index, lstDocuments.Count - index),
                     Images = lstImages,
-                    AccessCounter = _counter.GetValue()
+                    AccessCounter = _counter.GetValue(),
+                    VisitorTracking = await _cacheService.GetCountKeys()
                 });
 
 

@@ -12,6 +12,6 @@ namespace Models.Dtos.Home
         public List<DocumentDto> DocumentSectionDto { get; set; }
         public List<PhotoDto> Images { get; set; }
         public int AccessCounter { get; set; }
-        public string PublicToken { get; set; }
+        public int VisitorTracking { get; set; }
     }
 }

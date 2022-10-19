@@ -73,6 +73,9 @@ namespace News.API.Controllers
                 };
             var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
             if (newsPost == null) return NotFound("News is not found !");
+            //Update Views of news post
+
+
             var parentId = newsPost.CategoryNews.ParentId;
             var categoryParentNews =
                 await _categoryNewsService.GetCategoryNews(parentId);
@@ -251,25 +254,32 @@ namespace News.API.Controllers
             var resultUpdate =
                 await _newsPostService.UpdateNewsPost(updatedNewsPost);
 
-            if (resultUpdate > 0)
+            if (resultUpdate > 0 && !string.IsNullOrEmpty(avartarPath))
             {
                 FileInfo fileAvatar =
                     new FileInfo(Directory.GetCurrentDirectory() +
                         tempAvatarPath);
-                FileInfo fileFileAttachment =
-                    new FileInfo(Directory.GetCurrentDirectory() +
-                        tempFileAttachmentPath);
+
 
                 // Clear old file upload if update success
                 if (fileAvatar.Exists)
                 {
                     fileAvatar.Delete();
                 }
+
+            }
+            if (resultUpdate > 0 && !string.IsNullOrEmpty(fileAttachmentPath))
+
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         tempFileAttachmentPath);
                 if (fileFileAttachment.Exists)
                 {
                     fileFileAttachment.Delete();
                 }
             }
+
             var result = _mapper.Map<NewsPostDto>(source: updatedNewsPost);
             return Ok(result);
         }

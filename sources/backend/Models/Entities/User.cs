@@ -1,11 +1,13 @@
 ﻿using System;
+using Contracts.Domains;
+
 namespace Models.Entities
 {
-    public class User
+    public class User : EntityAuditBase<int>
     {
-        public User()
-        {
-        }
+        public string Username { get; set; }
+        public string Password { get; set; }
+
     }
 }
 

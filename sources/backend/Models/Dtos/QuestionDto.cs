@@ -5,6 +5,7 @@ namespace Models.Dtos
 {
     public class QuestionDto : DtoBase
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string? AskedPersonName { get; set; }
         public string? Department { get; set; }
@@ -19,6 +20,7 @@ namespace Models.Dtos
         public DateTime? AnswerDate { get; set; }
         public DateTime? QuestionDate { get; set; }
         public int Views { get; set; }
+        public string? FilePath { get; set; }
         public QuestionCategoryDto? QuestionCategory { get; set; }
     }
 }
