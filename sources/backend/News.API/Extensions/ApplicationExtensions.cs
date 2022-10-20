@@ -21,7 +21,7 @@ namespace News.API.Extensions
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
-                        .WithOrigins("http://localhost:3000"));
+                        .WithOrigins("http://localhost:3000", "http://localhost:1818"));
             app.UseAuthorization();
 
             app
