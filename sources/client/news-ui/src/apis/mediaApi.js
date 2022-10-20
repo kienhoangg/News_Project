@@ -3,16 +3,17 @@ import datafakeMedia from './datafake/datafakeMedia';
 import axiosClient from './axiosClient';
 
 class MediaApi {
-  getImageAll = (params) => {
-    // const url = '/news';
-    // return axiosClient.get(url, { params });
-
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeMedia.imageItem.objectExample
-    );
-    return response;
+  getImageAll = (body) => {
+    const url = '/Photos/filter';
+    return axiosClient.post(url, body);
+  };
+  insertImage = (body) => {
+    const url = '/Photos';
+    return axiosClient.post(url, body);
+  };
+  deleteImage = (id) => {
+    const url = `/Photos/${id}`;
+    return axiosClient.delete(url);
   };
 
   getImageCategoryAll = (body) => {
