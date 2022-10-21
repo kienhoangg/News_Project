@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using AutoMapper;
 using Common.Interfaces;
 using Common.Shared.Constants;
@@ -27,6 +29,7 @@ namespace News.API.Controllers
         private readonly IMenuService _menuService;
         private readonly IPhotoService _photoService;
         private readonly ICacheService _cacheService;
+        private readonly IFieldNewsService _fieldNewsService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
@@ -46,7 +49,8 @@ namespace News.API.Controllers
             IJwtUtils jwtUtils,
             IMenuService menuService,
             IPhotoService photoService,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            IFieldNewsService fieldNewsService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -59,6 +63,7 @@ namespace News.API.Controllers
             _menuService = menuService;
             _photoService = photoService;
             _cacheService = cacheService;
+            _fieldNewsService = fieldNewsService;
         }
 
         [HttpGet("documents/master")]
@@ -83,6 +88,29 @@ namespace News.API.Controllers
         public async Task<IActionResult> GetQuestionAnswer()
         {
             var result = await _questionService.GetQuestionHome();
+            return Ok(result);
+        }
+
+        [HttpGet("published/fields")]
+        public async Task<IActionResult> GetNewsPostEachFields()
+        {
+            Expression<Func<FieldNews, object>>[]? lstInclude =
+                new Expression<Func<FieldNews, object>>[] {
+                    (x => x.NewsPosts)
+                };
+            var fields =
+                await _fieldNewsService
+                    .GetFieldNewsByPaging(new FieldNewsRequest()
+                    { PageSize = 5 },
+                    lstInclude);
+            if (fields == null) return NotFound();
+            return Ok(fields.PagedData.Results);
+        }
+
+        [HttpPost("published/fieldNews/{fieldNewsId:int}")]
+        public async Task<IActionResult> GetNewsPostCategoryEachFields([Required] int fieldNewsId, [FromBody] NewsPostRequest newsPostRequest)
+        {
+            var result = await _newsPostService.GetNewsPostCategoryEachFields(fieldNewsId, newsPostRequest);
             return Ok(result);
         }
 

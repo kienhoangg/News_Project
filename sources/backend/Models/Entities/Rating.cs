@@ -1,8 +1,20 @@
+using Contracts.Domains;
+
 namespace Models.Entities
 {
-    public class Rating
+    public class Rating : EntityAuditBase<int>
     {
-        public int Id { get; set; }
+        public Rating(string title, int satisfiedCount, int happyCount, int okCount, int notSatisfiedCount, int unHappyCount)
+        {
+            Title = title;
+            SatisfiedCount = satisfiedCount;
+            HappyCount = happyCount;
+            OkCount = okCount;
+            NotSatisfiedCount = notSatisfiedCount;
+            UnHappyCount = unHappyCount;
+            TotalRating = satisfiedCount + happyCount + okCount + notSatisfiedCount + unHappyCount;
+        }
+
         public string Title { get; set; }
         public int SatisfiedCount { get; set; }
         public int HappyCount { get; set; }

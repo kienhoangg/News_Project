@@ -128,7 +128,7 @@ namespace News.API.Services
                 tomorrow = tomorrow.AddDays(1);
                 tomorrow = tomorrow.AddTicks(-1);
 
-                query = query.Where(x => x.PublishedDate < tomorrow );
+                query = query.Where(x => x.PublishedDate < tomorrow);
             }
             if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
             {
@@ -204,27 +204,16 @@ namespace News.API.Services
             return await UpdateAsync(product);
         }
 
-        public async Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, NewsPostTypeUpdate newsPostTypeUpdate)
+        public async Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, MultipleTypeUpdate multipleTypeUpdate)
         {
             var lstNewsPostDto = (await GetNewsPostByPaging(new NewsPostRequest()
             {
                 ListNewsPostId = lstNewsPostId
             })).PagedData.Results.ToList();
             var action = new Action<NewsPostDto>(x => x.IsHotNews = value);
-            if (newsPostTypeUpdate == NewsPostTypeUpdate.STATUS)
+            if (multipleTypeUpdate == MultipleTypeUpdate.STATUS)
             {
-                switch (value)
-                {
-                    case true:
-                        action = new Action<NewsPostDto>(x => x.Status = Status.Enabled);
-                        break;
-                    case false:
-                        action = new Action<NewsPostDto>(x => x.Status = Status.Disabled);
-                        break;
-                    default:
-                        break;
-                }
-
+                action = new Action<NewsPostDto>(x => x.Status = value ? Status.Enabled : Status.Disabled);
             }
             lstNewsPostDto.ForEach(action);
             await UpdateListAsync(_mapper.Map<List<NewsPost>>(lstNewsPostDto));

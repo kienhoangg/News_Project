@@ -44,6 +44,14 @@ namespace News.API.Persistence
             {
                 newsContext.AddRange(GetStaticCategory());
             }
+            if (!newsContext.Ratings.Any())
+            {
+                newsContext.AddRange(GetRatings());
+            }
+            if (!newsContext.Users.Any())
+            {
+                newsContext.AddRange(GetUsers());
+            }
 
             //   if (!newsContext.NewsPosts.Any())
             // {
@@ -80,6 +88,11 @@ namespace News.API.Persistence
             {
                 newsContext.AddRange(GetNewsPostV2());
             }
+            if (!newsContext.VideoCategories.Any())
+            {
+                newsContext.AddRange(GetVideoCategories());
+            }
+
             //  if (!newsContext.SourceNews.Any())
             // {
             //     newsContext.AddRange(GetSourceNews());
@@ -310,6 +323,162 @@ namespace News.API.Persistence
                    }
                };
         }
+        private static IEnumerable<VideoCategory> GetVideoCategories()
+        {
+            return new List<VideoCategory>()
+            { new VideoCategory(){
+                  Title = "Chương trình hành động 190 của Tỉnh ủy: Tạo đà bứt phá cho Yên Bái phát triển",
+                  Videos = new List<Video>{
+
+                     new Video(){
+                        Title = "Yên Bái: Đột phá trong công tác thu ngân sách năm 2019",
+                        Avatar = "https://yenbai.gov.vn/noidung/hinhanhvideo/PublishingImages/Tien%20Lap/Nam%202020/vlcsnap-2020-01-08-13h49m25s417.jpg",
+                        LinkVideo = @"
+                       
+	<div id='player'>Tr´nh duy?t không h? tr? xem tr?c tuy?n</div>
+	<script type='text/javascript'>	
+	jwplayer('player').setup({
+		playlist: [{image:'/Asset/live/images/play.jpg',
+		sources: [{
+		file: 'https://video.yenbai.gov.vn:8080/Video/portal/thuvienvideo/thu_ngan_sach_yen bai.mp4',
+		type: 'mp4'
+		}]
+		}],	
+		autostart: 'true',
+		aspectratio: '16:9',
+		skin: 'five',	
+		logo: {
+				 file: '/Asset/live/images/logo.png',
+				 link: 'http://yenbai.gov.vn',
+			  },
+		primary: 'html5',
+		
+		httpstreaming: {
+				levels: [
+					{ bitrate: 150, label: '150k' },
+					{ bitrate: 500, label: '500k', isDefault: true },
+					{ bitrate: 700, label: '700k' },
+					{ bitrate: 1000, label: '1000k' },
+					{ bitrate: 1500, label: '1500k' }
+				]
+		}
+	});
+	</script>
+                        ",
+                     }, new Video(){
+                        Title = "Sự kiện tháng 5",
+                        Avatar = "https://yenbai.gov.vn/noidung/hinhanhvideo/PublishingImages/Tran-Hung/a111.jpg",
+                        LinkVideo = @"
+                    <div id='player'>Trình duyệt không hỗ trợ xem trực tuyến</div>
+	<script type='text/javascript'>	
+	jwplayer('player').setup({
+		playlist: [{image:'/Asset/live/images/play.jpg',
+		sources: [{
+		file: 'https://video.yenbai.gov.vn:8080/Video/Sukientrongthang/sukienthang5_2017.mp4',
+		type: 'mp4'
+		}]
+		}],	
+		autostart: 'true',
+		aspectratio: '16:9',
+		skin: 'five',	
+		logo: {
+				 file: '/Asset/live/images/logo.png',
+				 link: 'http://yenbai.gov.vn',
+			  },
+		primary: 'html5',
+		
+		httpstreaming: {
+				levels: [
+					{ bitrate: 150, label: '150k' },
+					{ bitrate: 500, label: '500k', isDefault: true },
+					{ bitrate: 700, label: '700k' },
+					{ bitrate: 1000, label: '1000k' },
+					{ bitrate: 1500, label: '1500k' }
+				]
+		}
+	});
+	</script>
+                        ",
+                     }
+                  }
+               },
+               new VideoCategory(){
+                  Title = "10 sự kiện và thành tựu nổi bật tỉnh Yên Bái năm 2020",
+                  Videos = new List<Video>{
+
+                     new Video(){
+                        Title = "9 điểm du lịch hấp dẫn nhất Yên Bái",
+                        Avatar = "https://yenbai.gov.vn/noidung/hinhanhvideo/Publish…es/Tien%20Lap/vlcsnap-2020-01-01-09h01m43s671.png",
+                        LinkVideo = @"
+                        <div id='player'>Trình duyệt không hỗ trợ xem trực tuyến</div>
+	<script type='text/javascript'>	
+	jwplayer('player').setup({
+		playlist: [{image:'/Asset/live/images/play.jpg',
+		sources: [{
+		file: 'https://video.yenbai.gov.vn:8080/Video/portal/thuvienvideo/20170103-10thanhtuu-2016.mp4',
+		type: 'mp4'
+		}]
+		}],	
+		autostart: 'true',
+		aspectratio: '16:9',
+		skin: 'five',	
+		logo: {
+				 file: '/Asset/live/images/logo.png',
+				 link: 'http://yenbai.gov.vn',
+			  },
+		primary: 'html5',
+		
+		httpstreaming: {
+				levels: [
+					{ bitrate: 150, label: '150k' },
+					{ bitrate: 500, label: '500k', isDefault: true },
+					{ bitrate: 700, label: '700k' },
+					{ bitrate: 1000, label: '1000k' },
+					{ bitrate: 1500, label: '1500k' }
+				]
+		}
+	});
+	</script>
+                        ",
+                     }, new Video(){
+                        Title = "Chiến thắng Tây Bắc - Cuộc kháng chiến chống thực dân Pháp tiến lên giành thắng lợi quyết định",
+                        Avatar = "https://yenbai.gov.vn/noidung/hinhanhvideo/PublishingImages/Tran-Hung/t6.jpg",
+                        LinkVideo = @"
+                       <div id='player'>Tr´nh duy?t không h? tr? xem tr?c tuy?n</div>
+	<script type='text/javascript'>	
+	jwplayer('player').setup({
+		playlist: [{image:'/Asset/live/images/play.jpg',
+		sources: [{
+		file: 'https://video.yenbai.gov.vn:8080/Video/portal/thuvienvideo/2018_02_14_chu_tich_chuc_tet2018.mp4',
+		type: 'mp4'
+		}]
+		}],	
+		autostart: 'true',
+		aspectratio: '16:9',
+		skin: 'five',	
+		logo: {
+				 file: '/Asset/live/images/logo.png',
+				 link: 'http://yenbai.gov.vn',
+			  },
+		primary: 'html5',
+		
+		httpstreaming: {
+				levels: [
+					{ bitrate: 150, label: '150k' },
+					{ bitrate: 500, label: '500k', isDefault: true },
+					{ bitrate: 700, label: '700k' },
+					{ bitrate: 1000, label: '1000k' },
+					{ bitrate: 1500, label: '1500k' }
+				]
+		}
+	});
+	</script>
+                        ",
+                     }
+                  }
+               }
+            };
+        }
 
         private static IEnumerable<NewsPost> GetNewsPostV2()
         {
@@ -533,6 +702,30 @@ namespace News.API.Persistence
                      }
                   }
                }
+            };
+        }
+        private static IEnumerable<User> GetUsers()
+        {
+            return new List<User>(){
+               new User(){
+                  Username = "admin",
+                  Password = "123"
+               },
+                new User(){
+                  Username = "siteadmin",
+                  Password = "123"
+               }
+            };
+        }
+
+        private static IEnumerable<Rating> GetRatings()
+        {
+
+            return new List<Rating>()
+            {
+               new Rating("Văn phòng UBND",15,2,6,7,1),
+               new Rating("Sở tài nguyên môi trường",18,5,2,1,2),
+               new Rating("Sở ngoại vụ",10,5,2,4,8),
             };
         }
 

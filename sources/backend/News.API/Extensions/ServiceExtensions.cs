@@ -166,7 +166,11 @@ namespace News.API.Extensions
                 typeof(StaticInfoService)).AddScoped(serviceType: typeof(IStaticCategoryService),
                 typeof(StaticCategoryService)).AddScoped(serviceType: typeof(IMenuService),
                 typeof(MenuService)).AddScoped(serviceType: typeof(IPhotoCategoryService),
-                typeof(PhotoCategoryService)).AddScoped(serviceType: typeof(IPhotoService),
+                typeof(PhotoCategoryService)).AddScoped(serviceType: typeof(IUserService),
+                typeof(UserService)).AddScoped(serviceType: typeof(IVideoService),
+                typeof(VideoService)).AddScoped(serviceType: typeof(IVideoCategoryService),
+                typeof(VideoCategoryService)).AddScoped(serviceType: typeof(IRatingService),
+                typeof(RatingService)).AddScoped(serviceType: typeof(IPhotoService),
                 typeof(PhotoService)).AddTransient(serviceType: typeof(ITokenService),
                 typeof(TokenService)).AddScoped<IJwtUtils, JwtUtils>();
         }

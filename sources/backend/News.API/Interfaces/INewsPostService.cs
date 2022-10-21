@@ -30,6 +30,6 @@ namespace News.API.Interfaces
         Task<int> UpdateNewsPost(NewsPost newsPost);
 
         Task<int> DeleteNewsPost(long id);
-        Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, NewsPostTypeUpdate newsPostTypeUpdate);
+        Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

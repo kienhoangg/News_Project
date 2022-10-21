@@ -1,6 +1,6 @@
 namespace Common.Enums
 {
-    public enum NewsPostTypeUpdate
+    public enum MultipleTypeUpdate
     {
         IS_HOT_NEWS,
         STATUS

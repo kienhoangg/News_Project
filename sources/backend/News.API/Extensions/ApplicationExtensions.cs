@@ -7,11 +7,13 @@ namespace News.API.Extensions
     {
         public static void UseInfrastructure(this IApplicationBuilder app)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<JwtMiddleware>();
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseStaticFiles();
-            app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<JwtMiddleware>();
+
+
             app.UseRouting();
 
             // app.UseHttpsRedirection(); //for production only

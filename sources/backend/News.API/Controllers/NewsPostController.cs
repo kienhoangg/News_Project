@@ -7,22 +7,24 @@ using System.Linq.Expressions;
 using AutoMapper;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class NewsPostController : ControllerBase
     {
         private readonly INewsPostService _newsPostService;
 
-        private readonly IFieldNewsService _fieldNewsService;
 
         private readonly ICategoryNewsService _categoryNewsService;
 
@@ -34,15 +36,13 @@ namespace News.API.Controllers
             INewsPostService newsPostService,
             IMapper mapper,
             ISerializeService serializeService,
-            ICategoryNewsService categoryNewsService,
-            IFieldNewsService fieldNewsService
+            ICategoryNewsService categoryNewsService
         )
         {
             _newsPostService = newsPostService;
             _mapper = mapper;
             _serializeService = serializeService;
             _categoryNewsService = categoryNewsService;
-            _fieldNewsService = fieldNewsService;
         }
 
         [HttpPost("filter")]
@@ -60,6 +60,8 @@ namespace News.API.Controllers
                     .GetNewsPostByPaging(newsPostRequest, lstInclude);
             return Ok(result);
         }
+
+       
 
 
 
@@ -293,31 +295,6 @@ namespace News.API.Controllers
             await _newsPostService.DeleteNewsPost(id);
             return NoContent();
         }
-
-        [HttpGet("published/fields")]
-        public async Task<IActionResult> GetNewsPostEachFields()
-        {
-            Expression<Func<FieldNews, object>>[]? lstInclude =
-                new Expression<Func<FieldNews, object>>[] {
-                    (x => x.NewsPosts)
-                };
-            var fields =
-                await _fieldNewsService
-                    .GetFieldNewsByPaging(new FieldNewsRequest()
-                    { PageSize = 5 },
-                    lstInclude);
-            if (fields == null) return NotFound();
-            return Ok(fields.PagedData.Results);
-        }
-
-
-        [HttpPost("published/fieldNews/{fieldNewsId:int}")]
-        public async Task<IActionResult> GetNewsPostCategoryEachFields([Required] int fieldNewsId, [FromBody] NewsPostRequest newsPostRequest)
-        {
-            var result = await _newsPostService.GetNewsPostCategoryEachFields(fieldNewsId, newsPostRequest);
-            return Ok(result);
-        }
     }
-
 }
 

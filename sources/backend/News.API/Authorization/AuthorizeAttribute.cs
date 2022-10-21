@@ -22,13 +22,18 @@ namespace News.API.Authorization
                 return;
 
             // authorization
-            if (Enum.TryParse<RoleCode>(context.HttpContext.Items["Role"].ToString(), out var roleCode))
+            if (context.HttpContext.Items["Role"] != null && Enum.TryParse<RoleCode>(context.HttpContext.Items["Role"].ToString(), out var roleCode))
             {
                 if (roleCode == null || (_roles.Any() && !_roles.Contains(roleCode)))
                 {
                     // not logged in or role not authorized
                     context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
                 }
+            }
+            else
+            {
+                // Invalid token
+                context.Result = new JsonResult(new { message = "Invalid Token" }) { StatusCode = StatusCodes.Status400BadRequest };
             }
 
         }

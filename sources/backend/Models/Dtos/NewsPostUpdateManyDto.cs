@@ -8,6 +8,6 @@ namespace Models.Dtos
     {
         public List<long> NewsPostIds { get; set; }
         public bool? Value { get; set; }
-        public NewsPostTypeUpdate? Field { get; set; }
+        public MultipleTypeUpdate? Field { get; set; }
     }
 }

@@ -35,8 +35,12 @@ namespace News.API.Persistence
         public DbSet<StaticInfo> StaticInfos { get; set; }
         public DbSet<StaticCategory> StaticCategories { get; set; }
         public DbSet<Menu> Menus { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<PhotoCategory> PhotoCategories { get; set; }
+        public DbSet<Video> Videos { get; set; }
+        public DbSet<VideoCategory> VideoCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
