@@ -10,7 +10,7 @@ class PublishedNewsApi {
     getData = (params) => {
         // const url = '/home';
         const { id } = params;
-        let url = `/newsPost/published/${id}`;
+        let url = `/home/published/${id}`;
         return axiosClient.get(url, {});
 
         // var response = datafakePublisedNews.objectExample;
@@ -23,7 +23,7 @@ class PublishedNewsApi {
     }
 
     getFieldsDataListPage() {
-        let url = `/newsPost/published/fields`;
+        let url = `/home/published/fields`;
         return axiosClient.get(url, {});
 
         // var response = datafakePublishedCategoryList;
@@ -32,7 +32,7 @@ class PublishedNewsApi {
 
     getFieldsDataPage(params) {
         const { id, currentPage, todayDate } = params;
-        const url = `/newsPost/published/fieldNews/${id}`;
+        const url = `/home/published/fieldNews/${id}`;
         const body = {
             "CurrentPage": currentPage,
             "PageSize": 6,
