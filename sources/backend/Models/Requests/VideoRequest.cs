@@ -5,6 +5,6 @@ namespace Models.Requests
 {
     public class VideoRequest : FilterBase
     {
-
+        public int? VideoCategoryId { get; set; }
     }
 }

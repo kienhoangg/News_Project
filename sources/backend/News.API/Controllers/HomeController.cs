@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using AutoMapper;
+using AutoMapper.Internal;
+using Common.Enums;
 using Common.Interfaces;
 using Common.Shared.Constants;
 using Contracts.Interfaces;
@@ -64,6 +66,55 @@ namespace News.API.Controllers
             _photoService = photoService;
             _cacheService = cacheService;
             _fieldNewsService = fieldNewsService;
+        }
+
+        [HttpGet("published/{id:int}")]
+        public async Task<IActionResult> GetPublishedNewsById([Required] int id)
+        {
+            var lstInclude =
+                new Expression<Func<NewsPost, object>>[] {
+                    (x => x.SourceNews),
+                    (x => x.CategoryNews)
+                };
+            var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
+            if (newsPost == null) return NotFound("News is not found !");
+            //Update Views of news post
+            await _newsPostService.UpdateManyNewsPostDto(new List<long> { id }, true, MultipleTypeUpdate.VIEWS_COUNT);
+            var categoryParentNews = new CategoryNews();
+            if (newsPost.CategoryNews != null)
+            {
+                var parentId = newsPost.CategoryNews.ParentId;
+                categoryParentNews =
+                   await _categoryNewsService.GetCategoryNews(parentId);
+            }
+            var lstNewsRelatives = new ApiSuccessResult<NewsPostDto>(new NewsPostDto());
+            if (newsPost.CategoryNewsId.HasValue)
+            {
+                lstNewsRelatives =
+                             await _newsPostService
+                                 .GetNewsPostByPaging(new NewsPostRequest()
+                                 {
+                                     PageSize = 8,
+                                     CurrentPage = 1,
+                                     CategoryNewsId = newsPost.CategoryNewsId,
+                                     OrderBy = "Order"
+                                 });
+            }
+
+            var result =
+                new NewsPublishedDetailDto()
+                {
+                    NewsPostDetail = _mapper.Map<NewsPostDto>(newsPost),
+                    CategoryParentNews =
+                        _mapper.Map<CategoryNewsDto>(categoryParentNews),
+                    NewsRelatives =
+                        lstNewsRelatives
+                            .PagedData
+                            .Results
+                            .Where(x => x.Id != id)
+                            .ToList()
+                };
+            return Ok(result);
         }
 
         [HttpGet("documents/master")]

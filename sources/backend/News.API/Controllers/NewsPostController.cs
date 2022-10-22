@@ -61,51 +61,11 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-       
 
 
 
-        [HttpGet("published/{id:int}")]
-        public async Task<IActionResult> GetPublishedNewsById([Required] int id)
-        {
-            var lstInclude =
-                new Expression<Func<NewsPost, object>>[] {
-                    (x => x.SourceNews),
-                    (x => x.CategoryNews)
-                };
-            var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
-            if (newsPost == null) return NotFound("News is not found !");
-            //Update Views of news post
 
 
-            var parentId = newsPost.CategoryNews.ParentId;
-            var categoryParentNews =
-                await _categoryNewsService.GetCategoryNews(parentId);
-
-            var lstNewsRelatives =
-                await _newsPostService
-                    .GetNewsPostByPaging(new NewsPostRequest()
-                    {
-                        PageSize = 8,
-                        CurrentPage = 1,
-                        CategoryNewsId = newsPost.CategoryNewsId,
-                        OrderBy = "Order"
-                    });
-            var result =
-                new NewsPublishedDetailDto()
-                {
-                    NewsPostDetail = _mapper.Map<NewsPostDto>(newsPost),
-                    CategoryParentNews =
-                        _mapper.Map<CategoryNewsDto>(categoryParentNews),
-                    NewsRelatives =
-                        lstNewsRelatives
-                            .PagedData
-                            .Results
-                            .Where(x => x.Id != id)
-                            .ToList()
-                };
-            return Ok(result);
-        }
 
         [HttpPost("file")]
         public async Task<IActionResult>

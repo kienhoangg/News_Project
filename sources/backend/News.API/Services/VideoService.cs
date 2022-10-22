@@ -52,6 +52,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(videoRequest.Keyword)));
             }
+            if (videoRequest.VideoCategoryId.HasValue)
+            {
+                query = query.Where(x => x.VideoCategoryId == videoRequest.VideoCategoryId);
+            }
             PagedResult<Video>? sourcePaging = await query.PaginatedListAsync(videoRequest.CurrentPage
                                                                                              ?? 1, videoRequest.PageSize ?? CommonConstants.PAGE_SIZE, videoRequest.OrderBy, videoRequest.Direction);
             var lstDto = _mapper.Map<List<VideoDto>>(sourcePaging.Results);

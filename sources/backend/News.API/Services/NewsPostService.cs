@@ -59,6 +59,144 @@ namespace News.API.Services
             return await GetByIdAsync(id, includeProperties);
         }
 
+        public async Task<ApiSuccessResult<NewsPost>> GetNewsPostNormalByPaging(NewsPostRequest newsPostRequest, params Expression<Func<NewsPost, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
+            if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
+            {
+                query = query.Where((x => x.Title.Contains(newsPostRequest.Keyword)));
+            }
+            if (newsPostRequest.CategoryNewsId.HasValue)
+            {
+                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
+            }
+
+            if (newsPostRequest.CategoryNewsId.HasValue)
+            {
+                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
+            }
+
+            if (newsPostRequest.FieldNewsId.HasValue)
+            {
+                query = query.Where(x => x.FieldNewsId == newsPostRequest.FieldNewsId);
+            }
+            if (newsPostRequest.CollaboratorId.HasValue)
+            {
+                query = query.Where(x => x.CollaboratorId == newsPostRequest.CollaboratorId);
+            }
+            if (newsPostRequest.IsHotNews.HasValue)
+            {
+                if (newsPostRequest.IsHotNews.Value)
+                {
+                    query = query.Where(x => x.IsHotNews);
+                }
+                else
+                {
+                    query = query.Where(x => !x.IsHotNews);
+                }
+            }
+            if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
+            {
+                var fromDate = newsPostRequest.FromDate.Value;
+                var yesterday = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day);
+                yesterday = yesterday.AddTicks(-1);
+
+                var todate = newsPostRequest.TodayDate.Value;
+                var tomorrow = new DateTime(todate.Year, todate.Month, todate.Day);
+                tomorrow = tomorrow.AddDays(1);
+                tomorrow = tomorrow.AddTicks(-1);
+
+
+                query = query.Where(x => x.PublishedDate < tomorrow && x.PublishedDate > yesterday);
+            }
+            if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
+            {
+                var today = newsPostRequest.FromDate.Value;
+                var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
+                yesterday1 = yesterday1.AddTicks(-1);
+
+                query = query.Where(x => x.PublishedDate > yesterday1);
+            }
+            if (newsPostRequest.TodayDate.HasValue && !newsPostRequest.FromDate.HasValue)
+            {
+                var today = newsPostRequest.TodayDate.Value;
+                var tomorrow = new DateTime(today.Year, today.Month, today.Day);
+                tomorrow = tomorrow.AddDays(1);
+                tomorrow = tomorrow.AddTicks(-1);
+
+                query = query.Where(x => x.PublishedDate < tomorrow);
+            }
+            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
+            {
+                query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
+            }
+            PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
+                                                                                              ?? 0, newsPostRequest.PageSize ?? 0, newsPostRequest.OrderBy, newsPostRequest.Direction);
+            ApiSuccessResult<NewsPost>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task<ApiSuccessResult<NewsPostWithoutContentDto>> GetNewsPostByPagingWithoutContent(NewsPostRequest newsPostRequest, params Expression<Func<NewsPost, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
+            if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
+            {
+                query = query.Where((x => x.Title.Contains(newsPostRequest.Keyword)));
+            }
+            if (newsPostRequest.CategoryNewsId.HasValue)
+            {
+                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
+            }
+            if (newsPostRequest.CategoryNewsId.HasValue)
+            {
+                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
+            }
+
+            if (newsPostRequest.FieldNewsId.HasValue)
+            {
+                query = query.Where(x => x.FieldNewsId == newsPostRequest.FieldNewsId);
+            }
+            if (newsPostRequest.CollaboratorId.HasValue)
+            {
+                query = query.Where(x => x.CollaboratorId == newsPostRequest.CollaboratorId);
+            }
+            if (newsPostRequest.IsHotNews.HasValue)
+            {
+                if (newsPostRequest.IsHotNews.Value)
+                {
+                    query = query.Where(x => x.IsHotNews);
+                }
+                else
+                {
+                    query = query.Where(x => !x.IsHotNews);
+                }
+            }
+            if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
+            {
+                query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&
+                 x.PublishedDate >= newsPostRequest.ToDate.Value);
+            }
+
+            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
+            {
+                query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
+            }
+            PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
+                                                                                              ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE, newsPostRequest.OrderBy, newsPostRequest.Direction);
+            var lstDto = _mapper.Map<List<NewsPostWithoutContentDto>>(sourcePaging.Results);
+            var paginationSet = new PagedResult<NewsPostWithoutContentDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
+            ApiSuccessResult<NewsPostWithoutContentDto>? result = new(paginationSet);
+            return result;
+        }
+
         public async Task<ApiSuccessResult<NewsPostDto>> GetNewsPostByPaging(NewsPostRequest newsPostRequest, params Expression<Func<NewsPost, object>>[] includeProperties)
         {
             var query = FindAll();
@@ -142,62 +280,7 @@ namespace News.API.Services
             return result;
         }
 
-        public async Task<ApiSuccessResult<NewsPostWithoutContentDto>> GetNewsPostByPagingWithoutContent(NewsPostRequest newsPostRequest, params Expression<Func<NewsPost, object>>[] includeProperties)
-        {
-            var query = FindAll();
-            if (includeProperties.ToList().Count > 0)
-            {
-                query = FindAll(includeProperties: includeProperties);
-            }
-            if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
-            {
-                query = query.Where((x => x.Title.Contains(newsPostRequest.Keyword)));
-            }
-            if (newsPostRequest.CategoryNewsId.HasValue)
-            {
-                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
-            }
-            if (newsPostRequest.CategoryNewsId.HasValue)
-            {
-                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
-            }
 
-            if (newsPostRequest.FieldNewsId.HasValue)
-            {
-                query = query.Where(x => x.FieldNewsId == newsPostRequest.FieldNewsId);
-            }
-            if (newsPostRequest.CollaboratorId.HasValue)
-            {
-                query = query.Where(x => x.CollaboratorId == newsPostRequest.CollaboratorId);
-            }
-            if (newsPostRequest.IsHotNews.HasValue)
-            {
-                if (newsPostRequest.IsHotNews.Value)
-                {
-                    query = query.Where(x => x.IsHotNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsHotNews);
-                }
-            }
-            if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
-            {
-                query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&
-                 x.PublishedDate >= newsPostRequest.ToDate.Value);
-            }
-
-            if (newsPostRequest.ListNewsPostId != null && newsPostRequest.ListNewsPostId.Count > 0)
-            {
-                query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
-            }
-            PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
-                                                                                              ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE, newsPostRequest.OrderBy, newsPostRequest.Direction);
-            var lstDto = _mapper.Map<List<NewsPostWithoutContentDto>>(sourcePaging.Results);
-            var paginationSet = new PagedResult<NewsPostWithoutContentDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
-            ApiSuccessResult<NewsPostWithoutContentDto>? result = new(paginationSet);
-            return result;
-        }
 
         public async Task<int> UpdateNewsPost(NewsPost product)
         {
@@ -206,17 +289,32 @@ namespace News.API.Services
 
         public async Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, MultipleTypeUpdate multipleTypeUpdate)
         {
-            var lstNewsPostDto = (await GetNewsPostByPaging(new NewsPostRequest()
+
+            var lstNewsPostDto = (await GetNewsPostNormalByPaging(new NewsPostRequest()
             {
                 ListNewsPostId = lstNewsPostId
             })).PagedData.Results.ToList();
-            var action = new Action<NewsPostDto>(x => x.IsHotNews = value);
-            if (multipleTypeUpdate == MultipleTypeUpdate.STATUS)
+            Action<NewsPost> action = null;
+            switch (multipleTypeUpdate)
             {
-                action = new Action<NewsPostDto>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                case MultipleTypeUpdate.IS_HOT_NEWS:
+                    action = new Action<NewsPost>(x => x.IsHotNews = value);
+                    break;
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<NewsPost>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                case MultipleTypeUpdate.VIEWS_COUNT:
+                    action = new Action<NewsPost>(x => x.Views += 1);
+                    break;
+                default:
+                    break;
             }
-            lstNewsPostDto.ForEach(action);
-            await UpdateListAsync(_mapper.Map<List<NewsPost>>(lstNewsPostDto));
+            if (action != null)
+            {
+                lstNewsPostDto.ForEach(action);
+                await UpdateListAsync(lstNewsPostDto);
+            }
+
         }
     }
 }

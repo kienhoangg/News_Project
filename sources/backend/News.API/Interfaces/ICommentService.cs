@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -9,14 +10,17 @@ namespace News.API.Interfaces
     {
         Task<ApiSuccessResult<CommentDto>>
         GetCommentByPaging(
-            CommentRequest collaboratorRequest
+
+                CommentRequest commentRequest,
+                params Expression<Func<Comment, object>>[] includeProperties
+
         );
 
-        Task<   Comment> GetComment(long id);
+        Task<Comment> GetComment(long id);
 
-        Task CreateComment(Comment collaborator);
+        Task CreateComment(Comment comment);
 
-        Task UpdateComment(Comment collaborator);
+        Task UpdateComment(Comment comment);
 
         Task DeleteComment(long id);
     }
