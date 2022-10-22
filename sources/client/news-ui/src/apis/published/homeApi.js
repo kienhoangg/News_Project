@@ -1,5 +1,8 @@
 import axiosClient from "apis/axiosClient";
 import datafakeHome, { datafakeEvaluateList, datafakeIntroduce, datafakeLayoutData, datafakeMenuPageData } from "apis/datafake/datafakeHome";
+import commonFunc from "common/commonFunc";
+import commonLocalStorage from "common/commonLocalStorage";
+import { constantLocalStorageKey } from "common/constant";
 
 class HomeApi {
     getData = (params) => {
@@ -55,6 +58,20 @@ class HomeApi {
      */
     convertDataApiToDataUI(dataApi) {
 
+    }
+
+    /**
+     * Api tracking số lượng visitor online
+     */
+    trackingVisitorOnline() {
+        let clientId = commonLocalStorage.getValue(constantLocalStorageKey.ClientID);
+        if (clientId == null || clientId == undefined) {
+            clientId = commonFunc.newGuid();
+            commonLocalStorage.setValue(constantLocalStorageKey.ClientID, clientId);
+        }
+        const url = `/home/visitor/tracking?ClientId=${clientId}`;
+
+        return axiosClient.post(url);
     }
 
 }

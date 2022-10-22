@@ -54,9 +54,9 @@ function ConnectionSection(props) {
                     </div>
                     <div className={cx('connection-list')}>
                         {Array.isArray(fakeConnectionWebsite) && (
-                            <Marquee duration={20000} background='' height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
-                                {fakeConnectionWebsite.map((item) => {
-                                    return <img src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
+                            <Marquee duration={20000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                                {fakeConnectionWebsite.map((item, index) => {
+                                    return <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
                                 })}
                             </Marquee>
                         )}
@@ -70,10 +70,11 @@ function ConnectionSection(props) {
                         <div className={cx('connection-divider')}></div>
                     </div>
                     <div className={cx('connection-list')}>
-                        <Marquee duration={20000} background='' height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
-                            {fakeConnectionConcern.map((item) => {
-                                return <img src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
-                            })}
+                        <Marquee duration={20000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                            {fakeConnectionConcern &&
+                                fakeConnectionConcern.map((item, index) => {
+                                    return <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
+                                })}
                         </Marquee>
                     </div>
                 </div>
