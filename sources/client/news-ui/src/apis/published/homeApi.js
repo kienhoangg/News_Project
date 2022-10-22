@@ -1,5 +1,5 @@
 import axiosClient from "apis/axiosClient";
-import datafakeHome, { datafakeIntroduce, datafakeLayoutData, datafakeMenuPageData } from "apis/datafake/datafakeHome";
+import datafakeHome, { datafakeEvaluateList, datafakeIntroduce, datafakeLayoutData, datafakeMenuPageData } from "apis/datafake/datafakeHome";
 
 class HomeApi {
     getData = (params) => {
@@ -36,6 +36,16 @@ class HomeApi {
         // return axiosClient.get(url, {});
 
         var response = datafakeMenuPageData;
+        return response;
+    };
+
+    getEvaluateListData = (params) => {
+        // const url = '/home';
+        // return axiosClient.get(url, {});
+
+        var response = {
+            Data: datafakeEvaluateList
+        };
         return response;
     };
 

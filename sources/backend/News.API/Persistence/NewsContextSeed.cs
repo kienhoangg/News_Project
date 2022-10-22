@@ -212,7 +212,7 @@ namespace News.API.Persistence
             {
                new Menu(){
                   Title = "Trang chủ",
-                  Url = "/page/6",
+                  Url = "/",
                   ParentId = 0
                },new Menu(){
                   Title = "Giới thiệu",
