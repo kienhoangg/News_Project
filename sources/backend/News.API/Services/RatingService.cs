@@ -53,7 +53,7 @@ namespace News.API.Services
                 query = query.Where((x => x.Title.Contains(ratingRequest.Keyword)));
             }
             PagedResult<Rating>? sourcePaging = await query.PaginatedListAsync(ratingRequest.CurrentPage
-                                                                                             ?? 1, ratingRequest.PageSize ?? CommonConstants.PAGE_SIZE, ratingRequest.OrderBy, ratingRequest.Direction);
+                                                                                             ?? 0, ratingRequest.PageSize ?? 0, ratingRequest.OrderBy, ratingRequest.Direction);
             var lstDto = _mapper.Map<List<RatingDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<RatingDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<RatingDto>? result = new(paginationSet);

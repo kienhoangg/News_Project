@@ -4,6 +4,7 @@ namespace Models.Entities
 {
     public class Rating : EntityAuditBase<int>
     {
+        public Rating() { }
         public Rating(string title, int satisfiedCount, int happyCount, int okCount, int notSatisfiedCount, int unHappyCount)
         {
             Title = title;

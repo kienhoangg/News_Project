@@ -48,23 +48,26 @@ namespace News.API.Controllers
         {
             Rating? rating = await _ratingService.GetRating(id);
             if (rating == null) return NotFound();
-
-            var result = _mapper.Map<RatingDto>(rating);
-            return Ok(result);
+            return Ok(rating);
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
         UpdateRatingDto(
             [Required] int id,
-            [FromBody] RatingDto ratingDto
+            [FromBody] Rating ratingUpdated
         )
         {
-            Rating? Rating = await _ratingService.GetRating(id);
-            if (Rating == null) return NotFound();
-            var updatedRating = _mapper.Map(ratingDto, Rating);
-            await _ratingService.UpdateRating(updatedRating);
-            var result = _mapper.Map<RatingDto>(updatedRating);
+            Rating? rating = await _ratingService.GetRating(id);
+            if (rating == null) return NotFound();
+            rating.SatisfiedCount += ratingUpdated.SatisfiedCount;
+            rating.NotSatisfiedCount += ratingUpdated.NotSatisfiedCount;
+            rating.OkCount += ratingUpdated.OkCount;
+            rating.HappyCount += ratingUpdated.HappyCount;
+            rating.UnHappyCount += ratingUpdated.UnHappyCount;
+            rating.TotalRating += 1;
+            await _ratingService.UpdateRating(rating);
+            var result = _mapper.Map<RatingDto>(rating);
             return Ok(result);
         }
 
