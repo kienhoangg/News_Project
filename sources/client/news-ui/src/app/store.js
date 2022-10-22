@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice';
-// import homeReducer from 'features/Home/homeSlice';
+import homeReducer from 'features/Home/homeSlice';
 // import adminMenuReducer from 'features/Admin/adminMenuSlice';
 
 const rootReducer = {
   user: userReducer,
-  // home: homeReducer,
+  home: homeReducer,
   // adminMenu: adminMenuReducer
 }
 
