@@ -1,5 +1,8 @@
 import axiosClient from "apis/axiosClient";
-import datafakeHome, { datafakeIntroduce, datafakeLayoutData, datafakeMenuPageData } from "apis/datafake/datafakeHome";
+import datafakeHome, { datafakeEvaluateList, datafakeIntroduce, datafakeLayoutData, datafakeMenuPageData } from "apis/datafake/datafakeHome";
+import commonFunc from "common/commonFunc";
+import commonLocalStorage from "common/commonLocalStorage";
+import { constantLocalStorageKey } from "common/constant";
 
 class HomeApi {
     getData = (params) => {
@@ -39,12 +42,36 @@ class HomeApi {
         return response;
     };
 
+    getEvaluateListData = (params) => {
+        // const url = '/home';
+        // return axiosClient.get(url, {});
+
+        var response = {
+            Data: datafakeEvaluateList
+        };
+        return response;
+    };
+
     /**
      * Convert dữ liệu lấy từ API sang dữ liệu hiển thị UI
      * @param {object} dataApi Dữ liệu lấy từ API
      */
     convertDataApiToDataUI(dataApi) {
 
+    }
+
+    /**
+     * Api tracking số lượng visitor online
+     */
+    trackingVisitorOnline() {
+        let clientId = commonLocalStorage.getValue(constantLocalStorageKey.ClientID);
+        if (clientId == null || clientId == undefined) {
+            clientId = commonFunc.newGuid();
+            commonLocalStorage.setValue(constantLocalStorageKey.ClientID, clientId);
+        }
+        const url = `/home/visitor/tracking?ClientId=${clientId}`;
+
+        return axiosClient.post(url);
     }
 
 }

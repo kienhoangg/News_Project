@@ -57,8 +57,6 @@ function MediaBlogSectionBanner(props) {
             <Carousel showStatus={false} showThumbs={false} autoPlay={true} interval={2000} infiniteLoop={true}>
                 {Array.isArray(AlbumImages) &&
                     AlbumImages.map((image) => {
-                        console.log("image.ImagePath.split(';;')[0] ", image.ImagePath.split(';;')[0]);
-
                         var urlImage = image.ImagePath ? image.ImagePath.split(';;')[0] : '';
 
                         return (

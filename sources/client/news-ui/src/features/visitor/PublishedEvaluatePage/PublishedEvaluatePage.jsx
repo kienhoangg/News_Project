@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './PublishedEvaluatePage.module.scss';
 import classNames from 'classnames/bind';
 import { Button, Modal, Radio, Row, Space } from 'antd';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
+import homeApi from 'apis/published/homeApi';
 
 const cx = classNames.bind(styles);
 
@@ -51,6 +52,8 @@ function PublishedEvaluatePage(props) {
     //     console.log('radio checked', e.target.value);
     //     setValue(e.target.value);
     // };
+    const [evaluateData, setEvaluateData] = useState();
+
     const [openModelResult, setOpenModelResult] = useState(false);
     const [dataChartResult, setDataChartResult] = useState([]);
 
@@ -102,6 +105,19 @@ function PublishedEvaluatePage(props) {
         setOpenModelResult(true);
     }
 
+    useEffect(() => {
+        const fetchHome = async () => {
+            try {
+                const params = {};
+                const response = await homeApi.getEvaluateListData(params);
+                setEvaluateData(response?.Data);
+            } catch (error) {
+                console.log('Failed to fetch list: ', error);
+            }
+        };
+        fetchHome();
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             <ScrollToTop />
@@ -119,8 +135,8 @@ function PublishedEvaluatePage(props) {
             <Row className={cx('title')}>
                 <h3>ĐÁNH GIÁ SỰ PHỤC VỤ CỦA CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC</h3>
             </Row>
-            {Array.isArray(listQuestions) &&
-                listQuestions.map((item, index) => {
+            {Array.isArray(evaluateData) &&
+                evaluateData.map((item, index) => {
                     const component = (
                         <Row className={cx('question')} key={index}>
                             <div className={cx('tutorial-title')}>

@@ -3,12 +3,45 @@ import PropTypes from 'prop-types';
 import styles from './ConnectionSection.module.scss';
 import classNames from 'classnames/bind';
 import Images from 'common/images';
+import imageHelper from 'helpers/imageHelper';
+import Marquee from 'react-easy-marquee';
 
 const cx = classNames.bind(styles);
 
 ConnectionSection.propTypes = {};
 
 ConnectionSection.defaultProps = {};
+
+const fakeConnectionWebsite = [
+    {
+        Id: 1,
+        ImageUrl: '/content/images/connect1.png',
+        Title: 'Trường đào tạo đại học',
+    },
+    {
+        Id: 2,
+        ImageUrl: '/content/images/connect2.png',
+        Title: 'Trường đào tạo đại học',
+    },
+    {
+        Id: 3,
+        ImageUrl: '/content/images/connect3.png',
+        Title: 'Trường đào tạo đại học',
+    },
+    {
+        Id: 4,
+        ImageUrl: '/content/images/connect4.png',
+        Title: 'Trường đào tạo đại học',
+    },
+];
+
+const fakeConnectionConcern = [
+    {
+        Id: 1,
+        ImageUrl: '/content/images/connect5.png',
+        Title: 'Trường đào tạo đại học',
+    },
+];
 
 function ConnectionSection(props) {
     return (
@@ -20,10 +53,13 @@ function ConnectionSection(props) {
                         <div className={cx('connection-divider')}></div>
                     </div>
                     <div className={cx('connection-list')}>
-                        <img style={{ width: 'calc(100% / 5)' }} src={Images.CONNECT1} alt='' />
-                        <img style={{ width: 'calc(100% / 5)' }} src={Images.CONNECT2} alt='' />
-                        <img style={{ width: 'calc(100% / 5)' }} src={Images.CONNECT3} alt='' />
-                        <img style={{ width: 'calc(100% / 5)' }} src={Images.CONNECT4} alt='' />
+                        {Array.isArray(fakeConnectionWebsite) && (
+                            <Marquee duration={20000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                                {fakeConnectionWebsite.map((item, index) => {
+                                    return <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
+                                })}
+                            </Marquee>
+                        )}
                     </div>
                 </div>
             </div>
@@ -34,7 +70,12 @@ function ConnectionSection(props) {
                         <div className={cx('connection-divider')}></div>
                     </div>
                     <div className={cx('connection-list')}>
-                        <img src={Images.CONNECT5} alt='' style={{ width: '100%' }} />
+                        <Marquee duration={20000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                            {fakeConnectionConcern &&
+                                fakeConnectionConcern.map((item, index) => {
+                                    return <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
+                                })}
+                        </Marquee>
                     </div>
                 </div>
             </div>
