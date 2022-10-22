@@ -9,11 +9,15 @@ import Images from 'common/images';
 
 const cx = classNames.bind(styles);
 
-FooterSection.propTypes = {};
+FooterSection.propTypes = {
+    visitorOnline: PropTypes.number,
+};
 
 FooterSection.defaultProps = {};
 
 function FooterSection(props) {
+    const { visitorOnline } = props;
+
     return (
         <div className={cx('wrapper')}>
             <Row gutter={64}>
@@ -62,6 +66,12 @@ function FooterSection(props) {
                 <Link to={'/'}>
                     <img style={{ width: 32, marginRight: 4 }} src={Images.iconIn} alt='' />
                 </Link>
+            </div>
+            <div className={cx('visitor-access')}>
+                <div className={cx('visitor-item')}>
+                    <span className={cx('visitor-item-label')}>NGƯỜI ONLINE</span>
+                    <span className={cx('visitor-item-value')}>{visitorOnline}</span>
+                </div>
             </div>
         </div>
     );

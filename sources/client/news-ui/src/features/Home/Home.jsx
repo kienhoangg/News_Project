@@ -12,12 +12,16 @@ import FooterSection from './components/FooterSection/FooterSection';
 import Images from 'common/images';
 import { useEffect, useRef, useState } from 'react';
 import homeApi from 'apis/published/homeApi';
+import { useDispatch } from 'react-redux';
+import { updateView } from './homeSlice';
 
 const cx = classNames.bind(styles);
 
 function Home(props) {
     const [homeData, setHomeData] = useState();
     const [newsPreview, setNewsPreview] = useState(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchHome = async () => {
@@ -26,6 +30,10 @@ function Home(props) {
                 const response = await homeApi.getData(params);
                 setHomeData(response);
                 setNewsPreview(response?.Data?.NewsHots[0]);
+
+                const action = updateView(response?.Data?.VisitorTracking);
+                // const action = updateView(50);
+                dispatch(action);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }

@@ -5,6 +5,7 @@ import Banner from 'layouts/components/Banner/Banner';
 import Navbar from 'layouts/components/Navbar/Navbar';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 // import { useSelector } from 'react-redux';
 import styles from './DefaultLayout.module.scss';
 // import { addView } from 'features/Home/homeSlice';
@@ -19,6 +20,8 @@ DefaultLayout.defaultProps = {};
 
 function DefaultLayout({ children }) {
     const [layoutData, setLayoutData] = useState();
+
+    const homeRedux = useSelector((state) => state.home);
 
     useEffect(() => {
         const fetchHome = async () => {
@@ -49,7 +52,7 @@ function DefaultLayout({ children }) {
                 <Banner />
                 <Navbar menuDatas={layoutData} />
                 <div className={cx('content')}>{children}</div>
-                <FooterSection />
+                <FooterSection visitorOnline={homeRedux?.view} />
             </div>
         </div>
     );

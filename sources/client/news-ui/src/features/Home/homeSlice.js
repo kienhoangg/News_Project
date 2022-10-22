@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialHome = {
-    view: 1000
+    view: 0
 }
 
 const home = createSlice({
