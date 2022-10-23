@@ -20,7 +20,7 @@ const routes = {
 
   publishedQuestions: '/questions',
   publishedPhotos: '/media/photos', //QueryPrams: ?albumid=1
-  publishedVideos: '/media/videos',
+  publishedVideos: '/media/videos', //QueryPrams: ?videoid=1
   publishedQuestionsDetail: '/questions/:id',
 
   search: '/search',
