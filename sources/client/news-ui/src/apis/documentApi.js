@@ -7,10 +7,17 @@ class DocumentApi {
     const url = '/Documents/filter';
     return axiosClient.post(url, body);
   };
+
   insertDocument = (body) => {
     const url = '/Documents';
     return axiosClient.post(url, body);
   };
+
+  updatStatusDocument = (body) => {
+    const url = '/Documents';
+    return axiosClient.put(url, body);
+  };
+
   deleteDocument = (id) => {
     const url = `/Documents/${id}`;
     return axiosClient.delete(url);
@@ -24,6 +31,10 @@ class DocumentApi {
   insertCategoryDocument = (body) => {
     const url = '/DocumentTypes';
     return axiosClient.post(url, body);
+  };
+  updatStatusCategoryDocument = (body) => {
+    const url = '/DocumentTypes';
+    return axiosClient.put(url, body);
   };
   deleteCategoryDocument = (id) => {
     const url = `/DocumentTypes/${id}`;
@@ -39,6 +50,10 @@ class DocumentApi {
     const url = '/DocumentDepartments';
     return axiosClient.post(url, body);
   };
+  updatStatusSourceDocument = (body) => {
+    const url = '/DocumentDepartments';
+    return axiosClient.put(url, body);
+  };
   deleteSourceDocument = (id) => {
     const url = `/DocumentDepartments/${id}`;
     return axiosClient.delete(url);
@@ -53,6 +68,10 @@ class DocumentApi {
     const url = '/documentfields';
     return axiosClient.post(url, body);
   };
+  updatStatusFieldDocument = (body) => {
+    const url = '/documentfields';
+    return axiosClient.put(url, body);
+  };
   deleteFieldDocument = (id) => {
     const url = `/documentfields/${id}`;
     return axiosClient.delete(url);
@@ -66,6 +85,10 @@ class DocumentApi {
   insertSingerDocument = (body) => {
     const url = '/documentsignpersons';
     return axiosClient.post(url, body);
+  };
+  updatStatusSingerDocument = (body) => {
+    const url = '/documentsignpersons';
+    return axiosClient.put(url, body);
   };
   deleteSingerDocument = (id) => {
     const url = `/documentsignpersons/${id}`;

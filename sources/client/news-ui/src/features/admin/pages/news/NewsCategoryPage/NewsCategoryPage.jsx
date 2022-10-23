@@ -10,6 +10,7 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import { Option } from 'antd/lib/mentions';
 import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -46,10 +47,10 @@ function NewsCategoryPage(props) {
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
   useEffect(() => {
-    if (isFirstCall.current) {
-      isFirstCall.current = false;
-      return;
-    }
+    // if (isFirstCall.current) {
+    //   isFirstCall.current = false;
+    //   return;
+    // }
     fetchCategoryList();
   }, [objFilter]);
 
@@ -208,6 +209,20 @@ function NewsCategoryPage(props) {
     }
   };
 
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await newsApi.updateStatusCategoryNews({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   const renderOption = (
     <Select
       placeholder='Chọn cấp cha'
@@ -281,6 +296,7 @@ function NewsCategoryPage(props) {
           onClickShowRowDetail={handleOnClickShowRowDetail}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
 

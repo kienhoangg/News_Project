@@ -11,17 +11,13 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import NewsHotTableDataPopUp from './NewsHotTableDataPopUp/NewsHotTableDataPopUp';
 import NewsHotPageSearchPopup from './NewsHotPageSearchPopUp/NewsHotPageSearchPopUp';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
 NewsHotPage.propTypes = {};
 
 NewsHotPage.defaultProps = {};
-
-const NewsPostTypeUpdate = {
-  IS_HOT_NEWS: 0,
-  STATUS: 1,
-};
 
 function NewsHotPage(props) {
   const [newsData, setNewsData] = useState({});
@@ -47,10 +43,10 @@ function NewsHotPage(props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [changeRowKey, setChangeRowKey] = useState();
   useEffect(() => {
-    if (isFirstCall.current) {
-      isFirstCall.current = false;
-      return;
-    }
+    // if (isFirstCall.current) {
+    //   isFirstCall.current = false;
+    //   return;
+    // }
     fetchProductList();
   }, [objFilter]);
 
@@ -150,10 +146,10 @@ function NewsHotPage(props) {
           NotificationType.ERROR
         );
       }
-      await newsApi.updateHotNews({
+      await newsApi.updatNews({
         NewsPostIds: changeRowKey,
         Value: true,
-        Field: NewsPostTypeUpdate.IS_HOT_NEWS,
+        Field: TypeUpdate.IS_HOT_NEWS,
       });
       fetchProductListPopUp();
     } catch (error) {
@@ -175,6 +171,20 @@ function NewsHotPage(props) {
     } else {
       isChangePopUpNew.current = true;
       setObjFilterPopUp({ ...objFilterPopUp, keyword: textSearch });
+    }
+  };
+
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await newsApi.updatNews({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchProductList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -216,6 +226,7 @@ function NewsHotPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

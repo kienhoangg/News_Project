@@ -8,6 +8,7 @@ import styles from './NewsSourcePage.module.scss';
 import NewsSourcePageSearch from './NewsSourcePageSearch/NewsSourcePageSearch';
 import NewsSourceTableData from './NewsSourceTableData/NewsSourceTableData';
 import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -37,10 +38,10 @@ function NewsSourcePage(props) {
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
   useEffect(() => {
-    if (isFirstCall.current) {
-      isFirstCall.current = false;
-      return;
-    }
+    // if (isFirstCall.current) {
+    //   isFirstCall.current = false;
+    //   return;
+    // }
     fetchProductList();
   }, [objFilter]);
 
@@ -121,6 +122,20 @@ function NewsSourcePage(props) {
     }
   };
 
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await newsApi.updateStatusSourceNew({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchProductList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   return (
     <div className={cx('wrapper')}>
       <Modal
@@ -179,6 +194,7 @@ function NewsSourcePage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

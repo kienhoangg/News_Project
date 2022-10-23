@@ -138,7 +138,7 @@ function NewsListMenuSearch(props) {
   };
 
   const handleStatus = (value) => {
-    // setObjFilterNews({ ...objFilterNews, statusNews: value });
+    setObjFilterNews({ ...objFilterNews, status: value });
   };
 
   return (
@@ -183,7 +183,7 @@ function NewsListMenuSearch(props) {
             onChange={handleStatus}
           >
             <Option value={1}>Đã duyệt</Option>
-            <Option value={2}>Chưa được duyệt</Option>
+            <Option value={0}>Chưa được duyệt</Option>
           </Select>
         </Col>
         <Col span={5}>
