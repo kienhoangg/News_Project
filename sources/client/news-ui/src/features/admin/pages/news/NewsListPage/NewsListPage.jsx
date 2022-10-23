@@ -110,10 +110,7 @@ function NewsListPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      if (error?.response?.data?.message === 'Invalid Token') {
-        openNotification('Hết phiên đăng nhập', '', NotificationType.ERROR);
-        navigate(routes.login);
-      }
+      openNotification('Lấy danh sách thất bại', '', NotificationType.ERROR);
     }
   };
 

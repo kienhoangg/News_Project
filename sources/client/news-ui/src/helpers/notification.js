@@ -18,12 +18,14 @@ export const openNotification = (
   message,
   description = '',
   typeNotification = NotificationType.SUCCESS,
-  placement = 'top'
+  placement = 'top',
+  duration = 1000
 ) => {
   const body = {
     message,
     description,
     placement,
+    duration,
   };
   notificationCustom[typeNotification](body);
 };
