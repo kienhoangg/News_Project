@@ -42,14 +42,20 @@ class HomeApi {
         return response;
     };
 
-    getEvaluateListData = (params) => {
-        // const url = '/home';
-        // return axiosClient.get(url, {});
+    getRateListData = (params) => {
+        const url = '/ratings/filter';
+        return axiosClient.post(url, {});
+    };
 
-        var response = {
-            Data: datafakeEvaluateList
-        };
-        return response;
+    getRateReport = (Id) => {
+        const url = `/ratings/${Id}`;
+        return axiosClient.get(url);
+    };
+
+    submitRating = (params) => {
+        const url = `/ratings/${params.Id}`;
+        const body = params;
+        return axiosClient.put(url, body);
     };
 
     /**

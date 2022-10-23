@@ -17,21 +17,25 @@ const fakeConnectionWebsite = [
         Id: 1,
         ImageUrl: '/content/images/connect1.png',
         Title: 'Trường đào tạo đại học',
+        Link: 'https://google.com',
     },
     {
         Id: 2,
         ImageUrl: '/content/images/connect2.png',
         Title: 'Trường đào tạo đại học',
+        Link: 'https://google.com',
     },
     {
         Id: 3,
         ImageUrl: '/content/images/connect3.png',
         Title: 'Trường đào tạo đại học',
+        Link: 'https://google.com',
     },
     {
         Id: 4,
         ImageUrl: '/content/images/connect4.png',
         Title: 'Trường đào tạo đại học',
+        Link: 'https://google.com',
     },
 ];
 
@@ -40,6 +44,7 @@ const fakeConnectionConcern = [
         Id: 1,
         ImageUrl: '/content/images/connect5.png',
         Title: 'Trường đào tạo đại học',
+        Link: 'https://google.com',
     },
 ];
 
@@ -56,7 +61,11 @@ function ConnectionSection(props) {
                         {Array.isArray(fakeConnectionWebsite) && (
                             <Marquee duration={20000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
                                 {fakeConnectionWebsite.map((item, index) => {
-                                    return <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
+                                    return (
+                                        <a href={item?.Link}>
+                                            <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />
+                                        </a>
+                                    );
                                 })}
                             </Marquee>
                         )}
@@ -73,7 +82,11 @@ function ConnectionSection(props) {
                         <Marquee duration={20000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
                             {fakeConnectionConcern &&
                                 fakeConnectionConcern.map((item, index) => {
-                                    return <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />;
+                                    return (
+                                        <a href={item?.Link}>
+                                            <img key={index} src={imageHelper.getLinkImageUrl(item.ImageUrl)} alt={item.Title} style={{ margin: '0 10px' }} />
+                                        </a>
+                                    );
                                 })}
                         </Marquee>
                     </div>
