@@ -6,7 +6,7 @@ namespace Models.Dtos
 {
     public class NewsPostUpdateManyDto
     {
-        public List<long> NewsPostIds { get; set; }
+        public List<long> Ids { get; set; }
         public bool? Value { get; set; }
         public MultipleTypeUpdate? Field { get; set; }
     }

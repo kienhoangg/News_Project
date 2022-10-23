@@ -17,6 +17,7 @@ import { FileAddFilled } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { Select } from 'antd';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 const layout = {
@@ -47,7 +48,7 @@ function ImageCategoryPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
-      return;
+      // return;
     }
     fetchCategoryList();
   }, [objFilter]);
@@ -90,6 +91,19 @@ function ImageCategoryPage(props) {
         '',
         NotificationType.ERROR
       );
+    }
+  };
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await mediaApi.updateStatusImageCategory({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -212,6 +226,7 @@ function ImageCategoryPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

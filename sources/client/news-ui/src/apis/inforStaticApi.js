@@ -9,6 +9,10 @@ class InforStaticAPI {
     const url = '/StaticInfos';
     return axiosClient.post(url, body);
   };
+  updateStatusContent = (body) => {
+    const url = '/StaticInfos';
+    return axiosClient.put(url, body);
+  };
   deleteContent = (id) => {
     const url = `/StaticInfos/${id}`;
     return axiosClient.delete(url);
@@ -21,6 +25,10 @@ class InforStaticAPI {
   insertCategory = (body) => {
     const url = '/StaticCategories';
     return axiosClient.post(url, body);
+  };
+  updateStatusCategor = (body) => {
+    const url = '/StaticCategories';
+    return axiosClient.put(url, body);
   };
   deleteCategory = (id) => {
     const url = `/StaticCategories/${id}`;

@@ -27,6 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './DocumentListPage.module.scss';
 import DocumentListPageSearch from './DocumentListPageSearch/DocumentListPageSearch';
 import DocumentListTableData from './DocumentListTableData/DocumentListTableData';
+import { TypeUpdate } from 'common/constant';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 const cx = classNames.bind(styles);
 
@@ -65,7 +66,7 @@ function DocumentListPage(props) {
     if (isFirstCall.current) {
       isFirstCall.current = false;
       getDataFilter();
-      return;
+      // return;
     }
     fetchList();
   }, [objFilter]);
@@ -217,6 +218,20 @@ function DocumentListPage(props) {
       fetchList();
     } catch (error) {
       openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+    }
+  };
+
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await documentApi.updatStatusDocument({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -468,6 +483,7 @@ function DocumentListPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

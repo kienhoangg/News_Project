@@ -10,6 +10,9 @@ import NewsListMenuSearch from './NewsListMenuSearch/NewsListMenuSearch';
 import styles from './NewsListPage.module.scss';
 import NewsListTableData from './NewsListTableData/NewsListTableData';
 import convertHelper from 'helpers/convertHelper';
+import { useNavigate } from 'react-router-dom';
+import routes from 'config/configRoutes';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -46,6 +49,7 @@ function NewsListPage(props) {
   });
   const dataDetail = useRef({});
   const action = useRef('create');
+  const navigate = useNavigate();
 
   const onCreate = async (values) => {
     try {
@@ -106,7 +110,7 @@ function NewsListPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      openNotification('Lấy danh sách thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -142,7 +146,6 @@ function NewsListPage(props) {
     if (isFirstCall.current) {
       isFirstCall.current = false;
       getDataFilter();
-      return;
     }
     fetchList();
   }, [objFilter]);
@@ -168,6 +171,20 @@ function NewsListPage(props) {
     action.current = value;
   };
 
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await newsApi.updatNews({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   return (
     <div className={cx('wrapper')}>
       <div className={cx('top')}>
@@ -186,6 +203,7 @@ function NewsListPage(props) {
           setPagination={handleChangePagination}
           onClickEditOneRow={handleOnClickEditOneRow}
           setActionForm={handleSetActionForm}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
       <CollectionNewsEditor

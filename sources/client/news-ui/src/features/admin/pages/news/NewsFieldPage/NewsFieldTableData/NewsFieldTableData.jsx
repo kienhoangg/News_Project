@@ -10,6 +10,10 @@ import styles from './NewsFieldTableData.module.scss';
 import classNames from 'classnames/bind';
 import { PropTypes } from 'prop-types';
 import { Direction } from 'common/enum';
+import commonFunc from 'common/commonFunc';
+import { Role } from 'common/constant';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
@@ -31,7 +35,7 @@ NewsFieldTableData.defaultProps = {
 };
 
 function NewsFieldTableData(props) {
-  const { data, setPagination, deleteFieldsNew } = props;
+  const { data, setPagination, deleteFieldsNew, updateStatusNew } = props;
 
   function handleDeleteFieldNew(values) {
     return Modal.confirm({
@@ -145,7 +149,34 @@ function NewsFieldTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    // console.log(values);
+    const role = commonFunc.getCookie('role');
+    if (role !== Role.ADMIN) {
+      openNotification(
+        <>
+          Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+      return;
+    }
+    Modal.confirm({
+      title: 'Cập nhật trạng thái',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+        </>
+      ),
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
+      onOk: () => {
+        if (!updateStatusNew) {
+          return;
+        }
+        updateStatusNew(values);
+      },
+    });
   }
 
   return (

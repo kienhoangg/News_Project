@@ -7,7 +7,7 @@ class NewsApi {
     const url = '/newsPost/filter';
     return axiosClient.post(url, body);
   };
-  updateHotNews = (body) => {
+  updatNews = (body) => {
     const url = '/newsPost';
     return axiosClient.put(url, body);
   };
@@ -43,6 +43,11 @@ class NewsApi {
     return axiosClient.post(url, body);
   };
 
+  updateStatusSourceNew = (body) => {
+    const url = '/sourceNews';
+    return axiosClient.put(url, body);
+  };
+
   deleteSourceNew = (id) => {
     const url = `/sourceNews/${id}`;
     return axiosClient.delete(url);
@@ -60,6 +65,11 @@ class NewsApi {
     return axiosClient.post(url, body);
   };
 
+  updateStatusFieldNews = (body) => {
+    const url = '/fieldNews';
+    return axiosClient.put(url, body);
+  };
+
   deleteFieldNews = (id) => {
     const url = `/fieldNews/${id}`;
     return axiosClient.delete(url);
@@ -75,6 +85,11 @@ class NewsApi {
   insertCategoryNews = (body) => {
     const url = '/categoryNews';
     return axiosClient.post(url, body);
+  };
+
+  updateStatusCategoryNews = (body) => {
+    const url = '/categoryNews';
+    return axiosClient.put(url, body);
   };
 
   deleteCategoryNews = (id) => {

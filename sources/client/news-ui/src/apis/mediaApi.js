@@ -11,6 +11,10 @@ class MediaApi {
     const url = '/Photos';
     return axiosClient.post(url, body);
   };
+  updateStatusImage = (body) => {
+    const url = '/Photos';
+    return axiosClient.put(url, body);
+  };
   deleteImage = (id) => {
     const url = `/Photos/${id}`;
     return axiosClient.delete(url);
@@ -23,6 +27,10 @@ class MediaApi {
   insertImageCategory = (body) => {
     const url = '/PhotoCategories';
     return axiosClient.post(url, body);
+  };
+  updateStatusImageCategory = (body) => {
+    const url = '/PhotoCategories';
+    return axiosClient.put(url, body);
   };
   deleteImageCategory = (id) => {
     const url = `/PhotoCategories/${id}`;
