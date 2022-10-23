@@ -23,8 +23,8 @@ namespace News.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost()]
-        public async Task<IActionResult> Authen(UserDto userDto)
+        [HttpPost]
+        public async Task<IActionResult> Authen([FromBody] UserDto userDto)
         {
             string token = await _userService.Authen(userDto);
             if (!string.IsNullOrEmpty(token))

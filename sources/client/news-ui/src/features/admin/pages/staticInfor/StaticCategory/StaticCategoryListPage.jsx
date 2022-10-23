@@ -24,6 +24,7 @@ import StaticCategoryTableData from './StaticCategoryTableData/StaticCategoryTab
 import TextArea from 'antd/lib/input/TextArea';
 import { Select } from 'antd';
 import { Option } from 'antd/lib/mentions';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -57,7 +58,7 @@ function StaticCategoryListPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
-      return;
+      // return;
     }
     fetchCategoryList();
   }, [objFilter]);
@@ -101,6 +102,20 @@ function StaticCategoryListPage(props) {
         '',
         NotificationType.ERROR
       );
+    }
+  };
+
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await inforStaticAPI.updateStatusCategor({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -255,6 +270,7 @@ function StaticCategoryListPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

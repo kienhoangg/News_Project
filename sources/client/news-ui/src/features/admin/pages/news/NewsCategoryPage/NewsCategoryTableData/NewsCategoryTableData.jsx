@@ -10,6 +10,10 @@ import datetimeHelper from 'helpers/datetimeHelper';
 import styles from './NewsCategoryTableData.module.scss';
 import classNames from 'classnames/bind';
 import { Direction } from 'common/enum';
+import { NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
+import { Role } from 'common/constant';
+import commonFunc from 'common/commonFunc';
 
 const cx = classNames.bind(styles);
 
@@ -25,8 +29,13 @@ NewsCategoryTableData.propTypes = {
 NewsCategoryTableData.defaultProps = {};
 
 function NewsCategoryTableData(props) {
-  const { data, onClickShowRowDetail, setPagination, deleteCategoryNew } =
-    props;
+  const {
+    data,
+    onClickShowRowDetail,
+    setPagination,
+    deleteCategoryNew,
+    updateStatusNew,
+  } = props;
 
   const handleOnClickTitle = (values) => {
     if (onClickShowRowDetail) onClickShowRowDetail(values);
@@ -130,7 +139,34 @@ function NewsCategoryTableData(props) {
   };
 
   function handleOnClickStatus(values) {
-    // console.log(values);
+    const role = commonFunc.getCookie('role');
+    if (role !== Role.ADMIN) {
+      openNotification(
+        <>
+          Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+      return;
+    }
+    Modal.confirm({
+      title: 'Cập nhật trạng thái',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+        </>
+      ),
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
+      onOk: () => {
+        if (!updateStatusNew) {
+          return;
+        }
+        updateStatusNew(values);
+      },
+    });
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {

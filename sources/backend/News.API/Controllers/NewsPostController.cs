@@ -151,7 +151,7 @@ namespace News.API.Controllers
        )
         {
             //  var lstNewsPostId = strNewsPostId.Split(',').Select(long.Parse).ToList();
-            await _newsPostService.UpdateManyNewsPostDto(newsPostUpdateManyDto.NewsPostIds, newsPostUpdateManyDto.Value.Value, newsPostUpdateManyDto.Field.Value);
+            await _newsPostService.UpdateManyNewsPostDto(newsPostUpdateManyDto.Ids, newsPostUpdateManyDto.Value.Value, newsPostUpdateManyDto.Field.Value);
             return NoContent();
         }
 

@@ -9,6 +9,7 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import { Option } from 'antd/lib/mentions';
 import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -42,7 +43,7 @@ function DocumentFieldPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
-      return;
+      // return;
     }
     fetchCategoryList();
   }, [objFilter]);
@@ -136,6 +137,19 @@ function DocumentFieldPage(props) {
       openNotification('Xóa lĩnh vực thất bại', '', NotificationType.ERROR);
     }
   };
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await documentApi.updatStatusFieldDocument({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
 
   const renderOption = (
     <Select
@@ -206,6 +220,7 @@ function DocumentFieldPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

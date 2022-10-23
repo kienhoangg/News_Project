@@ -9,6 +9,7 @@ import DocumentCategoryPageSearch from './DocumentCategoryPageSearch/DocumentCat
 import DocumentCategoryTableData from './DocumentCategoryTableData/DocumentCategoryTableData';
 import { FileAddFilled } from '@ant-design/icons';
 import { Option } from 'antd/lib/mentions';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -40,10 +41,10 @@ function DocumentCategoryPage(props) {
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
   useEffect(() => {
-    if (isFirstCall.current) {
-      isFirstCall.current = false;
-      return;
-    }
+    // if (isFirstCall.current) {
+    //   isFirstCall.current = false;
+    //   return;
+    // }
     fetchCategoryList();
   }, [objFilter]);
 
@@ -155,6 +156,20 @@ function DocumentCategoryPage(props) {
     </Select>
   );
 
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await documentApi.updatStatusCategoryDocument({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   return (
     <div className={cx('wrapper')}>
       {
@@ -210,6 +225,7 @@ function DocumentCategoryPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>
