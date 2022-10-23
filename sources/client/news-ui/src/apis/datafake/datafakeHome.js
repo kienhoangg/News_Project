@@ -431,49 +431,6 @@ export const datafakeMenuPageData = [
     }
 ]
 
-export const datafakeEvaluateList = [
-    {
-        Id: 1,
-        Title: 'Văn phòng UBND tỉnh Thừa Thiên Huế',
-    },
-    {
-        Id: 1,
-        Title: 'Sở Tài nguyên và Môi trường',
-    },
-    {
-        Id: 1,
-        Title: 'Sở ngoại vụ',
-    },
-    {
-        Id: 1,
-        Title: 'Sở văn hóa và thể thao',
-    },
-    {
-        Id: 1,
-        Title: 'Sở xây dựng',
-    },
-    {
-        Id: 1,
-        Title: 'Sở công thương',
-    },
-    {
-        Id: 1,
-        Title: 'Sở khoa học và công nghệ',
-    },
-    {
-        Id: 1,
-        Title: 'Sở Lao động - Thương binh và xã hội',
-    },
-    {
-        Id: 1,
-        Title: 'Sở Tư pháp',
-    },
-    {
-        Id: 1,
-        Title: 'Sở Du lịch',
-    },
-]
-
 export const datafakeEvaluateReport = {
     Id: 1,
     Total: 64,

@@ -1,3 +1,4 @@
+import { CheckCircleOutlined, SmileOutlined } from "@ant-design/icons";
 import { notification } from "antd";
 import routes from "config/configRoutes";
 import datetimeHelper from "helpers/datetimeHelper";
@@ -99,7 +100,25 @@ export const commonRender = {
             description: 'Tính năng đang được thi công',
             duration: 1
         });
-    }
+    },
+
+    /**
+    * Hiển thị thông báo thành công
+    */
+    showNotifySuccess: (msg) => {
+        notification.open({
+            message: 'Thành công',
+            description: msg ?? "Thực hiện thành công",
+            duration: 2,
+            icon: (
+                < CheckCircleOutlined
+                    style={{
+                        color: '#49cc90',
+                    }}
+                />
+            ),
+        });
+    },
 }
 
 
