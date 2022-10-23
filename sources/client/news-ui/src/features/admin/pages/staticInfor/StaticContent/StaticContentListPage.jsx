@@ -27,6 +27,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { CKEditor } from 'ckeditor4-react';
 import commonFunc from 'common/commonFunc';
 import { TreeNode } from 'antd/lib/tree-select';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -69,7 +70,7 @@ function StaticContentListPage(props) {
     if (isFirstCall.current) {
       isFirstCall.current = false;
       getDataFilter();
-      return;
+      // return;
     }
     fetchCategoryList();
   }, [objFilter]);
@@ -121,7 +122,19 @@ function StaticContentListPage(props) {
       openNotification('Xóa loại văn bản thất bại', '', NotificationType.ERROR);
     }
   };
-
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await inforStaticAPI.updateStatusContent({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
   /**
    * Sử lý thay đổi text search
    * @param {*} textSearch Từ cần tìm
@@ -397,6 +410,7 @@ function StaticContentListPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

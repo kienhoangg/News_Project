@@ -8,6 +8,7 @@ import classNames from 'classnames/bind';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 
 const layout = {
@@ -38,10 +39,10 @@ function NewsFieldPage(props) {
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
   useEffect(() => {
-    if (isFirstCall.current) {
-      isFirstCall.current = false;
-      return;
-    }
+    // if (isFirstCall.current) {
+    //   isFirstCall.current = false;
+    //   return;
+    // }
     fetchProductList();
   }, [objFilter]);
 
@@ -87,6 +88,20 @@ function NewsFieldPage(props) {
       fetchProductList();
     } catch (error) {
       openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+    }
+  };
+
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await newsApi.updateStatusFieldNews({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchProductList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -187,6 +202,7 @@ function NewsFieldPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteFieldsNew={handleDeleteFieldNews}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

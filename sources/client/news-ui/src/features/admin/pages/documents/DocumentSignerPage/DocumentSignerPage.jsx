@@ -9,6 +9,7 @@ import { Divider, Form, Button, Input, Modal, Select } from 'antd';
 import { openNotification } from 'helpers/notification';
 import { Option } from 'antd/lib/mentions';
 import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -39,7 +40,7 @@ function DocumentSignerPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
-      return;
+      // return;
     }
     fetchProductList();
   }, [objFilter]);
@@ -130,6 +131,20 @@ function DocumentSignerPage(props) {
     }
   };
 
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await documentApi.updatStatusSingerDocument({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchProductList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   const renderOption = (
     <Select
       placeholder='Chọn cấp cha'
@@ -200,6 +215,7 @@ function DocumentSignerPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>

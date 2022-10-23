@@ -1,11 +1,15 @@
-import { EditFilled } from '@ant-design/icons';
-import { Button, Space, Table, Tag } from 'antd';
+import { EditFilled, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Space, Table, Tag, Modal } from 'antd';
 import classNames from 'classnames/bind';
 import { commonRenderTable } from 'common/commonRender';
-import { Direction } from 'common/enum';
+import { Direction, NotificationType } from 'common/enum';
 import datetimeHelper from 'helpers/datetimeHelper';
 import PropTypes from 'prop-types';
 import styles from './NewsListTableData.module.scss';
+import commonFunc from 'common/commonFunc';
+import { openNotification } from 'helpers/notification';
+import newsApi from 'apis/newsApi';
+import { Role, TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -35,6 +39,7 @@ function NewsListTableData(props) {
     onClickEditOneRow,
     setPagination,
     setActionForm,
+    updateStatusNew,
   } = props;
   const handleOnClickTitle = (values) => {
     if (onClickShowRowDetail) onClickShowRowDetail(values);
@@ -93,15 +98,15 @@ function NewsListTableData(props) {
       align: 'center',
       width: 100,
       sorter: (a, b) => true,
-      render: (_, { id, Status }) => {
+      render: (_, { Id, Status }) => {
         let color = Status ? 'geekblue' : 'volcano';
         let text = Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
-            key={id}
+            key={Id}
             style={{ cursor: 'pointer' }}
-            onClick={() => handleOnClickStatus({ id, Status })}
+            onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
           </Tag>
@@ -117,7 +122,34 @@ function NewsListTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    // console.log(values);
+    const role = commonFunc.getCookie('role');
+    if (role !== Role.ADMIN) {
+      openNotification(
+        <>
+          Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+      return;
+    }
+    Modal.confirm({
+      title: 'Cập nhật trạng thái',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+        </>
+      ),
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
+      onOk: () => {
+        if (!updateStatusNew) {
+          return;
+        }
+        updateStatusNew(values);
+      },
+    });
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {

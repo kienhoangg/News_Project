@@ -11,6 +11,8 @@ import classNames from 'classnames/bind';
 import { PropTypes } from 'prop-types';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
+import commonFunc from 'common/commonFunc';
+import { Role } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -32,7 +34,7 @@ NewsSourceTableData.defaultProps = {
 };
 
 function NewsSourceTableData(props) {
-  const { data, setPagination, deleteSourceNew } = props;
+  const { data, setPagination, deleteSourceNew, updateStatusNew } = props;
 
   const columns = [
     {
@@ -135,7 +137,34 @@ function NewsSourceTableData(props) {
   };
 
   function handleOnClickStatus(values) {
-    // console.log(values);
+    const role = commonFunc.getCookie('role');
+    if (role !== Role.ADMIN) {
+      openNotification(
+        <>
+          Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+      return;
+    }
+    Modal.confirm({
+      title: 'Cập nhật trạng thái',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+        </>
+      ),
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
+      onOk: () => {
+        if (!updateStatusNew) {
+          return;
+        }
+        updateStatusNew(values);
+      },
+    });
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {

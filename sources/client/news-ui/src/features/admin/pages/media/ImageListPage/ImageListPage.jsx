@@ -16,6 +16,7 @@ import { Option } from 'antd/lib/mentions';
 import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
 import commonFunc from 'common/commonFunc';
 import convertHelper from 'helpers/convertHelper';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 const layout = {
@@ -62,7 +63,7 @@ function ImageListPage(props) {
     if (isFirstCall.current) {
       isFirstCall.current = false;
       getDataFilter();
-      return;
+      // return;
     }
     fetchCategoryList();
   }, [objFilter]);
@@ -115,6 +116,19 @@ function ImageListPage(props) {
       fetchCategoryList();
     } catch (error) {
       openNotification('Xóa hình ảnh thất bại', '', NotificationType.ERROR);
+    }
+  };
+  const handleUpdateStatusNew = async (values) => {
+    try {
+      await mediaApi.updateStatusImage({
+        Ids: [values.Id],
+        Value: values.Status === 0 ? 1 : 0,
+        Field: TypeUpdate.STATUS,
+      });
+      fetchCategoryList();
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -273,6 +287,7 @@ function ImageListPage(props) {
           data={newsData}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
         />
       </div>
     </div>
