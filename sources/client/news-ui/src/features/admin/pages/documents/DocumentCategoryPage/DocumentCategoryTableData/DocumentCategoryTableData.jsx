@@ -138,10 +138,6 @@ function DocumentCategoryTableData(props) {
     deleteSourceNew(values.Id);
   };
 
-  function handleOnClickStatus(values) {
-    // console.log(values);
-  }
-
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
     setPagination(
       pagination.current,
