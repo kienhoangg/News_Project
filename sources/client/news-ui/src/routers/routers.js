@@ -225,6 +225,11 @@ const publicRoutes = [
     component: QuestionDetailPage,
   },
 
+  {
+    path: config.routes.publishedVideos,
+    component: LibVideoListPage,
+  },
+
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
   // { path: config.routes.adminNewsList, component: NewsListPage, layout: AdminLayout },
   // { path: config.routes.adminNewsHot, component: NewsHotPage, layout: AdminLayout },

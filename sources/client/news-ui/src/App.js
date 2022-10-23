@@ -1,35 +1,34 @@
-import homeApi from 'apis/published/homeApi';
-import { envTimeTrackingVisitorOnline } from 'common/enviroments';
-import { updateView } from 'features/Home/homeSlice';
-import DefaultLayout from 'layouts/DefaultLayout/DefaultLayout';
-import React, { useEffect } from 'react';
-import { Fragment } from 'react';
-import { useDispatch } from 'react-redux';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { publicRoutes } from 'routers/routers';
-
+import homeApi from "apis/published/homeApi";
+import { envTimeTrackingVisitorOnline } from "common/enviroments";
+import { updateView } from "features/Home/homeSlice";
+import DefaultLayout from "layouts/DefaultLayout/DefaultLayout";
+import React, { useEffect } from "react";
+import { Fragment } from "react";
+import { useDispatch } from "react-redux";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { publicRoutes } from "routers/routers";
 
 function App() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchTracking = async () => {
-      try {
-        const response = await homeApi.trackingVisitorOnline();
-        const action = updateView(response);
-        dispatch(action);
+  // useEffect(() => {
+  //   const fetchTracking = async () => {
+  //     try {
+  //       const response = await homeApi.trackingVisitorOnline();
+  //       const action = updateView(response);
+  //       dispatch(action);
 
-      } catch (error) {
-        console.log('Failed to fetch list: ', error);
-      }
-    };
-    fetchTracking();
+  //     } catch (error) {
+  //       console.log('Failed to fetch list: ', error);
+  //     }
+  //   };
+  //   fetchTracking();
 
-    setInterval(() => {
-      fetchTracking();
-    }, envTimeTrackingVisitorOnline);
+  //   setInterval(() => {
+  //     fetchTracking();
+  //   }, envTimeTrackingVisitorOnline);
 
-  }, [])
+  // }, [])
 
   return (
     <Router>
@@ -60,7 +59,6 @@ function App() {
         </Routes>
       </div>
     </Router>
-
   );
 }
 export default App;
