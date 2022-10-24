@@ -53,7 +53,8 @@ namespace News.API.Controllers
                 new Expression<Func<NewsPost, object>>[] {
                     (x => x.FieldNews),
                     (x => x.SourceNews),
-                    (x => x.CategoryNews)
+                    (x => x.CategoryNews),
+                    (x=>x.Collaborator)
                 };
             var result =
                 await _newsPostService
@@ -137,7 +138,14 @@ namespace News.API.Controllers
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetNewsPostById([Required] long id)
         {
-            NewsPost? newsPost = await _newsPostService.GetNewsPost(id);
+            var lstInclude =
+               new Expression<Func<NewsPost, object>>[] {
+                    (x => x.FieldNews),
+                    (x => x.SourceNews),
+                    (x => x.CategoryNews),
+                    (x=>x.Collaborator)
+               };
+            NewsPost? newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
             if (newsPost == null) return NotFound();
 
             var result = _mapper.Map<NewsPostDto>(newsPost);
