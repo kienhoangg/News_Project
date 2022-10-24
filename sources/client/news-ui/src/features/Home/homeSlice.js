@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialHome = {
-    view: 0,
-    runPost: []
+    view: 0
 }
 
 const home = createSlice({
-    name: 'home',
+    name: 'photos',
     initialState: initialHome,
     reducers: {
         addView: (state, action) => {
@@ -15,13 +14,10 @@ const home = createSlice({
         },
         updateView: (state, action) => {
             state.view = action.payload;
-        },
-        updateRunPosts: (state, action) => {
-            state.runPost = action.payload;
         }
     }
 });
 
 const { reducer, actions } = home;
-export const { addView, updateView, updateRunPosts } = actions;
+export const { addView, updateView } = actions;
 export default reducer;

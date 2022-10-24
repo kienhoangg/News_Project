@@ -101,16 +101,3 @@ bld/
 **/appsettings.Development.json
 .idea/.idea.OctoQual/.idea
 **/~$*.xlsx
-/sources/backend/.idea/.idea.News.API/.idea/.gitignore
-/sources/backend/.idea/.idea.News.API/.idea/.name
-/sources/backend/.idea/.idea.News.API/.idea/encodings.xml
-/sources/backend/.idea/.idea.News.API/.idea/indexLayout.xml
-/sources/backend/.idea/.idea.News.API/.idea/vcs.xml
-/sources/backend/News.API/appsettings.json
-/sources/backend/News.API/Persistence/Migrations/20221018143752_SampleMigration.cs
-/sources/backend/News.API/Persistence/Migrations/20221018143752_SampleMigration.Designer.cs
-/sources/backend/News.API/Persistence/Migrations/20221021104559_SampleMigration1.cs
-/sources/backend/News.API/Persistence/Migrations/20221021104559_SampleMigration1.Designer.cs
-/sources/backend/News.API/Persistence/Migrations/20221022025536_SampleMigration1.cs
-/sources/backend/News.API/Persistence/Migrations/20221022025536_SampleMigration1.Designer.cs
-/sources/client/news-ui/package-lock.json
