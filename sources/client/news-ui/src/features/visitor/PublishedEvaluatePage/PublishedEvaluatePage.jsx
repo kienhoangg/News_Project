@@ -3,7 +3,7 @@ import homeApi from 'apis/published/homeApi';
 import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Bar, BarChart, LabelList, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import styles from './PublishedEvaluatePage.module.scss';
 
@@ -57,6 +57,8 @@ function PublishedEvaluatePage(props) {
     const [openModelResult, setOpenModelResult] = useState(false);
     const [dataChartResult, setDataChartResult] = useState([]);
     const [dataChartTotalRate, setChartTotalRate] = useState({});
+
+    const formRates = useRef({});
 
     function handleOnClickResult(id) {
         const fetchDataReport = async (id) => {
@@ -155,6 +157,8 @@ function PublishedEvaluatePage(props) {
 
                 await homeApi.submitRating(body);
                 commonRender.showNotifySuccess('Cảm ơn bạn đã bình chọn');
+
+                console.log('formRate', formRates);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }
