@@ -5,6 +5,9 @@ import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import { Col, Input, Row } from 'antd';
 import routes from 'config/configRoutes';
+import { useSelector } from 'react-redux';
+import Marquee from 'react-easy-marquee';
+
 const { Search } = Input;
 const cx = classNames.bind(styles);
 
@@ -13,6 +16,8 @@ SearchBar.propTypes = {};
 SearchBar.defaultProps = {};
 
 function SearchBar(props) {
+    const homeRedux = useSelector((state) => state.home);
+
     return (
         <div className={cx('wrapper')}>
             <Row gutter={8} style={{ width: '100%' }}>
@@ -51,8 +56,52 @@ function SearchBar(props) {
             </Row>
             <Row gutter={8}>
                 <div className={cx('news-hot')}>
-                    <span className={cx('news-hot-icon')}></span>
-                    <span className={cx('news-hot-content')}>Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8</span>
+                    {Array.isArray(homeRedux?.runPost) && (
+                        <Marquee duration={50000} height='80px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                            {homeRedux.runPost.map((item, index) => {
+                                return (
+                                    <>
+                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                            <span className={cx('news-hot-icon')}></span>
+                                            <span key={index} className={cx('news-hot-content')}>
+                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                            </span>
+                                        </Link>
+                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                            <span className={cx('news-hot-icon')}></span>
+                                            <span key={index} className={cx('news-hot-content')}>
+                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                            </span>
+                                        </Link>
+                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                            <span className={cx('news-hot-icon')}></span>
+                                            <span key={index} className={cx('news-hot-content')}>
+                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                            </span>
+                                        </Link>
+                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                            <span className={cx('news-hot-icon')}></span>
+                                            <span key={index} className={cx('news-hot-content')}>
+                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                            </span>
+                                        </Link>
+                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                            <span className={cx('news-hot-icon')}></span>
+                                            <span key={index} className={cx('news-hot-content')}>
+                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                            </span>
+                                        </Link>
+                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                            <span className={cx('news-hot-icon')}></span>
+                                            <span key={index} className={cx('news-hot-content')}>
+                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                            </span>
+                                        </Link>
+                                    </>
+                                );
+                            })}
+                        </Marquee>
+                    )}
                 </div>
                 <div className={cx('divider')}></div>
             </Row>

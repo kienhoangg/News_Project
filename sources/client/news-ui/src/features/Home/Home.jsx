@@ -13,9 +13,11 @@ import Images from 'common/images';
 import { useEffect, useRef, useState } from 'react';
 import homeApi from 'apis/published/homeApi';
 import { useDispatch } from 'react-redux';
-import { updateView } from './homeSlice';
+import { updateRunPosts, updateView } from './homeSlice';
 
 const cx = classNames.bind(styles);
+
+const fakeDataRunPosts = [];
 
 function Home(props) {
     const [homeData, setHomeData] = useState();
@@ -31,9 +33,13 @@ function Home(props) {
                 setHomeData(response);
                 setNewsPreview(response?.Data?.NewsHots[0]);
 
-                const action = updateView(response?.Data?.VisitorTracking);
-                // const action = updateView(50);
-                dispatch(action);
+                const actionUpdateView = updateView(response?.Data?.VisitorTracking);
+                dispatch(actionUpdateView);
+
+                if (Array.isArray(response?.Data?.NewsHots)) {
+                    const actionUpdateRunPosts = updateRunPosts(response?.Data?.NewsHots);
+                    dispatch(actionUpdateRunPosts);
+                }
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             }
