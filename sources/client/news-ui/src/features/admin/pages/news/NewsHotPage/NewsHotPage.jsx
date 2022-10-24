@@ -147,7 +147,7 @@ function NewsHotPage(props) {
         );
       }
       await newsApi.updatNews({
-        NewsPostIds: changeRowKey,
+        Ids: changeRowKey,
         Value: true,
         Field: TypeUpdate.IS_HOT_NEWS,
       });

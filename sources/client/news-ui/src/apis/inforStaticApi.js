@@ -5,6 +5,10 @@ class InforStaticAPI {
     const url = '/StaticInfos/filter';
     return axiosClient.post(url, body);
   };
+  getNewsById = (id) => {
+    const url = `/StaticInfos/${id}`;
+    return axiosClient.get(url);
+  };
   insertContent = (body) => {
     const url = '/StaticInfos';
     return axiosClient.post(url, body);

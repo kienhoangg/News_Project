@@ -42,7 +42,7 @@ function MenuPage(props) {
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
-      return;
+      // return;
     }
     getMenuAll();
   }, []);
@@ -99,7 +99,7 @@ function MenuPage(props) {
             onClick={() => editMenu(id)}
           />
           <CheckOutlined
-            title='Đanh hiện thị'
+            title='Đang hiện thị'
             style={{ margin: '0 10px', padding: 4 }}
             onClick={disableMenu}
           />

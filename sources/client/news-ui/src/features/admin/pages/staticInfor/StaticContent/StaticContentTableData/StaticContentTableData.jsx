@@ -46,11 +46,11 @@ function StaticContentTableData(props) {
       key: 'Title',
       dataIndex: 'Title',
       title: 'Tiêu đề',
-      render: (_, { id, Title }) => (
+      render: (_, { Id, Title }) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            handleOnClickTitle({ id, Title });
+            handleOnClickTitle({ Id, Title });
           }}
         >
           {Title}
