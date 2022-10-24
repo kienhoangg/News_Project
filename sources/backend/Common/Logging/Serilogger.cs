@@ -18,7 +18,7 @@ namespace Common.Logging
 
                 configuration.WriteTo.Debug()
                              .WriteTo
-                             .Console(outputTemplate: "")
+                             .Console(outputTemplate: "").WriteTo.File("logs/rumble-.txt", rollingInterval: RollingInterval.Minute)
                              .Enrich
                              .FromLogContext()
                              .Enrich
