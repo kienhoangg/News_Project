@@ -257,7 +257,7 @@ function DocumentListPage(props) {
           form
             .validateFields()
             .then((values) => {
-              values.content = values.content?.editor?.getData();
+              values.content = values.Content?.editor?.getData();
               const date =
                 values?.PublishedDate?._d ?? '0001-01-01 00:00:00.0000000';
               const publishedDate =
@@ -269,10 +269,12 @@ function DocumentListPage(props) {
                 DocumentFieldId,
                 DocumentSignPersonId,
                 DocumentTypeId,
+                content,
               } = values;
               const bodyData = {
                 Code,
                 Name,
+                content,
                 PublishedDate: publishedDate,
               };
               if (DocumentDepartmentId) {
