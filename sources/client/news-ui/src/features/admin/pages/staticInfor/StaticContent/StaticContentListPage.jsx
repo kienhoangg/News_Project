@@ -27,7 +27,8 @@ import TextArea from 'antd/lib/input/TextArea';
 import { CKEditor } from 'ckeditor4-react';
 import commonFunc from 'common/commonFunc';
 import { TreeNode } from 'antd/lib/tree-select';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, Role } from 'common/constant';
+import StaticContentDetail from './StaticContentDetail/StaticContentDetail';
 
 const cx = classNames.bind(styles);
 
@@ -60,8 +61,12 @@ function StaticContentListPage(props) {
   });
   const [fileListAttachment, setFileListAttachment] = useState([]);
   const [fileList, setFileList] = useState([]);
-
+  const dataDetail = useRef({});
+  const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
+    useState(false);
   const [form] = Form.useForm();
+
+  const refCategoryAll = useRef([]);
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -76,7 +81,7 @@ function StaticContentListPage(props) {
   }, [objFilter]);
 
   /**
-   * Gọi api lấy dữ liệu danh sách loại văn bản tin
+   * Gọi api lấy dữ liệu danh sách nội dung tĩnh tin
    */
   const fetchCategoryList = async () => {
     try {
@@ -87,7 +92,11 @@ function StaticContentListPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification('Lấy loại văn bản thất bại', '', NotificationType.ERROR);
+      openNotification(
+        'Lấy nội dung tĩnh thất bại',
+        '',
+        NotificationType.ERROR
+      );
     }
   };
 
@@ -95,6 +104,7 @@ function StaticContentListPage(props) {
     const responseCategoryAll = inforStaticAPI.getStaticCategoryAll(filterAll);
 
     Promise.all([responseCategoryAll]).then((values) => {
+      refCategoryAll.current = values[0]?.PagedData?.Results ?? [];
       setDataFilter({
         categoryAll: values[0]?.PagedData?.Results ?? [],
       });
@@ -113,13 +123,34 @@ function StaticContentListPage(props) {
     setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
   };
 
+  const handleOnClickShowRowDetail = async (values) => {
+    const detailRow = await fetchItem(values);
+    if (!detailRow) {
+      return;
+    }
+    dataDetail.current = detailRow;
+    setOpenCollectionNewsDetail(true);
+  };
+
+  const fetchItem = async (values) => {
+    try {
+      return await inforStaticAPI.getNewsById(values?.Id);
+    } catch (error) {
+      openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
+      return null;
+    }
+  };
   const handleDeleteCategoryNew = async (id) => {
     try {
       await inforStaticAPI.deleteContent(id);
-      openNotification('Xóa loại văn bản thành công');
+      openNotification('Xóa nội dung tĩnh thành công');
       fetchCategoryList();
     } catch (error) {
-      openNotification('Xóa loại văn bản thất bại', '', NotificationType.ERROR);
+      openNotification(
+        'Xóa nội dung tĩnh thất bại',
+        '',
+        NotificationType.ERROR
+      );
     }
   };
   const handleUpdateStatusNew = async (values) => {
@@ -227,7 +258,7 @@ function StaticContentListPage(props) {
           form
             .validateFields()
             .then((values) => {
-              values.content = values.content?.editor?.getData();
+              values.content = values.Content?.editor?.getData();
               const { Title, Descritpion, StaticCategoryId, content } = values;
               const bodyData = {
                 Title,
@@ -238,6 +269,8 @@ function StaticContentListPage(props) {
                 bodyData.StaticCategoryId = parseInt(StaticCategoryId);
               }
 
+              const role = commonFunc.getCookie('role');
+              bodyData.Status = role !== Role.ADMIN ? 0 : 1;
               let body = { JsonString: bodyData };
               if (fileList.length > 0) {
                 const file = fileList[0].originFileObj;
@@ -408,9 +441,19 @@ function StaticContentListPage(props) {
       <div className={cx('table-data')}>
         <StaticContentTableData
           data={newsData}
+          onClickShowRowDetail={handleOnClickShowRowDetail}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
+        />
+
+        <StaticContentDetail
+          categoryAll={refCategoryAll.current}
+          data={dataDetail.current}
+          open={openCollectionNewsDetail}
+          onCancel={() => {
+            setOpenCollectionNewsDetail(false);
+          }}
         />
       </div>
     </div>

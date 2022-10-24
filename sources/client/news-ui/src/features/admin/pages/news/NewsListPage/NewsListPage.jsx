@@ -219,7 +219,6 @@ function NewsListPage(props) {
       <CollectionNewsDetail
         data={dataDetail.current}
         open={openCollectionNewsDetail}
-        onCreate={onCreate}
         onCancel={() => {
           setOpenCollectionNewsDetail(false);
         }}
