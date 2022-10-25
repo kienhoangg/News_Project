@@ -19,6 +19,7 @@ import commonFunc from 'common/commonFunc';
 import { TreeNode } from 'antd/lib/tree-select';
 import { TypeUpdate, Role } from 'common/constant';
 import StaticContentDetail from './StaticContentDetail/StaticContentDetail';
+import StaticContentDetailUpdate from './StaticContentDetailUpdate/StaticContentDetailUpdate';
 
 const cx = classNames.bind(styles);
 
@@ -33,27 +34,32 @@ const filterAll = {
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
 function StaticContentListPage(props) {
-    const [newsData, setNewsData] = useState({
-        data: [],
-        total: 0,
-    });
-    const isFirstCall = useRef(true);
-    const [objFilter, setObjFilter] = useState({
-        currentPage: 1,
-        pageSize: 10,
-        direction: Direction.DESC,
-        orderBy: 'CreatedDate',
-        keyword: '',
-    });
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [dataFilter, setDataFilter] = useState({
-        categoryAll: [],
-    });
-    const [fileListAttachment, setFileListAttachment] = useState([]);
-    const [fileList, setFileList] = useState([]);
-    const dataDetail = useRef({});
-    const [openCollectionNewsDetail, setOpenCollectionNewsDetail] = useState(false);
-    const [form] = Form.useForm();
+  const [newsData, setNewsData] = useState({
+    data: [],
+    total: 0,
+  });
+  const isFirstCall = useRef(true);
+  const [objFilter, setObjFilter] = useState({
+    currentPage: 1,
+    pageSize: 10,
+    direction: Direction.DESC,
+    orderBy: 'CreatedDate',
+    keyword: '',
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dataFilter, setDataFilter] = useState({
+    categoryAll: [],
+  });
+  const [fileListAttachment, setFileListAttachment] = useState([]);
+  const [fileList, setFileList] = useState([]);
+  const dataDetail = useRef({});
+  const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
+    useState(false);
+  const [popupUpdate, setPopupUpdate] = useState({
+    id: null,
+    show: false,
+  });
+  const [form] = Form.useForm();
 
     const refCategoryAll = useRef([]);
 
@@ -288,115 +294,163 @@ function StaticContentListPage(props) {
                         <Input />
                     </Form.Item>
 
-                    <Form.Item name='Descritpion' label='Mô tả' style={{ marginBottom: 0 }}>
-                        <TextArea
-                            showCount
-                            style={{
-                                height: 80,
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item name='Content' label='Nội dung'>
-                        <CKEditor
-                            initData='<p>Nội dung</p>'
-                            // onInstanceReady={() => {
-                            //     alert('Editor is ready!');
-                            // }}
-                            onChange={onEditorChange}
-                            config={{
-                                language: 'vi',
-                                toolbarGroups: [
-                                    {
-                                        name: 'document',
-                                        groups: ['mode', 'document', 'doctools'],
-                                    },
-                                    { name: 'clipboard', groups: ['clipboard', 'undo'] },
-                                    {
-                                        name: 'editing',
-                                        groups: ['find', 'selection', 'spellchecker', 'editing'],
-                                    },
-                                    { name: 'forms', groups: ['forms'] },
-                                    '/',
-                                    '/',
-                                    { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-                                    {
-                                        name: 'paragraph',
-                                        groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'],
-                                    },
-                                    { name: 'links', groups: ['links'] },
-                                    { name: 'insert', groups: ['insert'] },
-                                    '/',
-                                    { name: 'styles', groups: ['styles'] },
-                                    { name: 'colors', groups: ['colors'] },
-                                    { name: 'tools', groups: ['tools'] },
-                                    { name: 'others', groups: ['others'] },
-                                    { name: 'about', groups: ['about'] },
-                                ],
-                                extraPlugins: 'justify,font,colorbutton,forms',
-                                removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
-                                allowedContent: true,
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label='Danh mục' name='StaticCategoryId'>
-                        {renderStaticCategoryId}
-                    </Form.Item>
-                    <Form.Item name='lb-avatar' label='Ảnh đại diện'>
-                        <Row gutter={8} justify={'space-between'}>
-                            <Col span={8}>
-                                <Upload
-                                    listType='picture'
-                                    maxCount={1}
-                                    fileList={fileList}
-                                    // onPreview={handlePreview}
-                                    onChange={handleChange}
-                                    accept='.jpg,.png,.jpeg'
-                                    customRequest={commonFunc.dummyRequest}
-                                >
-                                    {fileList.length < 1 ? uploadButton : null}
-                                </Upload>
-                            </Col>
-                            <Col span={8}>
-                                <Form.Item style={{ marginBottom: 0 }} name='lb-attachment' label='Tệp đính kèm'>
-                                    <Upload listType='picture' maxCount={1} fileList={fileListAttachment} onChange={handleChangeAttachment} customRequest={commonFunc.dummyRequest}>
-                                        {fileListAttachment.length < 1 ? <Button icon={<UploadOutlined />}>Tải lên Tệp</Button> : null}
-                                    </Upload>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-                    </Form.Item>
-                </Form>
-            </Modal>
+          <Form.Item
+            name='Descritpion'
+            label='Mô tả'
+            style={{ marginBottom: 0 }}
+          >
+            <TextArea
+              showCount
+              style={{
+                height: 80,
+              }}
+            />
+          </Form.Item>
+          <Form.Item name='Content' label='Nội dung'>
+            <CKEditor
+              initData='<p>Nội dung</p>'
+              // onInstanceReady={() => {
+              //     alert('Editor is ready!');
+              // }}
+              onChange={onEditorChange}
+              config={{
+                language: 'vi',
+                toolbarGroups: [
+                  {
+                    name: 'document',
+                    groups: ['mode', 'document', 'doctools'],
+                  },
+                  { name: 'clipboard', groups: ['clipboard', 'undo'] },
+                  {
+                    name: 'editing',
+                    groups: ['find', 'selection', 'spellchecker', 'editing'],
+                  },
+                  { name: 'forms', groups: ['forms'] },
+                  '/',
+                  '/',
+                  { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                  {
+                    name: 'paragraph',
+                    groups: [
+                      'list',
+                      'indent',
+                      'blocks',
+                      'align',
+                      'bidi',
+                      'paragraph',
+                    ],
+                  },
+                  { name: 'links', groups: ['links'] },
+                  { name: 'insert', groups: ['insert'] },
+                  '/',
+                  { name: 'styles', groups: ['styles'] },
+                  { name: 'colors', groups: ['colors'] },
+                  { name: 'tools', groups: ['tools'] },
+                  { name: 'others', groups: ['others'] },
+                  { name: 'about', groups: ['about'] },
+                ],
+                extraPlugins: 'justify,font,colorbutton,forms',
+                removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+                allowedContent: true,
+              }}
+            />
+          </Form.Item>
+          <Form.Item label='Danh mục' name='StaticCategoryId'>
+            {renderStaticCategoryId}
+          </Form.Item>
+          <Form.Item name='lb-avatar' label='Ảnh đại diện'>
+            <Row gutter={8} justify={'space-between'}>
+              <Col span={8}>
+                <Upload
+                  listType='picture'
+                  maxCount={1}
+                  fileList={fileList}
+                  // onPreview={handlePreview}
+                  onChange={handleChange}
+                  accept='.jpg,.png,.jpeg'
+                  customRequest={commonFunc.dummyRequest}
+                >
+                  {fileList.length < 1 ? uploadButton : null}
+                </Upload>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  name='lb-attachment'
+                  label='Tệp đính kèm'
+                >
+                  <Upload
+                    listType='picture'
+                    maxCount={1}
+                    fileList={fileListAttachment}
+                    onChange={handleChangeAttachment}
+                    customRequest={commonFunc.dummyRequest}
+                  >
+                    {fileListAttachment.length < 1 ? (
+                      <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                    ) : null}
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>
 
-            <div className={cx('top')}>
-                <StaticContentPageSearch setTextSearch={handleChangeTextSearch} />
-                <div>
-                    <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
-                        Tạo mới
-                    </Button>
-                </div>
-            </div>
-            <Divider style={{ marginBottom: 16 }} />
-            <div className={cx('table-data')}>
-                <StaticContentTableData
-                    data={newsData}
-                    onClickShowRowDetail={handleOnClickShowRowDetail}
-                    setPagination={handleChangePagination}
-                    deleteCategoryNew={handleDeleteCategoryNew}
-                    updateStatusNew={handleUpdateStatusNew}
-                />
-
-                <StaticContentDetail
-                    categoryAll={refCategoryAll.current}
-                    data={dataDetail.current}
-                    open={openCollectionNewsDetail}
-                    onCancel={() => {
-                        setOpenCollectionNewsDetail(false);
-                    }}
-                />
-            </div>
+      <div className={cx('top')}>
+        <StaticContentPageSearch setTextSearch={handleChangeTextSearch} />
+        <div>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
+            Tạo mới
+          </Button>
         </div>
-    );
+      </div>
+      <Divider style={{ marginBottom: 16 }} />
+      <div className={cx('table-data')}>
+        <StaticContentTableData
+          data={newsData}
+          onClickShowRowDetail={handleOnClickShowRowDetail}
+          setPagination={handleChangePagination}
+          deleteCategoryNew={handleDeleteCategoryNew}
+          updateStatusNew={handleUpdateStatusNew}
+          onClickEdit={(id) => {
+            setPopupUpdate({
+              id: id,
+              show: true,
+            });
+          }}
+        />
+
+        <StaticContentDetail
+          categoryAll={refCategoryAll.current}
+          data={dataDetail.current}
+          open={openCollectionNewsDetail}
+          onCancel={() => {
+            setOpenCollectionNewsDetail(false);
+          }}
+        />
+
+        {(popupUpdate?.id || popupUpdate?.id === 0) && popupUpdate?.show ? (
+          <StaticContentDetailUpdate
+            onSuccess={() => {
+              setPopupUpdate({
+                id: null,
+                show: false,
+              });
+              fetchCategoryList();
+            }}
+            Id={popupUpdate?.id}
+            onCancel={() => {
+              setPopupUpdate({
+                id: null,
+                show: false,
+              });
+            }}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
 }
 
 export default StaticContentListPage;

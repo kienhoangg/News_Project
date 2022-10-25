@@ -421,6 +421,7 @@ function CollectionNewsEditor({
               ],
               extraPlugins: 'justify,font,colorbutton,forms',
               removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+              allowedContent: true,
             }}
           />
         </Form.Item>

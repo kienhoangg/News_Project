@@ -35,10 +35,11 @@ function StaticContentTableData(props) {
     setPagination,
     deleteCategoryNew,
     updateStatusNew,
+    onClickEdit,
   } = props;
 
-  const handleOnClickTitle = (values) => {
-    if (onClickShowRowDetail) onClickShowRowDetail(values);
+  const handleOnClickTitle = (id) => {
+    if (onClickShowRowDetail) onClickShowRowDetail(id);
   };
 
   const columns = [
@@ -88,6 +89,26 @@ function StaticContentTableData(props) {
       width: 100,
       render: (_, record) => (
         <Space size='middle'>
+          <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => {
+              if (record?.Status) {
+                openNotification(
+                  <>
+                    <b>Hủy duyệt</b> để có thể chỉnh sửa
+                  </>,
+                  '',
+                  NotificationType.ERROR
+                );
+
+                return;
+              }
+              onClickEdit && onClickEdit(record?.Id);
+            }}
+          >
+            Sửa
+          </Button>
           <Button
             type='ghost'
             danger
