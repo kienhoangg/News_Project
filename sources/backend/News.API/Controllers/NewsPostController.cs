@@ -224,26 +224,21 @@ namespace News.API.Controllers
             var resultUpdate =
                 await _newsPostService.UpdateNewsPost(newsPostUpdated);
 
-            if (resultUpdate > 0 && !string.IsNullOrEmpty(avartarPath))
-            {
-                FileInfo fileAvatar =
-                    new FileInfo(Directory.GetCurrentDirectory() +
-                        tempAvatarPath);
-
-
-                // Clear old file upload if update success
-                if (fileAvatar.Exists)
-                {
-                    fileAvatar.Delete();
-                }
-
-            }
-            if (resultUpdate > 0 && !string.IsNullOrEmpty(fileAttachmentPath))
-
+            if (avartarPath != tempAvatarPath)
             {
                 FileInfo fileFileAttachment =
                                      new FileInfo(Directory.GetCurrentDirectory() +
-                                         tempFileAttachmentPath);
+                                         "/wwwroot" + tempAvatarPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
                 if (fileFileAttachment.Exists)
                 {
                     fileFileAttachment.Delete();
@@ -259,8 +254,29 @@ namespace News.API.Controllers
         {
             NewsPost? newsPost = await _newsPostService.GetNewsPost(id);
             if (newsPost == null) return NotFound();
-
             await _newsPostService.DeleteNewsPost(id);
+            if (string.IsNullOrEmpty(newsPost.Avatar))
+            {
+                FileInfo fileFileAttachment =
+                                              new FileInfo(Directory.GetCurrentDirectory() +
+                                                  "/wwwroot" + newsPost.Avatar);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+
+            if (string.IsNullOrEmpty(newsPost.FilePath))
+            {
+                FileInfo fileFileAttachment =
+                                              new FileInfo(Directory.GetCurrentDirectory() +
+                                                  "/wwwroot" + newsPost.FilePath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+
             return NoContent();
         }
     }

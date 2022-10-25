@@ -142,11 +142,11 @@ namespace News.API.Controllers
             var resultUpdate =
                 await _documentService.UpdateDocument(documentUpdated);
 
-            if (resultUpdate > 0 && !string.IsNullOrEmpty(fileAttachmentPath))
+            if (fileAttachmentPath != tempFileAttachmentPath)
             {
                 FileInfo fileFileAttachment =
                                      new FileInfo(Directory.GetCurrentDirectory() +
-                                         tempFileAttachmentPath);
+                                         "/wwwroot" + tempFileAttachmentPath);
                 if (fileFileAttachment.Exists)
                 {
                     fileFileAttachment.Delete();
