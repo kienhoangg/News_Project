@@ -38,6 +38,7 @@ import LibVideoListPage from 'features/visitor/VideoListPage/LibVideoListPage';
 import StaticContentListPage from 'features/admin/pages/staticInfor/StaticContent/StaticContentListPage';
 import StaticCategoryListPage from 'features/admin/pages/staticInfor/StaticCategory/StaticCategoryListPage';
 import QuestionDetailPage from 'features/visitor/QuestionDetailPage/QuestionDetailPage';
+import PublishedStaticPage from 'features/visitor/PublishedStaticPage/PublishedStaticPage';
 
 // Public routes
 const publicRoutes = [
@@ -61,7 +62,7 @@ const publicRoutes = [
 
   { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
 
-  { path: config.routes.publishedStaticPage, component: PublishedMenuPage },
+  { path: config.routes.publishedStaticPage, component: PublishedStaticPage },
   { path: config.routes.search, component: SearchPage },
 
   {

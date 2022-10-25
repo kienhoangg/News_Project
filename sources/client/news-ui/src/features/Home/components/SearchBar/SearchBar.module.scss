@@ -61,9 +61,10 @@
 
     .divider {
         height: 1px;
-        width: calc(100% - 4px);
+        width: calc(100% - 6px);
         border-top: 1px solid var(--default-color-border);
         border-bottom: 1px solid var(--default-color-border);
         box-sizing: content-box;
+        margin-left: 3px;
     }
 }

@@ -77,7 +77,7 @@ function ConnectionSection(props) {
                                     <Marquee duration={connectionSites.length * 8000} height='130px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
                                         {connectionSites.map((item, index) => {
                                             return (
-                                                <a href={item?.Link}>
+                                                <a href={item?.Link} key={item}>
                                                     <img key={index} src={imageHelper.getLinkImageUrl(item.Avatar)} alt={item.Title} style={{ margin: '0 10px' }} />
                                                 </a>
                                             );
@@ -106,7 +106,7 @@ function ConnectionSection(props) {
                                     {connectionConcern &&
                                         connectionConcern.map((item, index) => {
                                             return (
-                                                <a href={item?.Link}>
+                                                <a href={item?.Link} key={item}>
                                                     <img key={index} src={imageHelper.getLinkImageUrl(item.Avatar)} alt={item.Title} style={{ margin: '0 10px' }} />
                                                 </a>
                                             );

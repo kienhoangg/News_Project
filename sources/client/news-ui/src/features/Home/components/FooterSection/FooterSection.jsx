@@ -72,7 +72,7 @@ function FooterSection(props) {
                 </Link>
             </div>
             <div className={cx('visitor-access')}>
-                <Skeleton loading={isLoading} active>
+                <Skeleton loading={visitorOnline <= 0} active>
                     <div className={cx('visitor-item')}>
                         <span className={cx('visitor-item-label')}>NGƯỜI ONLINE</span>
                         <span className={cx('visitor-item-value')}>{visitorOnline}</span>

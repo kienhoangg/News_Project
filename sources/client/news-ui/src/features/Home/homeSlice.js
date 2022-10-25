@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialHome = {
-    view: 0,
+    view: -1,
     runPost: [],
     loading: true
 }
