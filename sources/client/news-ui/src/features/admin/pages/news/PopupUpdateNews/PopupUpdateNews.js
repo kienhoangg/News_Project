@@ -235,353 +235,355 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
 
   return (
     <div className="popup-update-news">
-      <Modal
-        open={true}
-        title="Chỉnh sửa tin tức TDBA"
-        okText="Cập nhật"
-        cancelText="Thoát"
-        onCancel={() => {
-          onCancel();
-        }}
-        width={1300}
-        centered
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              const date =
-                values?.publishedDate?._d ?? "0001-01-01 00:00:00.0000000";
-              const publishedDate =
-                datetimeHelper.formatDatetimeToDateSerer(date);
-              const {
-                category,
-                title,
-                IsNewsHot,
-                IsNewsVideo,
-                IsDisplayTitle,
-                IsDisplayAvatar,
-                IsComment,
-                avatarTitle,
-                description,
-                field,
-                source,
-              } = values;
-              let bodyData = {
-                Title: title,
-                IsHotNews: IsNewsHot,
-                IsVideoNews: IsNewsVideo,
-                IsShowTitle: IsDisplayTitle,
-                IsShowAvatar: IsDisplayAvatar,
-                IsShowComment: IsComment,
-                AvatarTitle: avatarTitle,
-                Description: description,
-                Content: newsDetail?.Content,
-                PublishedDate: publishedDate,
-              };
-              if (field) {
-                bodyData.FieldNewsId = parseInt(field);
-              }
-              if (source) {
-                bodyData.SourceNewsId = parseInt(source);
-              }
-              if (category) {
-                bodyData.CategoryNewsId = parseInt(category);
-              }
-
-              let body = { JsonString: bodyData };
-
-              if (fileList.length > 0 && !fileList?.[0]?.isFileFormServer) {
-                const file = fileList[0].originFileObj;
-                if (file.size > LIMIT_UP_LOAD_FILE) {
-                  openNotification(
-                    "File ảnh đã lớn hơn 2MB",
-                    "",
-                    NotificationType.ERROR
-                  );
-                  return;
-                }
-                body.Avatar = file;
-
-                delete bodyData?.Avatar;
-              } else if (
-                fileList?.[0]?.isFileFormServer &&
-                fileList.length > 0
-              ) {
-                bodyData = {
-                  ...bodyData,
-                  Avatar: newsDetail?.Avatar,
+      {newsDetail?.Id ? (
+        <Modal
+          open={true}
+          title="Chỉnh sửa tin tức TDBA"
+          okText="Cập nhật"
+          cancelText="Thoát"
+          onCancel={() => {
+            onCancel();
+          }}
+          width={1300}
+          centered
+          onOk={() => {
+            form
+              .validateFields()
+              .then((values) => {
+                const date =
+                  values?.publishedDate?._d ?? "0001-01-01 00:00:00.0000000";
+                const publishedDate =
+                  datetimeHelper.formatDatetimeToDateSerer(date);
+                const {
+                  category,
+                  title,
+                  IsNewsHot,
+                  IsNewsVideo,
+                  IsDisplayTitle,
+                  IsDisplayAvatar,
+                  IsComment,
+                  avatarTitle,
+                  description,
+                  field,
+                  source,
+                } = values;
+                let bodyData = {
+                  Title: title,
+                  IsHotNews: IsNewsHot,
+                  IsVideoNews: IsNewsVideo,
+                  IsShowTitle: IsDisplayTitle,
+                  IsShowAvatar: IsDisplayAvatar,
+                  IsShowComment: IsComment,
+                  AvatarTitle: avatarTitle,
+                  Description: description,
+                  Content: newsDetail?.Content,
+                  PublishedDate: publishedDate,
                 };
-              }
-
-              if (
-                fileListAttachment.length > 0 &&
-                !fileListAttachment?.[0]?.isFileFormServer
-              ) {
-                const file = fileListAttachment[0].originFileObj;
-                if (file.size > LIMIT_UP_LOAD_FILE) {
-                  openNotification(
-                    "File đính kèm đã lớn hơn 2MB",
-                    "",
-                    NotificationType.ERROR
-                  );
-                  return;
+                if (field) {
+                  bodyData.FieldNewsId = parseInt(field);
                 }
-                body.FileAttachment = file;
-                delete bodyData?.FilePath;
-              } else if (
-                fileListAttachment?.[0]?.isFileFormServer &&
-                fileListAttachment.length > 0
-              ) {
-                bodyData = {
-                  ...bodyData,
-                  FilePath: newsDetail?.FilePath,
-                };
-              }
+                if (source) {
+                  bodyData.SourceNewsId = parseInt(source);
+                }
+                if (category) {
+                  bodyData.CategoryNewsId = parseInt(category);
+                }
 
-              body = { ...body, JsonString: bodyData };
+                let body = { JsonString: bodyData };
 
-              // form.resetFields();
-              // setFileList([]);
-              // setFileListAttachment([]);
-              onUpdate(body);
-            })
-            .catch((info) => {
-              console.log("Validate Failed:", info);
-            });
-        }}
-      >
-        <Form
-          form={form}
-          // size={'small'}
-          // layout='vertical'
-          name="form_in_modal"
-          labelCol={{ span: 2 }}
-          // wrapperCol={{ span: 21 }}
-          initialValues={{
-            modifier: "public",
-            IsNewsHot: false,
-            IsNewsVideo: false,
-            IsDisplayTitle: false,
-            IsDisplayAvatar: false,
-            IsComment: false,
+                if (fileList.length > 0 && !fileList?.[0]?.isFileFormServer) {
+                  const file = fileList[0].originFileObj;
+                  if (file.size > LIMIT_UP_LOAD_FILE) {
+                    openNotification(
+                      "File ảnh đã lớn hơn 2MB",
+                      "",
+                      NotificationType.ERROR
+                    );
+                    return;
+                  }
+                  body.Avatar = file;
+
+                  delete bodyData?.Avatar;
+                } else if (
+                  fileList?.[0]?.isFileFormServer &&
+                  fileList.length > 0
+                ) {
+                  bodyData = {
+                    ...bodyData,
+                    Avatar: newsDetail?.Avatar,
+                  };
+                }
+
+                if (
+                  fileListAttachment.length > 0 &&
+                  !fileListAttachment?.[0]?.isFileFormServer
+                ) {
+                  const file = fileListAttachment[0].originFileObj;
+                  if (file.size > LIMIT_UP_LOAD_FILE) {
+                    openNotification(
+                      "File đính kèm đã lớn hơn 2MB",
+                      "",
+                      NotificationType.ERROR
+                    );
+                    return;
+                  }
+                  body.FileAttachment = file;
+                  delete bodyData?.FilePath;
+                } else if (
+                  fileListAttachment?.[0]?.isFileFormServer &&
+                  fileListAttachment.length > 0
+                ) {
+                  bodyData = {
+                    ...bodyData,
+                    FilePath: newsDetail?.FilePath,
+                  };
+                }
+
+                body = { ...body, JsonString: bodyData };
+
+                // form.resetFields();
+                // setFileList([]);
+                // setFileListAttachment([]);
+                onUpdate(body);
+              })
+              .catch((info) => {
+                console.log("Validate Failed:", info);
+              });
           }}
         >
-          <Form.Item label="Danh mục">
-            <Row gutter={8}>
-              <Col span={5}>
-                <Form.Item style={{ marginBottom: 0 }} name="category">
-                  {renderCategoryNews}
-                </Form.Item>
-              </Col>
-              <Col span={13}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="title"
-                  label="Tiêu đề"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập tiêu đề",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item
-                  name="publishedDate"
-                  label="Ngày tạo"
-                  style={{ marginBottom: 0 }}
-                >
-                  <DatePicker
-                    placeholder="Ngày tạo"
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
-          <Form.Item label="Tin nổi bật">
-            <Row gutter={8}>
-              <Col span={4}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="IsNewsHot"
-                  valuePropName="checked"
-                >
-                  <Checkbox></Checkbox>
-                </Form.Item>
-              </Col>
-              <Col span={4}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="IsNewsVideo"
-                  valuePropName="checked"
-                  label={"Tin video"}
-                >
-                  <Checkbox></Checkbox>
-                </Form.Item>
-              </Col>
-              <Col span={4}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="IsDisplayTitle"
-                  valuePropName="checked"
-                  label="Hiển thị tiêu đề"
-                >
-                  <Checkbox></Checkbox>
-                </Form.Item>
-              </Col>
-              <Col span={4}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="IsDisplayAvatar"
-                  valuePropName="checked"
-                  label="Hình ảnh đại diện"
-                >
-                  <Checkbox></Checkbox>
-                </Form.Item>
-              </Col>
-              <Col span={4}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="IsComment"
-                  valuePropName="checked"
-                  label="Bình luận"
-                >
-                  <Checkbox></Checkbox>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
-
-          <Form.Item name="lb-avatar" label="Ảnh đại diện">
-            <Row gutter={8}>
-              <Col span={8}>
-                <Upload
-                  listType="picture"
-                  maxCount={1}
-                  fileList={fileList}
-                  // onPreview={handlePreview}
-                  onChange={handleChange}
-                  accept=".jpg,.png,.jpeg"
-                  customRequest={commonFunc.dummyRequest}
-                >
-                  {fileList.length < 1 ? uploadButton : null}
-                </Upload>
-              </Col>
-              <Col span={16}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="avatarTitle"
-                  label="Tiêu đề ảnh"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Nhập tiêu đề ảnh",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Mô tả"
-            style={{ marginBottom: 0 }}
+          <Form
+            form={form}
+            // size={'small'}
+            // layout='vertical'
+            name="form_in_modal"
+            labelCol={{ span: 2 }}
+            // wrapperCol={{ span: 21 }}
+            initialValues={{
+              modifier: "public",
+              IsNewsHot: false,
+              IsNewsVideo: false,
+              IsDisplayTitle: false,
+              IsDisplayAvatar: false,
+              IsComment: false,
+            }}
           >
-            <TextArea
-              showCount
-              maxLength={256}
-              style={{
-                height: 80,
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="content" label="Nội dung">
-            <CKEditor
-              initData={newsDetail?.Content}
-              onChange={onEditorChange}
-              config={{
-                language: "vi",
-                toolbarGroups: [
-                  {
-                    name: "document",
-                    groups: ["mode", "document", "doctools"],
-                  },
-                  { name: "clipboard", groups: ["clipboard", "undo"] },
-                  {
-                    name: "editing",
-                    groups: ["find", "selection", "spellchecker", "editing"],
-                  },
-                  { name: "forms", groups: ["forms"] },
-                  "/",
-                  "/",
-                  { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
-                  {
-                    name: "paragraph",
-                    groups: [
-                      "list",
-                      "indent",
-                      "blocks",
-                      "align",
-                      "bidi",
-                      "paragraph",
-                    ],
-                  },
-                  { name: "links", groups: ["links"] },
-                  { name: "insert", groups: ["insert"] },
-                  "/",
-                  { name: "styles", groups: ["styles"] },
-                  { name: "colors", groups: ["colors"] },
-                  { name: "tools", groups: ["tools"] },
-                  { name: "others", groups: ["others"] },
-                  { name: "about", groups: ["about"] },
-                ],
-                extraPlugins: "justify,font,colorbutton,forms",
-                removeButtons: "Scayt,HiddenField,CopyFormatting,About",
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="lb-avatar"
-            label="Lĩnh vực"
-            style={{ marginBottom: 0 }}
-          >
-            <Row gutter={16}>
-              <Col span={6}>
-                <Form.Item name="field">{renderFieldNews}</Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="source" label="Nguồn tin">
-                  {renderSourceNews}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
-          <Form.Item name="lb-attachment" label="Tệp đính kèm">
-            <Row gutter={8}>
-              <Col span={8}>
-                <Upload
-                  listType="picture"
-                  maxCount={1}
-                  fileList={fileListAttachment}
-                  onChange={handleChangeAttachment}
-                  customRequest={commonFunc.dummyRequest}
-                >
-                  {fileListAttachment.length < 1 ? (
-                    <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-                  ) : null}
-                </Upload>
-              </Col>
-            </Row>
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item label="Danh mục">
+              <Row gutter={8}>
+                <Col span={5}>
+                  <Form.Item style={{ marginBottom: 0 }} name="category">
+                    {renderCategoryNews}
+                  </Form.Item>
+                </Col>
+                <Col span={13}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="title"
+                    label="Tiêu đề"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập tiêu đề",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={6}>
+                  <Form.Item
+                    name="publishedDate"
+                    label="Ngày tạo"
+                    style={{ marginBottom: 0 }}
+                  >
+                    <DatePicker
+                      placeholder="Ngày tạo"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item label="Tin nổi bật">
+              <Row gutter={8}>
+                <Col span={4}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="IsNewsHot"
+                    valuePropName="checked"
+                  >
+                    <Checkbox></Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="IsNewsVideo"
+                    valuePropName="checked"
+                    label={"Tin video"}
+                  >
+                    <Checkbox></Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="IsDisplayTitle"
+                    valuePropName="checked"
+                    label="Hiển thị tiêu đề"
+                  >
+                    <Checkbox></Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="IsDisplayAvatar"
+                    valuePropName="checked"
+                    label="Hình ảnh đại diện"
+                  >
+                    <Checkbox></Checkbox>
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="IsComment"
+                    valuePropName="checked"
+                    label="Bình luận"
+                  >
+                    <Checkbox></Checkbox>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+
+            <Form.Item name="lb-avatar" label="Ảnh đại diện">
+              <Row gutter={8}>
+                <Col span={8}>
+                  <Upload
+                    listType="picture"
+                    maxCount={1}
+                    fileList={fileList}
+                    // onPreview={handlePreview}
+                    onChange={handleChange}
+                    accept=".jpg,.png,.jpeg"
+                    customRequest={commonFunc.dummyRequest}
+                  >
+                    {fileList.length < 1 ? uploadButton : null}
+                  </Upload>
+                </Col>
+                <Col span={16}>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name="avatarTitle"
+                    label="Tiêu đề ảnh"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Nhập tiêu đề ảnh",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+
+            <Form.Item
+              name="description"
+              label="Mô tả"
+              style={{ marginBottom: 0 }}
+            >
+              <TextArea
+                showCount
+                maxLength={256}
+                style={{
+                  height: 80,
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="content" label="Nội dung">
+              <CKEditor
+                initData={newsDetail?.Content}
+                onChange={onEditorChange}
+                config={{
+                  language: "vi",
+                  toolbarGroups: [
+                    {
+                      name: "document",
+                      groups: ["mode", "document", "doctools"],
+                    },
+                    { name: "clipboard", groups: ["clipboard", "undo"] },
+                    {
+                      name: "editing",
+                      groups: ["find", "selection", "spellchecker", "editing"],
+                    },
+                    { name: "forms", groups: ["forms"] },
+                    "/",
+                    "/",
+                    { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
+                    {
+                      name: "paragraph",
+                      groups: [
+                        "list",
+                        "indent",
+                        "blocks",
+                        "align",
+                        "bidi",
+                        "paragraph",
+                      ],
+                    },
+                    { name: "links", groups: ["links"] },
+                    { name: "insert", groups: ["insert"] },
+                    "/",
+                    { name: "styles", groups: ["styles"] },
+                    { name: "colors", groups: ["colors"] },
+                    { name: "tools", groups: ["tools"] },
+                    { name: "others", groups: ["others"] },
+                    { name: "about", groups: ["about"] },
+                  ],
+                  extraPlugins: "justify,font,colorbutton,forms",
+                  removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="lb-avatar"
+              label="Lĩnh vực"
+              style={{ marginBottom: 0 }}
+            >
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Form.Item name="field">{renderFieldNews}</Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="source" label="Nguồn tin">
+                    {renderSourceNews}
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item name="lb-attachment" label="Tệp đính kèm">
+              <Row gutter={8}>
+                <Col span={8}>
+                  <Upload
+                    listType="picture"
+                    maxCount={1}
+                    fileList={fileListAttachment}
+                    onChange={handleChangeAttachment}
+                    customRequest={commonFunc.dummyRequest}
+                  >
+                    {fileListAttachment.length < 1 ? (
+                      <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                    ) : null}
+                  </Upload>
+                </Col>
+              </Row>
+            </Form.Item>
+          </Form>
+        </Modal>
+      ) : null}
     </div>
   );
 };
