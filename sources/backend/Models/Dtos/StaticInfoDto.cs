@@ -1,6 +1,8 @@
+using Contracts.Domains;
+
 namespace Models.Dtos
 {
-    public class StaticInfoDto
+    public class StaticInfoDto : DtoBase
     {
         public int? Id { get; set; }
         public string Title { get; set; }

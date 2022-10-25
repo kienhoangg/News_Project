@@ -13,7 +13,7 @@ namespace Common.Extensions
                 !System.IO.Directory.Exists(destinationFolder) //create path
             )
             {
-                Directory.CreateDirectory (destinationFolder);
+                Directory.CreateDirectory(destinationFolder);
             }
             string indentityFileName =
                 Path.GetFileNameWithoutExtension(file.FileName) +
@@ -25,7 +25,12 @@ namespace Common.Extensions
                     .Combine(destinationFolder,
                     Path.GetFileName(indentityFileName)); //the path to upload
             await file.CopyToAsync(new FileStream(path, FileMode.Create));
-            return $"{folderDestination}/{indentityFileName}";
+            var result = $"{folderDestination}/{indentityFileName}";
+            if (result.Contains("/wwwroot"))
+            {
+                result = result.Replace("/wwwroot", "");
+            }
+            return result;
         }
     }
 }
