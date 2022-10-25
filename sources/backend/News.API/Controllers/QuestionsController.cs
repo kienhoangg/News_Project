@@ -90,16 +90,61 @@ namespace News.API.Controllers
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateQuestionDto(
-            [Required] int id,
-            [FromBody] QuestionDto questionDto
-        )
+         UpdateQuestionDto(
+             [Required] int id,
+             [FromForm] QuestionUploadDto questionUploadDto
+         )
         {
-            Question? Question = await _questionService.GetQuestion(id);
-            if (Question == null) return NotFound();
-            var updatedQuestion = _mapper.Map(questionDto, Question);
-            await _questionService.UpdateQuestion(updatedQuestion);
-            var result = _mapper.Map<QuestionDto>(updatedQuestion);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Question
+                    >(lstErrorString));
+                }
+            }
+            Question? question = await _questionService.GetQuestion(id);
+            if (question == null) return NotFound();
+            var tempFileAttachmentPath = question.FilePath;
+            var questionUpdated = new Question();
+            if (!string.IsNullOrEmpty(questionUploadDto.JsonString))
+            {
+                questionUpdated =
+                    _serializeService
+                        .Deserialize<Question>(questionUploadDto.JsonString);
+                questionUpdated.Id = question.Id;
+            }
+            string fileAttachmentPath = !String.IsNullOrEmpty(questionUpdated.FilePath) ? questionUpdated.FilePath : "";
+            // Upload file attachment if exist
+            if (questionUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await questionUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            questionUpdated.FilePath = fileAttachmentPath;
+            await _questionService.UpdateQuestion(questionUpdated);
+
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            var result = _mapper.Map<QuestionDto>(source: questionUpdated);
             return Ok(result);
         }
 
@@ -110,6 +155,13 @@ namespace News.API.Controllers
             if (question == null) return NotFound();
 
             await _questionService.DeleteQuestion(id);
+            FileInfo fileFileAttachment =
+                                    new FileInfo(Directory.GetCurrentDirectory() +
+                                        question.FilePath);
+            if (fileFileAttachment.Exists)
+            {
+                fileFileAttachment.Delete();
+            }
             return NoContent();
         }
     }

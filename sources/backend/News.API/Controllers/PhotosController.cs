@@ -91,15 +91,78 @@ namespace News.API.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
         UpdatePhotoDto(
-            [Required] int id,
-            [FromBody] PhotoDto photoDto
+           [Required] int id,
+          [FromForm] PhotoUploadDto photoUploadDto
         )
         {
-            Photo? Photo = await _photoService.GetPhoto(id);
-            if (Photo == null) return NotFound();
-            var updatedPhoto = _mapper.Map(photoDto, Photo);
-            await _photoService.UpdatePhoto(updatedPhoto);
-            var result = _mapper.Map<PhotoDto>(updatedPhoto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Photo
+                    >(lstErrorString));
+                }
+            }
+
+            Photo? photo = await _photoService.GetPhoto(id);
+
+            if (photo == null) return NotFound();
+            var tempFileAttachmentPath = photo.ImagePath;
+            var photoUpdated = new Photo();
+            if (!string.IsNullOrEmpty(photoUploadDto.JsonString))
+            {
+                photoUpdated = _serializeService
+                                    .Deserialize<Photo>(photoUploadDto.JsonString);
+                photoUpdated.Id = photo.Id;
+            }
+
+            string fileAttachmentPath = !String.IsNullOrEmpty(photoUpdated.ImagePath) ? photoUpdated.ImagePath : "";
+            // Upload file attachment if exist
+            if (photoUploadDto.FileAttachment != null)
+            {
+                List<string> lstStringFile = new List<string>();
+                foreach (var item in photoUploadDto.FileAttachment)
+                {
+                    lstStringFile.Add(await item.UploadFile(CommonConstants.FILE_ATTACHMENT_PATH));
+                }
+                fileAttachmentPath = String.Join(";;", lstStringFile.ToArray());
+            }
+            photoUpdated.ImagePath = fileAttachmentPath;
+            await _photoService.UpdatePhoto(photoUpdated);
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                if (!string.IsNullOrEmpty(tempFileAttachmentPath) && tempFileAttachmentPath.Contains(";;"))
+                {
+                    foreach (var item in tempFileAttachmentPath.Split(";;"))
+                    {
+                        FileInfo fileFileAttachment =
+                                                       new FileInfo(Directory.GetCurrentDirectory() +
+                                                           "/wwwroot" + item);
+                        if (fileFileAttachment.Exists)
+                        {
+                            fileFileAttachment.Delete();
+                        }
+                    }
+                }
+                else
+                {
+                    FileInfo fileFileAttachment =
+                                                        new FileInfo(Directory.GetCurrentDirectory() +
+                                                            "/wwwroot" + tempFileAttachmentPath);
+                    if (fileFileAttachment.Exists)
+                    {
+                        fileFileAttachment.Delete();
+                    }
+                }
+            }
+            var result = _mapper.Map<PhotoDto>(photo);
             return Ok(result);
         }
 
@@ -108,7 +171,32 @@ namespace News.API.Controllers
         {
             Photo? photo = await _photoService.GetPhoto(id);
             if (photo == null) return NotFound();
-
+            if (!string.IsNullOrEmpty(photo.ImagePath))
+            {
+                if (!string.IsNullOrEmpty(photo.ImagePath) && photo.ImagePath.Contains(";;"))
+                {
+                    foreach (var item in photo.ImagePath.Split(";;"))
+                    {
+                        FileInfo fileFileAttachment =
+                                                       new FileInfo(Directory.GetCurrentDirectory() +
+                                                           "/wwwroot" + item);
+                        if (fileFileAttachment.Exists)
+                        {
+                            fileFileAttachment.Delete();
+                        }
+                    }
+                }
+                else
+                {
+                    FileInfo fileFileAttachment =
+                                                        new FileInfo(Directory.GetCurrentDirectory() +
+                                                            "/wwwroot" + photo.ImagePath);
+                    if (fileFileAttachment.Exists)
+                    {
+                        fileFileAttachment.Delete();
+                    }
+                }
+            }
             await _photoService.DeletePhoto(id);
             return NoContent();
         }
