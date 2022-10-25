@@ -32,6 +32,11 @@ const filterAll = {
   orderBy: 'Title',
 };
 
+const Mode = {
+  Create: 1,
+  Edit: 0,
+};
+
 function MenuPage(props) {
   const [displayIcon, setDisplayIcon] = useState([]);
   const [dataTree, setDataTree] = useState([]);
@@ -39,6 +44,8 @@ function MenuPage(props) {
   const dataResource = useRef([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const mode = useRef(Mode.Create);
+  const idEdit = useRef(-1);
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
@@ -62,14 +69,34 @@ function MenuPage(props) {
     _displayIcon[id] = !displayIcon[id];
     setDisplayIcon(_displayIcon);
   }
-  function xyz(id) {
-    const _displayIcon = [];
-    _displayIcon[id] = false;
-    setDisplayIcon(_displayIcon);
-  }
 
-  function editMenu(e) {
-    console.log('editMenu', e);
+  async function editMenu(id) {
+    const res = await setupApi.getMenuById(id);
+    if (res?.Status) {
+      openNotification(
+        <>
+          <b>Hủy duyệt</b> để có thể chỉnh sửa
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+
+      return;
+    }
+    idEdit.current = id;
+    mode.current = Mode.Edit;
+    form?.setFieldsValue({
+      title: res?.Title,
+      parentId: res?.ParentId,
+      order: res?.Order,
+      url: res?.Url,
+      urlAdmin: res?.UrlAdmin,
+      urlChildren: res?.UrlChildren,
+      isOpenNewTab: res?.IsOpenNewTab,
+      isPublish: res?.IsPublish,
+    });
+
+    setIsModalOpen(true);
   }
   function disableMenu() {
     console.log('disableMenu');
@@ -150,10 +177,14 @@ function MenuPage(props) {
   };
 
   const onFinish = (values) => {
-    values.parentID = parseInt(values?.parentId ?? 0);
+    values.parentId = parseInt(values?.parentId ?? 0);
     values.order = parseInt(values?.order ?? 0);
-    console.log(values);
-    insertCategoryNews(values);
+    if (mode.current === Mode.Create) {
+      insertCategoryNews(values);
+    } else {
+      updateCategoryNews(values);
+    }
+
     form.resetFields();
   };
 
@@ -171,7 +202,23 @@ function MenuPage(props) {
     }
   };
 
+  /**
+   * Gọi api lấy dữ liệu danh sách nguồi tin tức
+   */
+  const updateCategoryNews = async (values) => {
+    try {
+      await setupApi.updateMenu(idEdit.current, values);
+      setIsModalOpen(false);
+      getMenuAll();
+      openNotification('Cập nhật menu thành công');
+    } catch (error) {
+      openNotification('Cập nhật menu thất bại', '', NotificationType.ERROR);
+    }
+  };
+
   const showModal = () => {
+    mode.current = Mode.Create;
+    form?.setFieldsValue({});
     setIsModalOpen(true);
   };
   return (
@@ -212,6 +259,7 @@ function MenuPage(props) {
           <Form.Item name='url' label='Địa chỉ (Url)'>
             <Input />
           </Form.Item>
+          {/*           
           <Form.Item name='urlAdmin' label='UrlList quản trị'>
             <Input />
           </Form.Item>
@@ -227,10 +275,13 @@ function MenuPage(props) {
           </Form.Item>
           <Form.Item name='isPublish' label='Xuất bản' valuePropName='checked'>
             <Checkbox />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='Tạo mới'>
-              Tạo mới
+            <Button
+              type='primary'
+              htmlType={mode.current === Mode.Edit ? 'Sửa' : 'Tạo mới'}
+            >
+              {mode.current === Mode.Edit ? 'Sửa' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>
