@@ -1,6 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Extensions;
+using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -12,16 +16,18 @@ namespace News.API.Controllers
     public class CompanyInfosController : ControllerBase
     {
         private readonly ICompanyInfoService _companyInfoService;
-
+        private readonly ISerializeService _serializeService;
         private readonly IMapper _mapper;
 
         public CompanyInfosController(
             ICompanyInfoService companyInfoService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _companyInfoService = companyInfoService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -35,10 +41,37 @@ namespace News.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult>
-        CreateCompanyInfoDto([FromBody] CompanyInfoDto companyInfoDto)
+       CreateCompanyInfoDto([FromForm] CompanyInfoUploadDto companyInfoUploadDto)
         {
-            var companyInfo = _mapper.Map<CompanyInfo>(companyInfoDto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<CompanyInfo
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            var companyInfo = _serializeService
+                  .Deserialize<CompanyInfo>(companyInfoUploadDto.JsonString);
+            // Upload file attachment if exist
+            if (companyInfoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await companyInfoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+            companyInfo.Avatar = fileAttachmentPath;
             await _companyInfoService.CreateCompanyInfo(companyInfo);
+
             var result = _mapper.Map<CompanyInfoDto>(companyInfo);
             return Ok(result);
         }
@@ -55,16 +88,61 @@ namespace News.API.Controllers
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateCompanyInfoDto(
-            [Required] int id,
-            [FromBody] CompanyInfoDto companyInfoDto
-        )
+      UpdateCompanyInfoDto(
+          [Required] int id,
+          [FromForm] CompanyInfoUploadDto companyInfoUploadDto
+      )
         {
-            CompanyInfo? CompanyInfo = await _companyInfoService.GetCompanyInfo(id);
-            if (CompanyInfo == null) return NotFound();
-            var updatedCompanyInfo = _mapper.Map(companyInfoDto, CompanyInfo);
-            await _companyInfoService.UpdateCompanyInfo(updatedCompanyInfo);
-            var result = _mapper.Map<CompanyInfoDto>(updatedCompanyInfo);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<CompanyInfo
+                    >(lstErrorString));
+                }
+            }
+            CompanyInfo? companyInfo = await _companyInfoService.GetCompanyInfo(id);
+            if (companyInfo == null) return NotFound();
+            var tempFileAttachmentPath = companyInfo.Avatar;
+            var companyInfoUpdated = new CompanyInfo();
+            if (!string.IsNullOrEmpty(companyInfoUploadDto.JsonString))
+            {
+                companyInfoUpdated =
+                    _serializeService
+                        .Deserialize<CompanyInfo>(companyInfoUploadDto.JsonString);
+                companyInfoUpdated.Id = companyInfo.Id;
+            }
+            string fileAttachmentPath = !String.IsNullOrEmpty(companyInfoUpdated.Avatar) ? companyInfoUpdated.Avatar : "";
+            // Upload file attachment if exist
+            if (companyInfoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await companyInfoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            companyInfoUpdated.Avatar = fileAttachmentPath;
+            await _companyInfoService.UpdateCompanyInfo(companyInfoUpdated);
+
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            var result = _mapper.Map<CompanyInfoDto>(source: companyInfoUpdated);
             return Ok(result);
         }
 
@@ -75,6 +153,13 @@ namespace News.API.Controllers
             if (companyInfo == null) return NotFound();
 
             await _companyInfoService.DeleteCompanyInfo(id);
+            FileInfo fileFileAttachment =
+                                    new FileInfo(Directory.GetCurrentDirectory() +
+                                        companyInfo.Avatar);
+            if (fileFileAttachment.Exists)
+            {
+                fileFileAttachment.Delete();
+            }
             return NoContent();
         }
     }
