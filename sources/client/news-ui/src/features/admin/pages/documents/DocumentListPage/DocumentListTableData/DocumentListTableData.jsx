@@ -24,7 +24,8 @@ DocumentListTableData.defaultProps = {
 };
 
 function DocumentListTableData(props) {
-  const { data, setPagination, deleteSourceNew, updateStatusNew, onClickRow } = props;
+  const { data, setPagination, deleteSourceNew, updateStatusNew, onClickRow } =
+    props;
 
   const columns = [
     {
@@ -75,9 +76,25 @@ function DocumentListTableData(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />} onClick={() => {
-          onClickRow && onClickRow(record?.Id)
-        }}>
+          <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => {
+              if (record?.Status) {
+                openNotification(
+                  <>
+                    <b>Hủy duyệt</b> để có thể chỉnh sửa
+                  </>,
+                  '',
+                  NotificationType.ERROR
+                );
+
+                return;
+              }
+
+              onClickRow && onClickRow(record?.Id);
+            }}
+          >
             Sửa
           </Button>
           <Button
@@ -173,7 +190,6 @@ function DocumentListTableData(props) {
         }}
         dataSource={dataItems}
         size='small'
-        
       />
     </div>
   );

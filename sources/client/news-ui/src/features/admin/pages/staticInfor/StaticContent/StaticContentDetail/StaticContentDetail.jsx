@@ -7,6 +7,8 @@ import { Row } from 'antd';
 import { Col } from 'antd';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { FileOutlined } from '@ant-design/icons';
+import { envDomainBackend, envDomainClient } from 'common/enviroments';
+import imageHelper from 'helpers/imageHelper';
 const cx = classNames.bind(styles);
 
 StaticContentDetail.propTypes = {};
@@ -18,32 +20,6 @@ function StaticContentDetail(props) {
   const findCategoryName = (id) => {
     const cateory = categoryAll.find((x) => x.Id === id);
     return cateory?.Title;
-  };
-
-  const getLinkFileAttachment = (filePath) => {
-    return filePath
-      ? filePath?.indexOf('https://') === 0 ||
-        filePath?.indexOf('http://') === 0
-        ? filePath
-        : (window.location.origin === 'http://localhost:3000'
-            ? 'https://localhost:7122/'
-            : window.location.origin) +
-          (filePath.startsWith('/wwwroot/', '')
-            ? filePath.replaceAll('/wwwroot/', '')
-            : filePath)
-      : '/';
-  };
-
-  const getNameFile = (filePath) => {
-    const file = filePath.replaceAll(
-      '/wwwroot/UploadFiles/FileAttachments/',
-      ''
-    );
-    const fileName =
-      file.substring(0, file.lastIndexOf('_')) +
-      file.substring(file.lastIndexOf('.'), file.length);
-
-    return fileName;
   };
 
   return (
@@ -104,19 +80,7 @@ function StaticContentDetail(props) {
                 <img
                   alt=''
                   style={{ width: '10vw' }}
-                  src={
-                    data?.Avatar
-                      ? data?.Avatar?.indexOf('https://') === 0 ||
-                        data?.Avatar?.indexOf('http://') === 0
-                        ? data?.Avatar
-                        : (window.location.origin === 'http://localhost:3000'
-                            ? 'https://localhost:7122/'
-                            : window.location.origin) +
-                          (data?.Avatar.startsWith('/wwwroot/', '')
-                            ? data?.Avatar.replaceAll('/wwwroot/', '')
-                            : data?.Avatar)
-                      : '/'
-                  }
+                  src={imageHelper.getLinkImageUrl(data?.Avatar)}
                 />
               </div>
             </Col>
@@ -126,14 +90,14 @@ function StaticContentDetail(props) {
               <div className={cx('row-item-label')}>Tệp dính kèm</div>
             </Col>
             <Col span={20}>
-              {getNameFile(data?.FilePath) && (
+              {imageHelper.getNameFile(data?.FilePath) && (
                 <div
                   className={cx('file-attachment')}
-                  onClick={() =>
-                    window.open(getLinkFileAttachment(data?.FilePath))
-                  }
+                  // onClick={() =>
+                  //   window.open(getLinkFileAttachment(data?.FilePath))
+                  // }
                 >
-                  <FileOutlined /> {getNameFile(data?.FilePath)}
+                  <FileOutlined /> {imageHelper.getNameFile(data?.FilePath)}
                 </div>
               )}
             </Col>

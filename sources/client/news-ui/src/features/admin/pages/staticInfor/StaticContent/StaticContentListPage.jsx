@@ -29,6 +29,7 @@ import commonFunc from 'common/commonFunc';
 import { TreeNode } from 'antd/lib/tree-select';
 import { TypeUpdate, Role } from 'common/constant';
 import StaticContentDetail from './StaticContentDetail/StaticContentDetail';
+import StaticContentDetailUpdate from './StaticContentDetailUpdate/StaticContentDetailUpdate';
 
 const cx = classNames.bind(styles);
 
@@ -64,6 +65,10 @@ function StaticContentListPage(props) {
   const dataDetail = useRef({});
   const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
     useState(false);
+  const [popupUpdate, setPopupUpdate] = useState({
+    id: null,
+    show: false,
+  });
   const [form] = Form.useForm();
 
   const refCategoryAll = useRef([]);
@@ -384,6 +389,7 @@ function StaticContentListPage(props) {
                 ],
                 extraPlugins: 'justify,font,colorbutton,forms',
                 removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+                allowedContent: true,
               }}
             />
           </Form.Item>
@@ -445,6 +451,12 @@ function StaticContentListPage(props) {
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
+          onClickEdit={(id) => {
+            setPopupUpdate({
+              id: id,
+              show: true,
+            });
+          }}
         />
 
         <StaticContentDetail
@@ -455,6 +467,25 @@ function StaticContentListPage(props) {
             setOpenCollectionNewsDetail(false);
           }}
         />
+
+        {(popupUpdate?.id || popupUpdate?.id === 0) && popupUpdate?.show ? (
+          <StaticContentDetailUpdate
+            onSuccess={() => {
+              setPopupUpdate({
+                id: null,
+                show: false,
+              });
+              fetchCategoryList();
+            }}
+            Id={popupUpdate?.id}
+            onCancel={() => {
+              setPopupUpdate({
+                id: null,
+                show: false,
+              });
+            }}
+          />
+        ) : null}
       </div>
     </div>
   );

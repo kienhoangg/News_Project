@@ -46,7 +46,7 @@ const filterAll = {
 function DocumentListPage(props) {
   const [popupUpdate, setPopupUpdate] = useState({
     id: null,
-    show: false
+    show: false,
   });
   const [newsData, setNewsData] = useState({});
   const [objFilter, setObjFilter] = useState({
@@ -446,13 +446,7 @@ function DocumentListPage(props) {
                 ],
                 extraPlugins: 'justify,font,colorbutton,forms',
                 removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
-                // filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
-                // filebrowserUploadUrl:
-                //   '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-                // filebrowserWindowWidth: '1000',
-                // filebrowserWindowHeight: '700',
-                // cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
-                // cloudServices_tokenUrl: 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt',
+                allowedContent: true,
               }}
             />
           </Form.Item>
@@ -491,26 +485,32 @@ function DocumentListPage(props) {
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
           updateStatusNew={handleUpdateStatusNew}
-          onClickRow={(id)=>{
+          onClickRow={(id) => {
             setPopupUpdate({
               id: id,
-              show: true
-            })
+              show: true,
+            });
           }}
         />
       </div>
-      {(popupUpdate?.id || popupUpdate?.id ===0) && popupUpdate?.show ? <PopupUpdateDocuments onSuccess={()=>{
-        setPopupUpdate({
-          id: null,
-          show: false
-        })
-        fetchList();
-      }} Id={popupUpdate?.id} onCancel={()=>{
-        setPopupUpdate({
-          id: null,
-          show: false
-        });
-      }} /> : null}
+      {(popupUpdate?.id || popupUpdate?.id === 0) && popupUpdate?.show ? (
+        <PopupUpdateDocuments
+          onSuccess={() => {
+            setPopupUpdate({
+              id: null,
+              show: false,
+            });
+            fetchList();
+          }}
+          Id={popupUpdate?.id}
+          onCancel={() => {
+            setPopupUpdate({
+              id: null,
+              show: false,
+            });
+          }}
+        />
+      ) : null}
     </div>
   );
 }

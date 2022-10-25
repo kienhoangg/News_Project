@@ -17,6 +17,10 @@ class InforStaticAPI {
     const url = '/StaticInfos';
     return axiosClient.put(url, body);
   };
+  updateContent = (id, body) => {
+    const url = `/StaticInfos/${id}`;
+    return axiosClient.put(url, body);
+  };
   deleteContent = (id) => {
     const url = `/StaticInfos/${id}`;
     return axiosClient.delete(url);
