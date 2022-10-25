@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Radio, Row, Space } from 'antd';
+import { Button, Form, Input, Modal, Radio, Row, Skeleton, Space } from 'antd';
 import homeApi from 'apis/published/homeApi';
 import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
@@ -53,6 +53,7 @@ const dataChartDefault = [
 
 function PublishedEvaluatePage(props) {
     const [evaluateData, setEvaluateData] = useState();
+    const [loading, setLoading] = useState(true);
 
     const [openModelResult, setOpenModelResult] = useState(false);
     const [dataChartResult, setDataChartResult] = useState([]);
@@ -96,7 +97,6 @@ function PublishedEvaluatePage(props) {
                     unStatisfied['Bình chọn'] = parseInt(percentUnStatisfied);
                     unStatisfied.value = `${percentUnStatisfied}%`;
 
-                    console.log(dataChart);
                     setDataChartResult(dataChart);
                 }
 
@@ -115,6 +115,8 @@ function PublishedEvaluatePage(props) {
                 setEvaluateData(response?.PagedData?.Results);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchHome();
@@ -180,59 +182,61 @@ function PublishedEvaluatePage(props) {
             <Row className={cx('title')}>
                 <h3>ĐÁNH GIÁ SỰ PHỤC VỤ CỦA CƠ QUAN HÀNH CHÍNH NHÀ NƯỚC</h3>
             </Row>
-            {Array.isArray(evaluateData) &&
-                evaluateData.map((item, index) => {
-                    const component = (
-                        <Row className={cx('question')} key={index}>
-                            <Form
-                                name={`form-${item.Id}`}
-                                onFinish={handleSubmitForm}
-                                initialValues={{
-                                    Id: item.Id,
-                                    Title: item.Title,
-                                }}
-                            >
-                                <div className={cx('tutorial-title')}>
-                                    {index + 1}. {item.Title}
-                                </div>
-                                <Form.Item
-                                    name={`rate`}
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng chọn ít nhất một lựa chọn',
-                                        },
-                                    ]}
+            <Skeleton loading={loading} active>
+                {Array.isArray(evaluateData) &&
+                    evaluateData.map((item, index) => {
+                        const component = (
+                            <Row className={cx('question')} key={index}>
+                                <Form
+                                    name={`form-${item.Id}`}
+                                    onFinish={handleSubmitForm}
+                                    initialValues={{
+                                        Id: item.Id,
+                                        Title: item.Title,
+                                    }}
                                 >
-                                    <Radio.Group size='small'>
-                                        <Space direction='vertical'>
-                                            <Radio value={1}>Rất hài lòng</Radio>
-                                            <Radio value={2}>Hài lòng</Radio>
-                                            <Radio value={3}>Chấp nhận được</Radio>
-                                            <Radio value={4}>Không hài lòng</Radio>
-                                            <Radio value={5}>Không thể chấp nhận được</Radio>
-                                        </Space>
-                                    </Radio.Group>
-                                </Form.Item>
-                                <Form.Item hidden name={'Id'}>
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item hidden name={'Title'}>
-                                    <Input />
-                                </Form.Item>
-                                <div className={cx('btn-group')}>
-                                    <Button type='primary' size='small' htmlType='submit'>
-                                        Bình chọn
-                                    </Button>
-                                    <Button type='primary' size='small' onClick={() => handleOnClickResult(item.Id)}>
-                                        Kết quả
-                                    </Button>
-                                </div>
-                            </Form>
-                        </Row>
-                    );
-                    return component;
-                })}
+                                    <div className={cx('tutorial-title')}>
+                                        {index + 1}. {item.Title}
+                                    </div>
+                                    <Form.Item
+                                        name={`rate`}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn ít nhất một lựa chọn',
+                                            },
+                                        ]}
+                                    >
+                                        <Radio.Group size='small'>
+                                            <Space direction='vertical'>
+                                                <Radio value={1}>Rất hài lòng</Radio>
+                                                <Radio value={2}>Hài lòng</Radio>
+                                                <Radio value={3}>Chấp nhận được</Radio>
+                                                <Radio value={4}>Không hài lòng</Radio>
+                                                <Radio value={5}>Không thể chấp nhận được</Radio>
+                                            </Space>
+                                        </Radio.Group>
+                                    </Form.Item>
+                                    <Form.Item hidden name={'Id'}>
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item hidden name={'Title'}>
+                                        <Input />
+                                    </Form.Item>
+                                    <div className={cx('btn-group')}>
+                                        <Button type='primary' size='small' htmlType='submit'>
+                                            Bình chọn
+                                        </Button>
+                                        <Button type='primary' size='small' onClick={() => handleOnClickResult(item.Id)}>
+                                            Kết quả
+                                        </Button>
+                                    </div>
+                                </Form>
+                            </Row>
+                        );
+                        return component;
+                    })}
+            </Skeleton>
 
             {/* Model kết quả*/}
             <Modal

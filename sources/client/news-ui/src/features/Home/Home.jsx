@@ -40,10 +40,10 @@ function Home(props) {
 
                 const actionLoading = updateLoading(false);
                 dispatch(actionLoading);
-
-                setLoading(false);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchHome();

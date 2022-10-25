@@ -37,9 +37,10 @@ function PublishedDocumentPage(props) {
                 const response = await publishedNewsApi.getData(params);
                 setData(response);
                 setDateFilter(moment(response?.NewsPostDetail.PublishedDate));
-                setLoading(false);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchDetail();
@@ -156,11 +157,11 @@ function PublishedDocumentPage(props) {
                 <FormVisitorComment onFinish={onFinishComment} />
             </div>
 
-            <div className={cx('document-relative')}>
-                <div className={cx('document-relative-label')}>Các bài khác</div>
-                <div className={cx('document-relative-divider')}></div>
+            <Skeleton loading={loading} active>
+                <div className={cx('document-relative')}>
+                    <div className={cx('document-relative-label')}>Các bài khác</div>
+                    <div className={cx('document-relative-divider')}></div>
 
-                <Skeleton loading={loading} active>
                     {data?.NewsRelatives &&
                         data?.NewsRelatives.map((item) => {
                             return (
@@ -173,22 +174,22 @@ function PublishedDocumentPage(props) {
                                 </div>
                             );
                         })}
-                </Skeleton>
-            </div>
-            <div className={cx('divider')}></div>
-            <Row align='end'>
-                <Col>
-                    <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>Xem thêm >></Link>
-                </Col>
-            </Row>
-            <Row align='end' style={{ marginTop: 8 }}>
-                <Col>
-                    {dateFilter && <DatePicker defaultValue={dateFilter} format={constant.DATE_FORMAT_VN} onChange={handleOnChangeDateFilter} />}
-                    <Button style={{ marginLeft: 8 }}>
-                        <Link to={commonRender.renderLinkNewsField(data?.CategoryParentNews?.Id, dateFilter)}>Xem</Link>
-                    </Button>
-                </Col>
-            </Row>
+                </div>
+                <div className={cx('divider')}></div>
+                <Row align='end'>
+                    <Col>
+                        <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>Xem thêm >></Link>
+                    </Col>
+                </Row>
+                <Row align='end' style={{ marginTop: 8 }}>
+                    <Col>
+                        {dateFilter && <DatePicker defaultValue={dateFilter} format={constant.DATE_FORMAT_VN} onChange={handleOnChangeDateFilter} />}
+                        <Button style={{ marginLeft: 8 }}>
+                            <Link to={commonRender.renderLinkNewsField(data?.CategoryParentNews?.Id, dateFilter)}>Xem</Link>
+                        </Button>
+                    </Col>
+                </Row>
+            </Skeleton>
         </div>
     );
 }

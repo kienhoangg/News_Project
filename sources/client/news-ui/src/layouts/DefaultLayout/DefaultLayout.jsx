@@ -29,9 +29,10 @@ function DefaultLayout({ children }) {
                 const params = {};
                 const response = await homeApi.getLayoutData(params);
                 setLayoutData(response);
-                setLoading(false);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchLayout();
@@ -44,7 +45,7 @@ function DefaultLayout({ children }) {
                 <Banner />
                 <Navbar isLoading={loading} menuDatas={layoutData} />
                 <div className={cx('content')}>{children}</div>
-                <FooterSection visitorOnline={homeRedux?.view} />
+                <FooterSection isLoading={homeRedux.loading} visitorOnline={homeRedux?.view} />
             </div>
         </div>
     );
