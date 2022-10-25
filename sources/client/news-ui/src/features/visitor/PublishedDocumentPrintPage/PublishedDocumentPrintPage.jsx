@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './PublishedDocumentPrintPage.module.scss';
 import classNames from 'classnames/bind';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
-import { Col, Row } from 'antd';
+import { Col, Row, Skeleton } from 'antd';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { useParams } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ PublishedDocumentPrintPage.defaultProps = {};
 function PublishedDocumentPrintPage(props) {
     let { id } = useParams();
     const [data, setData] = useState();
+    const [loading, setLoading] = useState(true);
 
     //Lấy dữ liệu chi tiết
     useEffect(() => {
@@ -30,6 +31,8 @@ function PublishedDocumentPrintPage(props) {
                 }
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -38,23 +41,25 @@ function PublishedDocumentPrintPage(props) {
 
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('document-container')}>
-                {data && (
-                    <>
-                        <h3 className={cx('title')}>{data?.NewsPostDetail.Title}</h3>
-                        <h3 style={{ fontSize: 13 }} className={cx('description')}>
-                            {data?.NewsPostDetail.Description}
-                        </h3>
-                        <div className={cx('avatar-content')}>
-                            <img src={data?.NewsPostDetail.Avatar} alt='' width={'80%'} />
-                            <div className={cx('avatar-title')}>{data?.NewsPostDetail.AvatarTitle}</div>
-                        </div>
+            <Skeleton loading={loading} active>
+                <div className={cx('document-container')}>
+                    {data && (
+                        <>
+                            <h3 className={cx('title')}>{data?.NewsPostDetail.Title}</h3>
+                            <h3 style={{ fontSize: 13 }} className={cx('description')}>
+                                {data?.NewsPostDetail.Description}
+                            </h3>
+                            <div className={cx('avatar-content')}>
+                                <img src={data?.NewsPostDetail.Avatar} alt='' width={'80%'} />
+                                <div className={cx('avatar-title')}>{data?.NewsPostDetail.AvatarTitle}</div>
+                            </div>
 
-                        <div className={cx('content')}></div>
-                        <div style={{ fontSize: 13 }} dangerouslySetInnerHTML={{ __html: data?.NewsPostDetail.Content }}></div>
-                    </>
-                )}
-            </div>
+                            <div className={cx('content')}></div>
+                            <div style={{ fontSize: 13 }} dangerouslySetInnerHTML={{ __html: data?.NewsPostDetail.Content }}></div>
+                        </>
+                    )}
+                </div>
+            </Skeleton>
         </div>
     );
 }
