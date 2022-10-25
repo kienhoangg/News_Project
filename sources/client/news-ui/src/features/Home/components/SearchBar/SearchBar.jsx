@@ -7,6 +7,7 @@ import { Col, Input, Row } from 'antd';
 import routes from 'config/configRoutes';
 import { useSelector } from 'react-redux';
 import Marquee from 'react-easy-marquee';
+import commonRender from 'common/commonRender';
 
 const { Search } = Input;
 const cx = classNames.bind(styles);
@@ -57,44 +58,14 @@ function SearchBar(props) {
             <Row gutter={8}>
                 <div className={cx('news-hot')}>
                     {Array.isArray(homeRedux?.runPost) && (
-                        <Marquee duration={50000} height='80px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                        <Marquee duration={homeRedux.runPost.length * 8000} height='80px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
                             {homeRedux.runPost.map((item, index) => {
                                 return (
                                     <>
-                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                        <Link to={commonRender.renderLinkNewsDetail(item.Id)} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
                                             <span className={cx('news-hot-icon')}></span>
                                             <span key={index} className={cx('news-hot-content')}>
-                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
-                                            </span>
-                                        </Link>
-                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
-                                            <span className={cx('news-hot-icon')}></span>
-                                            <span key={index} className={cx('news-hot-content')}>
-                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
-                                            </span>
-                                        </Link>
-                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
-                                            <span className={cx('news-hot-icon')}></span>
-                                            <span key={index} className={cx('news-hot-content')}>
-                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
-                                            </span>
-                                        </Link>
-                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
-                                            <span className={cx('news-hot-icon')}></span>
-                                            <span key={index} className={cx('news-hot-content')}>
-                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
-                                            </span>
-                                        </Link>
-                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
-                                            <span className={cx('news-hot-icon')}></span>
-                                            <span key={index} className={cx('news-hot-content')}>
-                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
-                                            </span>
-                                        </Link>
-                                        <Link to={'/'} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
-                                            <span className={cx('news-hot-icon')}></span>
-                                            <span key={index} className={cx('news-hot-content')}>
-                                                Điểm hoạt động chỉ đạo, điều hành của lãnh đạo UBND tỉnh trong tuần từ 08/8 - 14/8
+                                                {item.Title}
                                             </span>
                                         </Link>
                                     </>

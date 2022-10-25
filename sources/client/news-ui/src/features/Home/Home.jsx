@@ -36,8 +36,8 @@ function Home(props) {
                 const actionUpdateView = updateView(response?.Data?.VisitorTracking);
                 dispatch(actionUpdateView);
 
-                if (Array.isArray(response?.Data?.NewsHots)) {
-                    const actionUpdateRunPosts = updateRunPosts(response?.Data?.NewsHots);
+                if (Array.isArray(response?.Data?.NewsDocuments)) {
+                    const actionUpdateRunPosts = updateRunPosts(response?.Data?.NewsDocuments);
                     dispatch(actionUpdateRunPosts);
                 }
             } catch (error) {
@@ -77,7 +77,7 @@ function Home(props) {
                 </Row>
                 <MediaBlogSection AlbumImages={homeData?.Data?.Images} />
                 <ListSection dataNews={homeData?.Data?.NewsSectionDto} dataDocuments={homeData?.Data?.DocumentSectionDto} />
-                <ConnectionSection />
+                <ConnectionSection connectionSites={homeData?.Data?.LinkInfos} connectionConcern={homeData?.Data?.CompanyInfos} />
             </div>
         </div>
     );
