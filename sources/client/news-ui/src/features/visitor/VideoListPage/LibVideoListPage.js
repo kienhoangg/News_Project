@@ -140,7 +140,10 @@ function LibVideoListPage(props) {
                 videoDetail?.FileAttachment?.indexOf("https://") === 0 ||
                 videoDetail?.FileAttachment?.indexOf("http://") === 0
                   ? videoDetail?.FileAttachment
-                  : window.location.origin + videoDetail?.FileAttachment
+                  : window.location.origin +
+                    (videoDetail?.FileAttachment?.indexOf("/") === 0
+                      ? videoDetail?.FileAttachment
+                      : "/" + videoDetail?.FileAttachment)
               }"
               type="video/mp4"
             />
@@ -172,7 +175,10 @@ function LibVideoListPage(props) {
                       ? item?.Avatar?.indexOf("https://") === 0 ||
                         item?.Avatar?.indexOf("http://") === 0
                         ? item?.Avatar
-                        : window.location.origin + item?.Avatar
+                        : window.location.origin +
+                          (item?.Avatar?.indexOf("/") === 0
+                            ? item?.Avatar
+                            : "/" + item?.Avatar)
                       : "/"
                   }
                 />{" "}

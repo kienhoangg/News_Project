@@ -24,7 +24,7 @@ DocumentListTableData.defaultProps = {
 };
 
 function DocumentListTableData(props) {
-  const { data, setPagination, deleteSourceNew, updateStatusNew } = props;
+  const { data, setPagination, deleteSourceNew, updateStatusNew, onClickRow } = props;
 
   const columns = [
     {
@@ -75,7 +75,9 @@ function DocumentListTableData(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
+          <Button type='primary' icon={<EditFilled />} onClick={() => {
+          onClickRow && onClickRow(record?.Id)
+        }}>
             Sửa
           </Button>
           <Button
@@ -171,6 +173,7 @@ function DocumentListTableData(props) {
         }}
         dataSource={dataItems}
         size='small'
+        
       />
     </div>
   );
