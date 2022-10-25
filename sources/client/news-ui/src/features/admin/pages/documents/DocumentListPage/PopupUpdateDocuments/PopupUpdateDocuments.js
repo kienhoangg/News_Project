@@ -27,6 +27,7 @@ import { openNotification } from "helpers/notification";
 import { TypeUpdate } from "common/constant";
 import axiosClient from "apis/axiosClient";
 import moment from "moment";
+import { envDomainBackend } from "common/enviroments";
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
 const PopupUpdateDocuments = (props) => {
@@ -65,7 +66,7 @@ const PopupUpdateDocuments = (props) => {
               res?.FilePath?.indexOf("https://") === 0 ||
               res?.FilePath?.indexOf("http://") === 0
                 ? res?.FilePath
-                : window.location.origin +
+                : envDomainBackend +
                   (res?.FilePath?.indexOf("/") === 0
                     ? res?.FilePath
                     : "/" + res?.FilePath),
