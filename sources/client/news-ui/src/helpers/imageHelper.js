@@ -1,4 +1,4 @@
-import { envDomainBackend, envDomainClient } from 'common/enviroments';
+import { envDomainBackend, envDomainClient } from "common/enviroments";
 
 const imageHelper = {
   /**
@@ -7,16 +7,16 @@ const imageHelper = {
    */
   getLinkImageUrl(urlApi) {
     if (urlApi) {
-      if (urlApi.startsWith('http://') || urlApi.startsWith('https://')) {
+      if (urlApi.startsWith("http://") || urlApi.startsWith("https://")) {
         return urlApi;
       }
 
-      if (urlApi.startsWith('/UploadFiles')) {
+      if (urlApi.startsWith("/UploadFiles")) {
         let result = `${envDomainBackend}${urlApi}`;
         return result;
       }
 
-      if (urlApi.startsWith('/')) {
+      if (urlApi.startsWith("/")) {
         return urlApi;
       }
 
@@ -27,14 +27,16 @@ const imageHelper = {
     return undefined;
   },
 
-  getNameFile(filePath = '') {
+  getNameFile(filePath = "") {
     const file = filePath?.substring(
-      filePath?.lastIndexOf('/') + 1,
+      filePath?.lastIndexOf("/") + 1,
       filePath?.length
     );
     const fileName =
-      file.substring(0, file.lastIndexOf('_')) +
-      file.substring(file.lastIndexOf('.'), file.length);
+      file.substring(
+        0,
+        file.lastIndexOf("_") === -1 ? file?.length : file.lastIndexOf("_")
+      ) + file.substring(file.lastIndexOf("."));
 
     return fileName;
   },

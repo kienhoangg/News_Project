@@ -1,14 +1,14 @@
-import commonFunc from 'common/commonFunc';
-import axiosClient from './axiosClient';
-import datafakeNews from './datafake/datafakeNews';
+import commonFunc from "common/commonFunc";
+import axiosClient from "./axiosClient";
+import datafakeNews from "./datafake/datafakeNews";
 
 class NewsApi {
   getNewsAll = (body) => {
-    const url = '/newsPost/filter';
+    const url = "/newsPost/filter";
     return axiosClient.post(url, body);
   };
   updatNews = (body) => {
-    const url = '/newsPost';
+    const url = "/newsPost";
     return axiosClient.put(url, body);
   };
   deleteHotNew = (id) => {
@@ -34,17 +34,17 @@ class NewsApi {
   };
   //#region Nguồn tin
   getNewsSourceAll = (body) => {
-    const url = '/sourceNews/filter';
+    const url = "/sourceNews/filter";
     return axiosClient.post(url, body);
   };
 
   insertSourceNew = (body) => {
-    const url = '/sourceNews';
+    const url = "/sourceNews";
     return axiosClient.post(url, body);
   };
 
   updateStatusSourceNew = (body) => {
-    const url = '/sourceNews';
+    const url = "/sourceNews";
     return axiosClient.put(url, body);
   };
 
@@ -56,17 +56,17 @@ class NewsApi {
 
   //#endregion Lĩnh vực
   getNewsFieldAll = (body) => {
-    const url = '/fieldNews/filter';
+    const url = "/fieldNews/filter";
     return axiosClient.post(url, body);
   };
 
   insertFieldNews = (body) => {
-    const url = '/fieldNews';
+    const url = "/fieldNews";
     return axiosClient.post(url, body);
   };
 
   updateStatusFieldNews = (body) => {
-    const url = '/fieldNews';
+    const url = "/fieldNews";
     return axiosClient.put(url, body);
   };
 
@@ -78,17 +78,17 @@ class NewsApi {
 
   //#region Danh mục
   getNewsCategoryAll = (body) => {
-    const url = '/categoryNews/filter';
+    const url = "/categoryNews/filter";
     return axiosClient.post(url, body);
   };
 
   insertCategoryNews = (body) => {
-    const url = '/categoryNews';
+    const url = "/categoryNews";
     return axiosClient.post(url, body);
   };
 
   updateStatusCategoryNews = (body) => {
-    const url = '/categoryNews';
+    const url = "/categoryNews";
     return axiosClient.put(url, body);
   };
 
@@ -113,11 +113,11 @@ class NewsApi {
   };
 
   insertNew = (body) => {
-    const url = '/newsPost';
+    const url = "/newsPost";
     return axiosClient.post(url, body, {
       headers: {
-        Prefer: 'code=200, example=200GetReturn2Record',
-        'Content-Type': 'multipart/form-data',
+        Prefer: "code=200, example=200GetReturn2Record",
+        "Content-Type": "multipart/form-data",
       },
     });
   };
