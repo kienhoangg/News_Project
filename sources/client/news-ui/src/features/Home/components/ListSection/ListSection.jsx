@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './ListSection.module.scss';
 import classNames from 'classnames/bind';
-import { Col, Divider, Row } from 'antd';
+import { Col, Divider, Row, Skeleton } from 'antd';
 import ListSectionButton from './ListSectionButton/ListSectionButton';
 import Images from 'common/images';
 import { SearchOutlined } from '@ant-design/icons';
@@ -17,10 +17,13 @@ const cx = classNames.bind(styles);
 ListSection.propTypes = {
     dataNews: PropTypes.object,
     dataDocuments: PropTypes.array,
+    isLoading: PropTypes.bool,
 };
 
 ListSection.defaultProps = {
     dataNews: {},
+    dataDocuments: null,
+    isLoading: true,
 };
 
 const LIST_BUTON = [
@@ -61,19 +64,8 @@ const LIST_BUTON = [
     },
 ];
 
-const LIST_NEWS = [
-    { href: '/', title: 'Tỉnh Hậu Giang tổ chức hội thi tuyên truyền lưu động về an toàn giao thông', avatar: Images.DEMO_AVATAR_1 },
-    { href: '/', title: 'Thái Nguyên: Thúc đẩy chuyển đổi số trong ngành kiếm sát', avatar: '' },
-    { href: '/', title: 'Đà Năng chính thức ra mắt ứng dụng quản lý, giám stas hành trình xe cứu thương', avatar: '' },
-    { href: '/', title: 'Bắc Nình tập huấn kỹ năng số cho Tổ công nghệ số cộng đồng', avatar: '' },
-];
-
-// href: PropTypes.string,
-// label: PropTypes.string,
-// imageName: PropTypes.any,
-
 function ListSection(props) {
-    const { dataNews, dataDocuments } = props;
+    const { isLoading, dataNews, dataDocuments } = props;
     const { CategoryNews, Data: items } = dataNews;
     if (Array.isArray(items) && items.length > 1) {
         for (let i = 1; i < items.length; i++) {
@@ -99,12 +91,22 @@ function ListSection(props) {
                         </Col>
                     </Row>
                     <div className={cx('list-document-content')}>
-                        {Array.isArray(dataDocuments) &&
-                            dataDocuments.map((item) => {
-                                return (
-                                    <ListSectionDocument title={item.Code} date={item.PublishedDate} key={item.Code} description={item.Name} href={commonRender.renderLinkDocumentDetail(item.Id)} />
-                                );
-                            })}
+                        <Skeleton loading={isLoading} active>
+                            <>
+                                {Array.isArray(dataDocuments) &&
+                                    dataDocuments.map((item) => {
+                                        return (
+                                            <ListSectionDocument
+                                                title={item.Code}
+                                                date={item.PublishedDate}
+                                                key={item.Code}
+                                                description={item.Name}
+                                                href={commonRender.renderLinkDocumentDetail(item.Id)}
+                                            />
+                                        );
+                                    })}
+                            </>
+                        </Skeleton>
                     </div>
                 </div>
             </Col>
@@ -118,10 +120,14 @@ function ListSection(props) {
                             <div className={cx('divider')}></div>
                             <Link to={commonRender.renderLinkNewsCategory(CategoryNews?.Id)}>{CategoryNews?.CategoryNewsName}</Link>
                         </div>
-                        {Array.isArray(items) &&
-                            items.map((item) => {
-                                return <ListSectionNews title={item.Title} key={item.Id} avatar={item.Avatar} href={commonRender.renderLinkNewsDetail(item.Id)} />;
-                            })}
+                        <Skeleton loading={isLoading} active>
+                            <>
+                                {Array.isArray(items) &&
+                                    items.map((item) => {
+                                        return <ListSectionNews title={item.Title} key={item.Id} avatar={item.Avatar} href={commonRender.renderLinkNewsDetail(item.Id)} />;
+                                    })}
+                            </>
+                        </Skeleton>
                     </div>
                 </div>
             </Col>

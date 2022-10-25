@@ -1,27 +1,24 @@
 import BlogSection from './components/BlogSection/BlogSection';
 import MediaBlogSection from './components/MediaBlogSection/MediaBlogSection';
-
-import styles from './Home.module.scss';
-import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
-import SearchBar from './components/SearchBar/SearchBar';
 import { Col, Divider, Row } from 'antd';
-import ListSection from './components/ListSection/ListSection';
-import ConnectionSection from './components/ConnectionSection/ConnectionSection';
-import FooterSection from './components/FooterSection/FooterSection';
-import Images from 'common/images';
-import { useEffect, useRef, useState } from 'react';
 import homeApi from 'apis/published/homeApi';
+import classNames from 'classnames/bind';
+import Images from 'common/images';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateRunPosts, updateView } from './homeSlice';
+import { Link } from 'react-router-dom';
+import ConnectionSection from './components/ConnectionSection/ConnectionSection';
+import ListSection from './components/ListSection/ListSection';
+import SearchBar from './components/SearchBar/SearchBar';
+import styles from './Home.module.scss';
+import { updateLoading, updateRunPosts, updateView } from './homeSlice';
 
 const cx = classNames.bind(styles);
-
-const fakeDataRunPosts = [];
 
 function Home(props) {
     const [homeData, setHomeData] = useState();
     const [newsPreview, setNewsPreview] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const dispatch = useDispatch();
 
@@ -40,8 +37,13 @@ function Home(props) {
                     const actionUpdateRunPosts = updateRunPosts(response?.Data?.NewsDocuments);
                     dispatch(actionUpdateRunPosts);
                 }
+
+                const actionLoading = updateLoading(false);
+                dispatch(actionLoading);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchHome();
@@ -58,7 +60,7 @@ function Home(props) {
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 <SearchBar />
-                <BlogSection documentHots={homeData?.Data?.DocumentHots} newsHots={homeData?.Data?.NewsHots} dataPreview={newsPreview} onHover={handleOnHoverNewPreview} />
+                <BlogSection isLoading={loading} documentHots={homeData?.Data?.DocumentHots} newsHots={homeData?.Data?.NewsHots} dataPreview={newsPreview} onHover={handleOnHoverNewPreview} />
 
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>
@@ -75,9 +77,9 @@ function Home(props) {
                         </div>
                     </Col>
                 </Row>
-                <MediaBlogSection AlbumImages={homeData?.Data?.Images} />
-                <ListSection dataNews={homeData?.Data?.NewsSectionDto} dataDocuments={homeData?.Data?.DocumentSectionDto} />
-                <ConnectionSection connectionSites={homeData?.Data?.LinkInfos} connectionConcern={homeData?.Data?.CompanyInfos} />
+                <MediaBlogSection isLoading={loading} AlbumImages={homeData?.Data?.Images} />
+                <ListSection isLoading={loading} dataNews={homeData?.Data?.NewsSectionDto} dataDocuments={homeData?.Data?.DocumentSectionDto} />
+                <ConnectionSection isLoading={loading} connectionSites={homeData?.Data?.LinkInfos} connectionConcern={homeData?.Data?.CompanyInfos} />
             </div>
         </div>
     );

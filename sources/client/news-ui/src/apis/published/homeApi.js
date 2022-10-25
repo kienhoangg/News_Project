@@ -42,6 +42,14 @@ class HomeApi {
         return response;
     };
 
+    getStaticPageData = (id) => {
+        const url = '/staticinfos/' + id;
+        return axiosClient.get(url);
+
+        // var response = datafakeMenuPageData;  //​/api​/staticinfos​/{id}
+        // return response;
+    };
+
     getRateListData = (params) => {
         const url = '/ratings/filter';
         return axiosClient.post(url, {});

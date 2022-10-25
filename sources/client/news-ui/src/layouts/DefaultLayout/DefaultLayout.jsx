@@ -20,39 +20,32 @@ DefaultLayout.defaultProps = {};
 
 function DefaultLayout({ children }) {
     const [layoutData, setLayoutData] = useState();
-
+    const [loading, setLoading] = useState(true);
     const homeRedux = useSelector((state) => state.home);
 
     useEffect(() => {
-        const fetchHome = async () => {
+        const fetchLayout = async () => {
             try {
                 const params = {};
                 const response = await homeApi.getLayoutData(params);
                 setLayoutData(response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
             }
         };
-        fetchHome();
+        fetchLayout();
     }, []);
-
-    // const viewCount = useSelector((state) => {
-    //     return state.home.view;
-    // });
-
-    useEffect(() => {
-        // const actionAddView = addView(1);
-        // dispatch(actionAddView);
-    });
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
                 {/* <div>Lượt view: {viewCount}</div> */}
                 <Banner />
-                <Navbar menuDatas={layoutData} />
+                <Navbar isLoading={loading} menuDatas={layoutData} />
                 <div className={cx('content')}>{children}</div>
-                <FooterSection visitorOnline={homeRedux?.view} />
+                <FooterSection isLoading={homeRedux.loading} visitorOnline={homeRedux?.view} />
             </div>
         </div>
     );

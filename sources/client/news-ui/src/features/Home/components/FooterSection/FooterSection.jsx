@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './FooterSection.module.scss';
 import classNames from 'classnames/bind';
-import { Col, Row } from 'antd';
+import { Col, Row, Skeleton } from 'antd';
 import { HomeOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import Images from 'common/images';
@@ -11,12 +11,16 @@ const cx = classNames.bind(styles);
 
 FooterSection.propTypes = {
     visitorOnline: PropTypes.number,
+    isLoading: PropTypes.bool,
 };
 
-FooterSection.defaultProps = {};
+FooterSection.defaultProps = {
+    visitorOnline: 0,
+    isLoading: true,
+};
 
 function FooterSection(props) {
-    const { visitorOnline } = props;
+    const { isLoading, visitorOnline } = props;
 
     return (
         <div className={cx('wrapper')}>
@@ -68,10 +72,12 @@ function FooterSection(props) {
                 </Link>
             </div>
             <div className={cx('visitor-access')}>
-                <div className={cx('visitor-item')}>
-                    <span className={cx('visitor-item-label')}>NGƯỜI ONLINE</span>
-                    <span className={cx('visitor-item-value')}>{visitorOnline}</span>
-                </div>
+                <Skeleton loading={visitorOnline <= 0} active>
+                    <div className={cx('visitor-item')}>
+                        <span className={cx('visitor-item-label')}>NGƯỜI ONLINE</span>
+                        <span className={cx('visitor-item-value')}>{visitorOnline}</span>
+                    </div>
+                </Skeleton>
             </div>
         </div>
     );
