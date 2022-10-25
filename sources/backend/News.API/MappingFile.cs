@@ -52,6 +52,14 @@ namespace News.API
             CreateMap<VideoCategoryDto, VideoCategory>().IgnoreAllNonExisting();
             CreateMap<Rating, RatingDto>().IgnoreAllNonExisting();
             CreateMap<RatingDto, Rating>().IgnoreAllNonExisting();
+            CreateMap<LinkInfo, LinkInfoDto>().IgnoreAllNonExisting();
+            CreateMap<LinkInfoDto, LinkInfo>().IgnoreAllNonExisting();
+            CreateMap<LinkInfoCategory, LinkInfoCategoryDto>().IgnoreAllNonExisting();
+            CreateMap<LinkInfoCategoryDto, LinkInfoCategory>().IgnoreAllNonExisting();
+            CreateMap<CompanyInfo, CompanyInfoDto>().IgnoreAllNonExisting();
+            CreateMap<CompanyInfoDto, CompanyInfo>().IgnoreAllNonExisting();
+            CreateMap<CompanyInfoCategory, CompanyInfoCategoryDto>().IgnoreAllNonExisting();
+            CreateMap<CompanyInfoCategoryDto, CompanyInfoCategory>().IgnoreAllNonExisting();
             CreateMap<MenuDto, MenuAdminDto>().AfterMap((src, dest) => src.Id = dest.Key)
                 .AfterMap((src, dest) => src.ParentId = dest.IsLeaf)
                 .IgnoreAllNonExisting();

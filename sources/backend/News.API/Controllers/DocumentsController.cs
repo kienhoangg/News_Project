@@ -95,19 +95,64 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:long}")]
         public async Task<IActionResult>
-        UpdateDocumentDto(
-            [Required] int id,
-            [FromBody] DocumentDto documentDto
-        )
+      UpdateDocumentDto(
+          [Required] int id,
+          [FromForm] DocumentUploadDto documentUploadDto
+      )
         {
-            documentDto.Id = id;
-            Document? Document = await _documentService.GetDocument(id);
-            if (Document == null) return NotFound();
-            var updatedDocument = _mapper.Map(documentDto, Document);
-            await _documentService.UpdateDocument(updatedDocument);
-            var result = _mapper.Map<DocumentDto>(updatedDocument);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Document
+                    >(lstErrorString));
+                }
+            }
+            Document? document = await _documentService.GetDocument(id);
+            var tempFileAttachmentPath = document.FilePath;
+            if (document == null) return NotFound();
+            var documentUpdated = new Document();
+            if (!string.IsNullOrEmpty(documentUploadDto.JsonString))
+            {
+                documentUpdated =
+                    _serializeService
+                        .Deserialize<Document>(documentUploadDto.JsonString);
+                documentUpdated.Id = document.Id;
+            }
+            string fileAttachmentPath = !String.IsNullOrEmpty(documentUpdated.FilePath) ? documentUpdated.FilePath : "";
+            // Upload file attachment if exist
+            if (documentUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await documentUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+            documentUpdated.FilePath = fileAttachmentPath;
+            var resultUpdate =
+                await _documentService.UpdateDocument(documentUpdated);
+
+            if (resultUpdate > 0 && !string.IsNullOrEmpty(fileAttachmentPath))
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            var result = _mapper.Map<DocumentDto>(source: documentUpdated);
             return Ok(result);
         }
 
@@ -118,6 +163,13 @@ namespace News.API.Controllers
             if (document == null) return NotFound();
 
             await _documentService.DeleteDocument(id);
+            FileInfo fileFileAttachment =
+                                    new FileInfo(Directory.GetCurrentDirectory() +
+                                        document.FilePath);
+            if (fileFileAttachment.Exists)
+            {
+                fileFileAttachment.Delete();
+            }
             return NoContent();
         }
     }

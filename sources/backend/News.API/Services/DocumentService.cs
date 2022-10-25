@@ -106,9 +106,9 @@ namespace News.API.Services
             return result;
         }
 
-        public async Task UpdateDocument(Document product)
+        public async Task<int> UpdateDocument(Document product)
         {
-            await UpdateAsync(product);
+            return await UpdateAsync(product);
         }
     }
 }

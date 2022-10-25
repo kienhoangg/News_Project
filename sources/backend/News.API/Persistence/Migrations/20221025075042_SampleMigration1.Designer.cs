@@ -12,8 +12,8 @@ using News.API.Persistence;
 namespace News.API.Persistence.Migrations
 {
     [DbContext(typeof(NewsContext))]
-    [Migration("20221018143752_SampleMigration")]
-    partial class SampleMigration
+    [Migration("20221025075042_SampleMigration1")]
+    partial class SampleMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -147,7 +147,7 @@ namespace News.API.Persistence.Migrations
                     b.Property<DateTimeOffset?>("LastModifiedDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<long>("NewsPostId")
+                    b.Property<long?>("NewsPostId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Order")
@@ -165,6 +165,90 @@ namespace News.API.Persistence.Migrations
                     b.HasIndex("NewsPostId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Models.Entities.CompanyInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CompanyInfoCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyInfoCategoryId");
+
+                    b.ToTable("CompanyInfos");
+                });
+
+            modelBuilder.Entity("Models.Entities.CompanyInfoCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CompanyInfoCategories");
                 });
 
             modelBuilder.Entity("Models.Entities.Document", b =>
@@ -445,6 +529,90 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("FieldNews");
                 });
 
+            modelBuilder.Entity("Models.Entities.LinkInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LinkInfoCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LinkInfoCategoryId");
+
+                    b.ToTable("LinkInfos");
+                });
+
+            modelBuilder.Entity("Models.Entities.LinkInfoCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LinkInfoCategories");
+                });
+
             modelBuilder.Entity("Models.Entities.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -523,6 +691,9 @@ namespace News.API.Persistence.Migrations
 
                     b.Property<string>("FilePath")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDocumentNews")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsHotNews")
                         .HasColumnType("bit");
@@ -787,6 +958,59 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("QuestionCategories");
                 });
 
+            modelBuilder.Entity("Models.Entities.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("HappyCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("NotSatisfiedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OkCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SatisfiedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalRating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnHappyCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ratings");
+                });
+
             modelBuilder.Entity("Models.Entities.SourceNews", b =>
                 {
                     b.Property<int>("Id")
@@ -918,6 +1142,133 @@ namespace News.API.Persistence.Migrations
                     b.ToTable("StaticInfos");
                 });
 
+            modelBuilder.Entity("Models.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Models.Entities.Video", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("FileAttachment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LinkVideo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("VideoCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VideoCategoryId");
+
+                    b.ToTable("Videos");
+                });
+
+            modelBuilder.Entity("Models.Entities.VideoCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("CreatedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VideoCategories");
+                });
+
             modelBuilder.Entity("Models.Entities.CategoryNews", b =>
                 {
                     b.HasOne("Models.Entities.FieldNews", "FieldNews")
@@ -931,11 +1282,18 @@ namespace News.API.Persistence.Migrations
                 {
                     b.HasOne("Models.Entities.NewsPost", "NewsPost")
                         .WithMany("Comments")
-                        .HasForeignKey("NewsPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("NewsPostId");
 
                     b.Navigation("NewsPost");
+                });
+
+            modelBuilder.Entity("Models.Entities.CompanyInfo", b =>
+                {
+                    b.HasOne("Models.Entities.CompanyInfoCategory", "CompanyInfoCategory")
+                        .WithMany("CompanyInfos")
+                        .HasForeignKey("CompanyInfoCategoryId");
+
+                    b.Navigation("CompanyInfoCategory");
                 });
 
             modelBuilder.Entity("Models.Entities.Document", b =>
@@ -963,6 +1321,15 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("DocumentSignPerson");
 
                     b.Navigation("DocumentType");
+                });
+
+            modelBuilder.Entity("Models.Entities.LinkInfo", b =>
+                {
+                    b.HasOne("Models.Entities.LinkInfoCategory", "LinkInfoCategory")
+                        .WithMany("LinkInfos")
+                        .HasForeignKey("LinkInfoCategoryId");
+
+                    b.Navigation("LinkInfoCategory");
                 });
 
             modelBuilder.Entity("Models.Entities.NewsPost", b =>
@@ -1019,6 +1386,15 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("StaticCategory");
                 });
 
+            modelBuilder.Entity("Models.Entities.Video", b =>
+                {
+                    b.HasOne("Models.Entities.VideoCategory", "VideoCategory")
+                        .WithMany("Videos")
+                        .HasForeignKey("VideoCategoryId");
+
+                    b.Navigation("VideoCategory");
+                });
+
             modelBuilder.Entity("Models.Entities.CategoryNews", b =>
                 {
                     b.Navigation("NewsPosts");
@@ -1027,6 +1403,11 @@ namespace News.API.Persistence.Migrations
             modelBuilder.Entity("Models.Entities.Collaborator", b =>
                 {
                     b.Navigation("NewsPosts");
+                });
+
+            modelBuilder.Entity("Models.Entities.CompanyInfoCategory", b =>
+                {
+                    b.Navigation("CompanyInfos");
                 });
 
             modelBuilder.Entity("Models.Entities.DocumentDepartment", b =>
@@ -1054,6 +1435,11 @@ namespace News.API.Persistence.Migrations
                     b.Navigation("NewsPosts");
                 });
 
+            modelBuilder.Entity("Models.Entities.LinkInfoCategory", b =>
+                {
+                    b.Navigation("LinkInfos");
+                });
+
             modelBuilder.Entity("Models.Entities.NewsPost", b =>
                 {
                     b.Navigation("Comments");
@@ -1077,6 +1463,11 @@ namespace News.API.Persistence.Migrations
             modelBuilder.Entity("Models.Entities.StaticCategory", b =>
                 {
                     b.Navigation("Statics");
+                });
+
+            modelBuilder.Entity("Models.Entities.VideoCategory", b =>
+                {
+                    b.Navigation("Videos");
                 });
 #pragma warning restore 612, 618
         }

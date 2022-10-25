@@ -35,6 +35,9 @@ namespace News.API.Controllers
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
+        private readonly ICompanyInfoService _companyInfoService;
+        private readonly ILinkInfoService _linkInfoService;
+
 
 
         private readonly IMapper _mapper;
@@ -52,7 +55,9 @@ namespace News.API.Controllers
             IMenuService menuService,
             IPhotoService photoService,
             ICacheService cacheService,
-            IFieldNewsService fieldNewsService)
+            IFieldNewsService fieldNewsService,
+            ICompanyInfoService companyInfoService,
+            ILinkInfoService linkInfoService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -66,6 +71,8 @@ namespace News.API.Controllers
             _photoService = photoService;
             _cacheService = cacheService;
             _fieldNewsService = fieldNewsService;
+            _companyInfoService = companyInfoService;
+            _linkInfoService = linkInfoService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -178,12 +185,19 @@ namespace News.API.Controllers
         {
             _counter.Increase();
             // Get 5 hot news
-            var hotNewsRequets =
+            var hotNewsRequest =
                 new NewsPostRequest()
                 { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsHotNews = true };
+            var documentNewsRequest =
+           new NewsPostRequest()
+           { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsDocumentNews = true };
 
             var lstHotNews =
-                await _newsPostService.GetNewsPostByPaging(hotNewsRequets);
+                await _newsPostService.GetNewsPostByPaging(hotNewsRequest);
+            var lstNewsDocuments =
+           await _newsPostService.GetNewsPostByPaging(documentNewsRequest);
+            var companyInfos = await _companyInfoService.GetCompanyInfoByPaging(new CompanyInfoRequest() { PageSize = 4, CurrentPage = 1, OrderBy = "Order" });
+            var linkInfos = await _linkInfoService.GetLinkInfoByPaging(new LinkInfoRequest() { PageSize = 4, CurrentPage = 1, OrderBy = "Order" });
             var categoryNewsId = 5;
             var normalNews =
                 new NewsPostRequest()
@@ -220,10 +234,14 @@ namespace News.API.Controllers
                 Direction = 1
             }, x => x.PhotoCategory)).PagedData.Results.ToList();
             int index = lstDocuments.Count / 2 + 1;
+
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()
                 {
                     NewsHots = lstHotNews.PagedData.Results.ToList(),
+                    NewsDocuments = lstNewsDocuments.PagedData.Results.ToList(),
+                    CompanyInfos = companyInfos.PagedData.Results.ToList(),
+                    LinkInfos = linkInfos.PagedData.Results.ToList(),
                     NewsSectionDto =
                             new NewsSectionDto()
                             {

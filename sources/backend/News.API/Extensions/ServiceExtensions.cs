@@ -144,6 +144,14 @@ namespace News.API.Extensions
                 .AddScoped(typeof(IDocumentService), typeof(DocumentService))
                 .AddScoped(serviceType: typeof(ICategoryNewsService),
                 typeof(CategoryNewsService))
+                 .AddScoped(serviceType: typeof(ILinkInfoService),
+                typeof(LinkInfoService))
+                 .AddScoped(serviceType: typeof(ILinkInfoCategoryService),
+                typeof(LinkInfoCategoryService))
+                 .AddScoped(serviceType: typeof(ICompanyInfoService),
+                typeof(CompanyInfoService))
+                 .AddScoped(serviceType: typeof(ICompanyInfoCategoryService),
+                typeof(CompanyInfoCategoryService))
                 .AddScoped(serviceType: typeof(IFieldNewsService),
                 typeof(FieldNewsService))
                 .AddScoped(serviceType: typeof(ISourceNewsService),

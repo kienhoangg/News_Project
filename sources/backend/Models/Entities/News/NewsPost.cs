@@ -22,6 +22,8 @@ namespace Models.Entities
 
         public bool? IsShowAvatar { get; set; }
 
+        public bool IsDocumentNews { get; set; }
+
         public bool? IsShowComment { get; set; }
 
         public string? Avatar { get; set; }

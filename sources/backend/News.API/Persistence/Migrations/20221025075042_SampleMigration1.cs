@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace News.API.Persistence.Migrations
 {
-    public partial class SampleMigration : Migration
+    public partial class SampleMigration1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,6 +32,26 @@ namespace News.API.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Collaborators", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyInfoCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyInfoCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,6 +161,26 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LinkInfoCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LinkInfoCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Menus",
                 columns: table => new
                 {
@@ -205,6 +245,31 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ratings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SatisfiedCount = table.Column<int>(type: "int", nullable: false),
+                    HappyCount = table.Column<int>(type: "int", nullable: false),
+                    OkCount = table.Column<int>(type: "int", nullable: false),
+                    NotSatisfiedCount = table.Column<int>(type: "int", nullable: false),
+                    UnHappyCount = table.Column<int>(type: "int", nullable: false),
+                    TotalRating = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SourceNews",
                 columns: table => new
                 {
@@ -243,6 +308,73 @@ namespace News.API.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StaticCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyInfoCategoryId = table.Column<int>(type: "int", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanyInfos_CompanyInfoCategories_CompanyInfoCategoryId",
+                        column: x => x.CompanyInfoCategoryId,
+                        principalTable: "CompanyInfoCategories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -317,6 +449,33 @@ namespace News.API.Persistence.Migrations
                         name: "FK_CategoryNews_FieldNews_FieldNews_SK_FK",
                         column: x => x.FieldNews_SK_FK,
                         principalTable: "FieldNews",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LinkInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LinkInfoCategoryId = table.Column<int>(type: "int", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LinkInfos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LinkInfos_LinkInfoCategories_LinkInfoCategoryId",
+                        column: x => x.LinkInfoCategoryId,
+                        principalTable: "LinkInfoCategories",
                         principalColumn: "Id");
                 });
 
@@ -415,6 +574,34 @@ namespace News.API.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Videos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VideoCategoryId = table.Column<int>(type: "int", nullable: true),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LinkVideo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileAttachment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Order = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Videos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Videos_VideoCategories_VideoCategoryId",
+                        column: x => x.VideoCategoryId,
+                        principalTable: "VideoCategories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "NewsPosts",
                 columns: table => new
                 {
@@ -427,6 +614,7 @@ namespace News.API.Persistence.Migrations
                     IsVideoNews = table.Column<bool>(type: "bit", nullable: true),
                     IsShowTitle = table.Column<bool>(type: "bit", nullable: true),
                     IsShowAvatar = table.Column<bool>(type: "bit", nullable: true),
+                    IsDocumentNews = table.Column<bool>(type: "bit", nullable: false),
                     IsShowComment = table.Column<bool>(type: "bit", nullable: true),
                     Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AvatarTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -477,7 +665,7 @@ namespace News.API.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NewsPostId = table.Column<long>(type: "bigint", nullable: false),
+                    NewsPostId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LastModifiedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(50)", nullable: true),
@@ -492,8 +680,7 @@ namespace News.API.Persistence.Migrations
                         name: "FK_Comments_NewsPosts_NewsPostId",
                         column: x => x.NewsPostId,
                         principalTable: "NewsPosts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -505,6 +692,11 @@ namespace News.API.Persistence.Migrations
                 name: "IX_Comments_NewsPostId",
                 table: "Comments",
                 column: "NewsPostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyInfos_CompanyInfoCategoryId",
+                table: "CompanyInfos",
+                column: "CompanyInfoCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documents_DocumentDepartmentId",
@@ -525,6 +717,11 @@ namespace News.API.Persistence.Migrations
                 name: "IX_Documents_DocumentTypeId",
                 table: "Documents",
                 column: "DocumentTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LinkInfos_LinkInfoCategoryId",
+                table: "LinkInfos",
+                column: "LinkInfoCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NewsPosts_CategoryNewsId",
@@ -560,6 +757,11 @@ namespace News.API.Persistence.Migrations
                 name: "IX_StaticInfos_StaticCategoryId",
                 table: "StaticInfos",
                 column: "StaticCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Videos_VideoCategoryId",
+                table: "Videos",
+                column: "VideoCategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -568,7 +770,13 @@ namespace News.API.Persistence.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
+                name: "CompanyInfos");
+
+            migrationBuilder.DropTable(
                 name: "Documents");
+
+            migrationBuilder.DropTable(
+                name: "LinkInfos");
 
             migrationBuilder.DropTable(
                 name: "Menus");
@@ -580,10 +788,22 @@ namespace News.API.Persistence.Migrations
                 name: "Questions");
 
             migrationBuilder.DropTable(
+                name: "Ratings");
+
+            migrationBuilder.DropTable(
                 name: "StaticInfos");
 
             migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Videos");
+
+            migrationBuilder.DropTable(
                 name: "NewsPosts");
+
+            migrationBuilder.DropTable(
+                name: "CompanyInfoCategories");
 
             migrationBuilder.DropTable(
                 name: "DocumentDepartments");
@@ -598,6 +818,9 @@ namespace News.API.Persistence.Migrations
                 name: "DocumentTypes");
 
             migrationBuilder.DropTable(
+                name: "LinkInfoCategories");
+
+            migrationBuilder.DropTable(
                 name: "PhotoCategories");
 
             migrationBuilder.DropTable(
@@ -605,6 +828,9 @@ namespace News.API.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "StaticCategories");
+
+            migrationBuilder.DropTable(
+                name: "VideoCategories");
 
             migrationBuilder.DropTable(
                 name: "CategoryNews");

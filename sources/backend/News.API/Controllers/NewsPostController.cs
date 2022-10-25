@@ -189,16 +189,16 @@ namespace News.API.Controllers
             var tempAvatarPath = newsPost.Avatar;
             var tempFileAttachmentPath = newsPost.FilePath;
             if (newsPost == null) return NotFound();
-            var newsPostDto = new NewsPostDto();
+            var newsPostUpdated = new NewsPost();
             if (!string.IsNullOrEmpty(newsPostUploadDto.JsonString))
             {
-                newsPostDto =
+                newsPostUpdated =
                     _serializeService
-                        .Deserialize<NewsPostDto>(newsPostUploadDto.JsonString);
-                newsPostDto.Id = newsPost.Id;
+                        .Deserialize<NewsPost>(newsPostUploadDto.JsonString);
+                newsPostUpdated.Id = newsPost.Id;
             }
-            string avartarPath = "";
-            string fileAttachmentPath = "";
+            string avartarPath = !String.IsNullOrEmpty(newsPostUpdated.Avatar) ? newsPostUpdated.Avatar : "";
+            string fileAttachmentPath = !String.IsNullOrEmpty(newsPostUpdated.FilePath) ? newsPostUpdated.FilePath : "";
 
             // Upload file avatar if exist
             if (newsPostUploadDto.Avatar != null)
@@ -218,11 +218,11 @@ namespace News.API.Controllers
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
 
-            var updatedNewsPost = _mapper.Map(newsPostDto, newsPost);
-            updatedNewsPost.Avatar = avartarPath;
-            updatedNewsPost.FilePath = fileAttachmentPath;
+
+            newsPostUpdated.Avatar = avartarPath;
+            newsPostUpdated.FilePath = fileAttachmentPath;
             var resultUpdate =
-                await _newsPostService.UpdateNewsPost(updatedNewsPost);
+                await _newsPostService.UpdateNewsPost(newsPostUpdated);
 
             if (resultUpdate > 0 && !string.IsNullOrEmpty(avartarPath))
             {
@@ -250,7 +250,7 @@ namespace News.API.Controllers
                 }
             }
 
-            var result = _mapper.Map<NewsPostDto>(source: updatedNewsPost);
+            var result = _mapper.Map<NewsPostDto>(source: newsPostUpdated);
             return Ok(result);
         }
 

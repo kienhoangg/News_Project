@@ -41,6 +41,10 @@ namespace News.API.Persistence
         public DbSet<PhotoCategory> PhotoCategories { get; set; }
         public DbSet<Video> Videos { get; set; }
         public DbSet<VideoCategory> VideoCategories { get; set; }
+        public DbSet<LinkInfo> LinkInfos { get; set; }
+        public DbSet<CompanyInfo> CompanyInfos { get; set; }
+        public DbSet<LinkInfoCategory> LinkInfoCategories { get; set; }
+        public DbSet<CompanyInfoCategory> CompanyInfoCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

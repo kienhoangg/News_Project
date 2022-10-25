@@ -39,6 +39,14 @@ namespace News.API.Persistence
             {
                 newsContext.AddRange(GetQuestionCategory());
             }
+            if (!newsContext.LinkInfoCategories.Any())
+            {
+                newsContext.AddRange(GetLinkInfoCategories());
+            }
+            if (!newsContext.CompanyInfoCategories.Any())
+            {
+                newsContext.AddRange(GetCompanyInfoCategories());
+            }
 
             if (!newsContext.StaticCategories.Any())
             {
@@ -150,6 +158,70 @@ namespace News.API.Persistence
                   Title = "Kết quả giải quyết khiếu nại",
                   Url = "/page/5",
                   ParentId = 4
+               }
+            };
+        }
+
+        private static IEnumerable<LinkInfoCategory> GetLinkInfoCategories()
+        {
+            return new List<LinkInfoCategory>
+            {
+               new LinkInfoCategory{
+                  Title = "Chính sách và cuộc sống",
+                  LinkInfos = new List<LinkInfo>{
+                     new LinkInfo{
+                        Title = "Tỉnh đoàn yên bái",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2017/Quy-II/thanhnien.jpg",
+                        Link = "http://tinhdoanyenbai.gov.vn/"
+                     },
+                       new LinkInfo{
+                        Title = "Hòa bình yên bái",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2020/Quy-II/image_2020_06_01t09_34_10_631z.png",
+                        Link = "http://hoabinhyenbai.com/"
+                     },
+                       new LinkInfo{
+                        Title = "Tổng công ty điện lực",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2017/Quy-IV/cskh-dienluc.jpg",
+                        Link = "https://cskh.npc.com.vn/"
+                     },
+                       new LinkInfo{
+                        Title = "Măng tre",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2022/mangtrebatdo-22.jpg",
+                        Link = "https://yenbai.gov.vn/hoat-dong-xuc-tien-thuong-mai/noidung/tintuc/Pages/chi-tiet-tin-tuc.aspx?l=Tinhoatdong&ItemID=1061"
+                     },
+                  }
+               }
+            };
+        }
+
+        private static IEnumerable<CompanyInfoCategory> GetCompanyInfoCategories()
+        {
+            return new List<CompanyInfoCategory>
+            {
+               new CompanyInfoCategory{
+                  Title = "Chính sách và cuộc sống",
+                  CompanyInfos = new List<CompanyInfo>{
+                     new CompanyInfo{
+                        Title = "Đặc sản trạm tấu",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2022/tramtau---.jpg",
+                        Link = "https://yenbai.gov.vn/hoat-dong-xuc-tien-thuong-mai/noidung/tintuc/Pages/chi-tiet-tin-tuc.aspx?ItemID=1060&l=Tinhoatdong"
+                     },
+                       new CompanyInfo{
+                        Title = "Yên bái online",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/%E1%BA%A2nh%20qu%E1%BA%A3ng%20c%C3%A1o/yenbai-online.png",
+                        Link = "http://www.baoyenbai.com.vn/"
+                     },
+                       new CompanyInfo{
+                        Title = "Đặc sản tủ lệ",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2022/tule---.jpg",
+                        Link = "https://yenbai.gov.vn/hoat-dong-xuc-tien-thuong-mai/noidung/tintuc/Pages/chi-tiet-tin-tuc.aspx?ItemID=1062&l=Tinhoatdong"
+                     },
+                       new CompanyInfo{
+                        Title = "Măng tre",
+                        Avatar = "https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoSlideShow/2017/Quy-IV/duongdaynong-sotnmt.gif",
+                        Link = "#"
+                     },
+                  }
                }
             };
         }

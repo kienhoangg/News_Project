@@ -99,6 +99,17 @@ namespace News.API.Services
                     query = query.Where(x => !x.IsHotNews);
                 }
             }
+            if (newsPostRequest.IsDocumentNews.HasValue)
+            {
+                if (newsPostRequest.IsDocumentNews.Value)
+                {
+                    query = query.Where(x => x.IsDocumentNews);
+                }
+                else
+                {
+                    query = query.Where(x => !x.IsDocumentNews);
+                }
+            }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
                 var fromDate = newsPostRequest.FromDate.Value;
@@ -179,6 +190,17 @@ namespace News.API.Services
                     query = query.Where(x => !x.IsHotNews);
                 }
             }
+            if (newsPostRequest.IsDocumentNews.HasValue)
+            {
+                if (newsPostRequest.IsDocumentNews.Value)
+                {
+                    query = query.Where(x => x.IsDocumentNews);
+                }
+                else
+                {
+                    query = query.Where(x => !x.IsDocumentNews);
+                }
+            }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
                 query = query.Where(x => x.PublishedDate <= newsPostRequest.FromDate.Value &&
@@ -189,6 +211,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
             }
+
             PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
                                                                                               ?? 1, newsPostRequest.PageSize ?? CommonConstants.PAGE_SIZE, newsPostRequest.OrderBy, newsPostRequest.Direction);
             var lstDto = _mapper.Map<List<NewsPostWithoutContentDto>>(sourcePaging.Results);
@@ -235,6 +258,17 @@ namespace News.API.Services
                 else
                 {
                     query = query.Where(x => !x.IsHotNews);
+                }
+            }
+            if (newsPostRequest.IsDocumentNews.HasValue)
+            {
+                if (newsPostRequest.IsDocumentNews.Value)
+                {
+                    query = query.Where(x => x.IsDocumentNews);
+                }
+                else
+                {
+                    query = query.Where(x => !x.IsDocumentNews);
                 }
             }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
