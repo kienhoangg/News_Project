@@ -18,7 +18,7 @@ const home = createSlice({
         },
         updateRunPosts: (state, action) => {
             state.runPost = action.payload;
-        }
+        },
     }
 });
 
