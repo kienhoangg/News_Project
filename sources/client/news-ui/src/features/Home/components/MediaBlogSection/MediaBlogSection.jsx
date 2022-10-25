@@ -5,17 +5,21 @@ import styles from './MediaBlogSection.module.scss';
 import MediaBlogSectionBanner from './MediaBlogSectionBanner/MediaBlogSectionBanner';
 import MediaBlogSectionButton from './MediaBlogSectionButton/MediaBlogSectionButton';
 import PropTypes from 'prop-types';
+import { Skeleton } from 'antd';
 
 const cx = classNames.bind(styles);
 
 MediaBlogSection.propTypes = {
     AlbumImages: PropTypes.array,
+    isLoading: PropTypes.bool,
 };
 
-MediaBlogSection.defaultProps = {};
+MediaBlogSection.defaultProps = {
+    isLoading: false,
+};
 
 function MediaBlogSection(props) {
-    const { AlbumImages } = props;
+    const { isLoading, AlbumImages } = props;
 
     return (
         <div className={cx('wrapper')}>
@@ -31,7 +35,13 @@ function MediaBlogSection(props) {
                 </div>
             </div>
             <div className={cx('carousel')}>
-                <MediaBlogSectionBanner AlbumImages={AlbumImages} />
+                {isLoading ? (
+                    <Skeleton.Image loading={isLoading} style={{ width: '998px', height: 300 }} active></Skeleton.Image>
+                ) : (
+                    <>
+                        <MediaBlogSectionBanner AlbumImages={AlbumImages} />
+                    </>
+                )}
             </div>
         </div>
     );

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './SearchBar.module.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
-import { Col, Input, Row } from 'antd';
+import { Col, Input, Row, Skeleton } from 'antd';
 import routes from 'config/configRoutes';
 import { useSelector } from 'react-redux';
 import Marquee from 'react-easy-marquee';
@@ -30,7 +30,6 @@ function SearchBar(props) {
                             style={{
                                 width: '100%',
                                 height: '100%',
-                                // background: '#ececec',
                             }}
                         />
                     </Row>
@@ -57,21 +56,29 @@ function SearchBar(props) {
             </Row>
             <Row gutter={8}>
                 <div className={cx('news-hot')}>
-                    {Array.isArray(homeRedux?.runPost) && (
-                        <Marquee duration={homeRedux.runPost.length * 8000} height='80px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
-                            {homeRedux.runPost.map((item, index) => {
-                                return (
-                                    <>
-                                        <Link to={commonRender.renderLinkNewsDetail(item.Id)} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
-                                            <span className={cx('news-hot-icon')}></span>
-                                            <span key={index} className={cx('news-hot-content')}>
-                                                {item.Title}
-                                            </span>
-                                        </Link>
-                                    </>
-                                );
-                            })}
-                        </Marquee>
+                    {homeRedux.loading ? (
+                        <>
+                            <Skeleton.Input active size='small' />
+                        </>
+                    ) : (
+                        <>
+                            {Array.isArray(homeRedux?.runPost) && (
+                                <Marquee duration={homeRedux.runPost.length * 8000} height='80px' width='100%' axis='X' align='center' pauseOnHover={true} reverse={true}>
+                                    {homeRedux.runPost.map((item, index) => {
+                                        return (
+                                            <>
+                                                <Link to={commonRender.renderLinkNewsDetail(item.Id)} style={{ display: 'flex', alignItems: 'center', marginRight: '100px' }}>
+                                                    <span className={cx('news-hot-icon')}></span>
+                                                    <span key={index} className={cx('news-hot-content')}>
+                                                        {item.Title}
+                                                    </span>
+                                                </Link>
+                                            </>
+                                        );
+                                    })}
+                                </Marquee>
+                            )}
+                        </>
                     )}
                 </div>
                 <div className={cx('divider')}></div>

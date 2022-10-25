@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialHome = {
     view: 0,
-    runPost: []
+    runPost: [],
+    loading: true
 }
 
 const home = createSlice({
@@ -19,9 +20,12 @@ const home = createSlice({
         updateRunPosts: (state, action) => {
             state.runPost = action.payload;
         },
+        updateLoading: (state, action) => {
+            state.loading = action.payload;
+        },
     }
 });
 
 const { reducer, actions } = home;
-export const { addView, updateView, updateRunPosts } = actions;
+export const { addView, updateView, updateRunPosts, updateLoading } = actions;
 export default reducer;

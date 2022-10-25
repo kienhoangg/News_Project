@@ -4,17 +4,21 @@ import { Link } from 'react-router-dom';
 import styles from './BlogSectionListNews.module.scss';
 import BlogSectionListNewsItem from './BlogSectionListNewsItem/BlogSectionListNewsItem';
 import PropTypes from 'prop-types';
+import { Skeleton } from 'antd';
 
 const cx = classNames.bind(styles);
 
 BlogSectionListNews.propTypes = {
+    isLoading: PropTypes.bool,
     DocumentHots: PropTypes.array,
 };
 
-BlogSectionListNews.defaultProps = {};
+BlogSectionListNews.defaultProps = {
+    isLoading: true,
+};
 
 function BlogSectionListNews(props) {
-    const { DocumentHots } = props;
+    const { isLoading, DocumentHots } = props;
 
     return (
         <div className={cx('wrapper')}>
@@ -24,14 +28,16 @@ function BlogSectionListNews(props) {
                 </Link>
             </div>
             <div className={cx('items')}>
-                {Array.isArray(DocumentHots) &&
-                    DocumentHots.map((item, index) => {
-                        return (
-                            <div key={item?.Id}>
-                                <BlogSectionListNewsItem DocumentData={item} />
-                            </div>
-                        );
-                    })}
+                <Skeleton loading={isLoading} active>
+                    {Array.isArray(DocumentHots) &&
+                        DocumentHots.map((item, index) => {
+                            return (
+                                <div key={item?.Id}>
+                                    <BlogSectionListNewsItem DocumentData={item} />
+                                </div>
+                            );
+                        })}
+                </Skeleton>
             </div>
         </div>
     );

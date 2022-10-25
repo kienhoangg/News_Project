@@ -1,5 +1,5 @@
 import { MailOutlined } from '@ant-design/icons';
-import { Menu } from 'antd';
+import { Menu, Skeleton } from 'antd';
 import commonRender from 'common/commonRender';
 import Images from 'common/images';
 import routes from 'config/configRoutes';
@@ -12,11 +12,17 @@ import { envDomainClient } from 'common/enviroments';
 
 Navbar.propTypes = {
     menuDatas: PropTypes.array,
+    isLoading: PropTypes.bool,
+};
+
+Navbar.defaultProps = {
+    menuDatas: undefined,
+    isLoading: true,
 };
 
 function Navbar(props) {
     const navigate = useNavigate();
-    const { menuDatas } = props;
+    const { isLoading, menuDatas } = props;
 
     let items = [
         {
@@ -52,13 +58,6 @@ function Navbar(props) {
         });
     }
 
-    // const [current, setCurrent] = useState('mail');
-
-    // const onClick = (e) => {
-    //     console.log('click ', e);
-    //     setCurrent(e.key);
-    // };
-
     function handleOnClickMenuItem(params) {
         let select = getMenuItemByKey(params.key);
 
@@ -86,17 +85,13 @@ function Navbar(props) {
 
     return (
         <div className='news-navbar'>
-            {Array.isArray(menuDatas) && <Menu mode='horizontal' items={items} selectable={false} onClick={handleOnClickMenuItem} />}
-
-            {/* <NavBarButtonItem href='/' label={'TRANG CHỦ'} imageName={Images.EMBELEM_VIETNAM} />
-            <div className='news-navbar-hr'></div>
-            <NavBarButtonItem href={commonRender.renderMenuPage(1)} label={'QLVN ĐIỀU HÀNH'} />
-            <div className='news-navbar-hr'></div>
-            <NavBarButtonItem href='/' label={'THƯ ĐIỆN TỬ'} />
-            <div className='news-navbar-hr'></div>
-            <NavBarButtonItem href='/' label={'DANH BẠ ĐIỆN THOẠI'} />
-            <div className='news-navbar-hr'></div>
-            <NavBarButtonItem href='/' label={'LIÊN HỆ'} /> */}
+            {isLoading ? (
+                <>
+                    <Skeleton.Input active block />
+                </>
+            ) : (
+                <>{Array.isArray(menuDatas) && <Menu mode='horizontal' items={items} selectable={false} onClick={handleOnClickMenuItem} />}</>
+            )}
         </div>
     );
 }
