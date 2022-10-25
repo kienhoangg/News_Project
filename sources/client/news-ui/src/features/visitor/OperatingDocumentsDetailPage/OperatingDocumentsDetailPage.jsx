@@ -7,6 +7,7 @@ import IconPDF from "../../../assets/icons/icon-pdf.png";
 import axiosClient from "apis/axiosClient";
 import moment from "moment";
 import ScrollToTop from "components/ScrollToTop/ScrollToTop";
+import { envDomainBackend } from "common/enviroments";
 
 OperatingDocumentsDetailPage.propTypes = {};
 
@@ -141,7 +142,7 @@ function OperatingDocumentsDetailPage(props) {
                         "operating-documents-detail-page__left__body__table__content__icon-pdf"
                       }
                       href={
-                        window.location.origin + "/" + documentDetail?.FilePath
+                        envDomainBackend + "/" + documentDetail?.FilePath
                       }
                     >
                       <img

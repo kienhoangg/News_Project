@@ -3,6 +3,11 @@ import datafakeDocument from "./datafake/datafakeDocument";
 import axiosClient from "./axiosClient";
 
 class DocumentApi {
+  updateNewPost = (id, body) => {
+    const url = "/newspost/" + id;
+    return axiosClient.put(url, body);
+  };
+
   getDocumentAll = (body) => {
     const url = "/Documents/filter";
     return axiosClient.post(url, body);

@@ -1,6 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Extensions;
+using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -13,15 +17,19 @@ namespace News.API.Controllers
     {
         private readonly IVideoService _videoService;
 
+        private readonly ISerializeService _serializeService;
+
         private readonly IMapper _mapper;
 
         public VideosController(
             IVideoService videoService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _videoService = videoService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -35,9 +43,48 @@ namespace News.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult>
-        CreateVideoDto([FromBody] VideoDto videoDto)
+          CreateVideoDto([FromForm] VideoUploadDto videoUploadDto)
         {
-            var video = _mapper.Map<Video>(videoDto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Video
+                    >(lstErrorString));
+                }
+            }
+
+            string avartarPath = "";
+            string fileAttachmentPath = "";
+            var video =
+                          _serializeService
+                              .Deserialize<Video>(videoUploadDto.JsonString);
+            // Upload file avatar if exist
+            if (videoUploadDto.Avatar != null)
+            {
+                avartarPath =
+                    await videoUploadDto
+                        .Avatar
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            // Upload file attachment if exist
+            if (videoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await videoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+            video.Avatar = avartarPath;
+            video.FileAttachment = fileAttachmentPath;
             await _videoService.CreateVideo(video);
             var result = _mapper.Map<VideoDto>(video);
             return Ok(result);
@@ -55,16 +102,86 @@ namespace News.API.Controllers
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateVideoDto(
-            [Required] int id,
-            [FromBody] VideoDto videoDto
-        )
+      UpdateVideoDto(
+          [Required] int id,
+          [FromForm] VideoUploadDto videoUploadDto
+      )
         {
-            Video? Video = await _videoService.GetVideo(id);
-            if (Video == null) return NotFound();
-            var updatedVideo = _mapper.Map(videoDto, Video);
-            await _videoService.UpdateVideo(updatedVideo);
-            var result = _mapper.Map<VideoDto>(updatedVideo);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Video
+                    >(lstErrorString));
+                }
+            }
+            Video? video = await _videoService.GetVideo(id);
+            var tempAvatarPath = video.Avatar;
+            var tempFileAttachmentPath = video.FileAttachment;
+            if (video == null) return NotFound();
+            var videoUpdated = new Video();
+            if (!string.IsNullOrEmpty(videoUploadDto.JsonString))
+            {
+                videoUpdated =
+                    _serializeService
+                        .Deserialize<Video>(videoUploadDto.JsonString);
+                videoUpdated.Id = video.Id;
+            }
+            string avartarPath = !String.IsNullOrEmpty(videoUpdated.Avatar) ? videoUpdated.Avatar : "";
+            string fileAttachmentPath = !String.IsNullOrEmpty(videoUpdated.FileAttachment) ? videoUpdated.FileAttachment : "";
+
+            // Upload file avatar if exist
+            if (videoUploadDto.Avatar != null)
+            {
+                avartarPath =
+                    await videoUploadDto
+                        .Avatar
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            // Upload file attachment if exist
+            if (videoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await videoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+
+            videoUpdated.Avatar = avartarPath;
+            videoUpdated.FileAttachment = fileAttachmentPath;
+            await _videoService.UpdateVideo(videoUpdated);
+
+            if (avartarPath != tempAvatarPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempAvatarPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+
+            var result = _mapper.Map<VideoDto>(source: videoUpdated);
             return Ok(result);
         }
 
@@ -73,8 +190,29 @@ namespace News.API.Controllers
         {
             Video? video = await _videoService.GetVideo(id);
             if (video == null) return NotFound();
-
             await _videoService.DeleteVideo(id);
+            if (string.IsNullOrEmpty(video.Avatar))
+            {
+                FileInfo fileFileAttachment =
+                                              new FileInfo(Directory.GetCurrentDirectory() +
+                                                  "/wwwroot" + video.Avatar);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+
+            if (string.IsNullOrEmpty(video.FileAttachment))
+            {
+                FileInfo fileFileAttachment =
+                                              new FileInfo(Directory.GetCurrentDirectory() +
+                                                  "/wwwroot" + video.FileAttachment);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+
             return NoContent();
         }
     }

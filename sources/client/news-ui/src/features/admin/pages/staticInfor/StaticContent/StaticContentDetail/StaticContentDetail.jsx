@@ -14,13 +14,13 @@ const cx = classNames.bind(styles);
 StaticContentDetail.propTypes = {};
 
 function StaticContentDetail(props) {
-  const { open, onCancel, confirmLoading, categoryAll } = props;
-  const { data } = props;
+    const { open, onCancel, confirmLoading, categoryAll } = props;
+    const { data } = props;
 
-  const findCategoryName = (id) => {
-    const cateory = categoryAll.find((x) => x.Id === id);
-    return cateory?.Title;
-  };
+    const findCategoryName = (id) => {
+        const cateory = categoryAll.find((x) => x.Id === id);
+        return cateory?.Title;
+    };
 
   return (
     <Modal

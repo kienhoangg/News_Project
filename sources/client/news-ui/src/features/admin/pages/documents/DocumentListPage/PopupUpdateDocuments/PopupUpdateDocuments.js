@@ -12,21 +12,22 @@ import {
   Select,
   TreeSelect,
   Upload,
-} from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import { Option } from 'antd/lib/mentions';
-import { TreeNode } from 'antd/lib/tree-select';
-import documentApi from 'apis/documentApi';
-import { CKEditor } from 'ckeditor4-react';
-import classNames from 'classnames/bind';
-import commonFunc from 'common/commonFunc';
-import { Direction, NotificationType } from 'common/enum';
-import convertHelper from 'helpers/convertHelper';
-import datetimeHelper from 'helpers/datetimeHelper';
-import { openNotification } from 'helpers/notification';
-import { TypeUpdate } from 'common/constant';
-import axiosClient from 'apis/axiosClient';
-import moment from 'moment';
+} from "antd";
+import TextArea from "antd/lib/input/TextArea";
+import { Option } from "antd/lib/mentions";
+import { TreeNode } from "antd/lib/tree-select";
+import documentApi from "apis/documentApi";
+import { CKEditor } from "ckeditor4-react";
+import classNames from "classnames/bind";
+import commonFunc from "common/commonFunc";
+import { Direction, NotificationType } from "common/enum";
+import convertHelper from "helpers/convertHelper";
+import datetimeHelper from "helpers/datetimeHelper";
+import { openNotification } from "helpers/notification";
+import { TypeUpdate } from "common/constant";
+import axiosClient from "apis/axiosClient";
+import moment from "moment";
+import { envDomainBackend } from "common/enviroments";
 import imageHelper from 'helpers/imageHelper';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
@@ -256,6 +257,7 @@ const PopupUpdateDocuments = (props) => {
                     return;
                   }
                   body.FileAttachment = file;
+                  delete bodyData?.FilePath;
                 } else if (
                   fileListAttachment?.[0]?.isFileFormServer &&
                   fileListAttachment.length > 0

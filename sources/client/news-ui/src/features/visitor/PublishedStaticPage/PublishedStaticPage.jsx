@@ -5,10 +5,12 @@ import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import datetimeHelper from 'helpers/datetimeHelper';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FacebookIcon, FacebookShareButton } from 'react-share';
 import styles from './PublishedStaticPage.module.scss';
+import PublishedStaticPageList from './PublishedStaticPageList/PublishedStaticPageList';
+import $ from 'jquery';
 
 const cx = classNames.bind(styles);
 
@@ -21,8 +23,8 @@ function PublishedStaticPage(props) {
 
     const [dataPage, setDataPage] = useState(null);
     const [loading, setLoading] = useState(true);
-
     const [fontSizeContainer, setFontSizeContainer] = useState(13);
+    const [isStyleListPage, setIsStyleListPage] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -30,7 +32,9 @@ function PublishedStaticPage(props) {
             try {
                 const response = await homeApi.getStaticPageData(id);
                 setDataPage(response);
-                console.log(response);
+                if (response?.Content?.includes(`<div class="box-container">`)) {
+                    setIsStyleListPage(true);
+                }
             } catch (error) {
                 setDataPage(null);
                 console.log('Failed to fetch list: ', error);
@@ -45,31 +49,63 @@ function PublishedStaticPage(props) {
         setFontSizeContainer(fontSizeContainer + value);
     }
 
+    function convertHtmlSourceToListPageData(htmlContent) {
+        let listData = [];
+
+        let boxContainers = $(`<div>${htmlContent}</div>`).find('.box-container');
+        for (const box of boxContainers) {
+            let title = $(box).find('.box-title h2').text();
+            let listDataItem = {
+                Title: title,
+                Items: [],
+            };
+
+            let items = $(box).find('a');
+            for (const item of items) {
+                let link = $(item).attr('href');
+                let text = $(item).text();
+
+                listDataItem.Items.push({
+                    Title: text,
+                    Url: link,
+                });
+            }
+
+            listData.push(listDataItem);
+        }
+
+        return listData;
+    }
+
     return (
         <div className={cx('wrapper')}>
             <ScrollToTop />
             <Skeleton loading={loading} active>
-                <div className={cx('menu-items')}>
-                    <Breadcrumb>
-                        <Breadcrumb.Item>{dataPage?.Title}</Breadcrumb.Item>
-                    </Breadcrumb>
-                    <div className={cx('menu-divider')}></div>
-                </div>
-                <div className={cx('document-container')}>
-                    {dataPage ? (
-                        <>
-                            <div className={cx('info-extension')}>
-                                <Row gutter={8} justify='space-between'>
-                                    <Col>{/* <div className={cx('align-center')}>{datetimeHelper.formatDatetimeToDateVN(data?.NewsPostDetail.PublishedDate)}</div> */}</Col>
-                                    <Col flex={1}>
-                                        <Row justify='end' align='middle'>
-                                            <div className={cx('font-size')}>
-                                                <div>Xem cỡ chữ</div>
-                                                <Button icon={<MinusOutlined />} size='small' onClick={() => handleChangeFontSize(-1)}></Button>
-                                                <Button icon={<PlusOutlined />} size='small' onClick={() => handleChangeFontSize(1)}></Button>
-                                            </div>
-                                            <div className={cx('print')}>
-                                                {/* <Button
+                {isStyleListPage ? (
+                    <PublishedStaticPageList dataList={convertHtmlSourceToListPageData(dataPage.Content)} />
+                ) : (
+                    <>
+                        <div className={cx('menu-items')}>
+                            <Breadcrumb>
+                                <Breadcrumb.Item>{dataPage?.Title}</Breadcrumb.Item>
+                            </Breadcrumb>
+                            <div className={cx('menu-divider')}></div>
+                        </div>
+                        <div className={cx('document-container')}>
+                            {dataPage ? (
+                                <>
+                                    <div className={cx('info-extension')}>
+                                        <Row gutter={8} justify='space-between'>
+                                            <Col>{/* <div className={cx('align-center')}>{datetimeHelper.formatDatetimeToDateVN(data?.NewsPostDetail.PublishedDate)}</div> */}</Col>
+                                            <Col flex={1}>
+                                                <Row justify='end' align='middle'>
+                                                    <div className={cx('font-size')}>
+                                                        <div>Xem cỡ chữ</div>
+                                                        <Button icon={<MinusOutlined />} size='small' onClick={() => handleChangeFontSize(-1)}></Button>
+                                                        <Button icon={<PlusOutlined />} size='small' onClick={() => handleChangeFontSize(1)}></Button>
+                                                    </div>
+                                                    <div className={cx('print')}>
+                                                        {/* <Button
                                                     size='small'
                                                     icon={<PrinterOutlined />}
                                                     onClick={() => {
@@ -79,32 +115,35 @@ function PublishedStaticPage(props) {
                                                 >
                                                     In trang
                                                 </Button> */}
-                                                <Button
-                                                    size='small'
-                                                    icon={<SoundOutlined />}
-                                                    onClick={() => {
-                                                        commonRender.showNotifyTodo();
-                                                    }}
-                                                >
-                                                    Đọc bài viết
-                                                </Button>
-                                            </div>
-                                            <div className={cx('share')}>
-                                                <FacebookShareButton url={window.location.href}>
-                                                    <FacebookIcon size={24} />
-                                                </FacebookShareButton>
-                                            </div>
+                                                        <Button
+                                                            size='small'
+                                                            icon={<SoundOutlined />}
+                                                            onClick={() => {
+                                                                commonRender.showNotifyTodo();
+                                                            }}
+                                                        >
+                                                            Đọc bài viết
+                                                        </Button>
+                                                    </div>
+                                                    <div className={cx('share')}>
+                                                        <FacebookShareButton url={window.location.href}>
+                                                            <FacebookIcon size={24} />
+                                                        </FacebookShareButton>
+                                                    </div>
+                                                </Row>
+                                            </Col>
                                         </Row>
-                                    </Col>
-                                </Row>
-                            </div>
-                            <div className={cx('content')}></div>
-                            <div style={{ fontSize: fontSizeContainer }} dangerouslySetInnerHTML={{ __html: dataPage.Content }}></div>
-                        </>
-                    ) : (
-                        <h3>Không tìm thấy nội dung</h3>
-                    )}
-                </div>
+                                    </div>
+                                    <div className={cx('content')}></div>
+
+                                    <div style={{ fontSize: fontSizeContainer }} dangerouslySetInnerHTML={{ __html: dataPage.Content }}></div>
+                                </>
+                            ) : (
+                                <h3>Không tìm thấy nội dung</h3>
+                            )}
+                        </div>
+                    </>
+                )}
             </Skeleton>
         </div>
     );

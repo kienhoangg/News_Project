@@ -95,7 +95,7 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id:long}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult>
       UpdateDocumentDto(
           [Required] int id,
@@ -118,8 +118,8 @@ namespace News.API.Controllers
                 }
             }
             Document? document = await _documentService.GetDocument(id);
-            var tempFileAttachmentPath = document.FilePath;
             if (document == null) return NotFound();
+            var tempFileAttachmentPath = document.FilePath;
             var documentUpdated = new Document();
             if (!string.IsNullOrEmpty(documentUploadDto.JsonString))
             {
@@ -139,8 +139,7 @@ namespace News.API.Controllers
             }
 
             documentUpdated.FilePath = fileAttachmentPath;
-            var resultUpdate =
-                await _documentService.UpdateDocument(documentUpdated);
+             await _documentService.UpdateDocument(documentUpdated);
 
             if (fileAttachmentPath != tempFileAttachmentPath)
             {

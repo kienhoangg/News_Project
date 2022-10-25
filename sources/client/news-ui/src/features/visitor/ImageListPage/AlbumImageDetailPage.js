@@ -8,6 +8,7 @@ import ScrollToTop from "components/ScrollToTop/ScrollToTop";
 import axiosClient from "apis/axiosClient";
 import { useLocation } from "react-router-dom";
 import IconClose from "../../../assets/icons/close.png";
+import { envDomainBackend } from "common/enviroments";
 
 export default function AlbumImageDetailPage() {
   const isFirstRender = useRef(true);
@@ -91,8 +92,7 @@ export default function AlbumImageDetailPage() {
           const url = val;
           if (val?.indexOf("https://") !== 0 && val?.indexOf("http://") !== 0)
             url =
-              window.location.origin +
-              (val?.indexOf("/") === 0 ? val : "/" + val);
+              envDomainBackend + (val?.indexOf("/") === 0 ? val : "/" + val);
 
           return {
             url: url,
@@ -214,7 +214,7 @@ export default function AlbumImageDetailPage() {
                       ? item?.Avatar?.indexOf("https://") === 0 ||
                         item?.Avatar?.indexOf("http://") === 0
                         ? item?.Avatar
-                        : window.location.origin +
+                        : envDomainBackend +
                           (item?.Avatar?.indexOf("/") === 0
                             ? item?.Avatar
                             : "/" + item?.Avatar)

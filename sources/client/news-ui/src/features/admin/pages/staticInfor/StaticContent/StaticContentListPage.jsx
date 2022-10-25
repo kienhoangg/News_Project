@@ -3,17 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import styles from './StaticContentListPage.module.scss';
 import StaticContentPageSearch from './StaticContentPageSearch/StaticContentPageSearch';
-import {
-  Button,
-  Divider,
-  Form,
-  Modal,
-  Row,
-  Col,
-  Input,
-  Upload,
-  TreeSelect,
-} from 'antd';
+import { Button, Divider, Form, Modal, Row, Col, Input, Upload, TreeSelect } from 'antd';
 import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
 import StaticContentTableData from './StaticContentTableData/StaticContentTableData';
 import { useState } from 'react';
@@ -36,10 +26,10 @@ const cx = classNames.bind(styles);
 StaticContentListPage.propTypes = {};
 
 const filterAll = {
-  currentPage: 1,
-  pageSize: 9_999_999,
-  direction: Direction.DESC,
-  orderBy: 'CreatedDate',
+    currentPage: 1,
+    pageSize: 9_999_999,
+    direction: Direction.DESC,
+    orderBy: 'CreatedDate',
 };
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
@@ -71,266 +61,238 @@ function StaticContentListPage(props) {
   });
   const [form] = Form.useForm();
 
-  const refCategoryAll = useRef([]);
+    const refCategoryAll = useRef([]);
 
-  /**
-   * Thay đổi bộ lọc thì gọi lại danh sách
-   */
-  useEffect(() => {
-    if (isFirstCall.current) {
-      isFirstCall.current = false;
-      getDataFilter();
-      // return;
-    }
-    fetchCategoryList();
-  }, [objFilter]);
+    /**
+     * Thay đổi bộ lọc thì gọi lại danh sách
+     */
+    useEffect(() => {
+        if (isFirstCall.current) {
+            isFirstCall.current = false;
+            getDataFilter();
+            // return;
+        }
+        fetchCategoryList();
+    }, [objFilter]);
 
-  /**
-   * Gọi api lấy dữ liệu danh sách nội dung tĩnh tin
-   */
-  const fetchCategoryList = async () => {
-    try {
-      const response = await inforStaticAPI.getContentAll(objFilter);
+    /**
+     * Gọi api lấy dữ liệu danh sách nội dung tĩnh tin
+     */
+    const fetchCategoryList = async () => {
+        try {
+            const response = await inforStaticAPI.getContentAll(objFilter);
 
-      setNewsData({
-        data: response?.PagedData?.Results ?? [],
-        total: response?.PagedData?.RowCount ?? 0,
-      });
-    } catch (error) {
-      openNotification(
-        'Lấy nội dung tĩnh thất bại',
-        '',
-        NotificationType.ERROR
-      );
-    }
-  };
-
-  const getDataFilter = async () => {
-    const responseCategoryAll = inforStaticAPI.getStaticCategoryAll(filterAll);
-
-    Promise.all([responseCategoryAll]).then((values) => {
-      refCategoryAll.current = values[0]?.PagedData?.Results ?? [];
-      setDataFilter({
-        categoryAll: values[0]?.PagedData?.Results ?? [],
-      });
-    });
-  };
-
-  /**
-   * Thay đổi phân trang
-   */
-  const handleChangePagination = (
-    currentPage,
-    pageSize,
-    orderBy,
-    direction
-  ) => {
-    setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
-  };
-
-  const handleOnClickShowRowDetail = async (values) => {
-    const detailRow = await fetchItem(values);
-    if (!detailRow) {
-      return;
-    }
-    dataDetail.current = detailRow;
-    setOpenCollectionNewsDetail(true);
-  };
-
-  const fetchItem = async (values) => {
-    try {
-      return await inforStaticAPI.getNewsById(values?.Id);
-    } catch (error) {
-      openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
-      return null;
-    }
-  };
-  const handleDeleteCategoryNew = async (id) => {
-    try {
-      await inforStaticAPI.deleteContent(id);
-      openNotification('Xóa nội dung tĩnh thành công');
-      fetchCategoryList();
-    } catch (error) {
-      openNotification(
-        'Xóa nội dung tĩnh thất bại',
-        '',
-        NotificationType.ERROR
-      );
-    }
-  };
-  const handleUpdateStatusNew = async (values) => {
-    try {
-      await inforStaticAPI.updateStatusContent({
-        Ids: [values.Id],
-        Value: values.Status === 0 ? 1 : 0,
-        Field: TypeUpdate.STATUS,
-      });
-      fetchCategoryList();
-      openNotification('Cập nhật thành công');
-    } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
-    }
-  };
-  /**
-   * Sử lý thay đổi text search
-   * @param {*} textSearch Từ cần tìm
-   */
-  const handleChangeTextSearch = (textSearch) => {
-    setObjFilter({ ...objFilter, keyword: textSearch });
-  };
-
-  const onCancel = () => {
-    setIsModalOpen(false);
-  };
-  const onCreate = async (values) => {
-    try {
-      var formData = new FormData();
-      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
-      if (values.Avatar) {
-        formData.append('Avatar', values.Avatar);
-      }
-      if (values.FileAttachment) {
-        formData.append('FileAttachment', values.FileAttachment);
-      }
-      setIsModalOpen(false);
-      await inforStaticAPI.insertContent(formData);
-      openNotification('Tạo mới nội dung tĩnh thành công');
-      fetchCategoryList();
-    } catch (error) {
-      openNotification(
-        'Tạo mới nội dung tĩnh thất bại',
-        '',
-        NotificationType.ERROR
-      );
-    }
-  };
-  function onEditorChange(event) {
-    // console.log('data: ', event.editor.getData());
-  }
-  const handleChangeAttachment = ({ fileList: newFileList }) => {
-    setFileListAttachment(newFileList);
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const generateTree = (arrNode) => {
-    return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.Title} key={x.Id}>
-        {x.children.length > 0 && generateTree(x.children)}
-      </TreeNode>
-    ));
-  };
-  const renderStaticCategoryId = (
-    <TreeSelect
-      showSearch
-      style={{
-        width: '100%',
-      }}
-      // value={valueNewsType}
-      dropdownStyle={{
-        maxHeight: 400,
-        overflow: 'auto',
-      }}
-      placeholder='Chọn loại tin tức'
-      allowClear
-      treeDefaultExpandAll
-      // onChange={onChangeNewsType}
-    >
-      {generateTree(commonFunc.list_to_tree(dataFilter?.categoryAll ?? []))}
-    </TreeSelect>
-  );
-
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const uploadButton = (
-    <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
-  );
-
-  return (
-    <div className={cx('wrapper')}>
-      <Modal
-        open={isModalOpen}
-        title='Tạo mới nội dung tĩnh'
-        okText='Thêm mới'
-        cancelText='Thoát'
-        onCancel={onCancel}
-        width={1300}
-        centered
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              values.content = values.Content?.editor?.getData();
-              const { Title, Descritpion, StaticCategoryId, content } = values;
-              const bodyData = {
-                Title,
-                Descritpion,
-                content,
-              };
-              if (StaticCategoryId) {
-                bodyData.StaticCategoryId = parseInt(StaticCategoryId);
-              }
-
-              const role = commonFunc.getCookie('role');
-              bodyData.Status = role !== Role.ADMIN ? 0 : 1;
-              let body = { JsonString: bodyData };
-              if (fileList.length > 0) {
-                const file = fileList[0].originFileObj;
-                if (file.size > LIMIT_UP_LOAD_FILE) {
-                  openNotification(
-                    'File ảnh đã lớn hơn 2MB',
-                    '',
-                    NotificationType.ERROR
-                  );
-                  return;
-                }
-                body.Avatar = file;
-              }
-              if (fileListAttachment.length > 0) {
-                const file = fileListAttachment[0].originFileObj;
-                if (file.size > LIMIT_UP_LOAD_FILE) {
-                  openNotification(
-                    'File đính kèm đã lớn hơn 2MB',
-                    '',
-                    NotificationType.ERROR
-                  );
-                  return;
-                }
-                body.FileAttachment = file;
-              }
-              form.resetFields();
-              setFileList([]);
-              setFileListAttachment([]);
-              onCreate(body);
-            })
-            .catch((info) => {
-              console.log('Validate Failed:', info);
+            setNewsData({
+                data: response?.PagedData?.Results ?? [],
+                total: response?.PagedData?.RowCount ?? 0,
             });
-        }}
-      >
-        <Form
-          form={form}
-          name='form_in_modal'
-          labelCol={{ span: 2 }}
-          initialValues={{
-            modifier: 'public',
-          }}
+        } catch (error) {
+            openNotification('Lấy nội dung tĩnh thất bại', '', NotificationType.ERROR);
+        }
+    };
+
+    const getDataFilter = async () => {
+        const responseCategoryAll = inforStaticAPI.getStaticCategoryAll(filterAll);
+
+        Promise.all([responseCategoryAll]).then((values) => {
+            refCategoryAll.current = values[0]?.PagedData?.Results ?? [];
+            setDataFilter({
+                categoryAll: values[0]?.PagedData?.Results ?? [],
+            });
+        });
+    };
+
+    /**
+     * Thay đổi phân trang
+     */
+    const handleChangePagination = (currentPage, pageSize, orderBy, direction) => {
+        setObjFilter({ ...objFilter, currentPage, pageSize, orderBy, direction });
+    };
+
+    const handleOnClickShowRowDetail = async (values) => {
+        const detailRow = await fetchItem(values);
+        if (!detailRow) {
+            return;
+        }
+        dataDetail.current = detailRow;
+        setOpenCollectionNewsDetail(true);
+    };
+
+    const fetchItem = async (values) => {
+        try {
+            return await inforStaticAPI.getNewsById(values?.Id);
+        } catch (error) {
+            openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
+            return null;
+        }
+    };
+    const handleDeleteCategoryNew = async (id) => {
+        try {
+            await inforStaticAPI.deleteContent(id);
+            openNotification('Xóa nội dung tĩnh thành công');
+            fetchCategoryList();
+        } catch (error) {
+            openNotification('Xóa nội dung tĩnh thất bại', '', NotificationType.ERROR);
+        }
+    };
+    const handleUpdateStatusNew = async (values) => {
+        try {
+            await inforStaticAPI.updateStatusContent({
+                Ids: [values.Id],
+                Value: values.Status === 0 ? 1 : 0,
+                Field: TypeUpdate.STATUS,
+            });
+            fetchCategoryList();
+            openNotification('Cập nhật thành công');
+        } catch (error) {
+            openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+        }
+    };
+    /**
+     * Sử lý thay đổi text search
+     * @param {*} textSearch Từ cần tìm
+     */
+    const handleChangeTextSearch = (textSearch) => {
+        setObjFilter({ ...objFilter, keyword: textSearch });
+    };
+
+    const onCancel = () => {
+        setIsModalOpen(false);
+    };
+    const onCreate = async (values) => {
+        try {
+            var formData = new FormData();
+            formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+            if (values.Avatar) {
+                formData.append('Avatar', values.Avatar);
+            }
+            if (values.FileAttachment) {
+                formData.append('FileAttachment', values.FileAttachment);
+            }
+            setIsModalOpen(false);
+            await inforStaticAPI.insertContent(formData);
+            openNotification('Tạo mới nội dung tĩnh thành công');
+            fetchCategoryList();
+        } catch (error) {
+            openNotification('Tạo mới nội dung tĩnh thất bại', '', NotificationType.ERROR);
+        }
+    };
+    function onEditorChange(event) {
+        // console.log('data: ', event.editor.getData());
+    }
+    const handleChangeAttachment = ({ fileList: newFileList }) => {
+        setFileListAttachment(newFileList);
+    };
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const generateTree = (arrNode) => {
+        return arrNode.map((x) => (
+            <TreeNode value={x.Id} title={x.Title} key={x.Id}>
+                {x.children.length > 0 && generateTree(x.children)}
+            </TreeNode>
+        ));
+    };
+    const renderStaticCategoryId = (
+        <TreeSelect
+            showSearch
+            style={{
+                width: '100%',
+            }}
+            // value={valueNewsType}
+            dropdownStyle={{
+                maxHeight: 400,
+                overflow: 'auto',
+            }}
+            placeholder='Chọn loại tin tức'
+            allowClear
+            treeDefaultExpandAll
+            // onChange={onChangeNewsType}
         >
-          <Form.Item
-            label='Tiêu đề'
-            name='Title'
-            rules={[
-              {
-                required: true,
-                message: 'Số ký hiệu không được để trống',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+            {generateTree(commonFunc.list_to_tree(dataFilter?.categoryAll ?? []))}
+        </TreeSelect>
+    );
+
+    const handleChange = ({ fileList: newFileList }) => {
+        setFileList(newFileList);
+    };
+
+    const uploadButton = <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>;
+
+    return (
+        <div className={cx('wrapper')}>
+            <Modal
+                open={isModalOpen}
+                title='Tạo mới nội dung tĩnh'
+                okText='Thêm mới'
+                cancelText='Thoát'
+                onCancel={onCancel}
+                width={1300}
+                centered
+                onOk={() => {
+                    form.validateFields()
+                        .then((values) => {
+                            values.content = values.Content?.editor?.getData();
+                            const { Title, Descritpion, StaticCategoryId, content } = values;
+                            const bodyData = {
+                                Title,
+                                Descritpion,
+                                content,
+                            };
+                            if (StaticCategoryId) {
+                                bodyData.StaticCategoryId = parseInt(StaticCategoryId);
+                            }
+
+                            const role = commonFunc.getCookie('role');
+                            bodyData.Status = role !== Role.ADMIN ? 0 : 1;
+                            let body = { JsonString: bodyData };
+                            if (fileList.length > 0) {
+                                const file = fileList[0].originFileObj;
+                                if (file.size > LIMIT_UP_LOAD_FILE) {
+                                    openNotification('File ảnh đã lớn hơn 2MB', '', NotificationType.ERROR);
+                                    return;
+                                }
+                                body.Avatar = file;
+                            }
+                            if (fileListAttachment.length > 0) {
+                                const file = fileListAttachment[0].originFileObj;
+                                if (file.size > LIMIT_UP_LOAD_FILE) {
+                                    openNotification('File đính kèm đã lớn hơn 2MB', '', NotificationType.ERROR);
+                                    return;
+                                }
+                                body.FileAttachment = file;
+                            }
+                            form.resetFields();
+                            setFileList([]);
+                            setFileListAttachment([]);
+                            onCreate(body);
+                        })
+                        .catch((info) => {
+                            console.log('Validate Failed:', info);
+                        });
+                }}
+            >
+                <Form
+                    form={form}
+                    name='form_in_modal'
+                    labelCol={{ span: 2 }}
+                    initialValues={{
+                        modifier: 'public',
+                    }}
+                >
+                    <Form.Item
+                        label='Tiêu đề'
+                        name='Title'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Số ký hiệu không được để trống',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
           <Form.Item
             name='Descritpion'

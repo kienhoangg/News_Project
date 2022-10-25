@@ -1,6 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Extensions;
+using Common.Interfaces;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -12,16 +16,18 @@ namespace News.API.Controllers
     public class LinkInfosController : ControllerBase
     {
         private readonly ILinkInfoService _linkInfoService;
-
+        private readonly ISerializeService _serializeService;
         private readonly IMapper _mapper;
 
         public LinkInfosController(
             ILinkInfoService linkInfoService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _linkInfoService = linkInfoService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -55,16 +61,61 @@ namespace News.API.Controllers
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateLinkInfoDto(
-            [Required] int id,
-            [FromBody] LinkInfoDto linkInfoDto
-        )
+      UpdateLinkInfoDto(
+          [Required] int id,
+          [FromForm] LinkInfoUploadDto linkInfoUploadDto
+      )
         {
-            LinkInfo? LinkInfo = await _linkInfoService.GetLinkInfo(id);
-            if (LinkInfo == null) return NotFound();
-            var updatedLinkInfo = _mapper.Map(linkInfoDto, LinkInfo);
-            await _linkInfoService.UpdateLinkInfo(updatedLinkInfo);
-            var result = _mapper.Map<LinkInfoDto>(updatedLinkInfo);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<LinkInfo
+                    >(lstErrorString));
+                }
+            }
+            LinkInfo? linkInfo = await _linkInfoService.GetLinkInfo(id);
+            if (linkInfo == null) return NotFound();
+            var tempFileAttachmentPath = linkInfo.Avatar;
+            var linkInfoUpdated = new LinkInfo();
+            if (!string.IsNullOrEmpty(linkInfoUploadDto.JsonString))
+            {
+                linkInfoUpdated =
+                    _serializeService
+                        .Deserialize<LinkInfo>(linkInfoUploadDto.JsonString);
+                linkInfoUpdated.Id = linkInfo.Id;
+            }
+            string fileAttachmentPath = !String.IsNullOrEmpty(linkInfoUpdated.Avatar) ? linkInfoUpdated.Avatar : "";
+            // Upload file attachment if exist
+            if (linkInfoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await linkInfoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+
+            linkInfoUpdated.Avatar = fileAttachmentPath;
+            await _linkInfoService.UpdateLinkInfo(linkInfoUpdated);
+
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            var result = _mapper.Map<LinkInfoDto>(source: linkInfoUpdated);
             return Ok(result);
         }
 
@@ -75,6 +126,13 @@ namespace News.API.Controllers
             if (linkInfo == null) return NotFound();
 
             await _linkInfoService.DeleteLinkInfo(id);
+            FileInfo fileFileAttachment =
+                                    new FileInfo(Directory.GetCurrentDirectory() +
+                                        linkInfo.Avatar);
+            if (fileFileAttachment.Exists)
+            {
+                fileFileAttachment.Delete();
+            }
             return NoContent();
         }
     }
