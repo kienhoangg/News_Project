@@ -86,25 +86,27 @@ export default function AlbumImageDetailPage() {
       const res = await axiosClient.get("/photocategories/" + idAlbum);
 
       const images = [];
-      res?.Photos?.map((item)=>{
+      res?.Photos?.map((item) => {
         const arrayUrl = item?.ImagePath?.split(";;")?.map((val) => {
           const url = val;
           if (val?.indexOf("https://") !== 0 && val?.indexOf("http://") !== 0)
-            url = window.location.origin + val;
+            url =
+              window.location.origin +
+              (val?.indexOf("/") === 0 ? val : "/" + val);
 
           return {
             url: url,
-            title: item?.Title
+            title: item?.Title,
           };
         });
-        
-        images.push(...arrayUrl)
-      })
+
+        images.push(...arrayUrl);
+      });
 
       setAlbumDetail({
         title: res?.Title,
-        images: images
-      })
+        images: images,
+      });
 
       setIndexImageCaroucel(0);
     } catch (error) {}
@@ -212,7 +214,10 @@ export default function AlbumImageDetailPage() {
                       ? item?.Avatar?.indexOf("https://") === 0 ||
                         item?.Avatar?.indexOf("http://") === 0
                         ? item?.Avatar
-                        : window.location.origin + item?.Avatar
+                        : window.location.origin +
+                          (item?.Avatar?.indexOf("/") === 0
+                            ? item?.Avatar
+                            : "/" + item?.Avatar)
                       : "/"
                   }
                 />

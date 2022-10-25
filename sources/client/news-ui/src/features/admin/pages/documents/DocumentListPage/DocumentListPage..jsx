@@ -28,6 +28,7 @@ import styles from './DocumentListPage.module.scss';
 import DocumentListPageSearch from './DocumentListPageSearch/DocumentListPageSearch';
 import DocumentListTableData from './DocumentListTableData/DocumentListTableData';
 import { TypeUpdate } from 'common/constant';
+import PopupUpdateDocuments from './PopupUpdateDocuments/PopupUpdateDocuments';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 const cx = classNames.bind(styles);
 
@@ -43,6 +44,10 @@ const filterAll = {
 };
 
 function DocumentListPage(props) {
+  const [popupUpdate, setPopupUpdate] = useState({
+    id: null,
+    show: false
+  });
   const [newsData, setNewsData] = useState({});
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
@@ -486,8 +491,26 @@ function DocumentListPage(props) {
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
           updateStatusNew={handleUpdateStatusNew}
+          onClickRow={(id)=>{
+            setPopupUpdate({
+              id: id,
+              show: true
+            })
+          }}
         />
       </div>
+      {(popupUpdate?.id || popupUpdate?.id ===0) && popupUpdate?.show ? <PopupUpdateDocuments onSuccess={()=>{
+        setPopupUpdate({
+          id: null,
+          show: false
+        })
+        fetchList();
+      }} Id={popupUpdate?.id} onCancel={()=>{
+        setPopupUpdate({
+          id: null,
+          show: false
+        });
+      }} /> : null}
     </div>
   );
 }
