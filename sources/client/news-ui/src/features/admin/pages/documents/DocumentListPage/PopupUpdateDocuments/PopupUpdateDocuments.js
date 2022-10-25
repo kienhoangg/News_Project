@@ -264,6 +264,7 @@ const PopupUpdateDocuments = (props) => {
                     return;
                   }
                   body.FileAttachment = file;
+                  delete bodyData?.FilePath;
                 } else if (
                   fileListAttachment?.[0]?.isFileFormServer &&
                   fileListAttachment.length > 0
