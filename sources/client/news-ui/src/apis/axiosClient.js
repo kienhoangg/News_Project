@@ -18,7 +18,7 @@ axiosClient.interceptors.request.use(async (config) => {
     openNotification('Hết phiên đăng nhập', '', NotificationType.ERROR);
     setTimeout(() => {
       window.open(routes.login, '_self');
-    }, 1000);
+    }, 500);
     return;
   }
   config.headers.Authorization = `Bearer ${token}`;
@@ -32,6 +32,13 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
+    if (error?.response?.data?.message === 'Invalid Token') {
+      openNotification('Hết phiên đăng nhập', '', NotificationType.ERROR);
+      setTimeout(() => {
+        window.open(routes.login, '_self');
+      }, 500);
+      return;
+    }
     throw error;
   }
 );

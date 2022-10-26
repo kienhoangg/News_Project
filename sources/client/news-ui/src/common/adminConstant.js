@@ -166,18 +166,18 @@ const adminMenu = [
   },
   {
     key: 'advertisement',
-    label: 'Liên kết & quảng cáo',
+    label: 'Liên kết & doanh nghiệp',
     icon: <PlayCircleFilled />,
     children: [
       {
         key: 'advertisement-category',
-        label: 'Danh mục quảng cáo',
+        label: 'Danh mục doanh nghiệp',
         icon: <PlayCircleFilled />,
         to: routes.adminAdvertisementCategory,
       },
       {
         key: 'advertisement-list',
-        label: 'Quảng cáo',
+        label: 'Doanh nghiệp',
         icon: <PlayCircleFilled />,
         to: routes.adminAdvertisementList,
       },
