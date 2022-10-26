@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -69,6 +70,46 @@ namespace News.API.Services
         public async Task UpdateQuestionCategory(QuestionCategory product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<QuestionCategory>> GetQuestionCategoryNormalByPaging(QuestionCategoryRequest questionCategoryRequest, params Expression<Func<QuestionCategory, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (questionCategoryRequest.Ids != null && questionCategoryRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => questionCategoryRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<QuestionCategory>? sourcePaging = await query.PaginatedListAsync(questionCategoryRequest.CurrentPage
+                                                                                              ?? 0, questionCategoryRequest.PageSize ?? 0, questionCategoryRequest.OrderBy, questionCategoryRequest.Direction);
+            ApiSuccessResult<QuestionCategory>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyQuestionCategoryDto(List<int> lstQuestionCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstQuestionCategoryDto = (await GetQuestionCategoryNormalByPaging(new QuestionCategoryRequest()
+            {
+                Ids = lstQuestionCategoryId
+            })).PagedData.Results.ToList();
+            Action<QuestionCategory> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<QuestionCategory>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstQuestionCategoryDto.ForEach(action);
+                await UpdateListAsync(lstQuestionCategoryDto);
+            }
         }
     }
 }

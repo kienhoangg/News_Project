@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task UpdateCompanyInfo(CompanyInfo product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<CompanyInfo>> GetCompanyInfoNormalByPaging(CompanyInfoRequest companyInfoRequest, params Expression<Func<CompanyInfo, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (companyInfoRequest.Ids != null && companyInfoRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => companyInfoRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<CompanyInfo>? sourcePaging = await query.PaginatedListAsync(companyInfoRequest.CurrentPage
+                                                                                              ?? 0, companyInfoRequest.PageSize ?? 0, companyInfoRequest.OrderBy, companyInfoRequest.Direction);
+            ApiSuccessResult<CompanyInfo>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyCompanyInfoDto(List<int> lstCompanyInfoId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstCompanyInfoDto = (await GetCompanyInfoNormalByPaging(new CompanyInfoRequest()
+            {
+                Ids = lstCompanyInfoId
+            })).PagedData.Results.ToList();
+            Action<CompanyInfo> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<CompanyInfo>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstCompanyInfoDto.ForEach(action);
+                await UpdateListAsync(lstCompanyInfoDto);
+            }
         }
     }
 }

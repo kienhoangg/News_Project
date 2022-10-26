@@ -200,5 +200,15 @@ namespace News.API.Controllers
             await _photoService.DeletePhoto(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyPhotoDto(
+    [FromBody] UpdateManyDto<int> photoUpdateManyDto
+  )
+        {
+            await _photoService.UpdateManyPhotoDto(photoUpdateManyDto.Ids, photoUpdateManyDto.Value.Value, photoUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

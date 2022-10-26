@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task UpdateVideoCategory(VideoCategory product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<VideoCategory>> GetVideoCategoryNormalByPaging(VideoCategoryRequest videoCategoryRequest, params Expression<Func<VideoCategory, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (videoCategoryRequest.Ids != null && videoCategoryRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => videoCategoryRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<VideoCategory>? sourcePaging = await query.PaginatedListAsync(videoCategoryRequest.CurrentPage
+                                                                                              ?? 0, videoCategoryRequest.PageSize ?? 0, videoCategoryRequest.OrderBy, videoCategoryRequest.Direction);
+            ApiSuccessResult<VideoCategory>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyVideoCategoryDto(List<int> lstVideoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstVideoCategoryDto = (await GetVideoCategoryNormalByPaging(new VideoCategoryRequest()
+            {
+                Ids = lstVideoCategoryId
+            })).PagedData.Results.ToList();
+            Action<VideoCategory> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<VideoCategory>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstVideoCategoryDto.ForEach(action);
+                await UpdateListAsync(lstVideoCategoryDto);
+            }
         }
     }
 }

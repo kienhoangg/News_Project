@@ -78,5 +78,15 @@ namespace News.API.Controllers
             await _sourceNewsService.DeleteSourceNews(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+ UpdateManySourceNewsDto(
+   [FromBody] UpdateManyDto<int> sourceNewsUpdateManyDto
+ )
+        {
+            await _sourceNewsService.UpdateManySourceNewsDto(sourceNewsUpdateManyDto.Ids, sourceNewsUpdateManyDto.Value.Value, sourceNewsUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

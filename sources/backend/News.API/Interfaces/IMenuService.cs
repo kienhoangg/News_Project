@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -25,5 +26,6 @@ namespace News.API.Interfaces
         Task DeleteMenu(int id);
         Task<List<HomeMenuDto>> GetHomeMenu();
         Task<List<HomeAdminDto>> GetAdminMenu();
+        Task UpdateManyMenuDto(List<int> lstMenuId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

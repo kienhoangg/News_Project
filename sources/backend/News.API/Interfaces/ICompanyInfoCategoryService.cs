@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -23,5 +24,7 @@ namespace News.API.Interfaces
         Task UpdateCompanyInfoCategory(CompanyInfoCategory companyInfoCategory);
 
         Task DeleteCompanyInfoCategory(int id);
+
+        Task UpdateManyCompanyInfoCategoryDto(List<int> lstCompanyInfoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task UpdateComment(Comment product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<Comment>> GetCommentNormalByPaging(CommentRequest commentRequest, params Expression<Func<Comment, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (commentRequest.Ids != null && commentRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => commentRequest.Ids.Contains((int)x.Id));
+            }
+            PagedResult<Comment>? sourcePaging = await query.PaginatedListAsync(commentRequest.CurrentPage
+                                                                                              ?? 0, commentRequest.PageSize ?? 0, commentRequest.OrderBy, commentRequest.Direction);
+            ApiSuccessResult<Comment>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyCommentDto(List<int> lstCommentId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstCommentDto = (await GetCommentNormalByPaging(new CommentRequest()
+            {
+                Ids = lstCommentId
+            })).PagedData.Results.ToList();
+            Action<Comment> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Comment>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstCommentDto.ForEach(action);
+                await UpdateListAsync(lstCommentDto);
+            }
         }
     }
 }

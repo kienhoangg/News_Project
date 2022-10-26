@@ -139,7 +139,7 @@ namespace News.API.Controllers
             }
 
             documentUpdated.FilePath = fileAttachmentPath;
-             await _documentService.UpdateDocument(documentUpdated);
+            await _documentService.UpdateDocument(documentUpdated);
 
             if (fileAttachmentPath != tempFileAttachmentPath)
             {
@@ -169,6 +169,15 @@ namespace News.API.Controllers
             {
                 fileFileAttachment.Delete();
             }
+            return NoContent();
+        }
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyDocumentDto(
+    [FromBody] UpdateManyDto<int> documentUpdateManyDto
+  )
+        {
+            await _documentService.UpdateManyDocumentDto(documentUpdateManyDto.Ids, documentUpdateManyDto.Value.Value, documentUpdateManyDto.Field.Value);
             return NoContent();
         }
     }

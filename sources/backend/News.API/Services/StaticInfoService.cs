@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task<int> UpdateStaticInfo(StaticInfo product)
         {
             return await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<StaticInfo>> GetStaticInfoNormalByPaging(StaticInfoRequest staticInfoRequest, params Expression<Func<StaticInfo, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (staticInfoRequest.Ids != null && staticInfoRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => staticInfoRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<StaticInfo>? sourcePaging = await query.PaginatedListAsync(staticInfoRequest.CurrentPage
+                                                                                              ?? 0, staticInfoRequest.PageSize ?? 0, staticInfoRequest.OrderBy, staticInfoRequest.Direction);
+            ApiSuccessResult<StaticInfo>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyStaticInfoDto(List<int> lstStaticInfoId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstStaticInfoDto = (await GetStaticInfoNormalByPaging(new StaticInfoRequest()
+            {
+                Ids = lstStaticInfoId
+            })).PagedData.Results.ToList();
+            Action<StaticInfo> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<StaticInfo>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstStaticInfoDto.ForEach(action);
+                await UpdateListAsync(lstStaticInfoDto);
+            }
         }
     }
 }

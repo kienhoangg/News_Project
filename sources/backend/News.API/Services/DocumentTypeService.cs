@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -69,6 +70,46 @@ namespace News.API.Services
         public async Task UpdateDocumentType(DocumentType product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<DocumentType>> GetDocumentTypeNormalByPaging(DocumentTypeRequest documentTypeRequest, params Expression<Func<DocumentType, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (documentTypeRequest.Ids != null && documentTypeRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => documentTypeRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<DocumentType>? sourcePaging = await query.PaginatedListAsync(documentTypeRequest.CurrentPage
+                                                                                              ?? 0, documentTypeRequest.PageSize ?? 0, documentTypeRequest.OrderBy, documentTypeRequest.Direction);
+            ApiSuccessResult<DocumentType>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyDocumentTypeDto(List<int> lstDocumentTypeId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstDocumentTypeDto = (await GetDocumentTypeNormalByPaging(new DocumentTypeRequest()
+            {
+                Ids = lstDocumentTypeId
+            })).PagedData.Results.ToList();
+            Action<DocumentType> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<DocumentType>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstDocumentTypeDto.ForEach(action);
+                await UpdateListAsync(lstDocumentTypeDto);
+            }
         }
     }
 }

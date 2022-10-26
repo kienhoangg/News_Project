@@ -77,5 +77,14 @@ namespace News.API.Controllers
             await _commentService.DeleteComment(id);
             return NoContent();
         }
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyCommentDto(
+    [FromBody] UpdateManyDto<int> commentUpdateManyDto
+  )
+        {
+            await _commentService.UpdateManyCommentDto(commentUpdateManyDto.Ids, commentUpdateManyDto.Value.Value, commentUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

@@ -162,5 +162,15 @@ namespace News.API.Controllers
             }
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyCompanyInfoDto(
+    [FromBody] UpdateManyDto<int> companyInfoUpdateManyDto
+  )
+        {
+            await _companyInfoService.UpdateManyCompanyInfoDto(companyInfoUpdateManyDto.Ids, companyInfoUpdateManyDto.Value.Value, companyInfoUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

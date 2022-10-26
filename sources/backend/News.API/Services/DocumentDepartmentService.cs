@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -70,6 +71,46 @@ namespace News.API.Services
         public async Task UpdateDocumentDepartment(DocumentDepartment product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<DocumentDepartment>> GetDocumentDepartmentNormalByPaging(DocumentDepartmentRequest documentDepartmentRequest, params Expression<Func<DocumentDepartment, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (documentDepartmentRequest.Ids != null && documentDepartmentRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => documentDepartmentRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<DocumentDepartment>? sourcePaging = await query.PaginatedListAsync(documentDepartmentRequest.CurrentPage
+                                                                                              ?? 0, documentDepartmentRequest.PageSize ?? 0, documentDepartmentRequest.OrderBy, documentDepartmentRequest.Direction);
+            ApiSuccessResult<DocumentDepartment>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyDocumentDepartmentDto(List<int> lstDocumentDepartmentId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstDocumentDepartmentDto = (await GetDocumentDepartmentNormalByPaging(new DocumentDepartmentRequest()
+            {
+                Ids = lstDocumentDepartmentId
+            })).PagedData.Results.ToList();
+            Action<DocumentDepartment> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<DocumentDepartment>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstDocumentDepartmentDto.ForEach(action);
+                await UpdateListAsync(lstDocumentDepartmentDto);
+            }
         }
     }
 }

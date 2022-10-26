@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -24,5 +25,7 @@ namespace News.API.Interfaces
 
         Task DeleteDocumentField(int id);
         Task<List<DocumentField>> GetAllDocumentFields();
+
+        Task UpdateManyDocumentFieldDto(List<int> lstDocumentFieldId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -22,5 +23,6 @@ namespace News.API.Interfaces
         Task UpdatePhotoCategory(PhotoCategory photoCategory);
 
         Task DeletePhotoCategory(int id);
+        Task UpdateManyPhotoCategoryDto(List<int> lstPhotoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

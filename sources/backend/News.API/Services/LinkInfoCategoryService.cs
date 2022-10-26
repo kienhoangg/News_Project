@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task UpdateLinkInfoCategory(LinkInfoCategory product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<LinkInfoCategory>> GetLinkInfoCategoryNormalByPaging(LinkInfoCategoryRequest linkInfoCategoryRequest, params Expression<Func<LinkInfoCategory, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (linkInfoCategoryRequest.Ids != null && linkInfoCategoryRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => linkInfoCategoryRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<LinkInfoCategory>? sourcePaging = await query.PaginatedListAsync(linkInfoCategoryRequest.CurrentPage
+                                                                                              ?? 0, linkInfoCategoryRequest.PageSize ?? 0, linkInfoCategoryRequest.OrderBy, linkInfoCategoryRequest.Direction);
+            ApiSuccessResult<LinkInfoCategory>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyLinkInfoCategoryDto(List<int> lstLinkInfoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstLinkInfoCategoryDto = (await GetLinkInfoCategoryNormalByPaging(new LinkInfoCategoryRequest()
+            {
+                Ids = lstLinkInfoCategoryId
+            })).PagedData.Results.ToList();
+            Action<LinkInfoCategory> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<LinkInfoCategory>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstLinkInfoCategoryDto.ForEach(action);
+                await UpdateListAsync(lstLinkInfoCategoryDto);
+            }
         }
     }
 }

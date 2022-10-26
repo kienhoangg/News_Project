@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -67,6 +68,46 @@ namespace News.API.Services
         public async Task UpdateVideo(Video product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<Video>> GetVideoNormalByPaging(VideoRequest videoRequest, params Expression<Func<Video, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (videoRequest.Ids != null && videoRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => videoRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<Video>? sourcePaging = await query.PaginatedListAsync(videoRequest.CurrentPage
+                                                                                              ?? 0, videoRequest.PageSize ?? 0, videoRequest.OrderBy, videoRequest.Direction);
+            ApiSuccessResult<Video>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyVideoDto(List<int> lstVideoId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstVideoDto = (await GetVideoNormalByPaging(new VideoRequest()
+            {
+                Ids = lstVideoId
+            })).PagedData.Results.ToList();
+            Action<Video> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Video>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstVideoDto.ForEach(action);
+                await UpdateListAsync(lstVideoDto);
+            }
         }
     }
 }

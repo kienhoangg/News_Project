@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -109,6 +110,46 @@ namespace News.API.Services
         public async Task<int> UpdateDocument(Document product)
         {
             return await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<Document>> GetDocumentNormalByPaging(DocumentRequest documentRequest, params Expression<Func<Document, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (documentRequest.Ids != null && documentRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => documentRequest.Ids.Contains((int)x.Id));
+            }
+            PagedResult<Document>? sourcePaging = await query.PaginatedListAsync(documentRequest.CurrentPage
+                                                                                              ?? 0, documentRequest.PageSize ?? 0, documentRequest.OrderBy, documentRequest.Direction);
+            ApiSuccessResult<Document>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyDocumentDto(List<int> lstDocumentId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstDocumentDto = (await GetDocumentNormalByPaging(new DocumentRequest()
+            {
+                Ids = lstDocumentId
+            })).PagedData.Results.ToList();
+            Action<Document> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Document>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstDocumentDto.ForEach(action);
+                await UpdateListAsync(lstDocumentDto);
+            }
         }
     }
 }

@@ -215,5 +215,15 @@ namespace News.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+ UpdateManyVideoDto(
+   [FromBody] UpdateManyDto<int> videoUpdateManyDto
+ )
+        {
+            await _videoService.UpdateManyVideoDto(videoUpdateManyDto.Ids, videoUpdateManyDto.Value.Value, videoUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

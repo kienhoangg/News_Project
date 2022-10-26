@@ -77,5 +77,14 @@ namespace News.API.Controllers
             await _companyInfoCategoryService.DeleteCompanyInfoCategory(id);
             return NoContent();
         }
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyCompanyInfoCategoryDto(
+    [FromBody] UpdateManyDto<int> companyInfoCategoryUpdateManyDto
+  )
+        {
+            await _companyInfoCategoryService.UpdateManyCompanyInfoCategoryDto(companyInfoCategoryUpdateManyDto.Ids, companyInfoCategoryUpdateManyDto.Value.Value, companyInfoCategoryUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

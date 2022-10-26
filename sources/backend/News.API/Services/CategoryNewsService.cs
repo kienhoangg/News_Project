@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -38,12 +39,12 @@ namespace News.API.Services
 
         public async Task<CategoryNews> GetCategoryNews(int id)
         {
-            return await GetByIdAsync(id, x => x.FieldNews);
+            return await GetByIdAsync(id, x => x.NewsPosts);
         }
 
         public async Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression)
         {
-            return await FindByCondition(expression, includeProperties: x => x.FieldNews).FirstOrDefaultAsync();
+            return await FindByCondition(expression, includeProperties: x => x.NewsPosts).FirstOrDefaultAsync();
         }
 
         public async Task<ApiSuccessResult<CategoryNewsDto>> GetCategoryNewsByPaging(CategoryNewsRequest categoryNewsRequest)
@@ -65,6 +66,46 @@ namespace News.API.Services
         public async Task UpdateCategoryNews(CategoryNews product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<CategoryNews>> GetCategoryNewsNormalByPaging(CategoryNewsRequest categoryNewsRequest, params Expression<Func<CategoryNews, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (categoryNewsRequest.Ids != null && categoryNewsRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => categoryNewsRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<CategoryNews>? sourcePaging = await query.PaginatedListAsync(categoryNewsRequest.CurrentPage
+                                                                                              ?? 0, categoryNewsRequest.PageSize ?? 0, categoryNewsRequest.OrderBy, categoryNewsRequest.Direction);
+            ApiSuccessResult<CategoryNews>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyCategoryNewsDto(List<int> lstCategoryNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstCategoryNewsDto = (await GetCategoryNewsNormalByPaging(new CategoryNewsRequest()
+            {
+                Ids = lstCategoryNewsId
+            })).PagedData.Results.ToList();
+            Action<CategoryNews> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<CategoryNews>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstCategoryNewsDto.ForEach(action);
+                await UpdateListAsync(lstCategoryNewsDto);
+            }
         }
     }
 }

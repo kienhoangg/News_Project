@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -23,5 +24,6 @@ namespace News.API.Interfaces
         Task UpdateLinkInfoCategory(LinkInfoCategory linkInfoCategory);
 
         Task DeleteLinkInfoCategory(int id);
+        Task UpdateManyLinkInfoCategoryDto(List<int> lstLinkInfoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

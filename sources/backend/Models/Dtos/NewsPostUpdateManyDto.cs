@@ -4,9 +4,9 @@ using Common.Enums;
 
 namespace Models.Dtos
 {
-    public class NewsPostUpdateManyDto
+    public class UpdateManyDto<T>
     {
-        public List<long> Ids { get; set; }
+        public List<T> Ids { get; set; }
         public bool? Value { get; set; }
         public MultipleTypeUpdate? Field { get; set; }
     }

@@ -78,5 +78,15 @@ namespace News.API.Controllers
             await _documentFieldService.DeleteDocumentField(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyDocumentFieldDto(
+    [FromBody] UpdateManyDto<int> documentFieldUpdateManyDto
+  )
+        {
+            await _documentFieldService.UpdateManyDocumentFieldDto(documentFieldUpdateManyDto.Ids, documentFieldUpdateManyDto.Value.Value, documentFieldUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

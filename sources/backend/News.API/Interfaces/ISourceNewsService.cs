@@ -1,3 +1,4 @@
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -19,5 +20,7 @@ namespace News.API.Interfaces
         Task UpdateSourceNews(SourceNews sourceNews);
 
         Task DeleteSourceNews(int id);
+
+        Task UpdateManySourceNewsDto(List<int> lstSourceNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

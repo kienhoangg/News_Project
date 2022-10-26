@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -23,5 +24,6 @@ namespace News.API.Interfaces
         Task UpdateVideo(Video video);
 
         Task DeleteVideo(int id);
+        Task UpdateManyVideoDto(List<int> lstVideoId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

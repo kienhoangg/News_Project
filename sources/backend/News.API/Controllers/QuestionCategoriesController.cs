@@ -77,5 +77,15 @@ namespace News.API.Controllers
             await _questionCategoryService.DeleteQuestionCategory(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyQuestionCategoryDto(
+    [FromBody] UpdateManyDto<int> questionCategoryUpdateManyDto
+  )
+        {
+            await _questionCategoryService.UpdateManyQuestionCategoryDto(questionCategoryUpdateManyDto.Ids, questionCategoryUpdateManyDto.Value.Value, questionCategoryUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

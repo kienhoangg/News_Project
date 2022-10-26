@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -23,5 +24,6 @@ namespace News.API.Interfaces
         Task UpdateComment(Comment comment);
 
         Task DeleteComment(long id);
+        Task UpdateManyCommentDto(List<int> lstCommentId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

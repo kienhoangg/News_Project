@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task UpdateLinkInfo(LinkInfo product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<LinkInfo>> GetLinkInfoNormalByPaging(LinkInfoRequest linkInfoRequest, params Expression<Func<LinkInfo, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (linkInfoRequest.Ids != null && linkInfoRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => linkInfoRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<LinkInfo>? sourcePaging = await query.PaginatedListAsync(linkInfoRequest.CurrentPage
+                                                                                              ?? 0, linkInfoRequest.PageSize ?? 0, linkInfoRequest.OrderBy, linkInfoRequest.Direction);
+            ApiSuccessResult<LinkInfo>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyLinkInfoDto(List<int> lstLinkInfoId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstLinkInfoDto = (await GetLinkInfoNormalByPaging(new LinkInfoRequest()
+            {
+                Ids = lstLinkInfoId
+            })).PagedData.Results.ToList();
+            Action<LinkInfo> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<LinkInfo>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstLinkInfoDto.ForEach(action);
+                await UpdateListAsync(lstLinkInfoDto);
+            }
         }
     }
 }

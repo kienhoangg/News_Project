@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -58,6 +60,46 @@ namespace News.API.Services
         public async Task UpdateCollaborator(Collaborator product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<Collaborator>> GetCollaboratorNormalByPaging(CollaboratorRequest collaboratorRequest, params Expression<Func<Collaborator, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (collaboratorRequest.Ids != null && collaboratorRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => collaboratorRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<Collaborator>? sourcePaging = await query.PaginatedListAsync(collaboratorRequest.CurrentPage
+                                                                                              ?? 0, collaboratorRequest.PageSize ?? 0, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
+            ApiSuccessResult<Collaborator>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyCollaboratorDto(List<int> lstCollaboratorId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstCollaboratorDto = (await GetCollaboratorNormalByPaging(new CollaboratorRequest()
+            {
+                Ids = lstCollaboratorId
+            })).PagedData.Results.ToList();
+            Action<Collaborator> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Collaborator>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstCollaboratorDto.ForEach(action);
+                await UpdateListAsync(lstCollaboratorDto);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -128,6 +129,46 @@ namespace News.API.Services
         public async Task UpdateMenu(Menu product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<Menu>> GetMenuNormalByPaging(MenuRequest menuRequest, params Expression<Func<Menu, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (menuRequest.Ids != null && menuRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => menuRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<Menu>? sourcePaging = await query.PaginatedListAsync(menuRequest.CurrentPage
+                                                                                              ?? 0, menuRequest.PageSize ?? 0, menuRequest.OrderBy, menuRequest.Direction);
+            ApiSuccessResult<Menu>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyMenuDto(List<int> lstMenuId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstMenuDto = (await GetMenuNormalByPaging(new MenuRequest()
+            {
+                Ids = lstMenuId
+            })).PagedData.Results.ToList();
+            Action<Menu> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Menu>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstMenuDto.ForEach(action);
+                await UpdateListAsync(lstMenuDto);
+            }
         }
     }
 }

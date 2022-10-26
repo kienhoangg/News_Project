@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -24,5 +25,7 @@ namespace News.API.Interfaces
 
         Task DeleteQuestionCategory(int id);
         Task<List<QuestionCategory>> GetAllQuestionCategories();
+
+        Task UpdateManyQuestionCategoryDto(List<int> lstQuestionCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

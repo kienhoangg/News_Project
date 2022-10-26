@@ -86,5 +86,15 @@ namespace News.API.Controllers
             await _collaboratorService.DeleteCollaborator(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyCollaboratorDto(
+    [FromBody] UpdateManyDto<int> collaboratorUpdateManyDto
+  )
+        {
+            await _collaboratorService.UpdateManyCollaboratorDto(collaboratorUpdateManyDto.Ids, collaboratorUpdateManyDto.Value.Value, collaboratorUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

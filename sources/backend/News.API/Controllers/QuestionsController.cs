@@ -164,5 +164,15 @@ namespace News.API.Controllers
             }
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyQuestionDto(
+    [FromBody] UpdateManyDto<int> questionUpdateManyDto
+  )
+        {
+            await _questionService.UpdateManyQuestionDto(questionUpdateManyDto.Ids, questionUpdateManyDto.Value.Value, questionUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

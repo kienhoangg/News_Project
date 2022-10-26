@@ -78,5 +78,14 @@ namespace News.API.Controllers
             await _documentSignPersonService.DeleteDocumentSignPerson(id);
             return NoContent();
         }
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyDocumentSignPersonDto(
+    [FromBody] UpdateManyDto<int> documentSignPersonUpdateManyDto
+  )
+        {
+            await _documentSignPersonService.UpdateManyDocumentSignPersonDto(documentSignPersonUpdateManyDto.Ids, documentSignPersonUpdateManyDto.Value.Value, documentSignPersonUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

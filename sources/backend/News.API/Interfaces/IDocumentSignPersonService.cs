@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -24,5 +25,6 @@ namespace News.API.Interfaces
 
         Task DeleteDocumentSignPerson(int id);
         Task<List<DocumentSignPerson>> GetAllDocumentSignPersons();
+        Task UpdateManyDocumentSignPersonDto(List<int> lstDocumentSignPersonId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

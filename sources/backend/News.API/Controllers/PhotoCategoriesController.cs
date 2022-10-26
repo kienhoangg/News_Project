@@ -82,5 +82,15 @@ namespace News.API.Controllers
             await _photoCategoryService.DeletePhotoCategory(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyPhotoCategoryDto(
+    [FromBody] UpdateManyDto<int> photoCategoryUpdateManyDto
+  )
+        {
+            await _photoCategoryService.UpdateManyPhotoCategoryDto(photoCategoryUpdateManyDto.Ids, photoCategoryUpdateManyDto.Value.Value, photoCategoryUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

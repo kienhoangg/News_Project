@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -63,6 +64,46 @@ namespace News.API.Services
         public async Task UpdateStaticCategory(StaticCategory product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<StaticCategory>> GetStaticCategoryNormalByPaging(StaticCategoryRequest staticCategoryRequest, params Expression<Func<StaticCategory, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (staticCategoryRequest.Ids != null && staticCategoryRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => staticCategoryRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<StaticCategory>? sourcePaging = await query.PaginatedListAsync(staticCategoryRequest.CurrentPage
+                                                                                              ?? 0, staticCategoryRequest.PageSize ?? 0, staticCategoryRequest.OrderBy, staticCategoryRequest.Direction);
+            ApiSuccessResult<StaticCategory>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyStaticCategoryDto(List<int> lstStaticCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstStaticCategoryDto = (await GetStaticCategoryNormalByPaging(new StaticCategoryRequest()
+            {
+                Ids = lstStaticCategoryId
+            })).PagedData.Results.ToList();
+            Action<StaticCategory> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<StaticCategory>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstStaticCategoryDto.ForEach(action);
+                await UpdateListAsync(lstStaticCategoryDto);
+            }
         }
     }
 }

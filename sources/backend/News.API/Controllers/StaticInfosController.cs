@@ -194,5 +194,14 @@ namespace News.API.Controllers
             await _staticInfoService.DeleteStaticInfo(id);
             return NoContent();
         }
+        [HttpPut("")]
+        public async Task<IActionResult>
+ UpdateManyStaticInfoDto(
+   [FromBody] UpdateManyDto<int> staticInfoUpdateManyDto
+ )
+        {
+            await _staticInfoService.UpdateManyStaticInfoDto(staticInfoUpdateManyDto.Ids, staticInfoUpdateManyDto.Value.Value, staticInfoUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

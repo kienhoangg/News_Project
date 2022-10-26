@@ -1,3 +1,4 @@
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -19,5 +20,6 @@ namespace News.API.Interfaces
         Task UpdateCollaborator(Collaborator collaborator);
 
         Task DeleteCollaborator(int id);
+        Task UpdateManyCollaboratorDto(List<int> lstCollaboratorId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

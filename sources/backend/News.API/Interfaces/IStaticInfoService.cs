@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -23,5 +24,6 @@ namespace News.API.Interfaces
         Task<int> UpdateStaticInfo(StaticInfo staticInfo);
 
         Task DeleteStaticInfo(int id);
+        Task UpdateManyStaticInfoDto(List<int> lstStaticInfoId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

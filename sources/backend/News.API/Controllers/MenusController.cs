@@ -86,5 +86,15 @@ namespace News.API.Controllers
             await _menuService.DeleteMenu(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyMenuDto(
+    [FromBody] UpdateManyDto<int> menuUpdateManyDto
+  )
+        {
+            await _menuService.UpdateManyMenuDto(menuUpdateManyDto.Ids, menuUpdateManyDto.Value.Value, menuUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

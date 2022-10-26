@@ -78,5 +78,15 @@ namespace News.API.Controllers
             await _documentDepartmentService.DeleteDocumentDepartment(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyDocumentDepartmentDto(
+    [FromBody] UpdateManyDto<int> documentDepartmentUpdateManyDto
+  )
+        {
+            await _documentDepartmentService.UpdateManyDocumentDepartmentDto(documentDepartmentUpdateManyDto.Ids, documentDepartmentUpdateManyDto.Value.Value, documentDepartmentUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

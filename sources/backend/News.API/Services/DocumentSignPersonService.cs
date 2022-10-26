@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -69,6 +70,46 @@ namespace News.API.Services
         public async Task UpdateDocumentSignPerson(DocumentSignPerson product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<DocumentSignPerson>> GetDocumentSignPersonNormalByPaging(DocumentSignPersonRequest documentSignPersonRequest, params Expression<Func<DocumentSignPerson, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (documentSignPersonRequest.Ids != null && documentSignPersonRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => documentSignPersonRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<DocumentSignPerson>? sourcePaging = await query.PaginatedListAsync(documentSignPersonRequest.CurrentPage
+                                                                                              ?? 0, documentSignPersonRequest.PageSize ?? 0, documentSignPersonRequest.OrderBy, documentSignPersonRequest.Direction);
+            ApiSuccessResult<DocumentSignPerson>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyDocumentSignPersonDto(List<int> lstDocumentSignPersonId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstDocumentSignPersonDto = (await GetDocumentSignPersonNormalByPaging(new DocumentSignPersonRequest()
+            {
+                Ids = lstDocumentSignPersonId
+            })).PagedData.Results.ToList();
+            Action<DocumentSignPerson> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<DocumentSignPerson>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstDocumentSignPersonDto.ForEach(action);
+                await UpdateListAsync(lstDocumentSignPersonDto);
+            }
         }
     }
 }

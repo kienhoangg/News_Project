@@ -110,5 +110,15 @@ namespace News.API.Controllers
             await _staticCategoryService.DeleteStaticCategory(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+ UpdateManyStaticCategoryDto(
+   [FromBody] UpdateManyDto<int> staticCategoryUpdateManyDto
+ )
+        {
+            await _staticCategoryService.UpdateManyStaticCategoryDto(staticCategoryUpdateManyDto.Ids, staticCategoryUpdateManyDto.Value.Value, staticCategoryUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

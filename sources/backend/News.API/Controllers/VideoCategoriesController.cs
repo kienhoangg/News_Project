@@ -77,5 +77,15 @@ namespace News.API.Controllers
             await _videoCategoryService.DeleteVideoCategory(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+ UpdateManyVideoCategoryDto(
+   [FromBody] UpdateManyDto<int> videoCategoryUpdateManyDto
+ )
+        {
+            await _videoCategoryService.UpdateManyVideoCategoryDto(videoCategoryUpdateManyDto.Ids, videoCategoryUpdateManyDto.Value.Value, videoCategoryUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

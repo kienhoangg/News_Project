@@ -77,5 +77,16 @@ namespace News.API.Controllers
             await _fieldNewsService.DeleteFieldNews(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+      UpdateManyFieldNewsDto(
+        [FromBody] UpdateManyDto<int> fieldNewsUpdateManyDto
+      )
+        {
+            //  var lstFieldNewsId = strFieldNewsId.Split(',').Select(long.Parse).ToList();
+            await _fieldNewsService.UpdateManyFieldNewsDto(fieldNewsUpdateManyDto.Ids, fieldNewsUpdateManyDto.Value.Value, fieldNewsUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

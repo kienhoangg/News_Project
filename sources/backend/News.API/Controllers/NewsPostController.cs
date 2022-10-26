@@ -155,7 +155,7 @@ namespace News.API.Controllers
         [HttpPut("")]
         public async Task<IActionResult>
        UpdateManyNewsPostDto(
-         [FromBody] NewsPostUpdateManyDto newsPostUpdateManyDto
+         [FromBody] UpdateManyDto<long> newsPostUpdateManyDto
        )
         {
             //  var lstNewsPostId = strNewsPostId.Split(',').Select(long.Parse).ToList();

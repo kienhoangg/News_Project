@@ -77,5 +77,15 @@ namespace News.API.Controllers
             await _linkInfoCategoryService.DeleteLinkInfoCategory(id);
             return NoContent();
         }
+
+        [HttpPut("")]
+        public async Task<IActionResult>
+  UpdateManyLinkInfoCategoryDto(
+    [FromBody] UpdateManyDto<int> linkInfoCategoryUpdateManyDto
+  )
+        {
+            await _linkInfoCategoryService.UpdateManyLinkInfoCategoryDto(linkInfoCategoryUpdateManyDto.Ids, linkInfoCategoryUpdateManyDto.Value.Value, linkInfoCategoryUpdateManyDto.Field.Value);
+            return NoContent();
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -67,6 +68,46 @@ namespace News.API.Services
         public async Task UpdatePhoto(Photo product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<Photo>> GetPhotoNormalByPaging(PhotoRequest photoRequest, params Expression<Func<Photo, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (photoRequest.Ids != null && photoRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => photoRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<Photo>? sourcePaging = await query.PaginatedListAsync(photoRequest.CurrentPage
+                                                                                              ?? 0, photoRequest.PageSize ?? 0, photoRequest.OrderBy, photoRequest.Direction);
+            ApiSuccessResult<Photo>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyPhotoDto(List<int> lstPhotoId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstPhotoDto = (await GetPhotoNormalByPaging(new PhotoRequest()
+            {
+                Ids = lstPhotoId
+            })).PagedData.Results.ToList();
+            Action<Photo> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Photo>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstPhotoDto.ForEach(action);
+                await UpdateListAsync(lstPhotoDto);
+            }
         }
     }
 }

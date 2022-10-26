@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -24,5 +25,6 @@ namespace News.API.Interfaces
 
         Task DeleteDocumentDepartment(int id);
         Task<List<DocumentDepartment>> GetAllDocumentDepartments();
+        Task UpdateManyDocumentDepartmentDto(List<int> lstDocumentDepartmentId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

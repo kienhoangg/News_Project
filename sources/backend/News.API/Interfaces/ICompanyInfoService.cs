@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
 using Models.Entities;
@@ -23,5 +24,6 @@ namespace News.API.Interfaces
         Task UpdateCompanyInfo(CompanyInfo companyInfo);
 
         Task DeleteCompanyInfo(int id);
+        Task UpdateManyCompanyInfoDto(List<int> lstCompanyInfoId, bool value, MultipleTypeUpdate multipleTypeUpdate);
     }
 }

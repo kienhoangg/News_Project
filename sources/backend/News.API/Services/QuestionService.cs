@@ -87,12 +87,51 @@ namespace News.API.Services
                     OrderBy = "Views",
                     Direction = -1,
                     PageSize = 5,
-                    CurrentPage = 1
+                    CurrentPage = 1,
                 })).PagedData.Results.ToList(),
                 QuestionCategories = await _questionCategoryService.GetAllQuestionCategories()
             };
             return questionHomeDto;
         }
 
+        public async Task<ApiSuccessResult<Question>> GetQuestionNormalByPaging(QuestionRequest questionRequest, params Expression<Func<Question, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (questionRequest.Ids != null && questionRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => questionRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<Question>? sourcePaging = await query.PaginatedListAsync(questionRequest.CurrentPage
+                                                                                              ?? 0, questionRequest.PageSize ?? 0, questionRequest.OrderBy, questionRequest.Direction);
+            ApiSuccessResult<Question>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyQuestionDto(List<int> lstQuestionId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstQuestionDto = (await GetQuestionNormalByPaging(new QuestionRequest()
+            {
+                Ids = lstQuestionId
+            })).PagedData.Results.ToList();
+            Action<Question> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<Question>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstQuestionDto.ForEach(action);
+                await UpdateListAsync(lstQuestionDto);
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -68,6 +69,46 @@ namespace News.API.Services
         public async Task UpdateDocumentField(DocumentField product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<DocumentField>> GetDocumentFieldNormalByPaging(DocumentFieldRequest đocumentFieldRequest, params Expression<Func<DocumentField, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (đocumentFieldRequest.Ids != null && đocumentFieldRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => đocumentFieldRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<DocumentField>? sourcePaging = await query.PaginatedListAsync(đocumentFieldRequest.CurrentPage
+                                                                                              ?? 0, đocumentFieldRequest.PageSize ?? 0, đocumentFieldRequest.OrderBy, đocumentFieldRequest.Direction);
+            ApiSuccessResult<DocumentField>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyDocumentFieldDto(List<int> lstDocumentFieldId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstDocumentFieldDto = (await GetDocumentFieldNormalByPaging(new DocumentFieldRequest()
+            {
+                Ids = lstDocumentFieldId
+            })).PagedData.Results.ToList();
+            Action<DocumentField> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<DocumentField>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstDocumentFieldDto.ForEach(action);
+                await UpdateListAsync(lstDocumentFieldDto);
+            }
         }
     }
 }

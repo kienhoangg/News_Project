@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
 using Infrastructure.Mappings;
@@ -85,6 +86,46 @@ namespace News.API.Services
         public async Task UpdatePhotoCategory(PhotoCategory product)
         {
             await UpdateAsync(product);
+        }
+
+        public async Task<ApiSuccessResult<PhotoCategory>> GetPhotoCategoryNormalByPaging(PhotoCategoryRequest photoCategoryRequest, params Expression<Func<PhotoCategory, object>>[] includeProperties)
+        {
+            var query = FindAll();
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll();
+            }
+
+            if (photoCategoryRequest.Ids != null && photoCategoryRequest.Ids.Count > 0)
+            {
+                query = query.Where(x => photoCategoryRequest.Ids.Contains(x.Id));
+            }
+            PagedResult<PhotoCategory>? sourcePaging = await query.PaginatedListAsync(photoCategoryRequest.CurrentPage
+                                                                                              ?? 0, photoCategoryRequest.PageSize ?? 0, photoCategoryRequest.OrderBy, photoCategoryRequest.Direction);
+            ApiSuccessResult<PhotoCategory>? result = new(sourcePaging);
+            return result;
+        }
+
+        public async Task UpdateManyPhotoCategoryDto(List<int> lstPhotoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate)
+        {
+            var lstPhotoCategoryDto = (await GetPhotoCategoryNormalByPaging(new PhotoCategoryRequest()
+            {
+                Ids = lstPhotoCategoryId
+            })).PagedData.Results.ToList();
+            Action<PhotoCategory> action = null;
+            switch (multipleTypeUpdate)
+            {
+                case MultipleTypeUpdate.STATUS:
+                    action = new Action<PhotoCategory>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                default:
+                    break;
+            }
+            if (action != null)
+            {
+                lstPhotoCategoryDto.ForEach(action);
+                await UpdateListAsync(lstPhotoCategoryDto);
+            }
         }
     }
 }
