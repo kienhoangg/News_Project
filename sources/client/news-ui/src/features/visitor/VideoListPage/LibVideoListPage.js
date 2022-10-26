@@ -159,7 +159,7 @@ function LibVideoListPage(props) {
     // resetScripVideo();
     setTimeout(() => {
       resetScripVideo();
-    }, 1000);
+    }, 300);
   };
 
   return (
