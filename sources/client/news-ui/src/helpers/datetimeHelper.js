@@ -8,7 +8,7 @@ const datetimeHelper = {
         let value = moment(input).format(constant.DATE_FORMAT_VN);
         return value;
       }
-    } catch (error) {}
+    } catch (error) { }
   },
   formatDatetimeToDateVN(input) {
     try {
@@ -16,7 +16,7 @@ const datetimeHelper = {
         let value = moment(input).format(constant.DATETIME_FORMAT_VN);
         return value;
       }
-    } catch (error) {}
+    } catch (error) { }
   },
   formatDatetimeToDate(input) {
     try {
@@ -24,7 +24,7 @@ const datetimeHelper = {
         let value = moment(input).format(constant.DATETIME_FORMAT);
         return value;
       }
-    } catch (error) {}
+    } catch (error) { }
   },
 
   formatDatetimeToDateSerer(input) {
@@ -33,7 +33,7 @@ const datetimeHelper = {
         let value = moment(input).format(constant.DATETIME_FORMAT_SERVER);
         return value;
       }
-    } catch (error) {}
+    } catch (error) { }
   },
 };
 
