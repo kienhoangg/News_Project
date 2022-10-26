@@ -26,6 +26,8 @@ function LibVideoListPage(props) {
   const [videoDetail, setVideoDetail] = useState({}); // Chi tiết video
   const [loading, setLoading] = useState(true);
 
+  const contentVideo = useRef("");
+
   useEffect(() => {
     callApiGetListLibVideo();
   }, []);
@@ -46,6 +48,34 @@ function LibVideoListPage(props) {
     try {
       const res = await axiosClient.get("/videos/" + id);
       setVideoDetail(res);
+
+      let contentVideoRes = '';
+
+      if (res?.FileAttachment) {
+        contentVideoRes = (`<video width="100%" height="100%" controls autoplay>
+            <source
+              src="${res?.FileAttachment?.indexOf("https://") === 0 ||
+            res?.FileAttachment?.indexOf("http://") === 0
+            ? res?.FileAttachment
+            : window.location.origin +
+            (res?.FileAttachment?.indexOf("/") === 0
+              ? res?.FileAttachment
+              : "/" + res?.FileAttachment)
+          }"
+              type="video/mp4"
+            />
+          </video>`);
+      } else {
+        contentVideoRes = res?.LinkVideo;
+      }
+
+      console.log("contentVideoRes, contentVideo.current", res.Id, contentVideo.current)
+
+      if (res.Id != contentVideo.current) {
+        addScriptVideo(contentVideoRes);
+      }
+
+      contentVideo.current = res.Id;
     } catch (error) { } finally {
       setLoading(false);
     }
@@ -123,21 +153,13 @@ function LibVideoListPage(props) {
         $(".lib-video-list-page__bottom__wrap-video-main")?.append(scriptVideo);
 
       }
-      console.log("Video render DOM", $(".lib-video-list-page__bottom__wrap-video-main"), scriptVideo)
+      // console.log("Video render DOM", $(".lib-video-list-page__bottom__wrap-video-main"), scriptVideo)
     }
 
-    resetScripVideo();
-
-
-    if ($(".lib-video-list-page__bottom__wrap-video-main").length > 0) {
+    // resetScripVideo();
+    setTimeout(() => {
       resetScripVideo();
-    } else {
-      console.log("Video render add", scriptVideo)
-
-      setTimeout(() => {
-        resetScripVideo();
-      }, 1000);
-    }
+    }, 1000);
   };
 
   return (
@@ -152,7 +174,7 @@ function LibVideoListPage(props) {
           className="lib-video-list-page__bottom__wrap-video-main"
           ref={elVideoMainRef}
         >
-          {videoIdBefore.current === videoDetail?.Id ? (
+          {/* {videoIdBefore.current === videoDetail?.Id ? (
             <div>Link video</div>
           ) : (
             (() => {
@@ -173,7 +195,7 @@ function LibVideoListPage(props) {
           </video>`)
                 : addScriptVideo(videoDetail?.LinkVideo);
             })()
-          )}
+          )} */}
         </div>
         <div className="lib-video-list-page__bottom__select-lib">
           <Select
