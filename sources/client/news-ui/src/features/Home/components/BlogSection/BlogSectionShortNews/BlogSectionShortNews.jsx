@@ -28,7 +28,7 @@ function BlogSectionShortNews(props) {
             <Link to={commonRender.renderLinkNewsDetail(Id)} underline='none' color='inherit'>
                 <h3 style={{ fontSize: 14 }}>{Title}</h3>
             </Link>
-            <img src={imageHelper.getLinkImageUrl(Avatar)} alt={AvatarTitle} width={'100%'} />
+            <img src={imageHelper.getLinkImageUrl(Avatar)} alt={AvatarTitle} width={'100%'} style={{ maxHeight: 300 }} />
             <div className={cx('content')}>{Description?.slice(0, 200)}...</div>
         </div>
     );
