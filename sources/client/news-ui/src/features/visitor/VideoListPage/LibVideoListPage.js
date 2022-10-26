@@ -24,6 +24,9 @@ function LibVideoListPage(props) {
   const [listLibVideo, setListLibVideo] = useState([]);
   const [dataPaging, setDataPaging] = useState(1); // State lưu dữ liệu paging
   const [videoDetail, setVideoDetail] = useState({}); // Chi tiết video
+  const [loading, setLoading] = useState(true);
+
+  const contentVideo = useRef("");
 
   useEffect(() => {
     callApiGetListLibVideo();
@@ -41,11 +44,41 @@ function LibVideoListPage(props) {
    */
   const callApiGetVideoDetail = async (id) => {
     if (!id) return;
-
+    setLoading(true);
     try {
       const res = await axiosClient.get("/videos/" + id);
       setVideoDetail(res);
-    } catch (error) {}
+
+      let contentVideoRes = '';
+
+      if (res?.FileAttachment) {
+        contentVideoRes = (`<video width="100%" height="100%" controls autoplay>
+            <source
+              src="${res?.FileAttachment?.indexOf("https://") === 0 ||
+            res?.FileAttachment?.indexOf("http://") === 0
+            ? res?.FileAttachment
+            : window.location.origin +
+            (res?.FileAttachment?.indexOf("/") === 0
+              ? res?.FileAttachment
+              : "/" + res?.FileAttachment)
+          }"
+              type="video/mp4"
+            />
+          </video>`);
+      } else {
+        contentVideoRes = res?.LinkVideo;
+      }
+
+      console.log("contentVideoRes, contentVideo.current", res.Id, contentVideo.current)
+
+      if (res.Id != contentVideo.current) {
+        addScriptVideo(contentVideoRes);
+      }
+
+      contentVideo.current = res.Id;
+    } catch (error) { } finally {
+      setLoading(false);
+    }
   };
 
   /**
@@ -71,7 +104,7 @@ function LibVideoListPage(props) {
       );
 
       setLibVideoSelected(res?.PagedData?.Results?.[0]?.Id);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   /**
@@ -104,7 +137,7 @@ function LibVideoListPage(props) {
 
         isFirstRender.current = false;
       }
-    } catch (err) {}
+    } catch (err) { }
   };
 
   /**
@@ -112,8 +145,21 @@ function LibVideoListPage(props) {
    * @author TDBA (22/10/2022)
    */
   const addScriptVideo = (scriptVideo) => {
-    $(".lib-video-list-page__bottom__wrap-video-main").empty();
-    $(".lib-video-list-page__bottom__wrap-video-main")?.append(scriptVideo);
+    if (!scriptVideo) return;
+
+    const resetScripVideo = () => {
+      if ($(".lib-video-list-page__bottom__wrap-video-main").length > 0 && scriptVideo) {
+        $(".lib-video-list-page__bottom__wrap-video-main").empty();
+        $(".lib-video-list-page__bottom__wrap-video-main")?.append(scriptVideo);
+
+      }
+      // console.log("Video render DOM", $(".lib-video-list-page__bottom__wrap-video-main"), scriptVideo)
+    }
+
+    // resetScripVideo();
+    setTimeout(() => {
+      resetScripVideo();
+    }, 300);
   };
 
   return (
@@ -128,7 +174,7 @@ function LibVideoListPage(props) {
           className="lib-video-list-page__bottom__wrap-video-main"
           ref={elVideoMainRef}
         >
-          {videoIdBefore.current === videoDetail?.Id ? (
+          {/* {videoIdBefore.current === videoDetail?.Id ? (
             <div>Link video</div>
           ) : (
             (() => {
@@ -136,21 +182,20 @@ function LibVideoListPage(props) {
               return videoDetail?.FileAttachment
                 ? addScriptVideo(`<video width="100%" height="100%" controls autoplay>
             <source
-              src="${
-                videoDetail?.FileAttachment?.indexOf("https://") === 0 ||
-                videoDetail?.FileAttachment?.indexOf("http://") === 0
-                  ? videoDetail?.FileAttachment
-                  : window.location.origin +
+              src="${videoDetail?.FileAttachment?.indexOf("https://") === 0 ||
+                    videoDetail?.FileAttachment?.indexOf("http://") === 0
+                    ? videoDetail?.FileAttachment
+                    : window.location.origin +
                     (videoDetail?.FileAttachment?.indexOf("/") === 0
                       ? videoDetail?.FileAttachment
                       : "/" + videoDetail?.FileAttachment)
-              }"
+                  }"
               type="video/mp4"
             />
           </video>`)
                 : addScriptVideo(videoDetail?.LinkVideo);
             })()
-          )}
+          )} */}
         </div>
         <div className="lib-video-list-page__bottom__select-lib">
           <Select
@@ -176,9 +221,9 @@ function LibVideoListPage(props) {
                         item?.Avatar?.indexOf("http://") === 0
                         ? item?.Avatar
                         : window.location.origin +
-                          (item?.Avatar?.indexOf("/") === 0
-                            ? item?.Avatar
-                            : "/" + item?.Avatar)
+                        (item?.Avatar?.indexOf("/") === 0
+                          ? item?.Avatar
+                          : "/" + item?.Avatar)
                       : "/"
                   }
                 />{" "}
