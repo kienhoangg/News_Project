@@ -6,6 +6,7 @@ import publishedNewsApi from 'apis/published/publishedNewsApi';
 import { Col, Row, Skeleton } from 'antd';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { useParams } from 'react-router-dom';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 
@@ -50,7 +51,7 @@ function PublishedDocumentPrintPage(props) {
                                 {data?.NewsPostDetail.Description}
                             </h3>
                             <div className={cx('avatar-content')}>
-                                <img src={data?.NewsPostDetail.Avatar} alt='' width={'80%'} />
+                                <img src={imageHelper.getLinkImageUrl(data?.NewsPostDetail.Avatar)} alt='' width={'80%'} />
                                 <div className={cx('avatar-title')}>{data?.NewsPostDetail.AvatarTitle}</div>
                             </div>
 

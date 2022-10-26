@@ -14,6 +14,7 @@ import { FacebookIcon, TwitterIcon } from 'react-share';
 import { MinusOutlined, PlusCircleOutlined, PlusOutlined, PrinterOutlined, SoundOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import constant from 'common/constant';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 
@@ -134,7 +135,7 @@ function PublishedDocumentPage(props) {
                                 {data?.NewsPostDetail.Description}
                             </h3>
                             <div className={cx('avatar-content')}>
-                                <img src={data?.NewsPostDetail.Avatar} alt='' width={'80%'} />
+                                <img src={imageHelper.getLinkImageUrl(data?.NewsPostDetail.Avatar)} alt='' width={'80%'} />
                                 <div className={cx('avatar-title')}>{data?.NewsPostDetail.AvatarTitle}</div>
                             </div>
 

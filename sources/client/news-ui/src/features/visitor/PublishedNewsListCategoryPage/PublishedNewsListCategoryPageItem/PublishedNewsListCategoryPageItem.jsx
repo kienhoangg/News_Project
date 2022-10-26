@@ -7,6 +7,7 @@ import stringHelper from 'helpers/stringHelper';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { Link } from 'react-router-dom';
 import commonRender from 'common/commonRender';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 
@@ -26,7 +27,7 @@ function PublishedNewsListCategoryPageItem(props) {
 
     const componentFirst = (
         <Row gutter={8}>
-            <Col flex='160px'>{stringHelper.isNullOrEmpty(Avatar) && <img src={Avatar} alt={AvatarTitle} width='100%' style={{ padding: '8px' }} />}</Col>
+            <Col flex='160px'>{stringHelper.isNullOrEmpty(Avatar) && <img src={imageHelper.getLinkImageUrl(Avatar)} alt={AvatarTitle} width='100%' style={{ padding: '8px' }} />}</Col>
             <Col flex='1'>
                 <div className={cx('content-right')}>
                     <Link to={commonRender.renderLinkNewsDetail(Id)} className={cx('title')}>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './MediaBlogSectionButton.module.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 
@@ -33,7 +34,7 @@ function MediaBlogSectionButton(props) {
 
     return (
         <Link className={cx('btn-wrapper')} underline='none' to={href}>
-            <img src={imageName} alt='' height={sizeImage} style={{ marginRight: marginImage }} />
+            <img src={imageHelper.getLinkImageUrl(imageName)} alt='' height={sizeImage} style={{ marginRight: marginImage }} />
             <span style={{ fontSize: fontSize }}>{label}</span>
         </Link>
     );

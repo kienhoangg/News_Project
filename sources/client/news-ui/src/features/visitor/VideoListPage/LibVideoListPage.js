@@ -4,6 +4,7 @@ import "./libVideoListPage.scss";
 import { Pagination, Select } from "antd";
 import axiosClient from "apis/axiosClient";
 import $ from "jquery";
+import imageHelper from "helpers/imageHelper";
 
 LibVideoListPage.propTypes = {};
 
@@ -215,16 +216,9 @@ function LibVideoListPage(props) {
               <div className="lib-video-list-page__bottom__list-video__item__avatar">
                 {" "}
                 <img
+                  alt=""
                   src={
-                    item?.Avatar
-                      ? item?.Avatar?.indexOf("https://") === 0 ||
-                        item?.Avatar?.indexOf("http://") === 0
-                        ? item?.Avatar
-                        : window.location.origin +
-                        (item?.Avatar?.indexOf("/") === 0
-                          ? item?.Avatar
-                          : "/" + item?.Avatar)
-                      : "/"
+                    imageHelper.getLinkImageUrl(item?.Avatar)
                   }
                 />{" "}
               </div>
