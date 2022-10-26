@@ -3,6 +3,27 @@ import datafakeMedia from "./datafake/datafakeMedia";
 import axiosClient from "./axiosClient";
 
 class MediaApi {
+  insertVideo = (body) => {
+    const url = "/Videos";
+    return axiosClient.post(url, body);
+  };
+  deleteVideo = (id) => {
+    const url = `/Videos/${id}`;
+    return axiosClient.delete(url);
+  };
+  updateStatusVideo = (body) => {
+    const url = "/Videos";
+    return axiosClient.put(url, body);
+  };
+  updateVideo = (id, body) => {
+    const url = `/Videos/${id}`;
+    return axiosClient.put(url, body);
+  };
+  getDetailVideo = (id) => {
+    const url = `/Videos/${id}`;
+    return axiosClient.get(url);
+  };
+
   getImageAll = (body) => {
     const url = "/Photos/filter";
     return axiosClient.post(url, body);
@@ -47,28 +68,14 @@ class MediaApi {
     return axiosClient.delete(url);
   };
 
-  getVideoAll = (params) => {
-    // const url = '/news';
-    // return axiosClient.get(url, { params });
-
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeMedia.videoItem.objectExample
-    );
-    return response;
+  getVideoCategoryAll = (body) => {
+    const url = "/VideoCategories/filter";
+    return axiosClient.post(url, body);
   };
 
-  getVideoCategoryAll = (params) => {
-    // const url = '/news';
-    // return axiosClient.get(url, { params });
-
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeMedia.videoCategory.objectExample
-    );
-    return response;
+  getVideoAll = (params = {}) => {
+    const url = "/videos/filter";
+    return axiosClient.post(url, params);
   };
 }
 const mediaApi = new MediaApi();
