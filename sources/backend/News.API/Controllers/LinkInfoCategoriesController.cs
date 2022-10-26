@@ -60,6 +60,7 @@ namespace News.API.Controllers
             [FromBody] LinkInfoCategoryDto linkInfoCategoryDto
         )
         {
+            linkInfoCategoryDto.Id = id;
             LinkInfoCategory? LinkInfoCategory = await _linkInfoCategoryService.GetLinkInfoCategory(id);
             if (LinkInfoCategory == null) return NotFound();
             var updatedLinkInfoCategory = _mapper.Map(linkInfoCategoryDto, LinkInfoCategory);

@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import { Col, Row } from 'antd';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { Link } from 'react-router-dom';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 
@@ -24,7 +25,7 @@ function SearchPageItem(props) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('left')}>
-                <img src={avatar} alt='avatar' />
+                <img src={imageHelper.getLinkImageUrl(avatar)} alt='avatar' />
             </div>
             <div className={cx('right')}>
                 <Link className={cx('title')} to={href}>

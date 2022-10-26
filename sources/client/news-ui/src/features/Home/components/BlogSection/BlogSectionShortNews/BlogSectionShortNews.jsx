@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styles from './BlogSectionShortNews.module.scss';
 import PropTypes from 'prop-types';
 import commonRender from 'common/commonRender';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 
@@ -27,7 +28,7 @@ function BlogSectionShortNews(props) {
             <Link to={commonRender.renderLinkNewsDetail(Id)} underline='none' color='inherit'>
                 <h3 style={{ fontSize: 14 }}>{Title}</h3>
             </Link>
-            <img src={Avatar} alt={AvatarTitle} width={'100%'} />
+            <img src={imageHelper.getLinkImageUrl(Avatar)} alt={AvatarTitle} width={'100%'} style={{maxHeight: 300}} />
             <div className={cx('content')}>{Description?.slice(0, 200)}...</div>
         </div>
     );

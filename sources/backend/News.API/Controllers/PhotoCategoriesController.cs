@@ -65,6 +65,7 @@ namespace News.API.Controllers
             [FromBody] PhotoCategoryDto photoCategoryDto
         )
         {
+            photoCategoryDto.Id = id;
             PhotoCategory? PhotoCategory = await _photoCategoryService.GetPhotoCategory(id);
             if (PhotoCategory == null) return NotFound();
             var updatedPhotoCategory = _mapper.Map(photoCategoryDto, PhotoCategory);

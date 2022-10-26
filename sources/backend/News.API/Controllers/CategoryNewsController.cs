@@ -53,6 +53,7 @@ namespace News.API.Controllers
             [FromBody] CategoryNewsDto categoryNewsDto
         )
         {
+            categoryNewsDto.Id = id;
             CategoryNews? categoryNews =
                 await _categoryNewsService.GetCategoryNews(id);
             if (categoryNews == null) return NotFound();
@@ -67,6 +68,7 @@ namespace News.API.Controllers
         public async Task<IActionResult>
         DeleteCategoryNewsDto([Required] int id)
         {
+
             CategoryNews? categoryNews =
                 await _categoryNewsService.GetCategoryNews(id);
             if (categoryNews == null) return NotFound();

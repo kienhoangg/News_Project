@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+import imageHelper from 'helpers/imageHelper';
 import stringHelper from 'helpers/stringHelper';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -21,7 +22,7 @@ function ListSectionNews(props) {
     }
     return (
         <Link className={cx('wrapper')} to={href}>
-            {stringHelper.isNullOrEmpty(avatar) && <img src={avatar} alt='img' />}
+            {stringHelper.isNullOrEmpty(avatar) && <img src={imageHelper.getLinkImageUrl(avatar)} alt='img' />}
             <div className={cx('title-text')}>
                 {title} <span className={cx('new-item')}>Mới</span>
             </div>

@@ -60,6 +60,7 @@ namespace News.API.Controllers
             [FromBody] CompanyInfoCategoryDto companyInfoCategoryDto
         )
         {
+            companyInfoCategoryDto.Id = id;
             CompanyInfoCategory? CompanyInfoCategory = await _companyInfoCategoryService.GetCompanyInfoCategory(id);
             if (CompanyInfoCategory == null) return NotFound();
             var updatedCompanyInfoCategory = _mapper.Map(companyInfoCategoryDto, CompanyInfoCategory);

@@ -1,24 +1,24 @@
-import { Divider, Form, Input, Select, Modal, Upload } from "antd";
-import { useEffect, useState } from "react";
-import ImageListPageSearch from "./ImageListPageSearch/ImageListPageSearch";
-import ImageListTableData from "./ImageListTableData/ImageListTableData";
+import { Divider, Form, Input, Select, Modal, Upload } from 'antd';
+import { useEffect, useState } from 'react';
+import ImageListPageSearch from './ImageListPageSearch/ImageListPageSearch';
+import ImageListTableData from './ImageListTableData/ImageListTableData';
 
-import mediaApi from "apis/mediaApi";
-import classNames from "classnames/bind";
-import styles from "./ImageListPage.module.scss";
-import { Direction } from "common/enum";
-import { useRef } from "react";
-import { openNotification } from "helpers/notification";
-import { NotificationType } from "common/enum";
-import { Button } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import { Option } from "antd/lib/mentions";
-import { FileAddFilled, UploadOutlined } from "@ant-design/icons";
-import commonFunc from "common/commonFunc";
-import convertHelper from "helpers/convertHelper";
-import { TypeUpdate } from "common/constant";
-import { envDomainBackend } from "common/enviroments";
-import imageHelper from "helpers/imageHelper";
+import mediaApi from 'apis/mediaApi';
+import classNames from 'classnames/bind';
+import styles from './ImageListPage.module.scss';
+import { Direction } from 'common/enum';
+import { useRef } from 'react';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
+import { Button } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { Option } from 'antd/lib/mentions';
+import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
+import commonFunc from 'common/commonFunc';
+import convertHelper from 'helpers/convertHelper';
+import { TypeUpdate } from 'common/constant';
+import { envDomainBackend } from 'common/enviroments';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 const layout = {
@@ -29,7 +29,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: "CreatedDate",
+  orderBy: 'CreatedDate',
 };
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
@@ -50,8 +50,8 @@ function ImageListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState({
     imageDetail: null,
@@ -96,9 +96,9 @@ function ImageListPage(props) {
         setFileListAttachment([
           {
             isFileFormServer: true,
-            uid: "1",
+            uid: '1',
             name: imageHelper.getNameFile(res?.ImagePath),
-            status: "done",
+            status: 'done',
             url: imageHelper.getLinkImageUrl(res?.ImagePath),
           },
         ]);
@@ -117,8 +117,8 @@ function ImageListPage(props) {
       });
     } catch (error) {
       openNotification(
-        "Lấy danh sách hình ảnh thất bại",
-        "",
+        'Lấy danh sách hình ảnh thất bại',
+        '',
         NotificationType.ERROR
       );
     }
@@ -149,10 +149,10 @@ function ImageListPage(props) {
   const handleDeleteCategoryNew = async (id) => {
     try {
       await mediaApi.deleteImage(id);
-      openNotification("Xóa hình ảnh thành công");
+      openNotification('Xóa hình ảnh thành công');
       fetchCategoryList();
     } catch (error) {
-      openNotification("Xóa hình ảnh thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa hình ảnh thất bại', '', NotificationType.ERROR);
     }
   };
   const handleUpdateStatusNew = async (values) => {
@@ -163,9 +163,9 @@ function ImageListPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -190,17 +190,19 @@ function ImageListPage(props) {
   const onCreate = async (values) => {
     try {
       var formData = new FormData();
-      formData.append("JsonString", convertHelper.Serialize(values.JsonString));
+      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
-        formData.append("FileAttachment", values.FileAttachment);
+        for (let file of values.FileAttachment) {
+          formData.append('FileAttachment', file);
+        }
       }
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         await mediaApi.insertImage(formData);
-        openNotification("Tạo mới hình ảnh thành công");
+        openNotification('Tạo mới hình ảnh thành công');
       } else {
         await mediaApi.updateImage(isModalOpen?.imageDetail?.Id, formData);
-        openNotification("Cập nhật hình ảnh thành công");
+        openNotification('Cập nhật hình ảnh thành công');
       }
 
       setIsModalOpen({
@@ -215,14 +217,14 @@ function ImageListPage(props) {
     } catch (error) {
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         openNotification(
-          "Tạo mới hình ảnh thất bại",
-          "",
+          'Tạo mới hình ảnh thất bại',
+          '',
           NotificationType.ERROR
         );
       } else {
         openNotification(
-          "Cập nhật hình ảnh thất bại",
-          "",
+          'Cập nhật hình ảnh thất bại',
+          '',
           NotificationType.ERROR
         );
       }
@@ -236,8 +238,8 @@ function ImageListPage(props) {
 
   const renderStaticCategoryId = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
       allowClear={true}
     >
       {dataFilter?.categoryAll.map((x) => (
@@ -273,7 +275,7 @@ function ImageListPage(props) {
         if (file.size > LIMIT_UP_LOAD_FILE) {
           openNotification(
             `File thứ ${i + 1} đã lớn hơn 2MB`,
-            "",
+            '',
             NotificationType.ERROR
           );
           return;
@@ -303,7 +305,7 @@ function ImageListPage(props) {
    */
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       {(isModalOpen?.type === MODAL_TYPE.CREATE ||
         isModalOpen?.type === MODAL_TYPE.EDIT) &&
       isModalOpen?.show ? (
@@ -311,45 +313,45 @@ function ImageListPage(props) {
           open={true}
           title={
             isModalOpen?.type === MODAL_TYPE.CREATE
-              ? "Tạo mới hình ảnh"
-              : "Chỉnh sửa hình ảnh"
+              ? 'Tạo mới hình ảnh'
+              : 'Chỉnh sửa hình ảnh'
           }
-          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
-          cancelText="Thoát"
+          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
+          cancelText='Thoát'
           onCancel={onCancel}
           footer={null}
         >
           <Form
             form={form}
             {...layout}
-            name="control-hooks"
+            name='control-hooks'
             onFinish={onFinish}
           >
             <Form.Item
-              label="Tiêu đề"
-              name="Title"
+              label='Tiêu đề'
+              name='Title'
               rules={[
                 {
                   required: true,
-                  message: "Tiêu đề không được để trống",
+                  message: 'Tiêu đề không được để trống',
                 },
               ]}
             >
               <Input />
             </Form.Item>
 
-            <Form.Item label="Danh mục hình ảnh" name="PhotoCategoryId">
+            <Form.Item label='Danh mục hình ảnh' name='PhotoCategoryId'>
               {renderStaticCategoryId}
             </Form.Item>
 
-            <Form.Item name="Order" label="Số thứ tự">
-              <Input type="number" min={0} />
+            <Form.Item name='Order' label='Số thứ tự'>
+              <Input type='number' min={0} />
             </Form.Item>
 
-            <Form.Item name="lb-attachment" label="Tệp đính kèm">
+            <Form.Item name='lb-attachment' label='Tệp đính kèm'>
               <Upload
-                listType="picture"
-                fileList={fileListAttachment}
+                listType='picture'
+                // fileList={fileListAttachment}
                 onChange={handleChangeAttachment}
                 customRequest={commonFunc.dummyRequest}
                 multiple={true}
@@ -364,19 +366,19 @@ function ImageListPage(props) {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="Tạo mới">
-                {isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
+              <Button type='primary' htmlType='Tạo mới'>
+                {isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
               </Button>
             </Form.Item>
           </Form>
         </Modal>
       ) : null}
 
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <ImageListPageSearch setTextSearch={handleChangeTextSearch} />
         <div>
           <Button
-            type="primary"
+            type='primary'
             icon={<FileAddFilled />}
             onClick={() => {
               setIsModalOpen({
@@ -390,8 +392,8 @@ function ImageListPage(props) {
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <ImageListTableData
           data={newsData}
           setPagination={handleChangePagination}

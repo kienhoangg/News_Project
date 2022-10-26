@@ -1,3 +1,4 @@
+import imageHelper from 'helpers/imageHelper';
 import stringHelper from 'helpers/stringHelper';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -20,7 +21,7 @@ function NavBarButtonItem(props) {
     const { imageName, label, href } = props;
     return (
         <Link className='navbar-button-item' to={href} color='inherit'>
-            {stringHelper.isNullOrEmpty(imageName) && <img src={imageName} alt='logo' height={16} style={{ marginRight: 4 }} />}
+            {stringHelper.isNullOrEmpty(imageName) && <img src={imageHelper.getLinkImageUrl(imageName)} alt='logo' height={16} style={{ marginRight: 4 }} />}
             <span>{label}</span>
         </Link>
     );

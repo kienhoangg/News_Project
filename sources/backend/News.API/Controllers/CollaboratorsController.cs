@@ -64,6 +64,7 @@ namespace News.API.Controllers
             [FromBody] CollaboratorDto collaboratorDto
         )
         {
+            collaboratorDto.Id = id;
             Collaborator? Collaborator =
                 await _collaboratorService.GetCollaborator(id);
             if (Collaborator == null) return NotFound();
