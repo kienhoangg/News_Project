@@ -28,7 +28,9 @@ function PublishedDocumentPrintPage(props) {
                 const response = await publishedNewsApi.getData(params);
                 setData(response);
                 if (response) {
-                    window.print();
+                    setTimeout(() => {
+                        window.print();
+                    }, 1500);
                 }
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
