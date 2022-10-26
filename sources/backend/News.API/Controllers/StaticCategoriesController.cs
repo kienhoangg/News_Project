@@ -93,6 +93,7 @@ namespace News.API.Controllers
             [FromBody] StaticCategoryDto staticCategoryDto
         )
         {
+            staticCategoryDto.Id = id;
             StaticCategory? StaticCategory = await _staticCategoryService.GetStaticCategory(id);
             if (StaticCategory == null) return NotFound();
             var updatedStaticCategory = _mapper.Map(staticCategoryDto, StaticCategory);

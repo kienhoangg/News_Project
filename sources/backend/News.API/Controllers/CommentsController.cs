@@ -60,6 +60,7 @@ namespace News.API.Controllers
             [FromBody] CommentDto commentDto
         )
         {
+            commentDto.Id = id;
             Comment? Comment = await _commentService.GetComment(id);
             if (Comment == null) return NotFound();
             var updatedComment = _mapper.Map(commentDto, Comment);

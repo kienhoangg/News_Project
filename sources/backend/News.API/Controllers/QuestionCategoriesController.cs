@@ -60,6 +60,7 @@ namespace News.API.Controllers
             [FromBody] QuestionCategoryDto questionCategoryDto
         )
         {
+            questionCategoryDto.Id = id;
             QuestionCategory? QuestionCategory = await _questionCategoryService.GetQuestionCategory(id);
             if (QuestionCategory == null) return NotFound();
             var updatedQuestionCategory = _mapper.Map(questionCategoryDto, QuestionCategory);

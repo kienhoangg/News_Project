@@ -60,6 +60,7 @@ namespace News.API.Controllers
             [FromBody] VideoCategoryDto videoCategoryDto
         )
         {
+            videoCategoryDto.Id = id;
             VideoCategory? VideoCategory = await _videoCategoryService.GetVideoCategory(id);
             if (VideoCategory == null) return NotFound();
             var updatedVideoCategory = _mapper.Map(videoCategoryDto, VideoCategory);

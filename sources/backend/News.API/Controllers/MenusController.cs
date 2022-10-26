@@ -69,6 +69,7 @@ namespace News.API.Controllers
             [FromBody] MenuDto menuDto
         )
         {
+            menuDto.Id = id;
             Menu? Menu = await _menuService.GetMenu(id);
             if (Menu == null) return NotFound();
             var updatedMenu = _mapper.Map(menuDto, Menu);

@@ -60,6 +60,7 @@ namespace News.API.Controllers
             [FromBody] FieldNewsDto fieldNewsDto
         )
         {
+            fieldNewsDto.Id = id;
             FieldNews? FieldNews = await _fieldNewsService.GetFieldNews(id);
             if (FieldNews == null) return NotFound();
             var updatedFieldNews = _mapper.Map(fieldNewsDto, FieldNews);

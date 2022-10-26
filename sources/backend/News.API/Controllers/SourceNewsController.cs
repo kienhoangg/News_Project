@@ -61,6 +61,7 @@ namespace News.API.Controllers
             [FromBody] SourceNewsDto sourceNewsDto
         )
         {
+            sourceNewsDto.Id = id;
             SourceNews? SourceNews = await _sourceNewsService.GetSourceNews(id);
             if (SourceNews == null) return NotFound();
             var updatedSourceNews = _mapper.Map(sourceNewsDto, SourceNews);
