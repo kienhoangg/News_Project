@@ -2,17 +2,17 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from '@ant-design/icons';
-import { Button, Space, Table, Tag, Modal } from 'antd';
-import { commonRenderTable } from 'common/commonRender';
-import datetimeHelper from 'helpers/datetimeHelper';
-import classNames from 'classnames/bind';
-import styles from './DocumentListTableData.module.scss';
-import { Direction } from 'common/enum';
-import commonFunc from 'common/commonFunc';
-import { Role } from 'common/constant';
-import { openNotification } from 'helpers/notification';
-import { NotificationType } from 'common/enum';
+} from "@ant-design/icons";
+import { Button, Space, Table, Tag, Modal } from "antd";
+import { commonRenderTable } from "common/commonRender";
+import datetimeHelper from "helpers/datetimeHelper";
+import classNames from "classnames/bind";
+import styles from "./DocumentListTableData.module.scss";
+import { Direction } from "common/enum";
+import commonFunc from "common/commonFunc";
+import { Role } from "common/constant";
+import { openNotification } from "helpers/notification";
+import { NotificationType } from "common/enum";
 
 const cx = classNames.bind(styles);
 
@@ -24,48 +24,57 @@ DocumentListTableData.defaultProps = {
 };
 
 function DocumentListTableData(props) {
-  const { data, setPagination, deleteSourceNew, updateStatusNew, onClickRow } =
-    props;
+  const {
+    data,
+    setPagination,
+    deleteSourceNew,
+    updateStatusNew,
+    onClickEdit,
+    onClickRow,
+  } = props;
 
   const columns = [
     {
-      key: 'Code',
-      dataIndex: 'Code',
-      title: 'Tiêu đề',
+      key: "Code",
+      dataIndex: "Code",
+      title: "Tiêu đề",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.Code - b.Code,
     },
     {
-      key: 'Name',
-      dataIndex: 'Name',
-      title: 'Trích yếu',
+      key: "Name",
+      dataIndex: "Name",
+      title: "Trích yếu",
       render: (text) => <div>{text}</div>,
       sorter: (a, b) => a.Name - b.Name,
     },
     {
-      key: 'PublishedDate',
-      dataIndex: 'PublishedDate',
-      title: 'Ngày ban hành',
+      key: "PublishedDate",
+      dataIndex: "PublishedDate",
+      title: "Ngày ban hành",
       width: 130,
-      align: 'center',
+      align: "center",
       sorter: (a, b) => a.PublishedDate - b.PublishedDate,
     },
     {
-      key: 'status',
-      dataIndex: 'Status',
-      title: 'Trạng thái',
-      align: 'center',
+      key: "status",
+      dataIndex: "Status",
+      title: "Trạng thái",
+      align: "center",
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = Status ? 'geekblue' : 'volcano';
-        let text = Status ? 'Duyệt' : 'Hủy duyệt';
+        let color = Status ? "geekblue" : "volcano";
+        let text = Status ? "Duyệt" : "Hủy duyệt";
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleOnClickStatus({ Id, Status })}
+            style={{ cursor: "pointer" }}
+            onClick={(event) => {
+              handleOnClickStatus({ Id, Status });
+              event?.stopPropagation();
+            }}
           >
             {text}
           </Tag>
@@ -73,35 +82,39 @@ function DocumentListTableData(props) {
       },
     },
     {
-      key: 'action',
+      key: "action",
       render: (_, record) => (
-        <Space size='middle'>
+        <Space size="middle">
           <Button
-            type='primary'
+            type="primary"
             icon={<EditFilled />}
-            onClick={() => {
+            onClick={(event) => {
+              event?.stopPropagation();
               if (record?.Status) {
                 openNotification(
                   <>
                     <b>Hủy duyệt</b> để có thể chỉnh sửa
                   </>,
-                  '',
+                  "",
                   NotificationType.ERROR
                 );
 
                 return;
               }
 
-              onClickRow && onClickRow(record?.Id);
+              onClickEdit && onClickEdit(record?.Id);
             }}
           >
             Sửa
           </Button>
           <Button
-            type='ghost'
+            type="ghost"
             danger
             icon={<DeleteFilled />}
-            onClick={() => handleDeleteSourceNew(record)}
+            onClick={(event) => {
+              handleDeleteSourceNew(record);
+              event?.stopPropagation();
+            }}
           >
             Xóa
           </Button>
@@ -119,11 +132,11 @@ function DocumentListTableData(props) {
 
   function handleDeleteSourceNew(values) {
     return Modal.confirm({
-      title: 'Xóa nguồn tin',
+      title: "Xóa nguồn tin",
       icon: <ExclamationCircleOutlined />,
-      content: 'Bạn có chắc chắn xóa không?',
-      okText: 'Xóa',
-      cancelText: 'Hủy',
+      content: "Bạn có chắc chắn xóa không?",
+      okText: "Xóa",
+      cancelText: "Hủy",
       onOk: () => deleteSourceNewCustom(values),
     });
   }
@@ -136,27 +149,27 @@ function DocumentListTableData(props) {
   };
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie('role');
+    const role = commonFunc.getCookie("role");
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        '',
+        "",
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: 'Cập nhật trạng thái',
+      title: "Cập nhật trạng thái",
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: 'Cập nhật',
-      cancelText: 'Hủy',
+      okText: "Cập nhật",
+      cancelText: "Hủy",
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -171,11 +184,11 @@ function DocumentListTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
+      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
     );
   };
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -189,7 +202,10 @@ function DocumentListTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size='small'
+        size="small"
+        onRow={(item) => ({
+          onClick: () => onClickRow && onClickRow(item),
+        })}
       />
     </div>
   );
