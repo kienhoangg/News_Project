@@ -1,18 +1,18 @@
-import commonFunc from 'common/commonFunc';
-import datafakeMedia from './datafake/datafakeMedia';
-import axiosClient from './axiosClient';
+import commonFunc from "common/commonFunc";
+import datafakeMedia from "./datafake/datafakeMedia";
+import axiosClient from "./axiosClient";
 
 class MediaApi {
   getImageAll = (body) => {
-    const url = '/Photos/filter';
+    const url = "/Photos/filter";
     return axiosClient.post(url, body);
   };
   insertImage = (body) => {
-    const url = '/Photos';
+    const url = "/Photos";
     return axiosClient.post(url, body);
   };
   updateStatusImage = (body) => {
-    const url = '/Photos';
+    const url = "/Photos";
     return axiosClient.put(url, body);
   };
   deleteImage = (id) => {
@@ -20,16 +20,26 @@ class MediaApi {
     return axiosClient.delete(url);
   };
 
+  updateImage = (id, body) => {
+    const url = `/Photos/${id}`;
+    return axiosClient.put(url, body);
+  };
+
+  getDetailImage = (id) => {
+    const url = `/Photos/${id}`;
+    return axiosClient.get(url);
+  };
+
   getImageCategoryAll = (body) => {
-    const url = '/PhotoCategories/filter';
+    const url = "/PhotoCategories/filter";
     return axiosClient.post(url, body);
   };
   insertImageCategory = (body) => {
-    const url = '/PhotoCategories';
+    const url = "/PhotoCategories";
     return axiosClient.post(url, body);
   };
   updateStatusImageCategory = (body) => {
-    const url = '/PhotoCategories';
+    const url = "/PhotoCategories";
     return axiosClient.put(url, body);
   };
   deleteImageCategory = (id) => {
