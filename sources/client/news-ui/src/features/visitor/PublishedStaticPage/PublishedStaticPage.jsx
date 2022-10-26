@@ -96,7 +96,9 @@ function PublishedStaticPage(props) {
                                 <>
                                     <div className={cx('info-extension')}>
                                         <Row gutter={8} justify='space-between'>
-                                            <Col>{/* <div className={cx('align-center')}>{datetimeHelper.formatDatetimeToDateVN(data?.NewsPostDetail.PublishedDate)}</div> */}</Col>
+                                            <Col>
+                                                <div className={cx('align-center')}>{datetimeHelper.formatDatetimeToDateVN(dataPage?.CreatedDate)}</div>
+                                            </Col>
                                             <Col flex={1}>
                                                 <Row justify='end' align='middle'>
                                                     <div className={cx('font-size')}>
