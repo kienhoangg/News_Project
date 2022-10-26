@@ -79,7 +79,7 @@ function VideoListTableData(props) {
             icon={<DeleteFilled />}
             onClick={() => {
               const role = commonFunc.getCookie("role");
-              if (role === Role.ADMIN) {
+              if (role !== Role.ADMIN) {
                 openNotification(
                   <>
                     Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
