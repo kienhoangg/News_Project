@@ -92,16 +92,20 @@ function ImageListPage(props) {
         Order: res?.Order,
       });
 
-      res?.ImagePath &&
-        setFileListAttachment([
-          {
+      if (res?.ImagePath) {
+        let links = res?.ImagePath.split(';;');
+        let linksObject = [];
+        for (let i = 0; i < links.length; i++) {
+          linksObject.push({
             isFileFormServer: true,
-            uid: '1',
-            name: imageHelper.getNameFile(res?.ImagePath),
+            uid: i,
+            name: imageHelper.getNameFile(links[i]),
             status: 'done',
-            url: imageHelper.getLinkImageUrl(res?.ImagePath),
-          },
-        ]);
+            url: imageHelper.getLinkImageUrl(links[i]),
+          });
+        }
+        setFileListAttachment(linksObject);
+      }
     } catch (err) {}
   };
 
@@ -351,7 +355,7 @@ function ImageListPage(props) {
             <Form.Item name='lb-attachment' label='Tệp đính kèm'>
               <Upload
                 listType='picture'
-                // fileList={fileListAttachment}
+                fileList={fileListAttachment}
                 onChange={handleChangeAttachment}
                 customRequest={commonFunc.dummyRequest}
                 multiple={true}
