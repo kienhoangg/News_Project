@@ -355,7 +355,7 @@ function ImageListPage(props) {
             <Form.Item name='lb-attachment' label='Tệp đính kèm'>
               <Upload
                 listType='picture'
-                fileList={fileListAttachment}
+                defaultFileList={fileListAttachment}
                 onChange={handleChangeAttachment}
                 customRequest={commonFunc.dummyRequest}
                 multiple={true}
