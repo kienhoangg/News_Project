@@ -238,6 +238,13 @@ namespace News.API.Controllers
             }, x => x.PhotoCategory)).PagedData.Results.ToList();
             int index = lstDocuments.Count / 2 + 1;
 
+            var documentHots = new List<DocumentDto>();
+            var documentSections = new List<DocumentDto>();
+            if (lstDocuments.Count > 0)
+            {
+                documentHots = lstDocuments.GetRange(0, index);
+                documentSections = lstDocuments.GetRange(index, lstDocuments.Count - index);
+            }
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()
                 {
@@ -256,8 +263,8 @@ namespace News.API.Controllers
                                             .GetCategoryNews(categoryNewsId)),
                                 Data = lstNormalNews.PagedData.Results.ToList()
                             },
-                    DocumentHots = lstDocuments.GetRange(0, index),
-                    DocumentSectionDto = lstDocuments.GetRange(index, lstDocuments.Count - index),
+                    DocumentHots = documentHots,
+                    DocumentSectionDto = documentSections,
                     Images = lstImages,
                     AccessCounter = _counter.GetValue(),
                     VisitorTracking = await _cacheService.GetCountKeys()
