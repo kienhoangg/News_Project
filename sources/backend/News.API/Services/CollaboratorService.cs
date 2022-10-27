@@ -49,6 +49,10 @@ namespace News.API.Services
             {
                 query = FindByCondition((x => x.Name.Contains(collaboratorRequest.Keyword)));
             }
+            if (collaboratorRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == collaboratorRequest.Status.Value);
+            }
             IQueryable<CollaboratorDto>? mappingQuery = query.ProjectTo<CollaboratorDto>(_mapper.ConfigurationProvider);
             PagedResult<CollaboratorDto>? paginationSet = await mappingQuery.PaginatedListAsync(collaboratorRequest.CurrentPage
                                                                                              ?? 1, collaboratorRequest.PageSize ?? CommonConstants.PAGE_SIZE, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
@@ -74,6 +78,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => collaboratorRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<Collaborator>? sourcePaging = await query.PaginatedListAsync(collaboratorRequest.CurrentPage
                                                                                               ?? 0, collaboratorRequest.PageSize ?? 0, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
             ApiSuccessResult<Collaborator>? result = new(sourcePaging);

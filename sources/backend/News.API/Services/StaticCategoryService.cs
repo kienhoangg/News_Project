@@ -53,6 +53,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(staticCategoryRequest.Keyword)));
             }
+            if (staticCategoryRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == staticCategoryRequest.Status.Value);
+            }
             PagedResult<StaticCategory>? sourcePaging = await query.PaginatedListAsync(staticCategoryRequest.CurrentPage
                                                                                              ?? 1, staticCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, staticCategoryRequest.OrderBy, staticCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<StaticCategoryDto>>(sourcePaging.Results);
@@ -78,6 +82,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => staticCategoryRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<StaticCategory>? sourcePaging = await query.PaginatedListAsync(staticCategoryRequest.CurrentPage
                                                                                               ?? 0, staticCategoryRequest.PageSize ?? 0, staticCategoryRequest.OrderBy, staticCategoryRequest.Direction);
             ApiSuccessResult<StaticCategory>? result = new(sourcePaging);

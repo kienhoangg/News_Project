@@ -159,7 +159,7 @@ namespace News.API.Controllers
             var fields =
                 await _fieldNewsService
                     .GetFieldNewsByPaging(new FieldNewsRequest()
-                    { PageSize = 5 },
+                    { PageSize = 5, Status = Status.Enabled },
                     lstInclude);
             if (fields == null) return NotFound();
             return Ok(fields.PagedData.Results);
@@ -187,10 +187,10 @@ namespace News.API.Controllers
             // Get 5 hot news
             var hotNewsRequest =
                 new NewsPostRequest()
-                { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsHotNews = true };
+                { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsHotNews = true, Status = Status.Enabled };
             var documentNewsRequest =
            new NewsPostRequest()
-           { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsDocumentNews = true };
+           { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsDocumentNews = true, Status = Status.Enabled };
 
             var lstHotNews =
                 await _newsPostService.GetNewsPostByPaging(hotNewsRequest);
@@ -205,7 +205,8 @@ namespace News.API.Controllers
                     PageSize = 5,
                     CurrentPage = 1,
                     OrderBy = "Order",
-                    CategoryNewsId = categoryNewsId
+                    CategoryNewsId = categoryNewsId,
+                    Status = Status.Enabled
                 };
 
             var lstNormalNews =
@@ -216,7 +217,8 @@ namespace News.API.Controllers
                                PageSize = 15,
                                CurrentPage = 1,
                                OrderBy = "Order",
-                               Direction = -1
+                               Direction = -1,
+                               Status = Status.Enabled
                            })).PagedData.Results.ToList();
             if (
                 lstHotNews.PagedData.Results.Count <= 0 &&
@@ -231,7 +233,8 @@ namespace News.API.Controllers
                 CurrentPage = 1,
                 PageSize = 15,
                 OrderBy = "Order",
-                Direction = 1
+                Direction = 1,
+                Status = Status.Enabled
             }, x => x.PhotoCategory)).PagedData.Results.ToList();
             int index = lstDocuments.Count / 2 + 1;
 

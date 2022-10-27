@@ -59,6 +59,7 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.QuestionStatus == questionRequest.QuestionStatus.Value));
             }
+
             PagedResult<Question>? sourcePaging = await query.PaginatedListAsync(questionRequest.CurrentPage
                                                                                              ?? 1, questionRequest.PageSize ?? CommonConstants.PAGE_SIZE, questionRequest.OrderBy, questionRequest.Direction);
             var lstDto = _mapper.Map<List<QuestionDto>>(sourcePaging.Results);
@@ -80,7 +81,7 @@ namespace News.API.Services
                 {
                     QuestionStatus = QuestionStatus.NEW_QUESTION,
                     PageSize = 5,
-                    CurrentPage = 1
+                    CurrentPage = 1,
                 })).PagedData.Results.ToList(),
                 MostViewQuestions = (await GetQuestionByPaging(new QuestionRequest()
                 {
@@ -88,6 +89,7 @@ namespace News.API.Services
                     Direction = -1,
                     PageSize = 5,
                     CurrentPage = 1,
+                    Status = Status.Enabled
                 })).PagedData.Results.ToList(),
                 QuestionCategories = await _questionCategoryService.GetAllQuestionCategories()
             };
@@ -123,6 +125,9 @@ namespace News.API.Services
             {
                 case MultipleTypeUpdate.STATUS:
                     action = new Action<Question>(x => x.Status = value ? Status.Enabled : Status.Disabled);
+                    break;
+                case MultipleTypeUpdate.VIEWS_COUNT:
+                    action = new Action<Question>(x => x.Views += 1);
                     break;
                 default:
                     break;

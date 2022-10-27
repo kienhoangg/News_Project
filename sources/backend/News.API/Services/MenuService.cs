@@ -47,7 +47,8 @@ namespace News.API.Services
             {
                 ParentId = 0,
                 OrderBy = "Order",
-                Direction = 1
+                Direction = 1,
+                Status = Status.Enabled
             })).PagedData.Results.ToList();
             foreach (var item in lstRootMenu)
             {
@@ -55,7 +56,8 @@ namespace News.API.Services
                 {
                     ParentId = item.Id,
                     OrderBy = "Order",
-                    Direction = 1
+                    Direction = 1,
+                    Status = Status.Enabled
                 })).PagedData.Results.ToList();
                 item.MenuChildren = lstChildMenu;
                 var homeMenuDto = new HomeMenuDto()
@@ -79,7 +81,8 @@ namespace News.API.Services
             {
                 ParentId = 0,
                 OrderBy = "Order",
-                Direction = 1
+                Direction = 1,
+                Status = Status.Enabled
             })).PagedData.Results.ToList();
             foreach (var item in lstRootMenu)
             {
@@ -87,7 +90,8 @@ namespace News.API.Services
                 {
                     ParentId = item.Id,
                     OrderBy = "Order",
-                    Direction = 1
+                    Direction = 1,
+                    Status = Status.Enabled
                 })).PagedData.Results.ToList();
                 var homeMenuDto = new HomeAdminDto()
                 {
@@ -119,6 +123,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.ParentId == menuRequest.ParentId.Value));
             }
+            if (menuRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == menuRequest.Status.Value);
+            }
             PagedResult<Menu>? sourcePaging = await query.PaginatedListAsync(menuRequest.CurrentPage ?? 0, menuRequest.PageSize ?? 0, menuRequest.OrderBy, menuRequest.Direction);
             var lstDto = _mapper.Map<List<MenuDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<MenuDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
@@ -143,6 +151,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => menuRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<Menu>? sourcePaging = await query.PaginatedListAsync(menuRequest.CurrentPage
                                                                                               ?? 0, menuRequest.PageSize ?? 0, menuRequest.OrderBy, menuRequest.Direction);
             ApiSuccessResult<Menu>? result = new(sourcePaging);

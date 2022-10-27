@@ -53,6 +53,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Content.Contains(commentRequest.Keyword)));
             }
+            if (commentRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == commentRequest.Status.Value);
+            }
             PagedResult<Comment>? sourcePaging = await query.PaginatedListAsync(commentRequest.CurrentPage
                                                                                              ?? 1, commentRequest.PageSize ?? CommonConstants.PAGE_SIZE, commentRequest.OrderBy, commentRequest.Direction);
             var lstDto = _mapper.Map<List<CommentDto>>(sourcePaging.Results);

@@ -59,6 +59,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(documentSignPersonRequest.Keyword)));
             }
+            if (documentSignPersonRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == documentSignPersonRequest.Status.Value);
+            }
             PagedResult<DocumentSignPerson>? sourcePaging = await query.PaginatedListAsync(documentSignPersonRequest.CurrentPage
                                                                                              ?? 1, documentSignPersonRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentSignPersonRequest.OrderBy, documentSignPersonRequest.Direction);
             var lstDto = _mapper.Map<List<DocumentSignPersonDto>>(sourcePaging.Results);

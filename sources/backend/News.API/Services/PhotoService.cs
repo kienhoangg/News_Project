@@ -57,6 +57,10 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.PhotoCategoryId == photoRequest.PhotoCategoryId.Value);
             }
+            if (photoRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == photoRequest.Status.Value);
+            }
             PagedResult<Photo>? sourcePaging = await query.PaginatedListAsync(photoRequest.CurrentPage
                                                                                              ?? 1, photoRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoRequest.OrderBy, photoRequest.Direction);
             var lstDto = _mapper.Map<List<PhotoDto>>(sourcePaging.Results);
@@ -82,6 +86,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => photoRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<Photo>? sourcePaging = await query.PaginatedListAsync(photoRequest.CurrentPage
                                                                                               ?? 0, photoRequest.PageSize ?? 0, photoRequest.OrderBy, photoRequest.Direction);
             ApiSuccessResult<Photo>? result = new(sourcePaging);

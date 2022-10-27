@@ -49,6 +49,10 @@ namespace News.API.Services
             {
                 query = FindByCondition((x => x.Title.Contains(sourceNewsRequest.Keyword)));
             }
+            if (sourceNewsRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == sourceNewsRequest.Status.Value);
+            }
             IQueryable<SourceNewsDto>? mappingQuery = query.ProjectTo<SourceNewsDto>(_mapper.ConfigurationProvider);
             PagedResult<SourceNewsDto>? paginationSet = await mappingQuery.PaginatedListAsync(sourceNewsRequest.CurrentPage
                                                                                              ?? 1, sourceNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, sourceNewsRequest.OrderBy, sourceNewsRequest.Direction);
@@ -74,6 +78,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => sourceNewsRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<SourceNews>? sourcePaging = await query.PaginatedListAsync(sourceNewsRequest.CurrentPage
                                                                                               ?? 0, sourceNewsRequest.PageSize ?? 0, sourceNewsRequest.OrderBy, sourceNewsRequest.Direction);
             ApiSuccessResult<SourceNews>? result = new(sourcePaging);

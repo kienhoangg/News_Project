@@ -53,6 +53,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(videoCategoryRequest.Keyword)));
             }
+            if (videoCategoryRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == videoCategoryRequest.Status.Value);
+            }
             PagedResult<VideoCategory>? sourcePaging = await query.PaginatedListAsync(videoCategoryRequest.CurrentPage
                                                                                              ?? 1, videoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, videoCategoryRequest.OrderBy, videoCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<VideoCategoryDto>>(sourcePaging.Results);
@@ -78,6 +82,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => videoCategoryRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<VideoCategory>? sourcePaging = await query.PaginatedListAsync(videoCategoryRequest.CurrentPage
                                                                                               ?? 0, videoCategoryRequest.PageSize ?? 0, videoCategoryRequest.OrderBy, videoCategoryRequest.Direction);
             ApiSuccessResult<VideoCategory>? result = new(sourcePaging);

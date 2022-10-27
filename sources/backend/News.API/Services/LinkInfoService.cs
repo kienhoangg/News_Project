@@ -53,6 +53,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(linkInfoRequest.Keyword)));
             }
+            if (linkInfoRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == linkInfoRequest.Status.Value);
+            }
             PagedResult<LinkInfo>? sourcePaging = await query.PaginatedListAsync(linkInfoRequest.CurrentPage
                                                                                              ?? 1, linkInfoRequest.PageSize ?? CommonConstants.PAGE_SIZE, linkInfoRequest.OrderBy, linkInfoRequest.Direction);
             var lstDto = _mapper.Map<List<LinkInfoDto>>(sourcePaging.Results);

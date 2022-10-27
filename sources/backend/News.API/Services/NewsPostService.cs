@@ -90,25 +90,11 @@ namespace News.API.Services
             }
             if (newsPostRequest.IsHotNews.HasValue)
             {
-                if (newsPostRequest.IsHotNews.Value)
-                {
-                    query = query.Where(x => x.IsHotNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsHotNews);
-                }
+                query = query.Where(x => x.IsHotNews == newsPostRequest.IsHotNews.Value);
             }
             if (newsPostRequest.IsDocumentNews.HasValue)
             {
-                if (newsPostRequest.IsDocumentNews.Value)
-                {
-                    query = query.Where(x => x.IsDocumentNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsDocumentNews);
-                }
+                query = query.Where(x => x.IsDocumentNews == newsPostRequest.IsDocumentNews.Value);
             }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
@@ -170,6 +156,10 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
             }
+            if (newsPostRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == newsPostRequest.Status.Value);
+            }
 
             if (newsPostRequest.FieldNewsId.HasValue)
             {
@@ -181,25 +171,11 @@ namespace News.API.Services
             }
             if (newsPostRequest.IsHotNews.HasValue)
             {
-                if (newsPostRequest.IsHotNews.Value)
-                {
-                    query = query.Where(x => x.IsHotNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsHotNews);
-                }
+                query = query.Where(x => x.IsHotNews == newsPostRequest.IsHotNews.Value);
             }
             if (newsPostRequest.IsDocumentNews.HasValue)
             {
-                if (newsPostRequest.IsDocumentNews.Value)
-                {
-                    query = query.Where(x => x.IsDocumentNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsDocumentNews);
-                }
+                query = query.Where(x => x.IsDocumentNews == newsPostRequest.IsDocumentNews.Value);
             }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
@@ -251,25 +227,15 @@ namespace News.API.Services
             }
             if (newsPostRequest.IsHotNews.HasValue)
             {
-                if (newsPostRequest.IsHotNews.Value)
-                {
-                    query = query.Where(x => x.IsHotNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsHotNews);
-                }
+                query = query.Where(x => x.IsHotNews == newsPostRequest.IsHotNews.Value);
             }
             if (newsPostRequest.IsDocumentNews.HasValue)
             {
-                if (newsPostRequest.IsDocumentNews.Value)
-                {
-                    query = query.Where(x => x.IsDocumentNews);
-                }
-                else
-                {
-                    query = query.Where(x => !x.IsDocumentNews);
-                }
+                query = query.Where(x => x.IsDocumentNews == newsPostRequest.IsDocumentNews.Value);
+            }
+            if (newsPostRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == newsPostRequest.Status.Value);
             }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {

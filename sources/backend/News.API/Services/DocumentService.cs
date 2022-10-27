@@ -99,6 +99,10 @@ namespace News.API.Services
                 query = query.Where(x => x.PublishedDate <= documentRequest.FromDate.Value &&
                  x.PublishedDate >= documentRequest.ToDate.Value);
             }
+            if (documentRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == documentRequest.Status.Value);
+            }
             PagedResult<Document>? sourcePaging = await query.PaginatedListAsync(documentRequest.CurrentPage
                                                                                              ?? 1, documentRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentRequest.OrderBy, documentRequest.Direction);
             var lstDto = _mapper.Map<List<DocumentDto>>(sourcePaging.Results);
@@ -124,6 +128,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => documentRequest.Ids.Contains((int)x.Id));
             }
+
             PagedResult<Document>? sourcePaging = await query.PaginatedListAsync(documentRequest.CurrentPage
                                                                                               ?? 0, documentRequest.PageSize ?? 0, documentRequest.OrderBy, documentRequest.Direction);
             ApiSuccessResult<Document>? result = new(sourcePaging);

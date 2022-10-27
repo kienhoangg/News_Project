@@ -53,6 +53,9 @@
     <Folder Include="UploadFiles\FileAttachments\" />
     <Folder Include="UploadFiles\Images\" />
   </ItemGroup>
+   <ItemGroup>
+    <None Include="wwwroot\*" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj">
       <GlobalPropertiesToRemove />

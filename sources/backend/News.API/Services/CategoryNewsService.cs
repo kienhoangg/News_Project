@@ -55,6 +55,10 @@ namespace News.API.Services
             {
                 query = FindByCondition((x => x.CategoryNewsName.Contains(categoryNewsRequest.Keyword)));
             }
+            if (categoryNewsRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == categoryNewsRequest.Status.Value);
+            }
             IQueryable<CategoryNewsDto>? mappingQuery = query.ProjectTo<CategoryNewsDto>(_mapper.ConfigurationProvider);
             PagedResult<CategoryNewsDto>? paginationSet = await mappingQuery.PaginatedListAsync(categoryNewsRequest.CurrentPage
                                                                                              ?? 1, categoryNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, categoryNewsRequest.OrderBy, categoryNewsRequest.Direction);

@@ -53,6 +53,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(linkInfoCategoryRequest.Keyword)));
             }
+            if (linkInfoCategoryRequest.Status.HasValue)
+            {
+                query = query.Where(x => x.Status == linkInfoCategoryRequest.Status.Value);
+            }
             PagedResult<LinkInfoCategory>? sourcePaging = await query.PaginatedListAsync(linkInfoCategoryRequest.CurrentPage
                                                                                              ?? 1, linkInfoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, linkInfoCategoryRequest.OrderBy, linkInfoCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<LinkInfoCategoryDto>>(sourcePaging.Results);
@@ -78,6 +82,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => linkInfoCategoryRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<LinkInfoCategory>? sourcePaging = await query.PaginatedListAsync(linkInfoCategoryRequest.CurrentPage
                                                                                               ?? 0, linkInfoCategoryRequest.PageSize ?? 0, linkInfoCategoryRequest.OrderBy, linkInfoCategoryRequest.Direction);
             ApiSuccessResult<LinkInfoCategory>? result = new(sourcePaging);
