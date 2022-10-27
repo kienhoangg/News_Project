@@ -5,6 +5,7 @@ import IconDot1 from "../../../assets/icons/icon-dot-1.png";
 import ScrollToTop from "components/ScrollToTop/ScrollToTop";
 import moment from "moment";
 import { useParams } from "react-router-dom";
+import imageHelper from "helpers/imageHelper";
 
 /**
  * Màn hình chi tiết hỏi đáp
@@ -170,27 +171,18 @@ function QuestionDetailPage() {
 
           <div style={{ marginTop: 10 }}>
             <b>
-              <u>
-                <a
-                  href={
-                    questionDetail?.FilePath
-                      ? questionDetail?.FilePath?.indexOf("https://") === 0 ||
-                        questionDetail?.FilePath?.indexOf("http://") === 0
-                        ? questionDetail?.FilePath
-                        : window.location.origin +
-                          (questionDetail?.FilePath?.indexOf("/") === 0
-                            ? questionDetail?.FilePath
-                            : "/" + questionDetail?.FilePath)
-                      : "javascript:void(0)"
-                  }
-                  style={{
-                    textDecoration: "none",
-                    color: "green",
-                  }}
-                >
-                  Tệp đính kèm
-                </a>
-              </u>
+              <span
+                style={{
+                  textDecoration: "none",
+                  color: "green",
+                }}
+              >
+                Tệp đính kèm
+              </span>
+              {": "}
+              <a href={imageHelper.getLinkImageUrl(questionDetail?.FilePath)}>
+                {imageHelper.getNameFile(questionDetail?.FilePath)}
+              </a>
             </b>
           </div>
 

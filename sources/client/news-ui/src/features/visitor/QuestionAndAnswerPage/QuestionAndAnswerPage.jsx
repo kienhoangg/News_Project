@@ -286,7 +286,16 @@ function QuestionAndAnswerPage() {
           </div>
           <div className="question-and-answer-page__left__group__list">
             {dataQuestionMaster?.NewQuestions?.map((item) => (
-              <div className="question-and-answer-page__left__group__list__item"  style={{cursor: "pointer"}} onClick={()=>{window.open(window.location.origin + "/questions/" + item?.Id, '_blank');}}>
+              <div
+                className="question-and-answer-page__left__group__list__item"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  window.open(
+                    window.location.origin + "/questions/" + item?.Id,
+                    "_blank"
+                  );
+                }}
+              >
                 <div className="question-and-answer-page__left__group__list__item__image">
                   <img src={IconDot1} />
                 </div>
@@ -301,7 +310,16 @@ function QuestionAndAnswerPage() {
           </div>
           <div className="question-and-answer-page__left__group__list">
             {dataQuestionMaster?.MostViewQuestions?.map((item) => (
-              <div className="question-and-answer-page__left__group__list__item"  style={{cursor: "pointer"}} onClick={()=>{window.open(window.location.origin + "/questions/" + item?.Id, '_blank');}}>
+              <div
+                className="question-and-answer-page__left__group__list__item"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  window.open(
+                    window.location.origin + "/questions/" + item?.Id,
+                    "_blank"
+                  );
+                }}
+              >
                 <div className="question-and-answer-page__left__group__list__item__image">
                   <img src={IconDot1} />
                 </div>
@@ -603,6 +621,13 @@ function QuestionAndAnswerPage() {
               columns={COLUMN}
               dataSource={convertDataTable(dataQuestionTable)}
               pagination={false}
+              onRow={(item) => ({
+                onClick: () =>
+                  window.open(
+                    window.location.origin + "/questions/" + item?.Id,
+                    "_blank"
+                  ),
+              })}
             />
           </div>
           <div

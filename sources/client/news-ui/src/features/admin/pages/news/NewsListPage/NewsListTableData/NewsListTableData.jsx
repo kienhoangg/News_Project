@@ -1,15 +1,19 @@
-import { EditFilled, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Space, Table, Tag, Modal } from 'antd';
-import classNames from 'classnames/bind';
-import { commonRenderTable } from 'common/commonRender';
-import { Direction, NotificationType } from 'common/enum';
-import datetimeHelper from 'helpers/datetimeHelper';
-import PropTypes from 'prop-types';
-import styles from './NewsListTableData.module.scss';
-import commonFunc from 'common/commonFunc';
-import { openNotification } from 'helpers/notification';
-import newsApi from 'apis/newsApi';
-import { Role, TypeUpdate } from 'common/constant';
+import {
+  DeleteFilled,
+  EditFilled,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { Button, Space, Table, Tag, Modal } from "antd";
+import classNames from "classnames/bind";
+import { commonRenderTable } from "common/commonRender";
+import { Direction, NotificationType } from "common/enum";
+import datetimeHelper from "helpers/datetimeHelper";
+import PropTypes from "prop-types";
+import styles from "./NewsListTableData.module.scss";
+import commonFunc from "common/commonFunc";
+import { openNotification } from "helpers/notification";
+import newsApi from "apis/newsApi";
+import { Role, TypeUpdate } from "common/constant";
 
 const cx = classNames.bind(styles);
 
@@ -40,6 +44,8 @@ function NewsListTableData(props) {
     setPagination,
     setActionForm,
     updateStatusNew,
+    onClickEdit,
+    deleteSourceNew,
   } = props;
   const handleOnClickTitle = (values) => {
     if (onClickShowRowDetail) onClickShowRowDetail(values);
@@ -50,17 +56,17 @@ function NewsListTableData(props) {
       return;
     }
     onClickEditOneRow(values);
-    setActionForm('edit');
+    setActionForm("edit");
   };
 
   const columns = [
     {
-      key: 'Title',
-      dataIndex: 'Title',
-      title: 'Tiêu đề',
+      key: "Title",
+      dataIndex: "Title",
+      title: "Tiêu đề",
       render: (_, { Id, Title }) => (
         <div
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
           onClick={() => {
             handleOnClickTitle({ Id, Title });
           }}
@@ -71,41 +77,41 @@ function NewsListTableData(props) {
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: 'PublishedDate',
-      dataIndex: 'PublishedDate',
-      title: 'Ngày tạo',
+      key: "PublishedDate",
+      dataIndex: "PublishedDate",
+      title: "Ngày tạo",
       width: 200,
       sorter: (a, b) => a.PublishedDate - b.PublishedDate,
       render: (_, { PublishedDate }) => (
         <div>
-          {PublishedDate.includes('0001')
-            ? '- - -'
+          {PublishedDate.includes("0001")
+            ? "- - -"
             : datetimeHelper.formatDateToDateVN(PublishedDate)}
         </div>
       ),
     },
     {
-      title: 'Thông tin',
-      dataIndex: 'description',
-      key: 'Description',
+      title: "Thông tin",
+      dataIndex: "description",
+      key: "Description",
       width: 200,
       sorter: (a, b) => true,
     },
     {
-      key: 'Status',
-      dataIndex: 'Status',
-      title: 'Trạng thái',
-      align: 'center',
+      key: "Status",
+      dataIndex: "Status",
+      title: "Trạng thái",
+      align: "center",
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = Status ? 'geekblue' : 'volcano';
-        let text = Status ? 'Duyệt' : 'Hủy duyệt';
+        let color = Status ? "geekblue" : "volcano";
+        let text = Status ? "Duyệt" : "Hủy duyệt";
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
@@ -113,7 +119,48 @@ function NewsListTableData(props) {
         );
       },
     },
+    {
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EditFilled />}
+            onClick={() => onClickEdit(record?.Id)}
+          >
+            Sửa
+          </Button>
+          <Button
+            type="ghost"
+            danger
+            icon={<DeleteFilled />}
+            onClick={() => handleDeleteSourceNew(record)}
+          >
+            Xóa
+          </Button>
+        </Space>
+      ),
+      width: 120,
+    },
   ];
+
+  function handleDeleteSourceNew(values) {
+    return Modal.confirm({
+      title: "Xóa nguồn tin",
+      icon: <ExclamationCircleOutlined />,
+      content: "Bạn có chắc chắn xóa không?",
+      okText: "Xóa",
+      cancelText: "Hủy",
+      onOk: () => deleteSourceNewCustom(values),
+    });
+  }
+
+  const deleteSourceNewCustom = (values) => {
+    if (!deleteSourceNew) {
+      return;
+    }
+    deleteSourceNew(values.Id);
+  };
 
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
@@ -122,27 +169,27 @@ function NewsListTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie('role');
+    const role = commonFunc.getCookie("role");
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        '',
+        "",
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: 'Cập nhật trạng thái',
+      title: "Cập nhật trạng thái",
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: 'Cập nhật',
-      cancelText: 'Hủy',
+      okText: "Cập nhật",
+      cancelText: "Hủy",
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -160,12 +207,12 @@ function NewsListTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
+      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
     );
   };
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -178,7 +225,7 @@ function NewsListTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size='small'
+        size="small"
       />
     </div>
   );

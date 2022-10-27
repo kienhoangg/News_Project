@@ -22,10 +22,6 @@ NewsHotPage.propTypes = {};
 NewsHotPage.defaultProps = {};
 
 function NewsHotPage(props) {
-  const [popupEditNews, setPopupEditNews] = useState({
-    Id: null,
-    show: false,
-  });
   const [newsData, setNewsData] = useState({});
   const [newsDataPopUp, setNewsDataPopUp] = useState({});
   const isFirstCall = useRef(true);
@@ -194,6 +190,20 @@ function NewsHotPage(props) {
     }
   };
 
+  const handleCancelNewsHot = async (res) => {
+    try {
+      await newsApi.updatNews({
+        Ids: [res?.Id],
+        Value: false,
+        Field: TypeUpdate.IS_HOT_NEWS,
+      });
+      fetchProductList();
+      openNotification("Cập nhật thành công");
+    } catch (error) {
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+    }
+  };
+
   return (
     <div className={cx("wrapper")}>
       <Modal
@@ -212,7 +222,6 @@ function NewsHotPage(props) {
           <NewsHotTableDataPopUp
             data={newsDataPopUp}
             setPagination={handleChangePagination}
-            deleteSourceNew={handleDeleteSourceNew}
             changeRowKey={handleChangeRowKey}
           />
         </div>
@@ -233,33 +242,9 @@ function NewsHotPage(props) {
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
           updateStatusNew={handleUpdateStatusNew}
-          onClickRow={(id) => {
-            setPopupEditNews({
-              Id: id,
-              show: true,
-            });
-          }}
+          cancelNewsHost={handleCancelNewsHot}
         />
       </div>
-
-      {(popupEditNews?.Id || popupEditNews?.Id === 0) && popupEditNews?.show ? (
-        <PopupUpdateNews
-          idNews={popupEditNews?.Id}
-          onSuccess={() => {
-            setPopupEditNews({
-              Id: null,
-              show: false,
-            });
-            fetchProductList();
-          }}
-          onCancel={() => {
-            setPopupEditNews({
-              Id: null,
-              show: false,
-            });
-          }}
-        />
-      ) : null}
     </div>
   );
 }
