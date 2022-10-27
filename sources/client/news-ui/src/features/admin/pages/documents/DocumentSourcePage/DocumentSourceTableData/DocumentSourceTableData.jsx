@@ -47,8 +47,8 @@ function DocumentSourceTableData(props) {
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = Status ? 'geekblue' : 'volcano';
-        let text = Status ? 'Duyệt' : 'Hủy duyệt';
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
