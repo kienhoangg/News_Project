@@ -21,8 +21,7 @@ NewsHotTableData.propTypes = {};
 NewsHotTableData.defaultProps = {};
 
 function NewsHotTableData(props) {
-  const { data, setPagination, deleteSourceNew, updateStatusNew, onClickRow } =
-    props;
+  const { data, setPagination, cancelNewsHost, updateStatusNew } = props;
 
   const columns = [
     {
@@ -58,21 +57,15 @@ function NewsHotTableData(props) {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EditFilled />}
-            onClick={() => onClickRow(record?.Id)}
-          >
-            Sửa
-          </Button>
-          <Button
-            type="ghost"
-            danger
-            icon={<DeleteFilled />}
-            onClick={() => handleDeleteSourceNew(record)}
+          <Tag
+            color={"volcano"}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              cancelNewsHost(record);
+            }}
           >
             Xóa
-          </Button>
+          </Tag>
         </Space>
       ),
       width: 120,
@@ -115,24 +108,6 @@ function NewsHotTableData(props) {
       },
     });
   }
-
-  function handleDeleteSourceNew(values) {
-    return Modal.confirm({
-      title: "Xóa nguồn tin",
-      icon: <ExclamationCircleOutlined />,
-      content: "Bạn có chắc chắn xóa không?",
-      okText: "Xóa",
-      cancelText: "Hủy",
-      onOk: () => deleteSourceNewCustom(values),
-    });
-  }
-
-  const deleteSourceNewCustom = (values) => {
-    if (!deleteSourceNew) {
-      return;
-    }
-    deleteSourceNew(values.Id);
-  };
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
     setPagination(
