@@ -68,3 +68,20 @@
         margin-left: 3px;
     }
 }
+
+@media (max-width: 767px) {
+    .wrapper {
+        .btn-group {
+            height: auto;
+            margin: 5px 0;
+
+            .btn-item {
+                padding: 8px 0;
+            }
+        }
+
+        .weather {
+            padding: 6px 0;
+        }
+    }
+}
