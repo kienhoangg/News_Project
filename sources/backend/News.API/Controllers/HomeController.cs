@@ -141,7 +141,7 @@ namespace News.API.Controllers
             }
             return NotFound();
         }
-
+        
         [HttpGet("question")]
         public async Task<IActionResult> GetQuestionAnswer()
         {
