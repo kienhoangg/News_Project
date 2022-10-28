@@ -21,6 +21,7 @@ namespace Models.Dtos
         public DateTime? QuestionDate { get; set; }
         public int Views { get; set; }
         public string? FilePath { get; set; }
+        public int? QuestionCategoryId { get; set; }
         public QuestionCategoryDto? QuestionCategory { get; set; }
     }
 }
