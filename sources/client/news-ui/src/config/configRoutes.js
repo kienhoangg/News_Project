@@ -51,10 +51,12 @@ const routes = {
   adminMediaVideoList: '/admin/media/video/list',
   adminMediaVideoCategory: '/admin/media/video/category',
 
-  adminAdvertisementCategory: '/admin/advertisement/category',
-  adminAdvertisementList: '/admin/advertisement/list',
   adminConnectionCategory: '/admin/connection/category',
   adminConnectionList: '/admin/connection/list',
+  adminCompanyCategory: '/admin/company/category',
+  adminCompanyList: '/admin/company/list',
+  adminAdvertisementCategory: '/admin/advertisement/category',
+  adminAdvertisementList: '/admin/advertisement/list',
 
   adminSetupMenu: '/admin/setup/menu',
 

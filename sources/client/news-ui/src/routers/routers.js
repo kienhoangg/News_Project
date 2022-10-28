@@ -39,6 +39,8 @@ import StaticContentListPage from 'features/admin/pages/staticInfor/StaticConten
 import StaticCategoryListPage from 'features/admin/pages/staticInfor/StaticCategory/StaticCategoryListPage';
 import QuestionDetailPage from 'features/visitor/QuestionDetailPage/QuestionDetailPage';
 import PublishedStaticPage from 'features/visitor/PublishedStaticPage/PublishedStaticPage';
+import CompanyListPage from './../features/admin/pages/connection/CompanyListPage/CompanyListPage';
+import CompanyCategoryPage from './../features/admin/pages/connection/CompanyCategoryPage/CompanyCategoryPage';
 
 // Public routes
 const publicRoutes = [
@@ -176,6 +178,16 @@ const publicRoutes = [
   {
     path: config.routes.adminAdvertisementList,
     component: ImageCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminCompanyCategory,
+    component: CompanyCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminCompanyList,
+    component: CompanyListPage,
     layout: AdminLayout,
   },
   {

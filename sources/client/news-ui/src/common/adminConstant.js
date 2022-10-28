@@ -169,17 +169,29 @@ const adminMenu = [
     label: 'Liên kết & doanh nghiệp',
     icon: <PlayCircleFilled />,
     children: [
+      // {
+      //   key: 'advertisement-category',
+      //   label: 'Danh mục quảng cáo',
+      //   icon: <PlayCircleFilled />,
+      //   to: routes.adminAdvertisementCategory,
+      // },
+      // {
+      //   key: 'advertisement-list',
+      //   label: 'Quảng Cáo',
+      //   icon: <PlayCircleFilled />,
+      //   to: routes.adminAdvertisementList,
+      // },
       {
-        key: 'advertisement-category',
+        key: 'company-category',
         label: 'Danh mục doanh nghiệp',
         icon: <PlayCircleFilled />,
-        to: routes.adminAdvertisementCategory,
+        to: routes.adminCompanyCategory,
       },
       {
-        key: 'advertisement-list',
+        key: 'company-list',
         label: 'Doanh nghiệp',
         icon: <PlayCircleFilled />,
-        to: routes.adminAdvertisementList,
+        to: routes.adminCompanyList,
       },
       {
         key: 'connection-category',
