@@ -96,11 +96,11 @@ function PublishedStaticPage(props) {
                                 <>
                                     <div className={cx('info-extension')}>
                                         <Row gutter={8} justify='space-between'>
-                                            <Col>
+                                            <Col className={cx('time')}>
                                                 <div className={cx('align-center')}>{datetimeHelper.formatDatetimeToDateVN(dataPage?.CreatedDate)}</div>
                                             </Col>
                                             <Col flex={1}>
-                                                <Row justify='end' align='middle'>
+                                                <Row justify='end' align='middle' className={cx('sm-justify-start')}>
                                                     <div className={cx('font-size')}>
                                                         <div>Xem cỡ chữ</div>
                                                         <Button icon={<MinusOutlined />} size='small' onClick={() => handleChangeFontSize(-1)}></Button>
