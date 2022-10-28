@@ -9,6 +9,7 @@ import axiosClient from "apis/axiosClient";
 import { useLocation } from "react-router-dom";
 import IconClose from "../../../assets/icons/close.png";
 import { envDomainBackend } from "common/enviroments";
+import imageHelper from "helpers/imageHelper";
 
 export default function AlbumImageDetailPage() {
   const isFirstRender = useRef(true);
@@ -89,10 +90,7 @@ export default function AlbumImageDetailPage() {
       const images = [];
       res?.Photos?.map((item) => {
         const arrayUrl = item?.ImagePath?.split(";;")?.map((val) => {
-          const url = val;
-          if (val?.indexOf("https://") !== 0 && val?.indexOf("http://") !== 0)
-            url =
-              envDomainBackend + (val?.indexOf("/") === 0 ? val : "/" + val);
+          const url = imageHelper.getLinkImageUrl(val);
 
           return {
             url: url,
@@ -208,19 +206,7 @@ export default function AlbumImageDetailPage() {
               onClick={() => getDetailAlbum(item?.Id)}
             >
               <div>
-                <img
-                  src={
-                    item?.Avatar
-                      ? item?.Avatar?.indexOf("https://") === 0 ||
-                        item?.Avatar?.indexOf("http://") === 0
-                        ? item?.Avatar
-                        : envDomainBackend +
-                          (item?.Avatar?.indexOf("/") === 0
-                            ? item?.Avatar
-                            : "/" + item?.Avatar)
-                      : "/"
-                  }
-                />
+                <img src={imageHelper.getLinkImageUrl(item?.Avatar)} />
               </div>
             </div>
           ))}
