@@ -1,9 +1,17 @@
-import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { Button, Space, Table, Tag } from 'antd';
-import classNames from 'classnames/bind';
-import { commonRenderTable } from 'common/commonRender';
-import datetimeHelper from 'helpers/datetimeHelper';
-import styles from './QuestionListTableData.module.scss';
+import {
+  DeleteFilled,
+  EditFilled,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { Button, Modal, Space, Table, Tag } from "antd";
+import classNames from "classnames/bind";
+import commonFunc from "common/commonFunc";
+import { commonRenderTable } from "common/commonRender";
+import { Role } from "common/constant";
+import { Direction, NotificationType } from "common/enum";
+import datetimeHelper from "helpers/datetimeHelper";
+import { openNotification } from "helpers/notification";
+import styles from "./QuestionListTableData.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -12,40 +20,72 @@ QuestionListTableData.propTypes = {};
 QuestionListTableData.defaultProps = {};
 
 function QuestionListTableData(props) {
-  const { data } = props;
+  const { data, setPagination, updateStatusNew, deleteCategoryNew, onEdit } =
+    props;
+
+  function handleOnClickStatus(values) {
+    const role = commonFunc.getCookie("role");
+    if (role !== Role.ADMIN) {
+      openNotification(
+        <>
+          Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+        </>,
+        "",
+        NotificationType.ERROR
+      );
+      return;
+    }
+    Modal.confirm({
+      title: "Cập nhật trạng thái",
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+        </>
+      ),
+      okText: "Cập nhật",
+      cancelText: "Hủy",
+      onOk: () => {
+        if (!updateStatusNew) {
+          return;
+        }
+        updateStatusNew(values);
+      },
+    });
+  }
 
   const columns = [
     {
-      key: 'title',
-      dataIndex: 'Title',
-      title: 'Tiêu đề',
+      key: "Title",
+      dataIndex: "Title",
+      title: "Tiêu đề",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: 'OrderNumber',
-      dataIndex: 'OrderNumber',
-      title: 'Số thứ tự',
+      key: "Order",
+      dataIndex: "Order",
+      title: "Số thứ tự",
       render: (OrderNumber) => <>{OrderNumber}</>,
       sorter: (a, b) => a.OrderNumber - b.OrderNumber,
       width: 100,
-      align: 'right',
+      align: "right",
     },
     {
-      key: 'status',
-      dataIndex: 'Status',
-      title: 'Trạng thái',
-      align: 'center',
+      key: "Status",
+      dataIndex: "Status",
+      title: "Trạng thái",
+      align: "center",
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = !Status ? 'geekblue' : 'volcano';
-        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
+        let color = !Status ? "geekblue" : "volcano";
+        let text = !Status ? "Duyệt" : "Hủy duyệt";
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
@@ -54,13 +94,51 @@ function QuestionListTableData(props) {
       },
     },
     {
-      key: 'action',
+      key: "action",
       render: (_, record) => (
-        <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EditFilled />}
+            onClick={() => onEdit(record?.Id)}
+          >
             Sửa
           </Button>
-          <Button type='ghost' danger icon={<DeleteFilled />}>
+          <Button
+            type="ghost"
+            danger
+            icon={<DeleteFilled />}
+            onClick={() => {
+              const role = commonFunc.getCookie("role");
+              if (role !== Role.ADMIN) {
+                openNotification(
+                  <>
+                    Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+                  </>,
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              Modal.confirm({
+                title: "Xóa video",
+                icon: <ExclamationCircleOutlined />,
+                content: (
+                  <>
+                    Bạn có chắc chắn <b>Xóa</b> không?
+                  </>
+                ),
+                okText: "Xóa",
+                cancelText: "Hủy",
+                onOk: () => {
+                  if (!deleteCategoryNew) {
+                    return;
+                  }
+                  deleteCategoryNew(record);
+                },
+              });
+            }}
+          >
             Xóa
           </Button>
         </Space>
@@ -75,13 +153,19 @@ function QuestionListTableData(props) {
     return { ...item, PublishedDate: PublishedDate, key: item.Key };
   });
 
-  function handleOnClickStatus(values) {
-    // console.log(values);
-  }
+  const handleOnchangeTable = (pagination, filters, sorter, extra) => {
+    setPagination(
+      pagination.current,
+      pagination.pageSize,
+      sorter.columnKey,
+      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
+    );
+  };
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Table
+        onChange={handleOnchangeTable}
         columns={columns}
         pagination={{
           defaultPageSize: 10,
@@ -91,7 +175,7 @@ function QuestionListTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size='small'
+        size="small"
       />
     </div>
   );

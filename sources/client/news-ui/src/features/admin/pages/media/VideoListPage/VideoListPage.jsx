@@ -42,7 +42,10 @@ function VideoListPage(props) {
     orderBy: "CreatedDate",
     keyword: "",
   });
-  const [newsData, setNewsData] = useState({});
+  const [newsData, setNewsData] = useState({
+    data: [],
+    total: 0,
+  });
 
   const MODAL_TYPE = {
     EDIT: 0,
@@ -321,7 +324,10 @@ function VideoListPage(props) {
   const fetchProductList = async () => {
     try {
       const response = await mediaApi.getVideoAll(objFilter);
-      setNewsData(response?.PagedData?.Results);
+      setNewsData({
+        data: response?.PagedData?.Results,
+        total: response?.PagedData?.RowCount,
+      });
     } catch (error) {
       console.log("Failed to fetch list: ", error);
     }

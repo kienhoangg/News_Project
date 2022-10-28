@@ -139,9 +139,10 @@ function QuestionDetailPage() {
               marginTop: 10,
               fontSize: 12,
             }}
-          >
-            {questionDetail?.QuestionContent}
-          </span>
+            dangerouslySetInnerHTML={{
+              __html: questionDetail?.QuestionContent,
+            }}
+          ></span>
 
           <div style={{ marginTop: 10 }}>
             <b>Người hỏi: </b>
