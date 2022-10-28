@@ -136,6 +136,8 @@ function CompanyListPage(props) {
   };
 
   const showModal = () => {
+    setFileListAttachment([]);
+    mode.current = Mode.Create;
     setIsModalOpen(true);
   };
 
