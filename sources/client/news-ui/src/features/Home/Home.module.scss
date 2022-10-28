@@ -46,3 +46,18 @@
         }
     }
 }
+
+@media (max-width: 767px) {
+    .wrapper {
+        padding: 0 4px;
+
+        .section-callout-middle {
+            img {
+                width: 100%;
+            }
+        }
+        .btn-call-out {
+            margin-top: 4px;
+        }
+    }
+}

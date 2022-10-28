@@ -25,14 +25,14 @@ function FooterSection(props) {
     return (
         <div className={cx('wrapper')}>
             <Row gutter={64}>
-                <Col span={12}>
+                <Col md={12} sm={24}>
                     <div className={cx('title')}>CƠ QUAN CHỦ QUẢN: Ủy ban nhân dẫn xã Đông Cuông</div>
                     <div className={cx('content-item')}>Giấy phép thiết lập Trang thông tin điện tử số 18/GP-TTĐT do Cục phát thanh, truyền hình và thông tin điên tử cấp ngày 15/03/20216.</div>
                     <div className={cx('content-item')}>Chịu trách nhiệm chính: </div>
                     <div className={cx('content-item')}>Bản quyền thuộc Trung tâm Thông tin.</div>
                     <div className={cx('content-item')}>(Ghi rõ nguồn "https://dongcuong.vanyen.yenbai.gov.vn" khi phát hành lại thông tin từ website này)</div>
                 </Col>
-                <Col span={12}>
+                <Col md={12} sm={24}>
                     <div className={cx('title')}>Liện hệ</div>
                     <div className={cx('content-item')}>
                         <PhoneOutlined />

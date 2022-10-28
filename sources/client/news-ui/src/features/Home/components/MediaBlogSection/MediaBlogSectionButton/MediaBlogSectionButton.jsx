@@ -19,23 +19,10 @@ MediaBlogSectionButton.defaultProps = {};
 function MediaBlogSectionButton(props) {
     const { href, label, imageName, size } = props;
 
-    let sizeImage = 24;
-    let marginImage = 8;
-    let fontSize = '21px';
-    switch (size) {
-        case 'small':
-            sizeImage = 16;
-            marginImage = 6;
-            fontSize = '16px';
-            break;
-        default:
-            break;
-    }
-
     return (
-        <Link className={cx('btn-wrapper')} underline='none' to={href}>
-            <img src={imageHelper.getLinkImageUrl(imageName)} alt='' height={sizeImage} style={{ marginRight: marginImage }} />
-            <span style={{ fontSize: fontSize }}>{label}</span>
+        <Link className={cx(`btn-wrapper`, size)} underline='none' to={href}>
+            <img src={imageName} alt='' />
+            <span>{label}</span>
         </Link>
     );
 }

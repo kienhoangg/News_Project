@@ -67,7 +67,7 @@ namespace News.API.Controllers
                 List<string> lstStringFile = new List<string>();
                 foreach (var item in photoUploadDto.FileAttachment)
                 {
-                    lstStringFile.Add(await item.UploadFile(CommonConstants.FILE_ATTACHMENT_PATH));
+                    lstStringFile.Add(await item.UploadFile(CommonConstants.IMAGES_PATH));
                 }
                 fileAttachmentPath = String.Join(";;", lstStringFile.ToArray());
             }
@@ -130,32 +130,23 @@ namespace News.API.Controllers
                 List<string> lstStringFile = new List<string>();
                 foreach (var item in photoUploadDto.FileAttachment)
                 {
-                    lstStringFile.Add(await item.UploadFile(CommonConstants.FILE_ATTACHMENT_PATH));
+                    lstStringFile.Add(await item.UploadFile(CommonConstants.IMAGES_PATH));
                 }
-                fileAttachmentPath = String.Join(";;", lstStringFile.ToArray());
+                fileAttachmentPath += ";;" + String.Join(";;", lstStringFile.ToArray());
+                if (fileAttachmentPath.StartsWith(";;"))
+                {
+                    fileAttachmentPath = fileAttachmentPath.Remove(0, 2);
+                }
             }
             photoUpdated.ImagePath = fileAttachmentPath;
             await _photoService.UpdatePhoto(photoUpdated);
-            if (fileAttachmentPath != tempFileAttachmentPath)
+            foreach (var item in tempFileAttachmentPath.Split(";;"))
             {
-                if (!string.IsNullOrEmpty(tempFileAttachmentPath) && tempFileAttachmentPath.Contains(";;"))
-                {
-                    foreach (var item in tempFileAttachmentPath.Split(";;"))
-                    {
-                        FileInfo fileFileAttachment =
-                                                       new FileInfo(Directory.GetCurrentDirectory() +
-                                                           "/wwwroot" + item);
-                        if (fileFileAttachment.Exists)
-                        {
-                            fileFileAttachment.Delete();
-                        }
-                    }
-                }
-                else
+                if (!fileAttachmentPath.Split(";;").Contains(item))
                 {
                     FileInfo fileFileAttachment =
-                                                        new FileInfo(Directory.GetCurrentDirectory() +
-                                                            "/wwwroot" + tempFileAttachmentPath);
+                                                                  new FileInfo(Directory.GetCurrentDirectory() +
+                                                                      "/wwwroot" + item);
                     if (fileFileAttachment.Exists)
                     {
                         fileFileAttachment.Delete();

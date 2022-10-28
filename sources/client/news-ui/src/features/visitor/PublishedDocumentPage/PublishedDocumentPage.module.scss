@@ -124,3 +124,16 @@
         }
     }
 }
+
+@media (max-width: 767px) {
+    .wrapper {
+        .document-container {
+            .info-extension {
+                .align-center {
+                    padding-left: 8px;
+                    margin-bottom: 8px;
+                }
+            }
+        }
+    }
+}

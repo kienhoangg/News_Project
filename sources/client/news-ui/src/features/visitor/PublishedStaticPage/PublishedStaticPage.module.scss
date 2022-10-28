@@ -112,3 +112,15 @@
         }
     }
 }
+
+@media (max-width: 767px) {
+    .wrapper {
+        .time {
+            margin-bottom: 2px;
+        }
+
+        .sm-justify-start {
+            justify-content: start;
+        }
+    }
+}

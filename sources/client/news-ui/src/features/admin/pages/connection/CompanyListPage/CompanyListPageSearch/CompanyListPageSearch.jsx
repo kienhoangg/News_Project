@@ -1,16 +1,16 @@
 import { FileAddFilled, SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Input, Row } from 'antd';
 import classNames from 'classnames/bind';
-import styles from './ConnectionListPageSearch.module.scss';
+import styles from './CompanyListPageSearch.module.scss';
 import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-ConnectionListPageSearch.propTypes = {};
+CompanyListPageSearch.propTypes = {};
 
-ConnectionListPageSearch.defaultProps = {};
+CompanyListPageSearch.defaultProps = {};
 
-function ConnectionListPageSearch(props) {
+function CompanyListPageSearch(props) {
   const { setTextSearch } = props;
   const [keyword, setKeyword] = useState('');
 
@@ -60,4 +60,4 @@ function ConnectionListPageSearch(props) {
   );
 }
 
-export default ConnectionListPageSearch;
+export default CompanyListPageSearch;

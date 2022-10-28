@@ -28,14 +28,14 @@ function BlogSection(props) {
     return (
         <div className={cx('wrapper')}>
             <Row className='h-100'>
-                <Col span={18} className={cx('left')}>
+                <Col md={18} sm={24} className={cx('left')}>
                     <Row className={cx('left-preview')}>
-                        <Col span={16} className={cx('preview-content')}>
+                        <Col md={16} sm={24} className={cx('preview-content')}>
                             <Skeleton loading={isLoading} active>
                                 <>{dataPreview && <BlogSectionShortNews data={dataPreview} />}</>
                             </Skeleton>
                         </Col>
-                        <Col span={8} className={cx('preview-news')}>
+                        <Col md={8} sm={24} className={cx('preview-news')}>
                             <Skeleton loading={isLoading} active>
                                 <BlogSectionShortList onHover={onHover} listData={newsHots} />
                             </Skeleton>
@@ -49,7 +49,7 @@ function BlogSection(props) {
                         </Col>
                     </Row>
                 </Col>
-                <Col span={6} className={cx('blog-right') + ' h-100'}>
+                <Col md={6} sm={24} className={cx('blog-right') + ' h-100'}>
                     <div className={cx('container')}>
                         <div className={cx('list-news')}>
                             <BlogSectionListNews DocumentHots={documentHots} isLoading={isLoading} />

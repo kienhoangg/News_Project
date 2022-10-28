@@ -7,7 +7,7 @@ import { Button, Space, Table, Tag, Modal } from 'antd';
 import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
 import classNames from 'classnames/bind';
-import styles from './ConnectionTableData.module.scss';
+import styles from './CompanyListTableData.module.scss';
 import { Direction, NotificationType } from 'common/enum';
 import commonFunc from 'common/commonFunc';
 import { Role } from 'common/constant';
@@ -15,11 +15,11 @@ import { openNotification } from 'helpers/notification';
 
 const cx = classNames.bind(styles);
 
-ConnectionTableData.propTypes = {};
+CompanyListTableData.propTypes = {};
 
-ConnectionTableData.defaultProps = {};
+CompanyListTableData.defaultProps = {};
 
-function ConnectionTableData(props) {
+function CompanyListTableData(props) {
   const {
     data,
     setPagination,
@@ -64,17 +64,10 @@ function ConnectionTableData(props) {
       sorter: (a, b) => a.Link - b.Link,
     },
     {
-      key: 'CategoryText',
-      dataIndex: 'CategoryText',
-      title: 'Danh mục',
-      width: 150,
-      render: (text) => <div>{text}</div>,
-      sorter: (a, b) => a.CategoryText - b.CategoryText,
-    },
-    {
       key: 'status',
       dataIndex: 'Status',
       title: 'Trạng thái',
+      align: 'center',
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
@@ -218,4 +211,4 @@ function ConnectionTableData(props) {
   );
 }
 
-export default ConnectionTableData;
+export default CompanyListTableData;

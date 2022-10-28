@@ -39,6 +39,10 @@ import StaticContentListPage from 'features/admin/pages/staticInfor/StaticConten
 import StaticCategoryListPage from 'features/admin/pages/staticInfor/StaticCategory/StaticCategoryListPage';
 import QuestionDetailPage from 'features/visitor/QuestionDetailPage/QuestionDetailPage';
 import PublishedStaticPage from 'features/visitor/PublishedStaticPage/PublishedStaticPage';
+import CompanyListPage from './../features/admin/pages/connection/CompanyListPage/CompanyListPage';
+import CompanyCategoryPage from './../features/admin/pages/connection/CompanyCategoryPage/CompanyCategoryPage';
+import ConnectionListPage from 'features/admin/pages/connection/ConnectionListPage/ConnectionListPage';
+import ConnectionCategoryPage from '../features/admin/pages/connection/ConnectionCategoryPage/ConnectionCategoryPage';
 
 // Public routes
 const publicRoutes = [
@@ -179,13 +183,23 @@ const publicRoutes = [
     layout: AdminLayout,
   },
   {
+    path: config.routes.adminCompanyCategory,
+    component: CompanyCategoryPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminCompanyList,
+    component: CompanyListPage,
+    layout: AdminLayout,
+  },
+  {
     path: config.routes.adminConnectionCategory,
-    component: VideoListPage,
+    component: ConnectionCategoryPage,
     layout: AdminLayout,
   },
   {
     path: config.routes.adminConnectionList,
-    component: VideoCategoryPage,
+    component: ConnectionListPage,
     layout: AdminLayout,
   },
   {

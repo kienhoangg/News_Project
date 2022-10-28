@@ -1,18 +1,18 @@
 import { Divider } from 'antd';
-import connectionApi from 'apis/ConnectionApi';
+import advertisementApi from 'apis/AdvertisementApi';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import styles from './ConnectionCategoryPage.module.scss';
-import ConnectionCategoryPageSearch from './ConnectionCategoryPageSearch/ConnectionCategoryPageSearch';
-import ConnectionCategoryTableData from './ConnectionCategoryTableData/ConnectionCategoryTableData';
+import styles from './AdvertisementCategoryPage.module.scss';
+import AdvertisementCategoryPageSearch from './AdvertisementCategoryPageSearch/AdvertisementCategoryPageSearch';
+import AdvertisementCategoryTableData from './AdvertisementCategoryTableData/AdvertisementCategoryTableData';
 
 const cx = classNames.bind(styles);
 
-ConnectionCategoryPage.propTypes = {};
+AdvertisementCategoryPage.propTypes = {};
 
-ConnectionCategoryPage.defaultProps = {};
+AdvertisementCategoryPage.defaultProps = {};
 
-function ConnectionCategoryPage(props) {
+function AdvertisementCategoryPage(props) {
     const [newsData, setNewsData] = useState({});
 
     useEffect(() => {
@@ -22,7 +22,7 @@ function ConnectionCategoryPage(props) {
                     _page: 1,
                     _limit: 10,
                 };
-                const response = await connectionApi.getConnectionCategoryAll(params);
+                const response = await advertisementApi.getAdvertisementCategoryAll(params);
                 setNewsData(response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
@@ -34,14 +34,14 @@ function ConnectionCategoryPage(props) {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('top')}>
-                <ConnectionCategoryPageSearch />
+                <AdvertisementCategoryPageSearch />
             </div>
             <Divider style={{ margin: '0' }} />
             <div className={cx('table-data')}>
-                <ConnectionCategoryTableData data={newsData} />
+                <AdvertisementCategoryTableData data={newsData} />
             </div>
         </div>
     );
 }
 
-export default ConnectionCategoryPage;
+export default AdvertisementCategoryPage;

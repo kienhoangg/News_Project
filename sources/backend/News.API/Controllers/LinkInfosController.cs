@@ -41,13 +41,41 @@ namespace News.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult>
-        CreateLinkInfoDto([FromBody] LinkInfoDto linkInfoDto)
+       CreateLinkInfoDto([FromForm] LinkInfoUploadDto linkInfoUploadDto)
         {
-            var linkInfo = _mapper.Map<LinkInfo>(linkInfoDto);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<LinkInfo
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            var linkInfo = _serializeService
+                  .Deserialize<LinkInfo>(linkInfoUploadDto.JsonString);
+            // Upload file attachment if exist
+            if (linkInfoUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await linkInfoUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.IMAGES_PATH);
+            }
+            linkInfo.Avatar = fileAttachmentPath;
             await _linkInfoService.CreateLinkInfo(linkInfo);
+
             var result = _mapper.Map<LinkInfoDto>(linkInfo);
             return Ok(result);
         }
+
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetLinkInfoById([Required] int id)

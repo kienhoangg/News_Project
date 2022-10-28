@@ -1,10 +1,9 @@
-import { Divider, Form, Input, Upload, Button, Select } from 'antd';
-import { useEffect, useState } from 'react';
-import ConnectionListPageSearch from './ConnectionListPageSearch/ConnectionListPageSearch';
-import ConnectionTableData from './ConnectionTableData/ConnectionTableData';
-
+import { Divider, Form, Input, Button, Select, Upload } from 'antd';
 import classNames from 'classnames/bind';
-import styles from './ConnectionListPage.module.scss';
+import { useEffect, useState } from 'react';
+import styles from './CompanyListPage.module.scss';
+import CompanyListTableData from './CompanyListTableData/CompanyListTableData';
+import CompanyListPageSearch from './CompanyListPageSearch/CompanyListPageSearch';
 import linkAndCompanyApi from 'apis/linkAndCompanyApi';
 import { useRef } from 'react';
 import { Direction, NotificationType } from 'common/enum';
@@ -17,7 +16,6 @@ import commonFunc from 'common/commonFunc';
 import convertHelper from 'helpers/convertHelper';
 import imageHelper from 'helpers/imageHelper';
 import { envDomainBackend } from 'common/enviroments';
-
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -34,13 +32,14 @@ const Mode = {
   Create: 1,
   Edit: 0,
 };
+
 const cx = classNames.bind(styles);
 
-ConnectionListPage.propTypes = {};
+CompanyListPage.propTypes = {};
 
-ConnectionListPage.defaultProps = {};
+CompanyListPage.defaultProps = {};
 
-function ConnectionListPage(props) {
+function CompanyListPage(props) {
   const [newsData, setNewsData] = useState({});
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
@@ -85,7 +84,7 @@ function ConnectionListPage(props) {
    */
   const fetchProductList = async () => {
     try {
-      const response = await linkAndCompanyApi.getLinkInfoAll(objFilter);
+      const response = await linkAndCompanyApi.getCompanyAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
         total: response?.PagedData?.RowCount ?? 0,
@@ -97,7 +96,7 @@ function ConnectionListPage(props) {
 
   const getDataFilter = async () => {
     const responseCategoryAll =
-      linkAndCompanyApi.getLinkInfoCategoryAll(filterAll);
+      linkAndCompanyApi.getCompanyInfoCategoryAll(filterAll);
 
     Promise.all([responseCategoryAll]).then((values) => {
       setDataFilter({
@@ -128,7 +127,7 @@ function ConnectionListPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
-      await linkAndCompanyApi.deleteLinkInfo(id);
+      await linkAndCompanyApi.deleteCompany(id);
       openNotification('Xóa doanh nghiệp thành công');
       fetchProductList();
     } catch (error) {
@@ -152,15 +151,15 @@ function ConnectionListPage(props) {
    * @param {*} values Đối tượng submit form
    */
   const onFinish = (values) => {
-    const { Title, Order, LinkInfoCategoryId, Link } = values;
+    const { Title, Order, CompanyInfoCategoryId, Link } = values;
     let bodyData = {
       Title,
       Order,
-      LinkInfoCategoryId,
+      CompanyInfoCategoryId,
       Link,
     };
-    if (LinkInfoCategoryId) {
-      bodyData.LinkInfoCategoryId = parseInt(LinkInfoCategoryId);
+    if (CompanyInfoCategoryId) {
+      bodyData.CompanyInfoCategoryId = parseInt(CompanyInfoCategoryId);
     }
     let body = { JsonString: bodyData };
 
@@ -208,9 +207,9 @@ function ConnectionListPage(props) {
         formData.append('FileAttachment', values.FileAttachment);
       }
       if (mode.current === Mode.Create) {
-        await linkAndCompanyApi.insertLinkInfo(formData);
+        await linkAndCompanyApi.insertCompany(formData);
       } else {
-        await linkAndCompanyApi.updateLinkInfo(idEdit.current, formData);
+        await linkAndCompanyApi.updateCompany(idEdit.current, formData);
       }
 
       openNotification('Thành công');
@@ -223,7 +222,7 @@ function ConnectionListPage(props) {
 
   const handleUpdateStatusNew = async (values) => {
     try {
-      await linkAndCompanyApi.updateStatusLinkInfo({
+      await linkAndCompanyApi.updateStatusCompany({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
         Field: TypeUpdate.STATUS,
@@ -246,7 +245,7 @@ function ConnectionListPage(props) {
 
   const fetchItem = async (values) => {
     try {
-      return await linkAndCompanyApi.getLinkInfoById(values?.Id);
+      return await linkAndCompanyApi.getCompanyById(values?.Id);
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
@@ -268,13 +267,13 @@ function ConnectionListPage(props) {
   );
 
   const handleEdit = async (id) => {
-    const res = await linkAndCompanyApi.getLinkInfoById(id);
+    const res = await linkAndCompanyApi.getCompanyById(id);
     idEdit.current = id;
     mode.current = Mode.Edit;
     form?.setFieldsValue({
       Title: res?.Title,
       Link: res?.Link,
-      LinkInfoCategoryId: res?.LinkInfoCategoryId,
+      CompanyInfoCategoryId: res?.CompanyInfoCategoryId,
       Order: res?.Order,
     });
 
@@ -310,7 +309,7 @@ function ConnectionListPage(props) {
             <Input />
           </Form.Item>
 
-          <Form.Item label='Danh mục liên kết' name='LinkInfoCategoryId'>
+          <Form.Item label='Danh mục doanh nghiệp' name='CompanyInfoCategoryId'>
             {renderStaticCategoryId}
           </Form.Item>
 
@@ -343,7 +342,7 @@ function ConnectionListPage(props) {
       </Modal>
 
       <div className={cx('top')}>
-        <ConnectionListPageSearch setTextSearch={handleChangeTextSearch} />
+        <CompanyListPageSearch setTextSearch={handleChangeTextSearch} />
         <div className={cx('btn-add-source-news')}>
           <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
@@ -352,7 +351,7 @@ function ConnectionListPage(props) {
       </div>
       <Divider style={{ margin: '0' }} />
       <div className={cx('table-data')}>
-        <ConnectionTableData
+        <CompanyListTableData
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
@@ -365,4 +364,4 @@ function ConnectionListPage(props) {
   );
 }
 
-export default ConnectionListPage;
+export default CompanyListPage;

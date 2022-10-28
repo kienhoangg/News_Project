@@ -74,12 +74,12 @@ function ListSection(props) {
     }
     return (
         <Row gutter={16} className={cx('wrapper')}>
-            <Col span={8}>
+            <Col md={8} sm={24}>
                 {LIST_BUTON.map((item) => {
                     return <ListSectionButton href={item.Href} imageName={item.Image} key={item.Label} label={item.Label} />;
                 })}
             </Col>
-            <Col span={8}>
+            <Col md={8} sm={24}>
                 <div className={cx('list-document')}>
                     <Row gutter={0} className={cx('list-card')}>
                         <Col span={12}>Dạng văn bản</Col>
@@ -110,7 +110,7 @@ function ListSection(props) {
                     </div>
                 </div>
             </Col>
-            <Col span={8}>
+            <Col md={8} sm={24}>
                 <div className={cx('list-news')}>
                     <Row gutter={0} className={cx('list-card')} justify='space-between'>
                         <Col span={12}>Dạng tin tức</Col>
