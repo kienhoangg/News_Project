@@ -65,6 +65,8 @@ function ImageListPage(props) {
     setFileListAttachment(newFileList);
   };
 
+  const urlLinkResponve = useRef('');
+
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
@@ -93,6 +95,7 @@ function ImageListPage(props) {
       });
 
       if (res?.ImagePath) {
+        urlLinkResponve.current = res?.ImagePath;
         let links = res?.ImagePath.split(';;');
         let linksObject = [];
         for (let i = 0; i < links.length; i++) {
@@ -269,36 +272,38 @@ function ImageListPage(props) {
     }
     let body = { JsonString: bodyData };
 
-    if (
-      fileListAttachment.length > 0 &&
-      !fileListAttachment?.[0]?.isFileFormServer
-    ) {
-      let listFileUpload = [];
-      for (let i = 0; i < fileListAttachment.length; i++) {
-        const file = fileListAttachment[i].originFileObj;
-        if (file.size > LIMIT_UP_LOAD_FILE) {
-          openNotification(
-            `File thứ ${i + 1} đã lớn hơn 2MB`,
-            '',
-            NotificationType.ERROR
-          );
-          return;
-        }
-        listFileUpload.push(file);
+    const _fileListAttachment = [...fileListAttachment];
+    let fileUploadCurrent = [];
+    let urlPath = '';
+    for (let file of _fileListAttachment) {
+      if (file?.isFileFormServer) {
+        urlPath += `${file.url.replaceAll(envDomainBackend, '')};;`;
+        continue;
       }
-
-      body.FileAttachment = listFileUpload;
-    } else if (
-      fileListAttachment?.[0]?.isFileFormServer &&
-      fileListAttachment.length > 0 &&
-      isModalOpen?.type === MODAL_TYPE.EDIT
-    ) {
-      bodyData = {
-        ...bodyData,
-        ImagePath: isModalOpen?.imageDetail?.ImagePath,
-      };
+      fileUploadCurrent.push(file);
+    }
+    let listFileUpload = [];
+    for (let i = 0; i < fileUploadCurrent.length; i++) {
+      const file = fileUploadCurrent[i].originFileObj;
+      if (file.size > LIMIT_UP_LOAD_FILE) {
+        openNotification(
+          `File thứ ${i + 1} đã lớn hơn 2MB`,
+          '',
+          NotificationType.ERROR
+        );
+        return;
+      }
+      listFileUpload.push(file);
     }
 
+    body.FileAttachment = listFileUpload;
+
+    if (urlPath.length > 0 && isModalOpen?.type === MODAL_TYPE.EDIT) {
+      bodyData = {
+        ...bodyData,
+        ImagePath: urlPath.substring(0, urlPath.length - 2), // -2 dấu ;; ở cuối
+      };
+    }
     body = { ...body, JsonString: bodyData };
 
     onCreate(body);

@@ -1,0 +1,16 @@
+.wrapper {
+    box-sizing: content-box;
+    // height: 100%;
+    // overflow: auto;
+
+    .top {
+        padding-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .table-data {
+        padding-top: 8px;
+        flex: 1;
+    }
+}
