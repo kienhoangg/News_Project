@@ -56,3 +56,16 @@
         align-items: center;
     }
 }
+
+@media (max-width: 767px) {
+    .wrapper {
+        height: auto;
+
+        .preview-news {
+            margin-top: 8px;
+        }
+
+        .blog-right {
+        }
+    }
+}

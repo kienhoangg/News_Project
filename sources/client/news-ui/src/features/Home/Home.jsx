@@ -64,12 +64,12 @@ function Home(props) {
 
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>
-                    <Col span={12}>
+                    <Col md={12} sm={24}>
                         <Link to='/' underline='none'>
-                            <img src={Images.CONG_DICH_VU} alt='' />
+                            <img src={Images.CONG_DICH_VU} alt='' width={'100%'} />
                         </Link>
                     </Col>
-                    <Col span={12}>
+                    <Col md={12} sm={24}>
                         <div className={cx('btn-call-out')}>
                             <Link to='/' underline='none' color='inherit'>
                                 <div>CÔNG DÂN DOANH NGHIỆP MỚI</div>

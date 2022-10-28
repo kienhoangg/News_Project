@@ -22,7 +22,7 @@ function SearchBar(props) {
     return (
         <div className={cx('wrapper')}>
             <Row gutter={8} style={{ width: '100%' }}>
-                <Col className={cx('col')} span={13}>
+                <Col className={cx('col')} md={13} xs={24}>
                     <Row align='middle'>
                         <Search
                             placeholder='Nhập từ khóa tìm kiếm'
@@ -34,7 +34,7 @@ function SearchBar(props) {
                         />
                     </Row>
                 </Col>
-                <Col span={7}>
+                <Col md={7} xs={24}>
                     <div className={cx('btn-group')}>
                         <Link className={cx('btn-item')} to={routes.publishedIntroduce}>
                             Giới thiệu chung
@@ -47,7 +47,7 @@ function SearchBar(props) {
                         </Link>
                     </div>
                 </Col>
-                <Col span={4}>
+                <Col md={4} xs={24}>
                     <div className={cx('weather')}>
                         <div className={cx('weather-label')}>Yên bái</div>
                         <div className={cx('weather-value')}>27.3 - 29.3</div>
