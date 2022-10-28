@@ -85,7 +85,7 @@ function ConnectionListPage(props) {
    */
   const fetchProductList = async () => {
     try {
-      const response = await linkAndCompanyApi.getCompanyAll(objFilter);
+      const response = await linkAndCompanyApi.getLinkInfoAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
         total: response?.PagedData?.RowCount ?? 0,
@@ -97,7 +97,7 @@ function ConnectionListPage(props) {
 
   const getDataFilter = async () => {
     const responseCategoryAll =
-      linkAndCompanyApi.getCompanyInfoCategoryAll(filterAll);
+      linkAndCompanyApi.getLinkInfoCategoryAll(filterAll);
 
     Promise.all([responseCategoryAll]).then((values) => {
       setDataFilter({
@@ -128,7 +128,7 @@ function ConnectionListPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
-      await linkAndCompanyApi.deleteCompany(id);
+      await linkAndCompanyApi.deleteLinkInfo(id);
       openNotification('Xóa doanh nghiệp thành công');
       fetchProductList();
     } catch (error) {
@@ -137,6 +137,7 @@ function ConnectionListPage(props) {
   };
 
   const showModal = () => {
+    setFileListAttachment([]);
     setIsModalOpen(true);
   };
 
@@ -150,15 +151,15 @@ function ConnectionListPage(props) {
    * @param {*} values Đối tượng submit form
    */
   const onFinish = (values) => {
-    const { Title, Order, CompanyInfoCategoryId, Link } = values;
+    const { Title, Order, LinkInfoCategoryId, Link } = values;
     let bodyData = {
       Title,
       Order,
-      CompanyInfoCategoryId,
+      LinkInfoCategoryId,
       Link,
     };
-    if (CompanyInfoCategoryId) {
-      bodyData.CompanyInfoCategoryId = parseInt(CompanyInfoCategoryId);
+    if (LinkInfoCategoryId) {
+      bodyData.LinkInfoCategoryId = parseInt(LinkInfoCategoryId);
     }
     let body = { JsonString: bodyData };
 
@@ -206,9 +207,9 @@ function ConnectionListPage(props) {
         formData.append('FileAttachment', values.FileAttachment);
       }
       if (mode.current === Mode.Create) {
-        await linkAndCompanyApi.insertCompany(formData);
+        await linkAndCompanyApi.insertLinkInfo(formData);
       } else {
-        await linkAndCompanyApi.updateCompany(idEdit.current, formData);
+        await linkAndCompanyApi.updateLinkInfo(idEdit.current, formData);
       }
 
       openNotification('Thành công');
@@ -221,7 +222,7 @@ function ConnectionListPage(props) {
 
   const handleUpdateStatusNew = async (values) => {
     try {
-      await linkAndCompanyApi.updateStatusCompany({
+      await linkAndCompanyApi.updateStatusLinkInfo({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
         Field: TypeUpdate.STATUS,
@@ -244,7 +245,7 @@ function ConnectionListPage(props) {
 
   const fetchItem = async (values) => {
     try {
-      return await linkAndCompanyApi.getCompanyById(values?.Id);
+      return await linkAndCompanyApi.getLinkInfoById(values?.Id);
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
@@ -266,13 +267,13 @@ function ConnectionListPage(props) {
   );
 
   const handleEdit = async (id) => {
-    const res = await linkAndCompanyApi.getCompanyById(id);
+    const res = await linkAndCompanyApi.getLinkInfoById(id);
     idEdit.current = id;
     mode.current = Mode.Edit;
     form?.setFieldsValue({
       Title: res?.Title,
       Link: res?.Link,
-      CompanyInfoCategoryId: res?.CompanyInfoCategoryId,
+      LinkInfoCategoryId: res?.LinkInfoCategoryId,
       Order: res?.Order,
     });
 
@@ -308,7 +309,7 @@ function ConnectionListPage(props) {
             <Input />
           </Form.Item>
 
-          <Form.Item label='Danh mục doanh nghiệp' name='CompanyInfoCategoryId'>
+          <Form.Item label='Danh mục liên kết' name='LinkInfoCategoryId'>
             {renderStaticCategoryId}
           </Form.Item>
 
