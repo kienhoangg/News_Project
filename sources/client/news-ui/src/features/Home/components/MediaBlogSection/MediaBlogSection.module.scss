@@ -1,7 +1,6 @@
 .navbar {
     display: flex;
     align-items: center;
-
     height: 60px;
     background-color: var(--default-bg);
 
@@ -16,4 +15,13 @@
 }
 
 .carousel {
+}
+
+@media (max-width: 767px) {
+    .navbar {
+        height: auto;
+    }
+
+    .navbar-right {
+    }
 }

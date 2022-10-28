@@ -5,7 +5,7 @@ import styles from './MediaBlogSection.module.scss';
 import MediaBlogSectionBanner from './MediaBlogSectionBanner/MediaBlogSectionBanner';
 import MediaBlogSectionButton from './MediaBlogSectionButton/MediaBlogSectionButton';
 import PropTypes from 'prop-types';
-import { Skeleton } from 'antd';
+import { Col, Row, Skeleton } from 'antd';
 
 const cx = classNames.bind(styles);
 
@@ -22,19 +22,27 @@ function MediaBlogSection(props) {
     const { isLoading, AlbumImages } = props;
 
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('navbar')}>
-                <div className={cx('navbar-left')}>
-                    <MediaBlogSectionButton href={'/'} size='large' label='MULTIMEDIA' imageName={Images.MULTIMEDIA} />
-                </div>
-                <div className={cx('navbar-right')}>
-                    <MediaBlogSectionButton href={routes.publishedVideos} size='small' label='Video' imageName={Images.VIDEO} />
-                    <MediaBlogSectionButton href={'/'} size='small' label='Radio News' imageName={Images.RADIO} />
-                    <MediaBlogSectionButton href={'/'} size='small' label='Infographics' imageName={Images.INFOGRAPHICS} />
-                    <MediaBlogSectionButton href={routes.publishedPhotos} size='small' label='Photos' imageName={Images.PHOTO} />
-                </div>
-            </div>
-            <div className={cx('carousel')}>
+        <Row gutter={8}>
+            <Col span={24} gutter={8}>
+                <Row className={cx('navbar')}>
+                    <Col md={12}>
+                        <div className={cx('navbar-left')}>
+                            <MediaBlogSectionButton href={'/'} size='large' label='MULTIMEDIA' imageName={Images.MULTIMEDIA} />
+                        </div>
+                    </Col>
+                    <Col md={12}>
+                        <Row justify='end'>
+                            <Col span={24} className={cx('navbar-right')}>
+                                <MediaBlogSectionButton href={routes.publishedVideos} size='small' label='Video' imageName={Images.VIDEO} />
+                                <MediaBlogSectionButton href={'/'} size='small' label='Radio News' imageName={Images.RADIO} />
+                                <MediaBlogSectionButton href={'/'} size='small' label='Infographics' imageName={Images.INFOGRAPHICS} />
+                                <MediaBlogSectionButton href={routes.publishedPhotos} size='small' label='Photos' imageName={Images.PHOTO} />
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            </Col>
+            <Col span={24} className={cx('carousel')}>
                 {isLoading ? (
                     <Skeleton.Image loading={isLoading} style={{ width: '998px', height: 300 }} active></Skeleton.Image>
                 ) : (
@@ -42,8 +50,8 @@ function MediaBlogSection(props) {
                         <MediaBlogSectionBanner AlbumImages={AlbumImages} />
                     </>
                 )}
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 }
 
