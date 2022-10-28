@@ -77,7 +77,6 @@ namespace News.API.Controllers
         }
 
 
-
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetLinkInfoById([Required] int id)
         {
