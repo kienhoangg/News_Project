@@ -2,10 +2,22 @@ import {
   CheckOutlined,
   CloseOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   FileAddFilled,
+  InfoCircleOutlined,
   LineOutlined,
 } from '@ant-design/icons';
-import { Tree, Button, Modal, Form, Select, Input, Checkbox } from 'antd';
+import {
+  Tree,
+  Button,
+  Modal,
+  Form,
+  Select,
+  Input,
+  Checkbox,
+  Row,
+  Col,
+} from 'antd';
 import setupApi from 'apis/setupApi';
 import classNames from 'classnames/bind';
 import commonFunc from 'common/commonFunc';
@@ -15,6 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './MenuPage.module.scss';
 import MenuSearch from './MenuSearch/MenuSearch';
 import { Option } from 'antd/lib/mentions';
+import { TypeUpdate, Role } from 'common/constant';
 const { DirectoryTree } = Tree;
 const layout = {
   labelCol: { span: 8 },
@@ -46,6 +59,8 @@ function MenuPage(props) {
   const [form] = Form.useForm();
   const mode = useRef(Mode.Create);
   const idEdit = useRef(-1);
+  const [isShowDetail, setIsShowDetail] = useState(false);
+  const detail = useRef({});
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
@@ -98,47 +113,115 @@ function MenuPage(props) {
 
     setIsModalOpen(true);
   }
-  function disableMenu() {
-    console.log('disableMenu');
-  }
-  function displayMenu() {
-    console.log('displayMenu');
+
+  async function displayMenu(id, status) {
+    const role = commonFunc.getCookie('role');
+    if (role !== Role.ADMIN) {
+      openNotification(
+        <>
+          Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+
+      return;
+    }
+    Modal.confirm({
+      title: 'Cập nhật trạng thái',
+      icon: <ExclamationCircleOutlined />,
+      content: (
+        <>
+          Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+        </>
+      ),
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
+      onOk: async () => {
+        try {
+          await setupApi.updateStatusMenu({
+            Ids: [id],
+            Value: status === 0 ? 1 : 0,
+            Field: TypeUpdate.STATUS,
+          });
+          getMenuAll();
+          openNotification('Cập nhật thành công');
+        } catch (error) {
+          openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+        }
+      },
+    });
   }
 
-  function deleteMenu() {
-    console.log('deleteMenu');
+  async function deleteMenu(id, status) {
+    if (status) {
+      openNotification(
+        <>
+          <b>Hủy duyệt</b> trước khi xóa
+        </>,
+        '',
+        NotificationType.ERROR
+      );
+      return;
+    }
+    return Modal.confirm({
+      title: 'Xóa menu',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
+      onOk: async () => {
+        try {
+          await setupApi.deleteMenu(id);
+          openNotification('Xóa thành công');
+          getMenuAll();
+        } catch (error) {
+          openNotification('Xóa thất bại', '', NotificationType.ERROR);
+        }
+      },
+    });
+  }
+
+  async function handleShowDetail(Id) {
+    const res = await await setupApi.getMenuById(Id);
+    detail.current = res;
+    setIsShowDetail(true);
   }
 
   const Title = (props) => {
-    const { title, id } = props;
+    const { record } = props;
+    const { Title, Id, Status } = record;
     return (
-      <div
-        onClick={() => handleClickNode(id)}
-        // onMouseLeave={() => xyz(id)}
-        // onBlur={() => xyz(id)}
-        style={{ display: 'flex' }}
-      >
-        <div title={title}>{title}</div>
-        <div style={{ display: displayIcon[id] ? 'block' : 'none' }}>
+      <div onClick={() => handleClickNode(Id)} style={{ display: 'flex' }}>
+        <div
+          title={Title}
+          style={{
+            textDecoration: Status ? 'none' : 'line-through',
+            fontStyle: Status ? 'normal' : 'italic',
+          }}
+        >
+          {Title}
+        </div>
+        <div style={{ display: displayIcon[Id] ? 'block' : 'none' }}>
+          <InfoCircleOutlined
+            title='Chi tiết'
+            style={{ margin: '0 10px', padding: 4, cursor: 'pointer' }}
+            onClick={() => handleShowDetail(Id)}
+          />
           <EditOutlined
             title='Sửa menu'
-            style={{ margin: '0 10px', padding: 4 }}
-            onClick={() => editMenu(id)}
-          />
-          <CheckOutlined
-            title='Đang hiện thị'
-            style={{ margin: '0 10px', padding: 4 }}
-            onClick={disableMenu}
+            style={{ margin: '0 10px', padding: 4, cursor: 'pointer' }}
+            onClick={() => editMenu(Id)}
           />
           <LineOutlined
-            title='Đang ẩn'
-            style={{ margin: '0 10px', padding: 4 }}
-            onClick={displayMenu}
+            title='Duyệt/Hủy duyệt'
+            style={{ margin: '0 10px', padding: 4, cursor: 'pointer' }}
+            onClick={() => displayMenu(Id, Status)}
           />
           <CloseOutlined
             title='Xóa menu'
-            style={{ margin: '0 10px', padding: 4 }}
-            onClick={deleteMenu}
+            style={{ margin: '0 10px', padding: 4, cursor: 'pointer' }}
+            onClick={() => deleteMenu(Id, Status)}
           />
         </div>
       </div>
@@ -307,9 +390,67 @@ function MenuPage(props) {
         defaultExpandAll={true}
         treeData={commonFunc.list_to_tree(dataTree)}
         titleRender={(nodeData) => {
-          return <Title title={nodeData.Title} id={nodeData.key} />;
+          return <Title record={nodeData} />;
         }}
       />
+
+      <Modal
+        open={isShowDetail}
+        title='Hiển thị thông tin'
+        okButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        cancelText='Thoát'
+        onCancel={() => {
+          setIsShowDetail(false);
+        }}
+      >
+        <Row gutter={8}>
+          <Col span={16}>
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Tiêu đề</div>
+              </Col>
+              <Col span={14}>
+                <div>{detail.current?.Title}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Danh mục cấp cha</div>
+              </Col>
+              <Col span={14}>
+                <div>
+                  {dataResource.current.find(
+                    (x) => x.Id === detail.current?.ParentId
+                  )?.Title ?? ''}
+                </div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Số thứ tự</div>
+              </Col>
+              <Col span={14}>
+                <div>{detail.current?.Order}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Địa chỉ (Url)</div>
+              </Col>
+              <Col span={14}>
+                <div>{detail.current?.Url}</div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 }

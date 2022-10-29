@@ -13,12 +13,16 @@ class SetupAPI {
     const url = `/menus/${id}`;
     return axiosClient.put(url, body);
   };
+  updateStatusMenu = (body) => {
+    const url = '/menus';
+    return axiosClient.put(url, body);
+  };
   getMenuById = (id) => {
     const url = `/menus/${id}`;
     return axiosClient.get(url);
   };
   deleteMenu = (id) => {
-    const url = `/home/menu/${id}`;
+    const url = `/menus/${id}`;
     return axiosClient.delete(url);
   };
 }

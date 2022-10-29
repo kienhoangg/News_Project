@@ -4,11 +4,23 @@
     // overflow: auto;
 
     .top {
-        padding-bottom: 8px;
-    }
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
 
     .table-data {
         padding-top: 8px;
         flex: 1;
+    }
+}
+
+
+.row-item {
+    margin-bottom: 16px;
+
+    .row-item-label {
+        text-align: right;
+        font-weight: 600;
     }
 }

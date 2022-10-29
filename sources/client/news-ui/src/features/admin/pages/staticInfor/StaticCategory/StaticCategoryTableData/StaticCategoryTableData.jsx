@@ -45,11 +45,13 @@ function StaticCategoryTableData(props) {
       key: 'Title',
       dataIndex: 'Title',
       title: 'Tiêu đề',
-      render: (_, { id, Title }) => (
+      render: (_, { Id, Title }) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            handleOnClickTitle({ id, Title });
+            if (props.showDetail) {
+              props.showDetail(Id);
+            }
           }}
         >
           {Title}
@@ -88,6 +90,13 @@ function StaticCategoryTableData(props) {
       render: (_, record) => (
         <Space size='middle'>
           <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => handleChangeSourceNew(record)}
+          >
+            Sửa
+          </Button>
+          <Button
             type='ghost'
             danger
             icon={<DeleteFilled />}
@@ -108,10 +117,20 @@ function StaticCategoryTableData(props) {
   });
 
   function handleChangeSourceNew(values) {
-    console.log(values);
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
+      return;
+    }
+    if (props.updateData) {
+      props.updateData(values.Id);
+    }
   }
 
   function handleDeleteCategoryNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa danh mục tin',
       icon: <ExclamationCircleOutlined />,
