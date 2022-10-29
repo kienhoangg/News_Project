@@ -31,6 +31,9 @@ function NewsCommentPage(props) {
     data: [],
     total: 0,
   });
+  useEffect(() => {
+    getCategoryNews();
+  }, []);
 
   useEffect(() => {
     fetchProductList();
@@ -49,12 +52,32 @@ function NewsCommentPage(props) {
     }
   };
 
+  const [listCategoryNews, setListCategoryNews] = useState([]);
+
+  const getCategoryNews = async () => {
+    try {
+      const responseCategoryNews = await newsApi.getNewsCategoryAll({
+        pageSize: 9999,
+        currentPage: 1,
+        direction: -1,
+        orderBy: "CreatedDate",
+      });
+      setListCategoryNews(responseCategoryNews?.PagedData?.Results);
+    } catch (err) {}
+  };
+
   /**
    * Sử lý thay đổi text search
    * @param {*} textSearch Từ cần tìm
    */
-  const handleChangeTextSearch = (textSearch) => {
-    setObjFilter({ ...objFilter, keyword: textSearch });
+  const handleChangeTextSearch = (textSearch, categoryNews) => {
+    setObjFilter({
+      ...objFilter,
+      keyword: textSearch,
+      ...(categoryNews || categoryNews === 0
+        ? { categoryNewsId: categoryNews }
+        : {}),
+    });
   };
 
   /**
@@ -104,8 +127,6 @@ function NewsCommentPage(props) {
     wrapperCol: { span: 16 },
   };
 
-  console.log(isModalOpen);
-
   return (
     <div className={cx("wrapper")}>
       <Modal
@@ -125,7 +146,7 @@ function NewsCommentPage(props) {
       >
         <Form form={form} {...layout} name="control-hooks">
           <Form.Item label="Thuộc tin">
-            <div>{isModalOpen?.comment?.NewsContent}</div>
+            <div>{isModalOpen?.comment?.NewsPost?.Title}</div>
           </Form.Item>
 
           <Form.Item label="Người gửi">
@@ -146,7 +167,10 @@ function NewsCommentPage(props) {
         </Form>
       </Modal>
       <div className={cx("top")}>
-        <NewsCommentPageSearch setTextSearch={handleChangeTextSearch} />
+        <NewsCommentPageSearch
+          setTextSearch={handleChangeTextSearch}
+          listCategoryNews={listCategoryNews}
+        />
       </div>
       <Divider style={{ margin: "0" }} />
       <div className={cx("table-data")}>

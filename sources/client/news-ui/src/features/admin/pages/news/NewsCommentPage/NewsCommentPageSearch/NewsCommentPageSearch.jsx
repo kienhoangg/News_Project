@@ -12,9 +12,10 @@ NewsCommentPageSearch.propTypes = {};
 NewsCommentPageSearch.defaultProps = {};
 
 function NewsCommentPageSearch(props) {
-  const { setTextSearch } = props;
+  const { setTextSearch, listCategoryNews } = props;
 
   const [keyword, setKeyword] = useState("");
+  const [categoryNews, setCategoryNews] = useState();
 
   /**
    * Sử lý sự kiện bấp search
@@ -23,7 +24,7 @@ function NewsCommentPageSearch(props) {
     if (!setTextSearch) {
       return;
     }
-    setTextSearch(keyword);
+    setTextSearch(keyword, categoryNews);
   };
 
   /**
@@ -45,16 +46,20 @@ function NewsCommentPageSearch(props) {
             onChange={handleChange}
           />
         </Col>
-        {/* <Col span={4}>
-          <Select placeholder="Danh mục tin" style={{ width: "100%" }}>
+        <Col span={4}>
+          <Select
+            placeholder="Danh mục tin"
+            style={{ width: "100%" }}
+            onChange={(id) => setCategoryNews(id)}
+          >
             <Option value="1">Lĩnh vực 1</Option>
-            <Option value="2">Lĩnh vực 2</Option>
-            <Option value="3">Lĩnh vực 3</Option>
-            <Option value="4">Lĩnh vực 4</Option>
-            <Option value="5">Lĩnh vực 5</Option>
-            <Option value="6">Lĩnh vực 6</Option>
+            {listCategoryNews?.map((x) => (
+              <Option value={x.Id} key={x.Id}>
+                {x.CategoryNewsName}
+              </Option>
+            ))}
           </Select>
-        </Col> */}
+        </Col>
         <Col span={2}>
           <Row justify="start">
             <Button

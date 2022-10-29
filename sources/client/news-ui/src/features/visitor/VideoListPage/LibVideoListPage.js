@@ -47,37 +47,36 @@ function LibVideoListPage(props) {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await axiosClient.get("/videos/" + id);
+      const res = await axiosClient.get("/home/videos/" + id);
       setVideoDetail(res);
 
-      let contentVideoRes = '';
+      let contentVideoRes = "";
 
       if (res?.FileAttachment) {
-        contentVideoRes = (`<video width="100%" height="100%" controls autoplay>
+        contentVideoRes = `<video width="100%" height="100%" controls autoplay>
             <source
-              src="${res?.FileAttachment?.indexOf("https://") === 0 ||
-            res?.FileAttachment?.indexOf("http://") === 0
-            ? res?.FileAttachment
-            : window.location.origin +
-            (res?.FileAttachment?.indexOf("/") === 0
-              ? res?.FileAttachment
-              : "/" + res?.FileAttachment)
+              src="${imageHelper.getLinkImageUrl(res?.FileAttachment)})
           }"
               type="video/mp4"
             />
-          </video>`);
+          </video>`;
       } else {
         contentVideoRes = res?.LinkVideo;
       }
 
-      console.log("contentVideoRes, contentVideo.current", res.Id, contentVideo.current)
+      console.log(
+        "contentVideoRes, contentVideo.current",
+        res.Id,
+        contentVideo.current
+      );
 
       if (res.Id != contentVideo.current) {
         addScriptVideo(contentVideoRes);
       }
 
       contentVideo.current = res.Id;
-    } catch (error) { } finally {
+    } catch (error) {
+    } finally {
       setLoading(false);
     }
   };
@@ -95,7 +94,7 @@ function LibVideoListPage(props) {
         orderBy: "CreatedDate",
       };
 
-      const res = await axiosClient.post("videocategories/filter", body);
+      const res = await axiosClient.post("/home/videocategories/filter", body);
 
       setListLibVideo(
         res?.PagedData?.Results?.map((item) => ({
@@ -105,7 +104,7 @@ function LibVideoListPage(props) {
       );
 
       setLibVideoSelected(res?.PagedData?.Results?.[0]?.Id);
-    } catch (err) { }
+    } catch (err) {}
   };
 
   /**
@@ -138,7 +137,7 @@ function LibVideoListPage(props) {
 
         isFirstRender.current = false;
       }
-    } catch (err) { }
+    } catch (err) {}
   };
 
   /**
@@ -149,13 +148,15 @@ function LibVideoListPage(props) {
     if (!scriptVideo) return;
 
     const resetScripVideo = () => {
-      if ($(".lib-video-list-page__bottom__wrap-video-main").length > 0 && scriptVideo) {
+      if (
+        $(".lib-video-list-page__bottom__wrap-video-main").length > 0 &&
+        scriptVideo
+      ) {
         $(".lib-video-list-page__bottom__wrap-video-main").empty();
         $(".lib-video-list-page__bottom__wrap-video-main")?.append(scriptVideo);
-
       }
       // console.log("Video render DOM", $(".lib-video-list-page__bottom__wrap-video-main"), scriptVideo)
-    }
+    };
 
     // resetScripVideo();
     setTimeout(() => {
@@ -217,9 +218,7 @@ function LibVideoListPage(props) {
                 {" "}
                 <img
                   alt=""
-                  src={
-                    imageHelper.getLinkImageUrl(item?.Avatar)
-                  }
+                  src={imageHelper.getLinkImageUrl(item?.Avatar)}
                 />{" "}
               </div>
               <div className="lib-video-list-page__bottom__list-video__item__title">

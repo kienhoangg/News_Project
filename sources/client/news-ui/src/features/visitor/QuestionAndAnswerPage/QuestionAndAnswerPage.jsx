@@ -125,7 +125,7 @@ function QuestionAndAnswerPage() {
    */
   const callApiGetQuestionCategories = async () => {
     try {
-      const res = await axiosClient.post("/questioncategories/filter", {
+      const res = await axiosClient.post("home/questioncategories/filter", {
         pageSize: 1000,
         currentPage: 1,
         direction: -1,
@@ -152,7 +152,7 @@ function QuestionAndAnswerPage() {
    */
   const callApiGetDataQuestionTable = async () => {
     try {
-      const res = await axiosClient.post("/questions/filter", {
+      const res = await axiosClient.post("/home/question/filter", {
         pageSize: PAGE_SIZE,
         currentPage: 1,
         direction: -1,
@@ -196,7 +196,7 @@ function QuestionAndAnswerPage() {
 
       formDataRef.current?.delete("JsonString");
       formDataRef.current?.append("JsonString", JSON.stringify(body));
-      const res = await axiosClient.post("/questions", formDataRef.current, {
+      const res = await axiosClient.post("home/question", formDataRef.current, {
         headers: {
           Prefer: "code=200, example=200GetReturn2Record",
           "Content-Type": "multipart/form-data",
