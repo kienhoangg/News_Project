@@ -55,14 +55,13 @@ namespace News.API.Controllers
             var result = _mapper.Map<CategoryNewsDto>(categoryNews);
             return Ok(result);
         }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCategoryNewsById([Required] int id)
         {
-            CategoryNews? categoryNews = await _categoryNewsService.GetCategoryNews(id);
+            var categoryNews = await _categoryNewsService.GetCategoryNewsWithParentName(id, x => x.NewsPosts);
             if (categoryNews == null) return NotFound();
-
-            var result = _mapper.Map<CategoryNewsDto>(categoryNews);
-            return Ok(result);
+            return Ok(categoryNews);
         }
 
         [HttpPut("{id:int}")]

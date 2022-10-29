@@ -38,8 +38,8 @@ function NewsCommentTableData(props) {
       width: 150,
     },
     {
-      key: "Title",
-      dataIndex: "Title",
+      key: "NewsPostTitle",
+      dataIndex: "NewsPostTitle",
       title: "Tiêu đề tin",
       render: (text) => <>{text}</>,
       sorter: (a, b) => a.Title - b.Title,
@@ -132,8 +132,11 @@ function NewsCommentTableData(props) {
       CreatedDate: CreatedDate,
       CreatedDateRaw: item.CreatedDate,
       key: item.Key,
+      NewsPostTitle: item?.NewsPost?.Title,
     };
   });
+
+  console.log(dataItems);
 
   function handleOnClickStatus(values) {
     const role = commonFunc.getCookie("role");

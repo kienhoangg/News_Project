@@ -50,7 +50,7 @@ function QuestionDetailPage() {
    */
   const callApiGetQuestionDetail = async (id) => {
     try {
-      const res = await axiosClient.get("/questions/" + id);
+      const res = await axiosClient.get("/home/question/" + id);
 
       setQuestionDetail(res);
     } catch (err) {}

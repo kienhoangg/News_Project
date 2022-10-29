@@ -37,6 +37,23 @@ namespace News.API.Controllers
             _serializeService = serializeService;
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetDocumentById([Required] int id)
+        {
+            var lstInclude =
+             new Expression<Func<Document, object>>[] {
+                    (x => x.DocumentDepartment),
+                    (x => x.DocumentField),
+                    (x => x.DocumentSignPerson),
+                     (x => x.DocumentType)
+             };
+            Document? document = await _documentService.GetDocument(id, lstInclude);
+            if (document == null) return NotFound();
+
+            var result = _mapper.Map<DocumentDto>(document);
+            return Ok(result);
+        }
+
         [HttpPost("filter")]
         public async Task<IActionResult>
         GetDocumentByPaging([FromBody] DocumentRequest documentRequest)
@@ -87,22 +104,7 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetDocumentById([Required] int id)
-        {
-            var lstInclude =
-             new Expression<Func<Document, object>>[] {
-                    (x => x.DocumentDepartment),
-                    (x => x.DocumentField),
-                    (x => x.DocumentSignPerson),
-                     (x => x.DocumentType)
-             };
-            Document? document = await _documentService.GetDocument(id, lstInclude);
-            if (document == null) return NotFound();
-
-            var result = _mapper.Map<DocumentDto>(document);
-            return Ok(result);
-        }
+      
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>

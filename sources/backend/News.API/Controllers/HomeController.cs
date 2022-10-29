@@ -34,12 +34,14 @@ namespace News.API.Controllers
         private readonly ICacheService _cacheService;
         private readonly IFieldNewsService _fieldNewsService;
         private readonly ICommentService _commentService;
+        private readonly IQuestionCategoryService _questionCategoryService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
         private readonly ICompanyInfoService _companyInfoService;
         private readonly ILinkInfoService _linkInfoService;
         private readonly IPhotoCategoryService _photoCategoryService;
+        private readonly IVideoService _videoService;
 
 
 
@@ -62,7 +64,9 @@ namespace News.API.Controllers
             ICompanyInfoService companyInfoService,
             ILinkInfoService linkInfoService,
             ICommentService commentService,
-            IPhotoCategoryService photoCategoryService)
+            IPhotoCategoryService photoCategoryService,
+            IVideoService videoService,
+            IQuestionCategoryService questionCategoryService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -80,6 +84,8 @@ namespace News.API.Controllers
             _linkInfoService = linkInfoService;
             _commentService = commentService;
             _photoCategoryService = photoCategoryService;
+            _videoService = videoService;
+            _questionCategoryService = questionCategoryService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -194,7 +200,7 @@ namespace News.API.Controllers
                 await _questionService.GetQuestionByPaging(questionRequest);
             return Ok(result);
         }
-        [HttpPost("question")]
+        [HttpPost("questions")]
         public async Task<IActionResult>
              CreateQuestionDto([FromForm] QuestionUploadDto questionUploadDto)
         {
@@ -371,6 +377,60 @@ namespace News.API.Controllers
                 });
 
 
+            return Ok(result);
+        }
+
+        [HttpGet("documents/{id:int}")]
+        public async Task<IActionResult> GetDocumentById([Required] int id)
+        {
+            var lstInclude =
+             new Expression<Func<Document, object>>[] {
+                    (x => x.DocumentDepartment),
+                    (x => x.DocumentField),
+                    (x => x.DocumentSignPerson),
+                     (x => x.DocumentType)
+             };
+            Document? document = await _documentService.GetDocument(id, lstInclude);
+            if (document == null) return NotFound();
+
+            var result = _mapper.Map<DocumentDto>(document);
+            return Ok(result);
+        }
+        [HttpGet("videos/{id:int}")]
+        public async Task<IActionResult> GetVideoById([Required] int id)
+        {
+            Video? video = await _videoService.GetVideo(id);
+            if (video == null) return NotFound();
+
+            var result = _mapper.Map<VideoDto>(video);
+            return Ok(result);
+        }
+
+        [HttpPost("documents/filter")]
+        public async Task<IActionResult>
+        GetDocumentByPaging([FromBody] DocumentRequest documentRequest)
+        {
+            var result =
+                await _documentService.GetDocumentByPaging(documentRequest);
+            return Ok(result);
+        }
+
+        [HttpGet("questions/{id:int}")]
+        public async Task<IActionResult> GetQuestionById([Required] int id)
+        {
+            Question? question = await _questionService.GetQuestion(id);
+            if (question == null) return NotFound();
+
+            var result = _mapper.Map<QuestionDto>(question);
+            return Ok(result);
+        }
+        [HttpGet("questioncategories/{id:int}")]
+        public async Task<IActionResult> GetQuestionCategoryById([Required] int id)
+        {
+            QuestionCategory? questionCategory = await _questionCategoryService.GetQuestionCategory(id);
+            if (questionCategory == null) return NotFound();
+
+            var result = _mapper.Map<QuestionCategoryDto>(questionCategory);
             return Ok(result);
         }
     }
