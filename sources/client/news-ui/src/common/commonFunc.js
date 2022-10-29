@@ -40,23 +40,24 @@ const commonFunc = {
     if (list.length === 0) {
       return [];
     }
+    let _list = [...list];
     let map = {},
       node,
       roots = [],
       i;
 
-    for (i = 0; i < list.length; i += 1) {
-      map[list[i].Id] = i; // initialize the map
-      list[i].children = []; // initialize the children
+    for (i = 0; i < _list.length; i += 1) {
+      map[_list[i].Id] = i; // initialize the map
+      _list[i].children = []; // initialize the children
     }
 
-    for (i = 0; i < list.length; i += 1) {
-      node = list[i];
+    for (i = 0; i < _list.length; i += 1) {
+      node = _list[i];
       node.key = node?.Id;
       if (node.ParentId && node.ParentId !== 0) {
         // if you have dangling branches check that map[node.parentId] exists
         node.isLeaf = true;
-        list[map[node.ParentId]]?.children?.push(node);
+        _list[map[node.ParentId]]?.children?.push(node);
       } else {
         roots.push(node);
       }

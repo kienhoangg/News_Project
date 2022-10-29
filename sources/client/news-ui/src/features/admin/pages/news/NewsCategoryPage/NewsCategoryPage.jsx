@@ -32,6 +32,7 @@ function NewsCategoryPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
@@ -100,7 +101,7 @@ function NewsCategoryPage(props) {
       {
         type: 'string',
         label: 'Danh mục cấp cha',
-        content: response?.ParentId ?? '',
+        content: response?.ParentName ?? '',
       },
       {
         type: 'string',
@@ -115,7 +116,9 @@ function NewsCategoryPage(props) {
       {
         type: 'string',
         label: 'Loại tin',
-        content: response?.FieldNews_SK_FK ?? '',
+        content:
+          dataFilter?.fieldNews.find((x) => x.Id === response?.FieldNews_SK_FK)
+            ?.Title ?? '',
       },
       {
         type: 'string',
@@ -129,9 +132,23 @@ function NewsCategoryPage(props) {
     setOpenCollectionDetail(true);
   };
 
-  const showModal = () => {
+  const showModal = async () => {
     mode.current = Mode.Create;
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await newsApi.getNewsCategoryAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const handleCancel = () => {
@@ -147,10 +164,15 @@ function NewsCategoryPage(props) {
     let parentID = null;
     let fieldNews_SK_FK = null;
     if (values.parentId) {
-      parentID = parseInt(values.parentId);
+      parentID = parseInt(
+        dataRoot.find((x) => x.CategoryNewsName === values.parentId)?.Id ?? '0'
+      );
     }
     if (values.FieldNews_SK_FK) {
-      fieldNews_SK_FK = parseInt(values.FieldNews_SK_FK);
+      fieldNews_SK_FK = parseInt(
+        dataFilter?.fieldNews.find((x) => x.Title === values.FieldNews_SK_FK)
+          ?.Id ?? '0'
+      );
     }
     values = {
       CategoryNewsName: values?.title,
@@ -243,12 +265,13 @@ function NewsCategoryPage(props) {
 
   const renderOption = (
     <Select
+      showSearch
       placeholder='Chọn cấp cha'
       style={{ width: '100%' }}
       allowClear={true}
     >
-      {newsData?.data.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+      {dataRoot.map((x) => (
+        <Option value={x.CategoryNewsName} key={x.Id}>
           {x.CategoryNewsName}
         </Option>
       ))}
@@ -257,12 +280,13 @@ function NewsCategoryPage(props) {
 
   const renderField = (
     <Select
+      showSearch
       placeholder='Chọn lĩnh vực'
       style={{ width: '100%' }}
       allowClear={true}
     >
       {dataFilter?.fieldNews.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -284,16 +308,19 @@ function NewsCategoryPage(props) {
   }
 
   async function handleUpdate(id) {
+    await getParentRoot();
     const res = await getSourceNewById(id);
     idEdit.current = id;
     mode.current = Mode.Edit;
     form?.setFieldsValue({
       title: res?.CategoryNewsName,
-      FieldNews_SK_FK: res?.FieldNews_SK_FK,
+      FieldNews_SK_FK:
+        dataFilter?.fieldNews.find((x) => x.Id === res?.FieldNews_SK_FK)
+          ?.Title ?? '',
       description: res?.Description,
       order: res?.Order,
       keyword: res?.Keyword,
-      parentId: res?.ParentId,
+      parentId: res?.ParentName,
     });
     setIsModalOpen(true);
   }
