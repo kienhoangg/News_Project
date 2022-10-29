@@ -26,5 +26,6 @@ namespace News.API.Interfaces
         Task DeleteDocumentDepartment(int id);
         Task<List<DocumentDepartment>> GetAllDocumentDepartments();
         Task UpdateManyDocumentDepartmentDto(List<int> lstDocumentDepartmentId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<DocumentDepartmentDto> GetDocumentDepartmentWithParentName(int id);
     }
 }

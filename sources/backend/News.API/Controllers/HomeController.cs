@@ -41,7 +41,9 @@ namespace News.API.Controllers
         private readonly ICompanyInfoService _companyInfoService;
         private readonly ILinkInfoService _linkInfoService;
         private readonly IPhotoCategoryService _photoCategoryService;
+        private readonly IVideoCategoryService _videoCategoryService;
         private readonly IVideoService _videoService;
+        private readonly IStaticInfoService _staticInfoService;
 
 
 
@@ -66,7 +68,9 @@ namespace News.API.Controllers
             ICommentService commentService,
             IPhotoCategoryService photoCategoryService,
             IVideoService videoService,
-            IQuestionCategoryService questionCategoryService)
+            IQuestionCategoryService questionCategoryService,
+            IVideoCategoryService videoCategoryService,
+            IStaticInfoService staticInfoService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -86,6 +90,8 @@ namespace News.API.Controllers
             _photoCategoryService = photoCategoryService;
             _videoService = videoService;
             _questionCategoryService = questionCategoryService;
+            _videoCategoryService = videoCategoryService;
+            _staticInfoService = staticInfoService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -285,6 +291,16 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("staticinfos/{id:int}")]
+        public async Task<IActionResult> GetStaticInfoById([Required] int id)
+        {
+            StaticInfo? staticInfo = await _staticInfoService.GetStaticInfo(id);
+            if (staticInfo == null) return NotFound();
+
+            var result = _mapper.Map<StaticInfoDto>(staticInfo);
+            return Ok(result);
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -377,6 +393,15 @@ namespace News.API.Controllers
                 });
 
 
+            return Ok(result);
+        }
+
+        [HttpPost("videocategories/filter")]
+        public async Task<IActionResult>
+        GetVideoCategoryByPaging([FromBody] VideoCategoryRequest videoCategoryRequest)
+        {
+            var result =
+                await _videoCategoryService.GetVideoCategoryByPaging(videoCategoryRequest);
             return Ok(result);
         }
 

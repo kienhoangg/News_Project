@@ -25,5 +25,6 @@ namespace News.API.Interfaces
 
         Task DeleteStaticCategory(int id);
         Task UpdateManyStaticCategoryDto(List<int> lstStaticCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<StaticCategoryDto> GetStaticCategoryWithParentName(int id);
     }
 }

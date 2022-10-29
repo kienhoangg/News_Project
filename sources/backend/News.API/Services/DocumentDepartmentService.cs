@@ -48,6 +48,16 @@ namespace News.API.Services
             return await FindAll().ToListAsync();
         }
 
+        public async Task<DocumentDepartmentDto> GetDocumentDepartmentWithParentName(int id)
+        {
+            var documentDepartmentDto = _mapper.Map<DocumentDepartmentDto>(await GetDocumentDepartment(id));
+            if (documentDepartmentDto.ParentId.HasValue && documentDepartmentDto.ParentId != 0)
+            {
+                documentDepartmentDto.ParentName = (await GetDocumentDepartment(documentDepartmentDto.ParentId.Value)).Title;
+            }
+            return documentDepartmentDto;
+        }
+
         public async Task<ApiSuccessResult<DocumentDepartmentDto>> GetDocumentDepartmentByPaging(DocumentDepartmentRequest documentDepartmentRequest, params Expression<Func<DocumentDepartment, object>>[] includeProperties)
         {
             var query = FindAll();

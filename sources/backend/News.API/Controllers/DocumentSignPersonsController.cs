@@ -55,11 +55,10 @@ namespace News.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDocumentSignPersonById([Required] int id)
         {
-            DocumentSignPerson? documentSignPerson = await _documentSignPersonService.GetDocumentSignPerson(id);
+            var documentSignPerson = await _documentSignPersonService.GetDocumentSignPersonWithParentName(id);
             if (documentSignPerson == null) return NotFound();
 
-            var result = _mapper.Map<DocumentSignPersonDto>(documentSignPerson);
-            return Ok(result);
+            return Ok(documentSignPerson);
         }
 
         [HttpPut("{id:int}")]

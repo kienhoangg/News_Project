@@ -47,6 +47,16 @@ namespace News.API.Services
             return await FindAll().ToListAsync();
         }
 
+        public async Task<DocumentTypeDto> GetDocumentTypeWithParentName(int id)
+        {
+            var documentTypeDto = _mapper.Map<DocumentTypeDto>(await GetDocumentType(id));
+            if (documentTypeDto.ParentId.HasValue && documentTypeDto.ParentId != 0)
+            {
+                documentTypeDto.ParentName = (await GetDocumentType(documentTypeDto.ParentId.Value)).Title;
+            }
+            return documentTypeDto;
+        }
+
         public async Task<ApiSuccessResult<DocumentTypeDto>> GetDocumentTypeByPaging(DocumentTypeRequest documentFieldRequest, params Expression<Func<DocumentType, object>>[] includeProperties)
         {
             var query = FindAll();
