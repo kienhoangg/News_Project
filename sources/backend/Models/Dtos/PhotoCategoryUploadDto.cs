@@ -1,9 +1,10 @@
+using Contracts.Domains;
 using Infrastructure.Shared.Attributes;
 using Microsoft.AspNetCore.Http;
 
 namespace Models.Dtos
 {
-    public class PhotoCategoryUploadDto
+    public class PhotoCategoryUploadDto : UploadDtoBase
     {
         public int? Id { get; set; }
 

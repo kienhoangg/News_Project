@@ -1,17 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class StaticInfosController : ControllerBase
     {
@@ -38,10 +43,10 @@ namespace News.API.Controllers
                 await _staticInfoService.GetStaticInfoByPaging(staticInfoRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-       CreateStaticInfoDto([FromForm] StaticInfoUploadDto staticInfoUploadDto)
+               CreateStaticInfoDto([FromForm] StaticInfoUploadDto staticInfoUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -83,6 +88,10 @@ namespace News.API.Controllers
             var staticInfo =
                 _serializeService
                     .Deserialize<StaticInfo>(staticInfoUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                staticInfo.Status = Status.Enabled;
+            }
 
             staticInfo.Avatar = avartarPath;
             staticInfo.FilePath = fileAttachmentPath;

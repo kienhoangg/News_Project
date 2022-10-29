@@ -1,9 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
@@ -16,12 +20,14 @@ namespace News.API.Controllers
         private readonly IMapper _mapper;
 
         public CommentsController(
-            ICommentService commentService,
+
             IMapper mapper
-        )
+,
+ICommentService commentService)
         {
-            _commentService = commentService;
+
             _mapper = mapper;
+            _commentService = commentService;
         }
 
         [HttpPost("filter")]
@@ -33,10 +39,15 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
         CreateCommentDto([FromBody] CommentDto commentDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                commentDto.Status = Status.Enabled;
+            }
             var comment = _mapper.Map<Comment>(commentDto);
             await _commentService.CreateComment(comment);
             var result = _mapper.Map<CommentDto>(comment);

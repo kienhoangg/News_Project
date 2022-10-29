@@ -1,13 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class DocumentFieldsController : ControllerBase
     {
@@ -32,11 +37,15 @@ namespace News.API.Controllers
                 await _documentFieldService.GetDocumentFieldByPaging(documentFieldRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateDocumentFieldDto([FromBody] DocumentFieldDto documentFieldDto)
+                CreateDocumentFieldDto([FromBody] DocumentFieldDto documentFieldDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                documentFieldDto.Status = Status.Enabled;
+            }
             var documentField = _mapper.Map<DocumentField>(documentFieldDto);
             await _documentFieldService.CreateDocumentField(documentField);
             var result = _mapper.Map<DocumentFieldDto>(documentField);

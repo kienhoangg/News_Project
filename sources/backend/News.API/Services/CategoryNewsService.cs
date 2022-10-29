@@ -42,6 +42,18 @@ namespace News.API.Services
             return await GetByIdAsync(id, x => x.NewsPosts);
         }
 
+        public IQueryable<Comment> GetCommentByCategoryNews(CommentRequest commentRequest)
+        {
+
+            var query = FindByCondition((x => x.Id == commentRequest.CategoryNewsId)).SelectMany(x => x.NewsPosts)
+                .SelectMany(x => x.Comments);
+            if (!string.IsNullOrEmpty(commentRequest.Keyword))
+            {
+                query = query.Where(x => x.Username.Contains(commentRequest.Keyword));
+            }
+            return query;
+        }
+
         public async Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression)
         {
             return await FindByCondition(expression, includeProperties: x => x.NewsPosts).FirstOrDefaultAsync();

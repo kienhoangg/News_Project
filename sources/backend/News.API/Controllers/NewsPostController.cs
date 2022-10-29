@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
 using Common.Shared.Constants;
@@ -15,6 +16,7 @@ using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
 using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
@@ -85,11 +87,12 @@ namespace News.API.Controllers
             }
             return BadRequest();
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateNewsPostDto([FromForm] NewsPostUploadDto newsPostUploadDto)
+                CreateNewsPostDto([FromForm] NewsPostUploadDto newsPostUploadDto)
         {
+
             if (!ModelState.IsValid)
             {
                 // Cover case avatar extension not equal
@@ -111,6 +114,10 @@ namespace News.API.Controllers
             var newsPost =
                           _serializeService
                               .Deserialize<NewsPost>(newsPostUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                newsPost.Status = Status.Enabled;
+            }
             // Upload file avatar if exist
             if (newsPostUploadDto.Avatar != null)
             {

@@ -1,14 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class PhotoCategoriesController : ControllerBase
     {
@@ -33,11 +38,15 @@ namespace News.API.Controllers
                 await _photoCategoryService.GetPhotoCategoryByPaging(photoCategoryRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreatePhotoCategoryDto([FromBody] PhotoCategoryDto photoCategoryDto)
+                CreatePhotoCategoryDto([FromBody] PhotoCategoryDto photoCategoryDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                photoCategoryDto.Status = Status.Enabled;
+            }
             var photoCategory = _mapper.Map<PhotoCategory>(photoCategoryDto);
             await _photoCategoryService.CreatePhotoCategory(photoCategory);
             var result = _mapper.Map<PhotoCategoryDto>(photoCategory);
