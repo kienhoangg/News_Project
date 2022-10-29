@@ -38,6 +38,10 @@ function NewsFieldTableData(props) {
   const { data, setPagination, deleteFieldsNew, updateStatusNew } = props;
 
   function handleDeleteFieldNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa loại tin',
       icon: <ExclamationCircleOutlined />,
@@ -69,7 +73,18 @@ function NewsFieldTableData(props) {
       key: 'Title',
       dataIndex: 'Title',
       title: 'Tiêu đề',
-      render: (text) => <div>{text}</div>,
+      render: (_, { Id, Title }) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (props.showDetail) {
+              props.showDetail(Id);
+            }
+          }}
+        >
+          {Title}
+        </div>
+      ),
       sorter: (a, b) => a.Title - b.Title,
     },
     {
@@ -125,7 +140,11 @@ function NewsFieldTableData(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
+          <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => handleChangeSourceNew(record)}
+          >
             Sửa
           </Button>
           <Button
@@ -147,6 +166,16 @@ function NewsFieldTableData(props) {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
     return { ...item, CreatedDate: createdDate, key: item.Id };
   });
+
+  function handleChangeSourceNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
+      return;
+    }
+    if (props.updateData) {
+      props.updateData(values.Id);
+    }
+  }
 
   function handleOnClickStatus(values) {
     const role = commonFunc.getCookie('role');

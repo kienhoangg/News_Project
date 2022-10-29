@@ -45,8 +45,6 @@ function AdminCollectionDetail(props) {
       }}
       cancelText='Thoát'
       onCancel={onCancel}
-      width={width ?? 800}
-      centered
       onOk={() => {}}
     >
       {Array.isArray(listData) &&
