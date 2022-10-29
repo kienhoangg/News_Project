@@ -213,7 +213,16 @@ function NewsCollaboratorsPage(props) {
               <Input />
             )}
           </Form.Item>
-          <Form.Item label="Ngày sinh" name="BirthDate">
+          <Form.Item
+            label="Ngày sinh"
+            name="BirthDate"
+            rules={[
+              {
+                required: true,
+                message: "Ngày sinh không được để trống",
+              },
+            ]}
+          >
             {isModalOpen?.type === POPUP_TYPE.DETAIL ? (
               <div>
                 {moment(isModalOpen?.comment?.BirthDate).format("DD/MM/YYYY")}
