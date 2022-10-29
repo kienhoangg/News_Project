@@ -11,21 +11,22 @@ namespace News.API.Interfaces
     {
         Task<ApiSuccessResult<CategoryNewsDto>>
         GetCategoryNewsByPaging(
-            CategoryNewsRequest CategoryNewsRequest
+
+                CategoryNewsRequest categoryNewsRequest,
+                params Expression<Func<CategoryNews, object>>[] includeProperties
+
         );
 
-        Task<CategoryNews> GetCategoryNews(int id);
+        Task<CategoryNews> GetCategoryNews(int id, params Expression<Func<CategoryNews, object>>[] includeProperties);
 
         Task CreateCategoryNews(CategoryNews categoryNews);
 
         Task UpdateCategoryNews(CategoryNews categoryNews);
 
         Task DeleteCategoryNews(int id);
-
+        Task UpdateManyCategoryNewsDto(List<int> lstFieldsNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        IQueryable<Comment> GetCommentByCategoryNews(CommentRequest commentRequest);
+        Task<CategoryNewsDto> GetCategoryNewsWithParentName(int id, params Expression<Func<CategoryNews, object>>[] includeProperties);
         Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression);
-
-        Task UpdateManyCategoryNewsDto(List<int> lstCategoryNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate);
-
-        public IQueryable<Comment> GetCommentByCategoryNews(CommentRequest commentRequest);
     }
 }

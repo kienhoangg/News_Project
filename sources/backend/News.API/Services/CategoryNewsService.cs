@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Common.Enums;
 using Common.Interfaces;
 using Infrastructure.Implements;
@@ -31,15 +30,15 @@ namespace News.API.Services
             await CreateAsync(categoryNews);
         }
 
+        public async Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression)
+        {
+            return await FindByCondition(expression, includeProperties: x => x.NewsPosts).FirstOrDefaultAsync();
+        }
+
         public async Task DeleteCategoryNews(int id)
         {
             var categoryNews = await GetByIdAsync(id);
             await DeleteAsync(categoryNews);
-        }
-
-        public async Task<CategoryNews> GetCategoryNews(int id)
-        {
-            return await GetByIdAsync(id, x => x.NewsPosts);
         }
 
         public IQueryable<Comment> GetCommentByCategoryNews(CommentRequest commentRequest)
@@ -54,27 +53,44 @@ namespace News.API.Services
             return query;
         }
 
-        public async Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression)
+
+        public async Task<CategoryNews> GetCategoryNews(int id, params Expression<Func<CategoryNews, object>>[] includeProperties)
         {
-            return await FindByCondition(expression, includeProperties: x => x.NewsPosts).FirstOrDefaultAsync();
+
+            return await GetCategoryNews(id, includeProperties);
         }
 
-        public async Task<ApiSuccessResult<CategoryNewsDto>> GetCategoryNewsByPaging(CategoryNewsRequest categoryNewsRequest)
+        public async Task<CategoryNewsDto> GetCategoryNewsWithParentName(int id, params Expression<Func<CategoryNews, object>>[] includeProperties)
+        {
+            var categoryNewsDto = _mapper.Map<CategoryNewsDto>(await GetCategoryNews(id, includeProperties));
+            if (categoryNewsDto.ParentId.HasValue)
+            {
+                categoryNewsDto.ParentName = (await GetCategoryNews(categoryNewsDto.ParentId.Value)).CategoryNewsName;
+            }
+            return categoryNewsDto;
+        }
+
+        public async Task<ApiSuccessResult<CategoryNewsDto>> GetCategoryNewsByPaging(CategoryNewsRequest categoryNewsRequest, params Expression<Func<CategoryNews, object>>[] includeProperties)
         {
             var query = FindAll();
 
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
+
             if (!string.IsNullOrEmpty(categoryNewsRequest.Keyword))
             {
-                query = FindByCondition((x => x.CategoryNewsName.Contains(categoryNewsRequest.Keyword)));
+                query = query.Where((x => x.CategoryNewsName.Contains(categoryNewsRequest.Keyword)));
             }
             if (categoryNewsRequest.Status.HasValue)
             {
                 query = query.Where(x => x.Status == categoryNewsRequest.Status.Value);
             }
-            IQueryable<CategoryNewsDto>? mappingQuery = query.ProjectTo<CategoryNewsDto>(_mapper.ConfigurationProvider);
-            PagedResult<CategoryNewsDto>? paginationSet = await mappingQuery.PaginatedListAsync(categoryNewsRequest.CurrentPage
+            PagedResult<CategoryNews>? sourcePaging = await query.PaginatedListAsync(categoryNewsRequest.CurrentPage
                                                                                              ?? 1, categoryNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, categoryNewsRequest.OrderBy, categoryNewsRequest.Direction);
-
+            var lstDto = _mapper.Map<List<CategoryNewsDto>>(sourcePaging.Results);
+            var paginationSet = new PagedResult<CategoryNewsDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<CategoryNewsDto>? result = new(paginationSet);
             return result;
         }
@@ -89,13 +105,14 @@ namespace News.API.Services
             var query = FindAll();
             if (includeProperties.ToList().Count > 0)
             {
-                query = FindAll();
+                query = FindAll(includeProperties: includeProperties);
             }
 
             if (categoryNewsRequest.Ids != null && categoryNewsRequest.Ids.Count > 0)
             {
                 query = query.Where(x => categoryNewsRequest.Ids.Contains(x.Id));
             }
+
             PagedResult<CategoryNews>? sourcePaging = await query.PaginatedListAsync(categoryNewsRequest.CurrentPage
                                                                                               ?? 0, categoryNewsRequest.PageSize ?? 0, categoryNewsRequest.OrderBy, categoryNewsRequest.Direction);
             ApiSuccessResult<CategoryNews>? result = new(sourcePaging);
