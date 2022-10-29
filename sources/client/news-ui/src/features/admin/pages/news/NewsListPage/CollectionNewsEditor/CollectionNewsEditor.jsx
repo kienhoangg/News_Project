@@ -87,9 +87,9 @@ function CollectionNewsEditor({
   );
 
   const renderFieldNews = (
-    <Select placeholder='Lĩnh vực' style={{ width: '100%' }}>
+    <Select placeholder='Lĩnh vực' style={{ width: '100%' }} showSearch>
       {dataFilter?.fieldNews?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -97,9 +97,9 @@ function CollectionNewsEditor({
   );
 
   const renderSourceNews = (
-    <Select placeholder='Nguồn tin' style={{ width: '100%' }}>
+    <Select placeholder='Nguồn tin' style={{ width: '100%' }} showSearch>
       {dataFilter?.sourceNews?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -108,7 +108,11 @@ function CollectionNewsEditor({
 
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+      <TreeNode
+        value={x.CategoryNewsName}
+        title={x.CategoryNewsName}
+        key={x.Id}
+      >
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));
@@ -179,13 +183,20 @@ function CollectionNewsEditor({
               PublishedDate: publishedDate,
             };
             if (field) {
-              bodyData.FieldNewsId = parseInt(field);
+              bodyData.FieldNewsId =
+                dataFilter?.fieldNews.find((x) => x.Title === field)?.Id ??
+                undefined;
             }
             if (source) {
-              bodyData.SourceNewsId = parseInt(source);
+              bodyData.SourceNewsId =
+                dataFilter?.sourceNews.find((x) => x.Title === source)?.Id ??
+                undefined;
             }
             if (category) {
-              bodyData.CategoryNewsId = parseInt(category);
+              bodyData.CategoryNewsId =
+                dataFilter?.categoryNews.find(
+                  (x) => x.CategoryNewsName === category
+                )?.Id ?? undefined;
             }
             let body = { JsonString: bodyData };
             if (fileList.length > 0) {
