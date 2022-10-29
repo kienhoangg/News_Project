@@ -34,6 +34,7 @@ function ImageCategoryPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
@@ -132,8 +133,22 @@ function ImageCategoryPage(props) {
     }
   };
 
-  const showModal = () => {
+  const showModal = async () => {
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await mediaApi.getImageCategoryAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const renderStaticCategoryId = (
@@ -142,7 +157,7 @@ function ImageCategoryPage(props) {
       style={{ width: '100%' }}
       allowClear={true}
     >
-      {newsData?.data.map((x) => (
+      {dataRoot.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
         </Option>

@@ -398,7 +398,7 @@ function StaticCategoryListPage(props) {
                 <div className={cx('row-item-label')}>Danh mục cha</div>
               </Col>
               <Col span={16}>
-                <div>{detail.current?.Description}</div>
+                <div>{detail.current?.ParentName}</div>
               </Col>
             </Row>
 

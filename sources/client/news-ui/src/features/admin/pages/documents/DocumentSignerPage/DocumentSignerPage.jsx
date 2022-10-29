@@ -1,15 +1,15 @@
-import documentApi from "apis/documentApi";
-import classNames from "classnames/bind";
-import { useEffect, useState, useRef } from "react";
-import styles from "./DocumentSignerPage.module.scss";
-import DocumentSignerPageSearch from "./DocumentSignerPageSearch/DocumentSignerPageSearch";
-import DocumentSignerTableData from "./DocumentSignerTableData/DocumentSignerTableData";
-import { Direction, NotificationType } from "common/enum";
-import { Divider, Form, Button, Input, Modal, Select } from "antd";
-import { openNotification } from "helpers/notification";
-import { Option } from "antd/lib/mentions";
-import { FileAddFilled } from "@ant-design/icons";
-import { TypeUpdate } from "common/constant";
+import documentApi from 'apis/documentApi';
+import classNames from 'classnames/bind';
+import { useEffect, useState, useRef } from 'react';
+import styles from './DocumentSignerPage.module.scss';
+import DocumentSignerPageSearch from './DocumentSignerPageSearch/DocumentSignerPageSearch';
+import DocumentSignerTableData from './DocumentSignerTableData/DocumentSignerTableData';
+import { Direction, NotificationType } from 'common/enum';
+import { Divider, Form, Button, Input, Modal, Select } from 'antd';
+import { openNotification } from 'helpers/notification';
+import { Option } from 'antd/lib/mentions';
+import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -35,13 +35,14 @@ function DocumentSignerPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -62,12 +63,26 @@ function DocumentSignerPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification("Lấy  người ký thất bại", "", NotificationType.ERROR);
+      openNotification('Lấy  người ký thất bại', '', NotificationType.ERROR);
     }
   };
 
-  const showModal = () => {
+  const showModal = async () => {
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await documentApi.getDocumentSingerAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const handleCancel = () => {
@@ -111,9 +126,9 @@ function DocumentSignerPage(props) {
       await documentApi.updateSingerDocument(document?.content?.Id, values);
       handleCancel();
       fetchProductList();
-      openNotification("Sửa thành công");
+      openNotification('Sửa thành công');
     } catch (error) {
-      openNotification("Sửa thất bại", "", NotificationType.ERROR);
+      openNotification('Sửa thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -125,9 +140,9 @@ function DocumentSignerPage(props) {
       await documentApi.insertSingerDocument(values);
       handleCancel();
       fetchProductList();
-      openNotification("Tạo mới người ký thành công");
+      openNotification('Tạo mới người ký thành công');
     } catch (error) {
-      openNotification("Tạo mới người ký thất bại", "", NotificationType.ERROR);
+      openNotification('Tạo mới người ký thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -154,10 +169,10 @@ function DocumentSignerPage(props) {
   const handleDeleteSourceNew = async (id) => {
     try {
       await documentApi.deleteSingerDocument(id);
-      openNotification("Xóa người ký thành công");
+      openNotification('Xóa người ký thành công');
       fetchProductList();
     } catch (error) {
-      openNotification("Xóa người ký thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa người ký thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -169,19 +184,19 @@ function DocumentSignerPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchProductList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
   const renderOption = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
       allowClear={true}
     >
-      {newsData?.data.map((x) => (
+      {dataRoot.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
         </Option>
@@ -190,28 +205,28 @@ function DocumentSignerPage(props) {
   );
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       {
         //#region popup thêm mới
       }
       <Modal
-        className={cx("modal-category-news")}
+        className={cx('modal-category-news')}
         title={
           document?.type === MODAL_TYPE.DETAIL
-            ? "Xem chi tiết"
+            ? 'Xem chi tiết'
             : document?.type === MODAL_TYPE.EDIT
-            ? "Chỉnh sửa"
-            : "Thêm mới loại văn bản tin"
+            ? 'Chỉnh sửa'
+            : 'Thêm mới loại văn bản tin'
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
           <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
+            name='title'
+            label='Tiêu đề'
+            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
           >
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Title}</div>
@@ -219,7 +234,7 @@ function DocumentSignerPage(props) {
               <Input />
             )}
           </Form.Item>
-          <Form.Item name="parentId" label="Danh mục cấp cha">
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>
                 {
@@ -232,14 +247,14 @@ function DocumentSignerPage(props) {
               renderOption
             )}
           </Form.Item>
-          <Form.Item name="order" label="Số thứ tự">
+          <Form.Item name='order' label='Số thứ tự'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Order}</div>
             ) : (
-              <Input type="number" min={0} defaultValue={0} />
+              <Input type='number' min={0} defaultValue={0} />
             )}
           </Form.Item>
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name='description' label='Mô tả'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Description}</div>
             ) : (
@@ -250,12 +265,12 @@ function DocumentSignerPage(props) {
           {document?.type === MODAL_TYPE.DETAIL ? null : (
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button
-                type="primary"
+                type='primary'
                 htmlType={
-                  document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"
+                  document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'
                 }
               >
-                {document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"}
+                {document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'}
               </Button>
             </Form.Item>
           )}
@@ -264,17 +279,17 @@ function DocumentSignerPage(props) {
       {
         //#endregion
       }
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <DocumentSignerPageSearch setTextSearch={handleChangeTextSearch} />
 
-        <div className={cx("btn-add-signer-document")}>
-          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
+        <div className={cx('btn-add-signer-document')}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <DocumentSignerTableData
           data={newsData}
           setPagination={handleChangePagination}
