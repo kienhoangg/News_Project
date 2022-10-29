@@ -34,6 +34,7 @@ namespace News.API.Controllers
         private readonly ICacheService _cacheService;
         private readonly IFieldNewsService _fieldNewsService;
         private readonly ICommentService _commentService;
+        private readonly IQuestionCategoryService _questionCategoryService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
@@ -64,7 +65,8 @@ namespace News.API.Controllers
             ILinkInfoService linkInfoService,
             ICommentService commentService,
             IPhotoCategoryService photoCategoryService,
-            IVideoService videoService)
+            IVideoService videoService,
+            IQuestionCategoryService questionCategoryService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -83,6 +85,7 @@ namespace News.API.Controllers
             _commentService = commentService;
             _photoCategoryService = photoCategoryService;
             _videoService = videoService;
+            _questionCategoryService = questionCategoryService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -419,6 +422,15 @@ namespace News.API.Controllers
             if (question == null) return NotFound();
 
             var result = _mapper.Map<QuestionDto>(question);
+            return Ok(result);
+        }
+        [HttpGet("questioncategories/{id:int}")]
+        public async Task<IActionResult> GetQuestionCategoryById([Required] int id)
+        {
+            QuestionCategory? questionCategory = await _questionCategoryService.GetQuestionCategory(id);
+            if (questionCategory == null) return NotFound();
+
+            var result = _mapper.Map<QuestionCategoryDto>(questionCategory);
             return Ok(result);
         }
     }
