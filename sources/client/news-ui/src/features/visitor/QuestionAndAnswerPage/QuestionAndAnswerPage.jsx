@@ -271,7 +271,7 @@ function QuestionAndAnswerPage() {
         QUESTION: item?.Title,
         QUESTIONER: item?.AskedPersonName,
         RESPONDENT: moment(item?.CreatedDate).format("DD/MM/YYYY"),
-        ANSWERING_UNIT: "Trần Duy Bá",
+        ANSWERING_UNIT: item?.Department,
       };
     });
   };
