@@ -29,6 +29,8 @@ function PublishedDocumentPage(props) {
     const [loading, setLoading] = useState(true);
 
     const [dateFilter, setDateFilter] = useState();
+    const [resetCommentFields, setResetCommentFields] = useState(false);
+    const [loadingSubmit, setLoadingSubmit] = useState(false);
 
     //Lấy dữ liệu chi tiết
     useEffect(() => {
@@ -56,6 +58,27 @@ function PublishedDocumentPage(props) {
     }
 
     function onFinishComment(params) {
+        const fetchSubmitComment = async (params) => {
+            try {
+                const { comment, name } = params;
+                let body = {
+                    username: name,
+                    content: comment,
+                    newsPostId: id,
+                };
+
+                await publishedNewsApi.postVisitorComment(body);
+                setResetCommentFields(!resetCommentFields);
+                commonRender.showNotifySuccess('Bình luận thành công');
+            } catch (error) {
+                console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoadingSubmit(false);
+            }
+        };
+        setLoadingSubmit(true);
+        fetchSubmitComment(params);
+
         console.log('onFinishComment', params);
     }
 
@@ -155,7 +178,7 @@ function PublishedDocumentPage(props) {
             <div className={cx('comment')}>
                 <div className={cx('comment-title')}>Ý kiến bạn đọc</div>
                 <div className={cx('divider')}></div>
-                <FormVisitorComment onFinish={onFinishComment} />
+                <FormVisitorComment onFinish={onFinishComment} resetFields={resetCommentFields} submitLoading={loadingSubmit} />
             </div>
 
             <Skeleton loading={loading} active>
