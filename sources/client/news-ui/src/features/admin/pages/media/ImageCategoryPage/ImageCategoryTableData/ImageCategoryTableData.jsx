@@ -127,6 +127,10 @@ function ImageCategoryTableData(props) {
   }
 
   function handleDeleteCategoryNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa danh mục hình ảnh',
       icon: <ExclamationCircleOutlined />,

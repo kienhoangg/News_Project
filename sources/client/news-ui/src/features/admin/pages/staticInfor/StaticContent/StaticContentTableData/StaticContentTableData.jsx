@@ -134,6 +134,10 @@ function StaticContentTableData(props) {
   }
 
   function handleDeleteCategoryNew(values) {
+     if (values.Status) {
+       openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+       return;
+     }
     return Modal.confirm({
       title: 'Xóa danh mục tin',
       icon: <ExclamationCircleOutlined />,

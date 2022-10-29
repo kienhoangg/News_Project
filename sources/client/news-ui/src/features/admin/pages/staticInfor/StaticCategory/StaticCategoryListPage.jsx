@@ -1,4 +1,4 @@
-import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
+import { FileAddFilled, UploadOutlined, FileOutlined } from '@ant-design/icons';
 import {
   Button,
   Divider,
@@ -21,10 +21,11 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './StaticCategoryListPage.module.scss';
 import StaticCategoryPageSearch from './StaticCategoryPageSearch/StaticCategoryPageSearch';
 import StaticCategoryTableData from './StaticCategoryTableData/StaticCategoryTableData';
-import TextArea from 'antd/lib/input/TextArea';
 import { Select } from 'antd';
 import { Option } from 'antd/lib/mentions';
 import { TypeUpdate } from 'common/constant';
+import imageHelper from 'helpers/imageHelper';
+import { envDomainBackend } from 'common/enviroments';
 
 const cx = classNames.bind(styles);
 
@@ -34,6 +35,11 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
+const Mode = {
+  Create: 1,
+  Edit: 0,
+};
+
 function StaticCategoryListPage(props) {
   const [newsData, setNewsData] = useState({
     data: [],
@@ -51,7 +57,10 @@ function StaticCategoryListPage(props) {
   const [fileListAttachment, setFileListAttachment] = useState([]);
 
   const [form] = Form.useForm();
-
+  const detail = useRef({});
+  const [isShowDetail, setIsShowDetail] = useState(false);
+  const idEdit = useRef();
+  const mode = useRef();
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
@@ -130,17 +139,10 @@ function StaticCategoryListPage(props) {
   const onCancel = () => {
     setIsModalOpen(false);
   };
-  const onCreate = async (values) => {
+  const onCreate = async (formData) => {
     try {
-      var formData = new FormData();
-      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
-      if (values.FileAttachment) {
-        formData.append('FileAttachment', values.FileAttachment);
-      }
-      setIsModalOpen(false);
       await inforStaticAPI.insertCategory(formData);
       openNotification('Tạo mới nội dung tĩnh thành công');
-      fetchCategoryList();
     } catch (error) {
       openNotification(
         'Tạo mới nội dung tĩnh thất bại',
@@ -155,6 +157,7 @@ function StaticCategoryListPage(props) {
   };
 
   const showModal = () => {
+    mode.current = Mode.Create;
     setIsModalOpen(true);
   };
 
@@ -176,9 +179,9 @@ function StaticCategoryListPage(props) {
    * Submit form tạo nguồn tin tức
    * @param {*} values Đối tượng submit form
    */
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     const { Title, Order, ParentId } = values;
-    const bodyData = {
+    let bodyData = {
       Title,
       Order,
     };
@@ -187,7 +190,10 @@ function StaticCategoryListPage(props) {
     }
     let body = { JsonString: bodyData };
 
-    if (fileListAttachment.length > 0) {
+    if (
+      fileListAttachment.length > 0 &&
+      !fileListAttachment?.[0]?.isFileFormServer
+    ) {
       const file = fileListAttachment[0].originFileObj;
       if (file.size > LIMIT_UP_LOAD_FILE) {
         openNotification(
@@ -198,17 +204,93 @@ function StaticCategoryListPage(props) {
         return;
       }
       body.FileAttachment = file;
+    } else if (
+      fileListAttachment?.[0]?.isFileFormServer &&
+      fileListAttachment.length > 0
+    ) {
+      const files = [...fileListAttachment];
+      bodyData = {
+        ...bodyData,
+        FilePath: files?.[0]?.url?.replaceAll(envDomainBackend, ''),
+      };
     }
+    body = { ...body, JsonString: bodyData };
+
+    var formData = new FormData();
+    formData.append('JsonString', convertHelper.Serialize(body.JsonString));
+    if (body.FileAttachment) {
+      formData.append('FileAttachment', body.FileAttachment);
+    }
+    setIsModalOpen(false);
     form.resetFields();
     setFileListAttachment([]);
-    onCreate(body);
+    if (mode.current === Mode.Create) {
+      await onCreate(formData);
+    } else {
+      await updateSounceNews(formData);
+    }
+    fetchCategoryList();
   };
+  const updateSounceNews = async (values) => {
+    try {
+      await inforStaticAPI.updateCategoryByID(idEdit.current, values);
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+  async function handleShowDetail(Id) {
+    const res = await getSourceNewById(Id);
+    detail.current = res;
+    setIsShowDetail(true);
+  }
+
+  async function getSourceNewById(id) {
+    try {
+      const res = await inforStaticAPI.getCategoryByID(id);
+      return res;
+    } catch (err) {
+      openNotification(
+        'Lấy chi tiết dữ liệu thất bại',
+        '',
+        NotificationType.ERROR
+      );
+      return null;
+    }
+  }
+
+  async function handleUpdate(id) {
+    const res = await getSourceNewById(id);
+    idEdit.current = id;
+    mode.current = Mode.Edit;
+    form?.setFieldsValue({
+      Title: res?.Title,
+      ParentId: res?.ParentId,
+      Order: res?.Order,
+    });
+    if (res?.FilePath) {
+      setFileListAttachment([
+        {
+          isFileFormServer: true,
+          uid: '1',
+          name: imageHelper.getNameFile(res?.FilePath),
+          status: 'done',
+          url: imageHelper.getLinkImageUrl(res?.FilePath),
+        },
+      ]);
+    }
+    setIsModalOpen(true);
+  }
 
   return (
     <div className={cx('wrapper')}>
       <Modal
         open={isModalOpen}
-        title='Tạo mới danh mục tĩnh'
+        title={
+          mode.current === Mode.Edit
+            ? 'Cập nhật danh mục tĩnh'
+            : 'Tạo mới danh mục tĩnh'
+        }
         okText='Thêm mới'
         cancelText='Thoát'
         onCancel={onCancel}
@@ -249,8 +331,11 @@ function StaticCategoryListPage(props) {
             </Upload>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='Tạo mới'>
-              Tạo mới
+            <Button
+              type='primary'
+              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+            >
+              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>
@@ -271,8 +356,68 @@ function StaticCategoryListPage(props) {
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
+          showDetail={handleShowDetail}
+          updateData={handleUpdate}
         />
       </div>
+      <Modal
+        open={isShowDetail}
+        title='Hiển thị thông tin'
+        okButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        cancelText='Thoát'
+        onCancel={() => {
+          setIsShowDetail(false);
+        }}
+      >
+        <Row gutter={8}>
+          <Col span={16}>
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Tiêu đề</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Title}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Số thứ tự</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Order}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Danh mục cha</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Description}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Tệp đính kèm</div>
+              </Col>
+              <Col span={16}>
+                {detail.current?.FilePath && (
+                  <>
+                    <FileOutlined />{' '}
+                    {imageHelper.getNameFile(detail.current?.FilePath)}
+                  </>
+                )}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 }

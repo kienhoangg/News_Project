@@ -30,12 +30,20 @@ class InforStaticAPI {
     const url = '/StaticCategories/filter';
     return axiosClient.post(url, body);
   };
+  getCategoryByID = (id) => {
+    const url = `/StaticCategories/${id}`;
+    return axiosClient.get(url);
+  };
   insertCategory = (body) => {
     const url = '/StaticCategories';
     return axiosClient.post(url, body);
   };
   updateStatusCategor = (body) => {
     const url = '/StaticCategories';
+    return axiosClient.put(url, body);
+  };
+  updateCategoryByID = (id, body) => {
+    const url = `/StaticCategories/${id}`;
     return axiosClient.put(url, body);
   };
   deleteCategory = (id) => {
