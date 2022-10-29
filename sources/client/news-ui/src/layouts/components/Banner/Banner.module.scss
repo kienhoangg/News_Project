@@ -1,12 +1,17 @@
 .news-banner {
-    height: 165px;
+    // height: 165px;
+    height: auto;
     // background-image: url("../../../assets//images//home//banner.jpg");
     background-size: auto;
+
+    img {
+        width: 100%;
+    }
 }
 
 @media (max-width: 767px) {
     .news-banner {
-        height: 75px;
+        // height: 75px;
         background-position: left;
         background-size: contain;
         background-repeat: no-repeat;

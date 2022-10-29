@@ -1,114 +1,138 @@
-import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { Button, Space, Table, Tag } from 'antd';
+import { DeleteFilled, EditFilled, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Modal, Space, Table, Tag } from 'antd';
 import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
 import classNames from 'classnames/bind';
 import styles from './QuestionCategoryTableData.module.scss';
+import PropTypes from 'prop-types';
+import { Direction, NotificationType } from 'common/enum';
+import commonFunc from 'common/commonFunc';
+import { Role } from 'common/constant';
+import { openNotification } from 'helpers/notification';
 
 const cx = classNames.bind(styles);
 
-QuestionCategoryTableData.propTypes = {};
+QuestionCategoryTableData.propTypes = {
+    setPagination: PropTypes.func,
+    data: PropTypes.object,
+    update: PropTypes.func,
+    delete: PropTypes.func,
+    toggleStatus: PropTypes.func,
+};
 
-QuestionCategoryTableData.defaultProps = {};
+QuestionCategoryTableData.defaultProps = {
+    setPagination: () => {},
+};
 
 function QuestionCategoryTableData(props) {
-  const { data } = props;
+    const { setPagination, data, update, toggleStatus } = props;
 
-  const columns = [
-    {
-      key: 'title',
-      dataIndex: 'Title',
-      title: 'Tiêu đề',
-      render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.title - b.title,
-    },
-    {
-      key: 'CreatedBy',
-      dataIndex: 'CreatedBy',
-      title: 'Người hỏi',
-      width: 120,
-      render: (text) => <div>{text}</div>,
-      sorter: (a, b) => a.CreatedBy - b.CreatedBy,
-    },
-    {
-      key: 'IsAnswer',
-      dataIndex: 'IsAnswer',
-      title: 'Trạng thái trả lời',
-      width: 150,
-      sorter: (a, b) => true,
-      render: (_, { Id, IsAnswer }) => {
-        let color = IsAnswer ? 'geekblue' : 'volcano';
-        let text = IsAnswer ? 'Đã trả lời' : 'Chưa trả lời';
-        return (
-          <Tag color={color} key={Id} style={{ cursor: 'pointer' }}>
-            {text}
-          </Tag>
-        );
-      },
-    },
-    {
-      key: 'status',
-      dataIndex: 'Status',
-      title: 'Trạng thái',
-      width: 100,
-      sorter: (a, b) => true,
-      render: (_, { Id, Status }) => {
-        let color = !Status ? 'geekblue' : 'volcano';
-        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
-        return (
-          <Tag
-            color={color}
-            key={Id}
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleOnClickStatus({ Id, Status })}
-          >
-            {text}
-          </Tag>
-        );
-      },
-    },
-    {
-      key: 'action',
-      render: (_, record) => (
-        <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
-            Sửa
-          </Button>
-          <Button type='ghost' danger icon={<DeleteFilled />}>
-            Xóa
-          </Button>
-        </Space>
-      ),
-      width: 120,
-    },
-  ];
+    const handleOnchangeTable = (pagination, filters, sorter, extra) => {
+        if (setPagination) {
+            setPagination(pagination.current, pagination.pageSize, sorter.columnKey, sorter.order === 'ascend' ? Direction.ASC : Direction.DESC);
+        }
+    };
 
-  let dataItems = data?.data ?? [];
-  dataItems = dataItems.map((item) => {
-    var PublishedDate = datetimeHelper.formatDateToDateVN(item.PublishedDate);
-    return { ...item, PublishedDate: PublishedDate, key: item.Key };
-  });
+    const columns = [
+        {
+            key: 'Title',
+            dataIndex: 'Title',
+            title: 'Tiêu đề',
+            render: (text) => <a>{text}</a>,
+            sorter: (a, b) => a.title - b.title,
+        },
+        {
+            key: 'Order',
+            dataIndex: 'Order',
+            title: 'Số thứ tự',
+            render: (OrderNumber) => <>{OrderNumber}</>,
+            sorter: (a, b) => a.OrderNumber - b.OrderNumber,
+            width: 100,
+            align: 'right',
+        },
+        {
+            key: 'status',
+            dataIndex: 'Status',
+            title: 'Trạng thái',
+            width: 100,
+            sorter: (a, b) => true,
+            render: (_, { Id, Status }) => {
+                let color = !Status ? 'geekblue' : 'volcano';
+                let text = !Status ? 'Duyệt' : 'Hủy duyệt';
+                return (
+                    <Tag color={color} key={Id} style={{ cursor: 'pointer' }} onClick={() => handleOnClickStatus({ Id, Status })}>
+                        {text}
+                    </Tag>
+                );
+            },
+        },
+        {
+            key: 'action',
+            render: (_, record) => (
+                <Space size='middle'>
+                    <Button type='primary' icon={<EditFilled />}>
+                        Sửa
+                    </Button>
+                    <Button type='ghost' danger icon={<DeleteFilled />}>
+                        Xóa
+                    </Button>
+                </Space>
+            ),
+            width: 120,
+        },
+    ];
 
-  function handleOnClickStatus(values) {
-    // console.log(values);
-  }
+    let dataItems = data?.Results ?? [];
+    dataItems = dataItems.map((item) => {
+        var CreatedDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
+        return { ...item, CreatedDate: CreatedDate, key: item.Id };
+    });
 
-  return (
-    <div className={cx('wrapper')}>
-      <Table
-        columns={columns}
-        pagination={{
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: [10, 20, 30],
-          showTotal: () =>
-            commonRenderTable.showTableTotalPagination(data?.total ?? 0),
-        }}
-        dataSource={dataItems}
-        size='small'
-      />
-    </div>
-  );
+    function handleOnClickStatus(values) {
+        const role = commonFunc.getCookie('role');
+        if (role !== Role.ADMIN) {
+            openNotification(
+                <>
+                    Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+                </>,
+                '',
+                NotificationType.ERROR
+            );
+            return;
+        }
+        Modal.confirm({
+            title: 'Cập nhật trạng thái',
+            icon: <ExclamationCircleOutlined />,
+            content: (
+                <>
+                    Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
+                </>
+            ),
+            okText: 'Cập nhật',
+            cancelText: 'Hủy',
+            onOk: () => {
+                if (toggleStatus) toggleStatus(values);
+            },
+        });
+    }
+
+    return (
+        <div className={cx('wrapper')}>
+            <Table
+                onChange={handleOnchangeTable}
+                columns={columns}
+                pagination={{
+                    defaultPageSize: 10,
+                    showSizeChanger: true,
+                    pageSizeOptions: [10, 20, 30],
+                    total: data?.RowCount,
+                    showTotal: () => commonRenderTable.showTableTotalPagination(data?.RowCount ?? 0),
+                }}
+                dataSource={dataItems}
+                size='small'
+            />
+        </div>
+    );
 }
 
 export default QuestionCategoryTableData;

@@ -1,23 +1,23 @@
-import commonFunc from 'common/commonFunc';
-import axiosClient from './axiosClient';
-import datafakeNews from './datafake/datafakeNews';
+import commonFunc from "common/commonFunc";
+import axiosClient from "./axiosClient";
+import datafakeNews from "./datafake/datafakeNews";
 
 class NewsApi {
   getNewsAll = (body) => {
-    const url = '/newsPost/filter';
+    const url = "/newsPost/filter";
     return axiosClient.post(url, body);
   };
   insertNew = (body) => {
-    const url = '/newsPost';
+    const url = "/newsPost";
     return axiosClient.post(url, body, {
       headers: {
-        Prefer: 'code=200, example=200GetReturn2Record',
-        'Content-Type': 'multipart/form-data',
+        Prefer: "code=200, example=200GetReturn2Record",
+        "Content-Type": "multipart/form-data",
       },
     });
   };
   updatNews = (body) => {
-    const url = '/newsPost';
+    const url = "/newsPost";
     return axiosClient.put(url, body);
   };
   deleteHotNew = (id) => {
@@ -31,7 +31,7 @@ class NewsApi {
   };
   //#region Nguồn tin
   getNewsSourceAll = (body) => {
-    const url = '/sourceNews/filter';
+    const url = "/sourceNews/filter";
     return axiosClient.post(url, body);
   };
   getSourceNewByID = (id) => {
@@ -39,11 +39,11 @@ class NewsApi {
     return axiosClient.get(url);
   };
   insertSourceNew = (body) => {
-    const url = '/sourceNews';
+    const url = "/sourceNews";
     return axiosClient.post(url, body);
   };
   updateStatusSourceNew = (body) => {
-    const url = '/sourceNews';
+    const url = "/sourceNews";
     return axiosClient.put(url, body);
   };
   updateSourceNew = (id, body) => {
@@ -58,7 +58,7 @@ class NewsApi {
 
   //#endregion Lĩnh vực
   getNewsFieldAll = (body) => {
-    const url = '/fieldNews/filter';
+    const url = "/fieldNews/filter";
     return axiosClient.post(url, body);
   };
   getNewsFieldByID = (id) => {
@@ -66,7 +66,7 @@ class NewsApi {
     return axiosClient.get(url);
   };
   insertFieldNews = (body) => {
-    const url = '/fieldNews';
+    const url = "/fieldNews";
     return axiosClient.post(url, body);
   };
   updateFieldNews = (id, body) => {
@@ -74,7 +74,7 @@ class NewsApi {
     return axiosClient.put(url, body);
   };
   updateStatusFieldNews = (body) => {
-    const url = '/fieldNews';
+    const url = "/fieldNews";
     return axiosClient.put(url, body);
   };
   deleteFieldNews = (id) => {
@@ -85,7 +85,7 @@ class NewsApi {
 
   //#region Danh mục
   getNewsCategoryAll = (body) => {
-    const url = '/categoryNews/filter';
+    const url = "/categoryNews/filter";
     return axiosClient.post(url, body);
   };
   getNewsCategoryByID = (id) => {
@@ -93,7 +93,7 @@ class NewsApi {
     return axiosClient.get(url);
   };
   insertCategoryNews = (body) => {
-    const url = '/categoryNews';
+    const url = "/categoryNews";
     return axiosClient.post(url, body);
   };
   updateCategoryNews = (id, body) => {
@@ -101,7 +101,7 @@ class NewsApi {
     return axiosClient.put(url, body);
   };
   updateStatusCategoryNews = (body) => {
-    const url = '/categoryNews';
+    const url = "/categoryNews";
     return axiosClient.put(url, body);
   };
 
@@ -116,13 +116,8 @@ class NewsApi {
   };
   //#endregion
 
-  getNewsCollaboratorsAll = (params) => {
-    var response = commonFunc.generateFakeData(
-      20,
-      50,
-      datafakeNews.Collaborators.objectExample
-    );
-    return response;
+  getNewsCollaboratorsAll = (body) => {
+    return axiosClient.post("/collaborators/filter", body);
   };
 }
 const newsApi = new NewsApi();

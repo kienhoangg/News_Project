@@ -42,6 +42,10 @@ class DocumentApi {
     const url = "/DocumentTypes";
     return axiosClient.post(url, body);
   };
+  updateCategoryDocument = (id, body) => {
+    const url = "/DocumentTypes/" + id;
+    return axiosClient.put(url, body);
+  };
   updatStatusCategoryDocument = (body) => {
     const url = "/DocumentTypes";
     return axiosClient.put(url, body);
@@ -77,6 +81,10 @@ class DocumentApi {
   insertFieldDocument = (body) => {
     const url = "/documentfields";
     return axiosClient.post(url, body);
+  };
+  updateFieldDocument = (id, body) => {
+    const url = "/documentfields/" + id;
+    return axiosClient.put(url, body);
   };
   updatStatusFieldDocument = (body) => {
     const url = "/documentfields";
