@@ -82,6 +82,10 @@ class DocumentApi {
     const url = "/documentfields";
     return axiosClient.post(url, body);
   };
+  updateFieldDocument = (id, body) => {
+    const url = "/documentfields/" + id;
+    return axiosClient.put(url, body);
+  };
   updatStatusFieldDocument = (body) => {
     const url = "/documentfields";
     return axiosClient.put(url, body);
