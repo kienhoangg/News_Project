@@ -58,18 +58,38 @@ function NewsHotTableData(props) {
       render: (_, record) => (
         <Space size='middle'>
           <Tag
-            color={'volcano'}
-            style={{ cursor: 'pointer' }}
-            onClick={() => {
-              if (record.Status) {
+            color={"volcano"}
+            style={{ cursor: "pointer" }}
+            onClick={(event) => {
+              event?.stopPropagation();
+              const role = commonFunc.getCookie("role");
+              if (role !== Role.ADMIN) {
                 openNotification(
-                  'Hủy duyệt trước khi xóa',
-                  '',
+                  <>
+                    Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+                  </>,
+                  "",
                   NotificationType.ERROR
                 );
                 return;
               }
-              handleDeleteHotNew(record);
+              Modal.confirm({
+                title: "Xóa video",
+                icon: <ExclamationCircleOutlined />,
+                content: (
+                  <>
+                    Bạn có chắc chắn <b>Xóa</b> không?
+                  </>
+                ),
+                okText: "Xóa",
+                cancelText: "Hủy",
+                onOk: () => {
+                  if (!cancelNewsHost) {
+                    return;
+                  }
+                  cancelNewsHost(record);
+                },
+              });
             }}
           >
             Xóa

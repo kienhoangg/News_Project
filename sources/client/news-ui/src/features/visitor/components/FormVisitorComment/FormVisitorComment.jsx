@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './FormVisitorComment.module.scss';
 import classNames from 'classnames/bind';
@@ -8,16 +8,26 @@ const cx = classNames.bind(styles);
 
 FormVisitorComment.propTypes = {
     onFinish: PropTypes.func,
+    resetFields: PropTypes.bool,
+    submitLoading: PropTypes.bool,
 };
 
-FormVisitorComment.defaultProps = {};
+FormVisitorComment.defaultProps = {
+    resetFields: false,
+    submitLoading: false,
+};
 
 function FormVisitorComment(props) {
-    const { onFinish } = props;
+    const { onFinish, resetFields, submitLoading } = props;
     const [form] = Form.useForm();
     const onReset = () => {
         form.resetFields();
     };
+
+    useEffect(() => {
+        form.resetFields();
+    }, [resetFields]);
+
     return (
         <div className={cx('wrapper')}>
             <Form
@@ -85,7 +95,7 @@ function FormVisitorComment(props) {
                         margin: '0',
                     }}
                 >
-                    <Button type='primary' htmlType='submit'>
+                    <Button type='primary' htmlType='submit' loading={submitLoading}>
                         Gửi bình luận
                     </Button>
                     <Button

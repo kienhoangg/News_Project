@@ -22,7 +22,7 @@
                     border-bottom: solid 2px #1e1e1e;
                     width: max-content;
 
-                    &>span {
+                    & > span {
                         color: #337ab7;
                         font-size: 13px;
                         text-transform: uppercase;
@@ -40,7 +40,7 @@
                         width: 17%;
                         padding-right: 10px;
 
-                        &>span {
+                        & > span {
                             font-size: 13px;
                             font-weight: 700;
                             color: #333;
@@ -51,7 +51,7 @@
                         width: calc(100% - 17%);
                         padding-left: 10px;
 
-                        &>input {
+                        & > input {
                             width: 100%;
                             height: 30px;
                             border: 1px solid #ababab;
@@ -83,12 +83,11 @@
                             }
                         }
 
-
                         &__label {
                             width: 34%;
                             padding-right: 10px;
 
-                            &>span {
+                            & > span {
                                 font-size: 13px;
                                 font-weight: 700;
                                 color: #333;
@@ -100,10 +99,10 @@
                             height: 30px;
                             padding-left: 10px;
 
-                            &>div.ant-select {
+                            & > div.ant-select {
                                 width: 100%;
 
-                                &>.ant-select-selector {
+                                & > .ant-select-selector {
                                     height: 30px;
                                     border: 1px solid #ababab !important;
                                     box-shadow: none !important;
@@ -111,7 +110,7 @@
                                 }
                             }
 
-                            &>.ant-picker {
+                            & > .ant-picker {
                                 border: 1px solid #ababab !important;
                                 box-shadow: none !important;
                                 border-radius: 3px;
@@ -136,7 +135,7 @@
                 border-bottom: 1px solid #ccc;
 
                 &__content {
-                    &>span {
+                    & > span {
                         font-size: 13px;
                         font-weight: 700;
                         color: #333;
@@ -169,7 +168,7 @@
                     .ant-table-tbody {
                         cursor: pointer;
 
-                        &>.ant-table-row {
+                        & > .ant-table-row {
                             &:nth-child(odd) {
                                 background-color: #f9f9f9;
                             }
@@ -183,7 +182,6 @@
                             padding: 8px;
                             border-left: 1px solid #ddd;
                             color: #337ab7;
-
 
                             &:first-child {
                                 border-left: none;
@@ -202,14 +200,10 @@
                     margin-top: 20px;
 
                     .ant-pagination {
-
                         .ant-pagination-item-link {
                             border-radius: 3px !important;
-
                         }
                     }
-
-
                 }
             }
         }
@@ -222,15 +216,15 @@
         flex-direction: column;
 
         &__row {
-            background: #BFC0C2;
+            background: #bfc0c2;
             border-bottom: 1px solid #ffffff;
             height: 33px;
 
-            &:hover>a {
+            &:hover > a {
                 color: red;
             }
 
-            &>a {
+            & > a {
                 text-transform: uppercase;
                 font-size: 14px;
                 color: #000;
@@ -247,7 +241,7 @@
                 height: 40px;
                 background-color: red;
 
-                &>a {
+                & > a {
                     color: #ffffff;
                 }
             }
@@ -261,14 +255,12 @@
                     display: none;
                 }
 
-
                 &__item {
                     &:first-child {
                         .operating-documents-page__right__row__list-item-running__item__href {
                             border-top: none;
                             margin-top: 0px;
                         }
-
                     }
 
                     &__href {
@@ -277,7 +269,7 @@
                         padding-right: 10px;
                         padding-top: 5px;
                         display: block;
-                        border-top: 1px dotted #BBBCBF;
+                        border-top: 1px dotted #bbbcbf;
                         margin-top: 10px;
 
                         &__dot {
@@ -290,6 +282,31 @@
                             border-radius: 50%;
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .operating-documents-page {
+        flex-direction: column;
+        margin-bottom: 8px;
+        // height: 800px;
+
+        .operating-documents-page__left {
+            width: 100%;
+        }
+
+        .operating-documents-page__right {
+            width: 100%;
+            margin-left: 0;
+
+            .operating-documents-page__right__row:last-child {
+                height: auto;
+
+                a {
+                    height: 40px;
                 }
             }
         }

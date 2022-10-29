@@ -1,5 +1,6 @@
 import { FileAddFilled, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Input, Row } from "antd";
+import { Button, Col, Input, Row, Select } from "antd";
+import { Option } from "antd/lib/mentions";
 import classNames from "classnames/bind";
 import { useState } from "react";
 import styles from "./QuestionListPageSearch.module.scss";
@@ -11,9 +12,13 @@ QuestionListPageSearch.propTypes = {};
 QuestionListPageSearch.defaultProps = {};
 
 function QuestionListPageSearch(props) {
-  const { setTextSearch, onCreate } = props;
+  const { setTextSearch, onCreate, dataCategoryQuestion } = props;
 
   const [keyword, setKeyword] = useState("");
+  const [questionStatus, setQuestionStatus] = useState(null);
+  const [categoryQuestion, setCategoryQuestion] = useState(null);
+
+  console.log(categoryQuestion);
   /**
    * Sử lý sự kiện bấp search
    */
@@ -21,7 +26,7 @@ function QuestionListPageSearch(props) {
     if (!setTextSearch) {
       return;
     }
-    setTextSearch(keyword);
+    setTextSearch(keyword, questionStatus, categoryQuestion);
   };
 
   /**
@@ -33,15 +38,68 @@ function QuestionListPageSearch(props) {
     setKeyword(textSearch);
   };
 
+  const QuestionStatus = [
+    {
+      id: 0,
+      label: "Câu hỏi mới",
+    },
+    {
+      id: 1,
+      label: "Chờ câu trả lời",
+    },
+    {
+      id: 2,
+      label: "Chờ được phê duyệt",
+    },
+    {
+      id: 3,
+      label: "Câu hỏi được phê duyệt",
+    },
+  ];
+
   return (
     <div className={cx("wrapper")}>
       <Row gutter={16} style={{ marginBottom: 0 }}>
-        <Col span={8}>
+        <Col
+          span={8}
+          style={{
+            display: "flex",
+          }}
+        >
           <Input
             style={{ width: "100%" }}
             placeholder="Từ khóa tìm kiếm"
             onChange={handleChange}
           />
+
+          <Select
+            style={{
+              width: 200,
+              marginLeft: 20,
+            }}
+            placeholder="Danh mục chủ đề"
+            onChange={(id) => setCategoryQuestion(id)}
+          >
+            {dataCategoryQuestion?.map((x) => (
+              <Option value={x.Id} key={x.Id}>
+                {x?.Title}
+              </Option>
+            ))}
+          </Select>
+          <Select
+            style={{
+              width: 200,
+              marginLeft: 20,
+            }}
+            placeholder="Trạng thái câu hỏi"
+            onChange={(id) => setQuestionStatus(id)}
+          >
+            {QuestionStatus?.map((x) => (
+              <Option value={x.id} key={x.id}>
+                {x.label}
+              </Option>
+            ))}
+          </Select>
         </Col>
         <Col span={2}>
           <Row justify="start">

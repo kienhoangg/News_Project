@@ -1,13 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class MenusController : ControllerBase
     {
@@ -41,11 +46,15 @@ namespace News.API.Controllers
                 await _menuService.GetAdminMenu();
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateMenuDto([FromBody] MenuDto menuDto)
+                CreateMenuDto([FromBody] MenuDto menuDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                menuDto.Status = Status.Enabled;
+            }
             var menu = _mapper.Map<Menu>(menuDto);
             await _menuService.CreateMenu(menu);
             var result = _mapper.Map<MenuDto>(menu);

@@ -154,10 +154,11 @@ function NewsHotPage(props) {
         Value: true,
         Field: TypeUpdate.IS_HOT_NEWS,
       });
-      openNotification('Cập nhật thành công');
+      openNotification("Thêm thành công");
       fetchProductListPopUp();
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      openNotification("Thêm thành thất bại");
+      console.log("Failed to fetch list: ", error);
     }
   };
 

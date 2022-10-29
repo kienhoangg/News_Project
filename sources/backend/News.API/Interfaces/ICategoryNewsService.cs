@@ -25,5 +25,7 @@ namespace News.API.Interfaces
         Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression);
 
         Task UpdateManyCategoryNewsDto(List<int> lstCategoryNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+
+        public IQueryable<Comment> GetCommentByCategoryNews(CommentRequest commentRequest);
     }
 }

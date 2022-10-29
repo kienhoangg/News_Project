@@ -1,17 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class StaticCategoriesController : ControllerBase
     {
@@ -38,10 +43,10 @@ namespace News.API.Controllers
                 await _staticCategoryService.GetStaticCategoryByPaging(staticCategoryRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-      CreateStaticCategoryDto([FromForm] StaticCategoryUploadDto staticCategoryUploadDto)
+              CreateStaticCategoryDto([FromForm] StaticCategoryUploadDto staticCategoryUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -61,6 +66,10 @@ namespace News.API.Controllers
             string fileAttachmentPath = "";
             var staticCategory = _serializeService
                   .Deserialize<StaticCategory>(staticCategoryUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                staticCategory.Status = Status.Enabled;
+            }
             // Upload file attachment if exist
             if (staticCategoryUploadDto.FileAttachment != null)
             {

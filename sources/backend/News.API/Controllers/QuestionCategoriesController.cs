@@ -1,13 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class QuestionCategoriesController : ControllerBase
     {
@@ -32,11 +37,15 @@ namespace News.API.Controllers
                 await _questionCategoryService.GetQuestionCategoryByPaging(questionCategoryRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateQuestionCategoryDto([FromBody] QuestionCategoryDto questionCategoryDto)
+                CreateQuestionCategoryDto([FromBody] QuestionCategoryDto questionCategoryDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                questionCategoryDto.Status = Status.Enabled;
+            }
             var questionCategory = _mapper.Map<QuestionCategory>(questionCategoryDto);
             await _questionCategoryService.CreateQuestionCategory(questionCategory);
             var result = _mapper.Map<QuestionCategoryDto>(questionCategory);
