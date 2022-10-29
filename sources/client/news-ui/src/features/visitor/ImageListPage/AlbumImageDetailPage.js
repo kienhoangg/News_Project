@@ -59,7 +59,7 @@ export default function AlbumImageDetailPage() {
    */
   const callApiGetListAlbum = async () => {
     try {
-      const res = await axiosClient.post("/hone/photocategories/filter", {
+      const res = await axiosClient.post("/home/photocategories/filter", {
         pageSize: PAGE_SIZE,
         currentPage: paging,
         direction: -1,
@@ -85,7 +85,7 @@ export default function AlbumImageDetailPage() {
    */
   const getDetailAlbum = async (idAlbum) => {
     try {
-      const res = await axiosClient.get("/hone/photocategories/" + idAlbum);
+      const res = await axiosClient.get("/home/photocategories/" + idAlbum);
 
       const images = [];
       res?.Photos?.map((item) => {
