@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using AutoMapper;
 using Common.Enums;
 using Common.Shared.Constants;
@@ -34,8 +35,12 @@ ICommentService commentService)
         public async Task<IActionResult>
         GetCommentByPaging([FromBody] CommentRequest commentRequest)
         {
+            var lstInclude =
+              new Expression<Func<Comment, object>>[] {
+                    (x => x.NewsPost)
+              };
             var result =
-                await _commentService.GetCommentByPaging(commentRequest);
+                await _commentService.GetCommentByPaging(commentRequest, lstInclude);
             return Ok(result);
         }
 
