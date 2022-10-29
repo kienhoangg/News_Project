@@ -99,18 +99,28 @@ function NewsCategoryPage(props) {
     const dicDetail = [
       {
         type: 'string',
-        label: 'Tiêu đề',
-        content: response?.CategoryNewsName,
+        label: 'Danh mục cấp cha',
+        content: response?.ParentId ?? '',
       },
       {
         type: 'string',
-        label: 'Danh mục cấp cha',
-        content: response?.ParentId ?? '',
+        label: 'Tiêu đề',
+        content: response?.CategoryNewsName,
       },
       {
         type: 'number',
         label: 'Số thứ tự',
         content: response?.Order,
+      },
+      {
+        type: 'string',
+        label: 'Loại tin',
+        content: response?.FieldNews_SK_FK ?? '',
+      },
+      {
+        type: 'string',
+        label: 'Keyword',
+        content: response?.Keyword ?? '',
       },
     ];
 
@@ -135,12 +145,12 @@ function NewsCategoryPage(props) {
    */
   const onFinish = async (values) => {
     let parentID = null;
-    let fieldNewID = null;
+    let fieldNews_SK_FK = null;
     if (values.parentId) {
       parentID = parseInt(values.parentId);
     }
-    if (values.fieldNewID) {
-      fieldNewID = parseInt(values.fieldNewID);
+    if (values.FieldNews_SK_FK) {
+      fieldNews_SK_FK = parseInt(values.FieldNews_SK_FK);
     }
     values = {
       CategoryNewsName: values?.title,
@@ -150,8 +160,8 @@ function NewsCategoryPage(props) {
     if (parentID) {
       values.ParentId = parentID;
     }
-    if (fieldNewID) {
-      values.fieldNewID = fieldNewID;
+    if (fieldNews_SK_FK) {
+      values.FieldNews_SK_FK = fieldNews_SK_FK;
     }
 
     setIsModalOpen(false);
@@ -260,12 +270,6 @@ function NewsCategoryPage(props) {
   );
 
   async function getSourceNewById(id) {
-    return {
-      CategoryNewsName: 'LALALAL',
-      Order: 5,
-      Keyword: 'ghfh',
-      ParentId: 4,
-    };
     try {
       const res = await newsApi.getNewsCategoryByID(id);
       return res;
@@ -284,9 +288,12 @@ function NewsCategoryPage(props) {
     idEdit.current = id;
     mode.current = Mode.Edit;
     form?.setFieldsValue({
-      title: res?.Title,
+      title: res?.CategoryNewsName,
+      FieldNews_SK_FK: res?.FieldNews_SK_FK,
       description: res?.Description,
       order: res?.Order,
+      keyword: res?.Keyword,
+      parentId: res?.ParentId,
     });
     setIsModalOpen(true);
   }
@@ -297,7 +304,11 @@ function NewsCategoryPage(props) {
       }
       <Modal
         className={cx('modal-category-news')}
-        title='Thêm mới danh mục tin'
+        title={
+          mode.current === Mode.Edit
+            ? 'Cập nhật danh mục tin'
+            : 'Tạo mới danh mục tin'
+        }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -317,15 +328,18 @@ function NewsCategoryPage(props) {
             <Input type='number' min={0} defaultValue={0} />
           </Form.Item>
 
-          <Form.Item name='fieldNewID' label='Loại tin'>
+          <Form.Item name='FieldNews_SK_FK' label='Loại tin'>
             {renderField}
           </Form.Item>
           <Form.Item name='keyword' label='Keyword'>
             <Input placeholder='Nhập Keyword' />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='Tạo mới'>
-              Tạo mới
+            <Button
+              type='primary'
+              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+            >
+              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>

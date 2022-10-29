@@ -3,6 +3,7 @@ import homeApi from 'apis/published/homeApi';
 import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
+import useWindowDimensions from 'customHooks/useWindowDimensions';
 import { useEffect, useState } from 'react';
 import { Bar, BarChart, LabelList, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 import styles from './PublishedEvaluatePage.module.scss';
@@ -58,6 +59,8 @@ function PublishedEvaluatePage(props) {
     const [openModelResult, setOpenModelResult] = useState(false);
     const [dataChartResult, setDataChartResult] = useState([]);
     const [dataChartTotalRate, setChartTotalRate] = useState({});
+
+    const { height, width } = useWindowDimensions();
 
     function handleOnClickResult(id) {
         const fetchDataReport = async (id) => {
@@ -260,7 +263,7 @@ function PublishedEvaluatePage(props) {
                         <div>{dataChartTotalRate?.Title}</div>
                     </div>
                     <div className={cx('result-chart')}>
-                        <BarChart width={800} height={300} data={dataChartResult} barSize={60}>
+                        <BarChart width={width > 767 ? 800 : width - 16} height={300} data={dataChartResult} barSize={width > 767 ? 60 : 10}>
                             <XAxis dataKey='name' />
                             <YAxis padding={{ top: 20 }} />
                             <Tooltip />
