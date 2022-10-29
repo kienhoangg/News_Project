@@ -56,7 +56,7 @@ class PublishedNewsApi {
     }
 
     postVisitorComment(params) {
-        const url = `/home/comments`;
+        const url = `/home/comment`;
         const body = params
 
         return axiosClient.post(url, body);

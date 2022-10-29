@@ -64,9 +64,7 @@ function PublishedDocumentPage(props) {
                 let body = {
                     username: name,
                     content: comment,
-                    newsPost: {
-                        id: id,
-                    },
+                    newsPostId: id,
                 };
 
                 await publishedNewsApi.postVisitorComment(body);
