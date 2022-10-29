@@ -31,7 +31,7 @@ function VideoListPageSearch(props) {
     const textSearch = event?.target?.value?.trim() ?? "";
     setKeyword(textSearch);
     // TODO: Xóa nếu bỏ search trong lúc gõ
-    setTextSearch(textSearch);
+    // setTextSearch(textSearch);
   };
 
   return (

@@ -28,20 +28,20 @@ function VideoListTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.Order === "ascend" ? Direction.ASC : Direction.DESC
+      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
     );
   };
 
   const columns = [
     {
-      key: "title",
+      key: "Title",
       dataIndex: "Title",
       title: "Tiêu đề",
       render: (text) => <div>{text}</div>,
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "status",
+      key: "Status",
       dataIndex: "Status",
       title: "Trạng thái",
       align: "center",
@@ -116,7 +116,7 @@ function VideoListTableData(props) {
     },
   ];
 
-  let dataItems = data?.length ? data : [];
+  let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var PublishedDate = datetimeHelper.formatDateToDateVN(item.PublishedDate);
     return { ...item, PublishedDate: PublishedDate, key: item.Key };

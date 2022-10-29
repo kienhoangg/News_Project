@@ -82,6 +82,7 @@ namespace News.API.Services
                     QuestionStatus = QuestionStatus.NEW_QUESTION,
                     PageSize = 5,
                     CurrentPage = 1,
+                    Status = Status.Enabled
                 })).PagedData.Results.ToList(),
                 MostViewQuestions = (await GetQuestionByPaging(new QuestionRequest()
                 {
