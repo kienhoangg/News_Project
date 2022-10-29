@@ -485,7 +485,7 @@ function QuestionListPage(props) {
                   style={{ marginBottom: 0 }}
                   name="IsNoticed"
                   valuePropName="checked"
-                  label={"Cẩu hỏi chú ý"}
+                  label={"Câu hỏi chú ý"}
                 >
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <Checkbox
