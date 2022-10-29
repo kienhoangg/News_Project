@@ -3,7 +3,7 @@ import {
   EditFilled,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Space, Table, Tag, Modal } from 'antd';
+import { Button, Space, Table, Tag, Modal, Row, Col } from 'antd';
 import { commonRenderTable } from 'common/commonRender';
 import datetimeHelper from 'helpers/datetimeHelper';
 import styles from './NewsSourceTableData.module.scss';
@@ -13,6 +13,7 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import commonFunc from 'common/commonFunc';
 import { Role } from 'common/constant';
+import newsApi from './../../../../../../apis/newsApi';
 
 const cx = classNames.bind(styles);
 
@@ -41,14 +42,25 @@ function NewsSourceTableData(props) {
       key: 'Title',
       dataIndex: 'Title',
       title: 'Tiêu đề',
-      render: (text) => <div>{text}</div>,
+      render: (_, { Id, Title }) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            if (props.showDetail) {
+              props.showDetail(Id);
+            }
+          }}
+        >
+          {Title}
+        </div>
+      ),
       sorter: (a, b) => a.Title - b.Title,
     },
     {
       key: 'Order',
       dataIndex: 'Order',
       title: 'Số thứ tự',
-      render: (Order) => <a>{Order}</a>,
+      render: (Order) => <>{Order}</>,
       sorter: (a, b) => a.Order - b.Order,
       width: 100,
       align: 'right',
@@ -57,7 +69,7 @@ function NewsSourceTableData(props) {
       key: 'Description',
       dataIndex: 'Description',
       title: 'Mô tả',
-      render: (Description) => <a>{Description}</a>,
+      render: (Description) => <>{Description}</>,
       sorter: (a, b) => a.Description - b.Description,
       width: 200,
     },
@@ -115,10 +127,20 @@ function NewsSourceTableData(props) {
   });
 
   function handleChangeSourceNew(values) {
-    console.log(values);
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
+      return;
+    }
+    if (props.updateData) {
+      props.updateData(values.Id);
+    }
   }
 
   function handleDeleteSourceNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa nguồn tin',
       icon: <ExclamationCircleOutlined />,

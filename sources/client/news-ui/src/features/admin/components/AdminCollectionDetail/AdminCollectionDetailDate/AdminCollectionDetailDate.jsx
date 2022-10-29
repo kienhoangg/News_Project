@@ -8,25 +8,25 @@ import datetimeHelper from 'helpers/datetimeHelper';
 const cx = classNames.bind(styles);
 
 AdminCollectionDetailDate.propTypes = {
-    label: PropTypes.string,
-    value: PropTypes.string,
+  label: PropTypes.string,
+  value: PropTypes.string,
 };
 
 AdminCollectionDetailDate.defaultProps = {};
 
 function AdminCollectionDetailDate(props) {
-    const { label, value } = props;
+  const { label, value } = props;
 
-    return (
-        <Row gutter={16} className={cx('row-item')}>
-            <Col span={4}>
-                <div className={cx('row-item-label')}>{label}</div>
-            </Col>
-            <Col span={20}>
-                <div>{datetimeHelper.formatDateToDateVN(value)}</div>
-            </Col>
-        </Row>
-    );
+  return (
+    <Row gutter={16} className={cx('row-item')}>
+      <Col span={8}>
+        <div className={cx('row-item-label')}>{label}</div>
+      </Col>
+      <Col span={16}>
+        <div>{datetimeHelper.formatDateToDateVN(value)}</div>
+      </Col>
+    </Row>
+  );
 }
 
 export default AdminCollectionDetailDate;
