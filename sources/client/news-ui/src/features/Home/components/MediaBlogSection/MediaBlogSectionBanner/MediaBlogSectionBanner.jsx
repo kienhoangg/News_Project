@@ -6,6 +6,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useNavigate } from 'react-router-dom';
 import styles from './MediaBlogSectionBanner.module.scss';
 import PropTypes from 'prop-types';
+import useWindowDimensions from 'customHooks/useWindowDimensions';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +19,10 @@ MediaBlogSectionBanner.defaultProps = {};
 function MediaBlogSectionBanner(props) {
     const { AlbumImages } = props;
 
+    const { height, width } = useWindowDimensions();
     const navigate = useNavigate();
+
+    console.log('width', width);
 
     // const Images = [
     //     {
@@ -67,7 +71,7 @@ function MediaBlogSectionBanner(props) {
                                 }}
                                 style={{ cursor: 'pointer' }}
                             >
-                                <LazyLoadImage effect='blur' src={urlImage} alt={urlImage} height={440} width={1000} />
+                                <LazyLoadImage effect='blur' src={urlImage} alt={urlImage} height={width > 767 ? 440 : 200} width={width > 767 ? 1000 : width} />
                             </div>
                         );
                     })}

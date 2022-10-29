@@ -17,7 +17,7 @@
                 border-bottom: solid 2px #1e1e1e;
                 width: max-content;
 
-                &>span {
+                & > span {
                     color: #337ab7;
                     font-size: 13px;
                     text-transform: uppercase;
@@ -44,15 +44,15 @@
                     border-collapse: collapse;
                     border-top: 1px solid #ddd;
 
-                    &>tbody {
-                        &>tr {
+                    & > tbody {
+                        & > tr {
                             border-bottom: 1px solid #ddd;
 
                             &:last-child {
                                 border-bottom: none;
                             }
 
-                            &>td {
+                            & > td {
                                 border-left: 1px solid #ddd;
                                 padding: 8px;
 
@@ -79,7 +79,6 @@
                 }
 
                 &__wrap-list {
-
                     &__row {
                         display: flex;
                         border-bottom: 1px dashed #ddd;
@@ -91,8 +90,7 @@
                         }
 
                         &__dot {
-
-                            &>img {
+                            & > img {
                                 margin-top: -4px;
                             }
                         }
@@ -100,7 +98,7 @@
                         &__title {
                             margin-left: 10px;
 
-                            &>a {
+                            & > a {
                                 color: #337ab7;
                                 text-decoration: none;
                             }
@@ -113,7 +111,7 @@
                 margin-top: 10px;
                 margin-bottom: 20px;
 
-                &>a {
+                & > a {
                     color: #337ab7;
                     text-decoration: none;
                 }
@@ -125,15 +123,15 @@
         width: 250px;
 
         &__row {
-            background: #BFC0C2;
+            background: #bfc0c2;
             border-bottom: 1px solid #ffffff;
             height: 33px;
 
-            &:hover>a {
+            &:hover > a {
                 color: red;
             }
 
-            &>a {
+            & > a {
                 text-transform: uppercase;
                 font-size: 14px;
                 color: #000;
@@ -150,7 +148,7 @@
                 height: 40px;
                 background-color: red;
 
-                &>a {
+                & > a {
                     color: #ffffff;
                 }
             }
@@ -164,14 +162,12 @@
                     display: none;
                 }
 
-
                 &__item {
                     &:first-child {
                         .operating-documents-detail-page__right__row__list-item-running__item__href {
                             border-top: none;
                             margin-top: 0px;
                         }
-
                     }
 
                     &__href {
@@ -180,7 +176,7 @@
                         padding-right: 10px;
                         padding-top: 5px;
                         display: block;
-                        border-top: 1px dotted #BBBCBF;
+                        border-top: 1px dotted #bbbcbf;
                         margin-top: 10px;
 
                         &__dot {
@@ -193,6 +189,30 @@
                             border-radius: 50%;
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .operating-documents-detail-page {
+        flex-direction: column;
+        margin-bottom: 8px;
+
+        .operating-documents-detail-page__left {
+            width: 100%;
+        }
+
+        .operating-documents-detail-page__right {
+            width: 100%;
+            margin-left: 0;
+
+            .operating-documents-detail-page__right__row:last-child {
+                height: auto;
+
+                a {
+                    height: 40px;
                 }
             }
         }
