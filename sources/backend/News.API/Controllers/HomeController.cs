@@ -39,6 +39,7 @@ namespace News.API.Controllers
         private readonly ITokenService _tokenService;
         private readonly ICompanyInfoService _companyInfoService;
         private readonly ILinkInfoService _linkInfoService;
+        private readonly IPhotoCategoryService _photoCategoryService;
 
 
 
@@ -60,7 +61,8 @@ namespace News.API.Controllers
             IFieldNewsService fieldNewsService,
             ICompanyInfoService companyInfoService,
             ILinkInfoService linkInfoService,
-            ICommentService commentService)
+            ICommentService commentService,
+            IPhotoCategoryService photoCategoryService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -77,6 +79,7 @@ namespace News.API.Controllers
             _companyInfoService = companyInfoService;
             _linkInfoService = linkInfoService;
             _commentService = commentService;
+            _photoCategoryService = photoCategoryService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -230,6 +233,39 @@ namespace News.API.Controllers
             await _questionService.CreateQuestion(question);
 
             var result = _mapper.Map<QuestionDto>(question);
+            return Ok(result);
+        }
+
+        [HttpPost("photocategories/filter")]
+        public async Task<IActionResult>
+        GetPhotoCategoryByPaging([FromBody] PhotoCategoryRequest photoCategoryRequest)
+        {
+            var result =
+                await _photoCategoryService.GetPhotoCategoryByPaging(photoCategoryRequest);
+            return Ok(result);
+        }
+
+        [HttpGet("photocategories/{id:int}")]
+        public async Task<IActionResult> GetPhotoCategoryById([Required] int id)
+        {
+            var lstInclude =
+             new Expression<Func<PhotoCategory, object>>[] {
+                    (x => x.Photos)
+             };
+            PhotoCategory? photoCategory = await _photoCategoryService.GetPhotoCategory(id, lstInclude);
+            if (photoCategory == null) return NotFound();
+
+            var result = _mapper.Map<PhotoCategoryDto>(photoCategory);
+            return Ok(result);
+        }
+
+        [HttpGet("photos/{id:int}")]
+        public async Task<IActionResult> GetPhotoById([Required] int id)
+        {
+            Photo? photo = await _photoService.GetPhoto(id);
+            if (photo == null) return NotFound();
+
+            var result = _mapper.Map<PhotoDto>(photo);
             return Ok(result);
         }
 
