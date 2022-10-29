@@ -58,31 +58,31 @@ function NewsHotTableData(props) {
       render: (_, record) => (
         <Space size='middle'>
           <Tag
-            color={"volcano"}
-            style={{ cursor: "pointer" }}
+            color={'volcano'}
+            style={{ cursor: 'pointer' }}
             onClick={(event) => {
               event?.stopPropagation();
-              const role = commonFunc.getCookie("role");
+              const role = commonFunc.getCookie('role');
               if (role !== Role.ADMIN) {
                 openNotification(
                   <>
                     Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
                   </>,
-                  "",
+                  '',
                   NotificationType.ERROR
                 );
                 return;
               }
               Modal.confirm({
-                title: "Xóa video",
+                title: 'Xóa video',
                 icon: <ExclamationCircleOutlined />,
                 content: (
                   <>
                     Bạn có chắc chắn <b>Xóa</b> không?
                   </>
                 ),
-                okText: "Xóa",
-                cancelText: "Hủy",
+                okText: 'Xóa',
+                cancelText: 'Hủy',
                 onOk: () => {
                   if (!cancelNewsHost) {
                     return;
@@ -107,6 +107,10 @@ function NewsHotTableData(props) {
   });
 
   function handleDeleteHotNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa tin nổi bật',
       icon: <ExclamationCircleOutlined />,

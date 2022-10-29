@@ -4,3 +4,11 @@
         justify-content: space-between;
     }
 }
+.row-item {
+    margin-bottom: 16px;
+
+    .row-item-label {
+        text-align: right;
+        font-weight: 600;
+    }
+}

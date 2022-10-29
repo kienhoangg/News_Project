@@ -141,6 +141,10 @@ function ConnectionTableData(props) {
   };
 
   function handleDeleteSourceNew(values) {
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa nguồn tin',
       icon: <ExclamationCircleOutlined />,
