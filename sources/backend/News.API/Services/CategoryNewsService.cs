@@ -57,7 +57,7 @@ namespace News.API.Services
         public async Task<CategoryNews> GetCategoryNews(int id, params Expression<Func<CategoryNews, object>>[] includeProperties)
         {
 
-            return await GetCategoryNews(id, includeProperties);
+            return await GetByIdAsync(id, includeProperties);
         }
 
         public async Task<CategoryNewsDto> GetCategoryNewsWithParentName(int id, params Expression<Func<CategoryNews, object>>[] includeProperties)
