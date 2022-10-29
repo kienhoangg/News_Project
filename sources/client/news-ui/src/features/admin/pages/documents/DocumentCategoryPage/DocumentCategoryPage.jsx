@@ -39,11 +39,13 @@ function DocumentCategoryPage(props) {
     EDIT: 0,
     DETAIL: 1,
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [document, setDocument] = useState({
     content: null,
     type: null,
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [form] = Form.useForm();
 
   /**
