@@ -6,6 +6,7 @@ using Infrastructure.Implements;
 using Infrastructure.Mappings;
 using Infrastructure.Shared.Paging;
 using Infrastructure.Shared.SeedWork;
+using Microsoft.EntityFrameworkCore;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
@@ -18,10 +19,12 @@ namespace News.API.Services
     public class CommentService : RepositoryBase<Comment, long, NewsContext>, ICommentService
     {
         private readonly IMapper _mapper;
+        private readonly ICategoryNewsService _categoryNewsService;
         public CommentService(IMapper mapper, NewsContext dbContext,
-            IUnitOfWork<NewsContext> unitOfWork) : base(dbContext, unitOfWork)
+            IUnitOfWork<NewsContext> unitOfWork, ICategoryNewsService categoryNewsService) : base(dbContext, unitOfWork)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _categoryNewsService = categoryNewsService;
         }
 
         public async Task CreateComment(Comment comment)
@@ -48,15 +51,24 @@ namespace News.API.Services
             {
                 query = FindAll(includeProperties: includeProperties);
             }
+            if (commentRequest.CategoryNewsId.HasValue)
+            {
+                _categoryNewsService.GetCommentByCategoryNews(commentRequest);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(commentRequest.Keyword))
+                {
+                    query = query.Where((x => x.Content.Contains(commentRequest.Keyword)));
+                }
 
-            if (!string.IsNullOrEmpty(commentRequest.Keyword))
-            {
-                query = query.Where((x => x.Content.Contains(commentRequest.Keyword)));
+                if (commentRequest.Status.HasValue)
+                {
+                    query = query.Where(x => x.Status == commentRequest.Status.Value);
+                }
             }
-            if (commentRequest.Status.HasValue)
-            {
-                query = query.Where(x => x.Status == commentRequest.Status.Value);
-            }
+
+
             PagedResult<Comment>? sourcePaging = await query.PaginatedListAsync(commentRequest.CurrentPage
                                                                                              ?? 1, commentRequest.PageSize ?? CommonConstants.PAGE_SIZE, commentRequest.OrderBy, commentRequest.Direction);
             var lstDto = _mapper.Map<List<CommentDto>>(sourcePaging.Results);

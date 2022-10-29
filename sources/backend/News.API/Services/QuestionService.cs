@@ -59,6 +59,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.QuestionStatus == questionRequest.QuestionStatus.Value));
             }
+            if (questionRequest.QuestionCategoryId.HasValue)
+            {
+                query = query.Where((x => x.QuestionCategoryId == questionRequest.QuestionCategoryId.Value));
+            }
 
             PagedResult<Question>? sourcePaging = await query.PaginatedListAsync(questionRequest.CurrentPage
                                                                                              ?? 1, questionRequest.PageSize ?? CommonConstants.PAGE_SIZE, questionRequest.OrderBy, questionRequest.Direction);

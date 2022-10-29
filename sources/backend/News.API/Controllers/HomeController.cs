@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.Internal;
 using Common.Enums;
+using Common.Extensions;
 using Common.Interfaces;
 using Common.Shared.Constants;
 using Contracts.Interfaces;
@@ -32,6 +33,7 @@ namespace News.API.Controllers
         private readonly IPhotoService _photoService;
         private readonly ICacheService _cacheService;
         private readonly IFieldNewsService _fieldNewsService;
+        private readonly ICommentService _commentService;
 
         private readonly ISerializeService _serializeService;
         private readonly ITokenService _tokenService;
@@ -57,7 +59,8 @@ namespace News.API.Controllers
             ICacheService cacheService,
             IFieldNewsService fieldNewsService,
             ICompanyInfoService companyInfoService,
-            ILinkInfoService linkInfoService)
+            ILinkInfoService linkInfoService,
+            ICommentService commentService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -73,6 +76,7 @@ namespace News.API.Controllers
             _fieldNewsService = fieldNewsService;
             _companyInfoService = companyInfoService;
             _linkInfoService = linkInfoService;
+            _commentService = commentService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -141,7 +145,7 @@ namespace News.API.Controllers
             }
             return NotFound();
         }
-        
+
         [HttpGet("question")]
         public async Task<IActionResult> GetQuestionAnswer()
         {
@@ -176,6 +180,66 @@ namespace News.API.Controllers
         public async Task<IActionResult> GetHomeMenu()
         {
             var result = await _menuService.GetHomeMenu();
+            return Ok(result);
+        }
+
+        [HttpPost("question/filter")]
+        public async Task<IActionResult>
+     GetQuestionByPaging([FromBody] QuestionRequest questionRequest)
+        {
+            var result =
+                await _questionService.GetQuestionByPaging(questionRequest);
+            return Ok(result);
+        }
+        [HttpPost("question")]
+        public async Task<IActionResult>
+             CreateQuestionDto([FromForm] QuestionUploadDto questionUploadDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Question
+                    >(lstErrorString));
+                }
+            }
+            var question = _serializeService
+                   .Deserialize<Question>(questionUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                question.Status = Status.Enabled;
+            }
+            string fileAttachmentPath = "";
+            // Upload file attachment if exist
+            if (questionUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await questionUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+            question.FilePath = fileAttachmentPath;
+            await _questionService.CreateQuestion(question);
+
+            var result = _mapper.Map<QuestionDto>(question);
+            return Ok(result);
+        }
+
+        [HttpPost("comment")]
+        public async Task<IActionResult>
+      CreateCommentDto([FromBody] CommentDto commentDto)
+        {
+            var comment = _mapper.Map<Comment>(commentDto);
+            await _commentService.CreateComment(comment);
+            var result = _mapper.Map<CommentDto>(comment);
             return Ok(result);
         }
 

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 using News.API.Persistence;
 using News.API.Services;
@@ -166,7 +167,7 @@ namespace News.API.Extensions
                 typeof(CacheService))
                  .AddScoped(serviceType: typeof(IDocumentFieldService),
                 typeof(DocumentFieldService)).AddScoped(serviceType: typeof(IDocumentTypeService),
-                typeof(DocumentTypeService)).AddScoped(serviceType: typeof(IDocumentDepartmentService),
+                typeof(DocumentTypeService)).AddScoped<HandleStatusByRoleAttribute>().AddScoped(serviceType: typeof(IDocumentDepartmentService),
                 typeof(DocumentDepartmentService)).AddScoped(serviceType: typeof(IDocumentSignPersonService),
                 typeof(DocumentSignPersonService)).AddScoped(serviceType: typeof(IQuestionService),
                 typeof(QuestionService)).AddScoped(serviceType: typeof(IQuestionCategoryService),

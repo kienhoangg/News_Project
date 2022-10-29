@@ -1,17 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class VideosController : ControllerBase
     {
@@ -40,10 +45,10 @@ namespace News.API.Controllers
                 await _videoService.GetVideoByPaging(videoRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-          CreateVideoDto([FromForm] VideoUploadDto videoUploadDto)
+                  CreateVideoDto([FromForm] VideoUploadDto videoUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -66,6 +71,10 @@ namespace News.API.Controllers
             var video =
                           _serializeService
                               .Deserialize<Video>(videoUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                video.Status = Status.Enabled;
+            }
             // Upload file avatar if exist
             if (videoUploadDto.Avatar != null)
             {

@@ -1,13 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class SourceNewsController : ControllerBase
     {
@@ -35,9 +40,14 @@ namespace News.API.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         public async Task<IActionResult>
         CreateSourceNewsDto([FromBody] SourceNewsDto sourceNewsDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                sourceNewsDto.Status = Status.Enabled;
+            }
             var sourceNews = _mapper.Map<SourceNews>(sourceNewsDto);
             await _sourceNewsService.CreateSourceNews(sourceNews);
             var result = _mapper.Map<SourceNewsDto>(sourceNews);

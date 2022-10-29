@@ -1,17 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class LinkInfosController : ControllerBase
     {
@@ -38,10 +43,10 @@ namespace News.API.Controllers
                 await _linkInfoService.GetLinkInfoByPaging(linkInfoRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-       CreateLinkInfoDto([FromForm] LinkInfoUploadDto linkInfoUploadDto)
+               CreateLinkInfoDto([FromForm] LinkInfoUploadDto linkInfoUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -61,6 +66,10 @@ namespace News.API.Controllers
             string fileAttachmentPath = "";
             var linkInfo = _serializeService
                   .Deserialize<LinkInfo>(linkInfoUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                linkInfo.Status = Status.Enabled;
+            }
             // Upload file attachment if exist
             if (linkInfoUploadDto.FileAttachment != null)
             {

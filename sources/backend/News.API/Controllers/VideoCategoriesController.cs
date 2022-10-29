@@ -1,13 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class VideoCategoriesController : ControllerBase
     {
@@ -32,11 +37,15 @@ namespace News.API.Controllers
                 await _videoCategoryService.GetVideoCategoryByPaging(videoCategoryRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateVideoCategoryDto([FromBody] VideoCategoryDto videoCategoryDto)
+                CreateVideoCategoryDto([FromBody] VideoCategoryDto videoCategoryDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                videoCategoryDto.Status = Status.Enabled;
+            }
             var videoCategory = _mapper.Map<VideoCategory>(videoCategoryDto);
             await _videoCategoryService.CreateVideoCategory(videoCategory);
             var result = _mapper.Map<VideoCategoryDto>(videoCategory);

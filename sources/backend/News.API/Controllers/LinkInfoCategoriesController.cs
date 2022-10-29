@@ -1,13 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
+
     [Route("api/[controller]")]
     public class LinkInfoCategoriesController : ControllerBase
     {
@@ -33,10 +39,15 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
         CreateLinkInfoCategoryDto([FromBody] LinkInfoCategoryDto linkInfoCategoryDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                linkInfoCategoryDto.Status = Status.Enabled;
+            }
             var linkInfoCategory = _mapper.Map<LinkInfoCategory>(linkInfoCategoryDto);
             await _linkInfoCategoryService.CreateLinkInfoCategory(linkInfoCategory);
             var result = _mapper.Map<LinkInfoCategoryDto>(linkInfoCategory);

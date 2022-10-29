@@ -1,17 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class PhotosController : ControllerBase
     {
@@ -38,10 +43,10 @@ namespace News.API.Controllers
                 await _photoService.GetPhotoByPaging(photoRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-         CreatePhotoDto([FromForm] PhotoUploadDto photoUploadDto)
+                 CreatePhotoDto([FromForm] PhotoUploadDto photoUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -60,6 +65,10 @@ namespace News.API.Controllers
             }
             var photo = _serializeService
          .Deserialize<Photo>(photoUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                photo.Status = Status.Enabled;
+            }
             string fileAttachmentPath = "";
             // Upload file attachment if exist
             if (photoUploadDto.FileAttachment != null)

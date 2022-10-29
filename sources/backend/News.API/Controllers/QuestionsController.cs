@@ -1,17 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class QuestionsController : ControllerBase
     {
@@ -38,10 +43,10 @@ namespace News.API.Controllers
                 await _questionService.GetQuestionByPaging(questionRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-     CreateQuestionDto([FromForm] QuestionUploadDto questionUploadDto)
+             CreateQuestionDto([FromForm] QuestionUploadDto questionUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -58,6 +63,12 @@ namespace News.API.Controllers
                     >(lstErrorString));
                 }
             }
+            var question = _serializeService
+                   .Deserialize<Question>(questionUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                question.Status = Status.Enabled;
+            }
             string fileAttachmentPath = "";
             // Upload file attachment if exist
             if (questionUploadDto.FileAttachment != null)
@@ -68,9 +79,6 @@ namespace News.API.Controllers
                         .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
             }
 
-
-            var question = _serializeService
-                    .Deserialize<Question>(questionUploadDto.JsonString);
             question.FilePath = fileAttachmentPath;
             await _questionService.CreateQuestion(question);
 

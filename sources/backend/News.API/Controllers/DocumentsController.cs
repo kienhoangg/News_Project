@@ -1,18 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using AutoMapper;
+using Common.Enums;
 using Common.Extensions;
 using Common.Interfaces;
+using Common.Shared.Constants;
 using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class DocumentsController : ControllerBase
     {
@@ -40,10 +45,10 @@ namespace News.API.Controllers
                 await _documentService.GetDocumentByPaging(documentRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateDocumentDto([FromForm] DocumentUploadDto documentUploadDto)
+                CreateDocumentDto([FromForm] DocumentUploadDto documentUploadDto)
         {
             if (!ModelState.IsValid)
             {
@@ -63,6 +68,10 @@ namespace News.API.Controllers
             string fileAttachmentPath = "";
             var document = _serializeService
                   .Deserialize<Document>(documentUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                document.Status = Status.Enabled;
+            }
             // Upload file attachment if exist
             if (documentUploadDto.FileAttachment != null)
             {

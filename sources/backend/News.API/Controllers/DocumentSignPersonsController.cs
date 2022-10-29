@@ -1,13 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Common.Enums;
+using Common.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
+using News.API.Authorization;
+using News.API.Filter;
 using News.API.Interfaces;
 
 namespace News.API.Controllers
 {
+    [Authorize(RoleCode.ADMIN, RoleCode.SITE_ADMIN)]
     [Route("api/[controller]")]
     public class DocumentSignPersonsController : ControllerBase
     {
@@ -32,11 +37,15 @@ namespace News.API.Controllers
                 await _documentSignPersonService.GetDocumentSignPersonByPaging(documentSignPersonRequest);
             return Ok(result);
         }
-
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateDocumentSignPersonDto([FromBody] DocumentSignPersonDto documentSignPersonDto)
+                CreateDocumentSignPersonDto([FromBody] DocumentSignPersonDto documentSignPersonDto)
         {
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                documentSignPersonDto.Status = Status.Enabled;
+            }
             var documentSignPerson = _mapper.Map<DocumentSignPerson>(documentSignPersonDto);
             await _documentSignPersonService.CreateDocumentSignPerson(documentSignPerson);
             var result = _mapper.Map<DocumentSignPersonDto>(documentSignPerson);
