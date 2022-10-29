@@ -42,6 +42,10 @@ class DocumentApi {
     const url = "/DocumentTypes";
     return axiosClient.post(url, body);
   };
+  updateCategoryDocument = (id, body) => {
+    const url = "/DocumentTypes/" + id;
+    return axiosClient.put(url, body);
+  };
   updatStatusCategoryDocument = (body) => {
     const url = "/DocumentTypes";
     return axiosClient.put(url, body);

@@ -324,17 +324,17 @@ function QuestionListPage(props) {
                   Address: Address,
                   Phone: Phone,
                   Email: Email,
-                  QuestionDate: datetimeHelper.formatDatetimeToDateSerer(
-                    QuestionDate?._d ?? null
-                  ),
+                  QuestionDate: QuestionDate?._d
+                    ? datetimeHelper.formatDatetimeToDateSerer(QuestionDate?._d)
+                    : null,
                   IsNoticed: IsNoticed,
                   QuestionContent: QuestionContent,
                   QuestionStatus: QuestionStatus,
                   AnswerPersonName: AnswerPersonName,
                   AnswerContent: AnswerContent,
-                  AnswerDate: datetimeHelper.formatDatetimeToDateSerer(
-                    AnswerDate?._d ?? null
-                  ),
+                  AnswerDate: AnswerDate?._d
+                    ? datetimeHelper.formatDatetimeToDateSerer(AnswerDate?._d)
+                    : null,
                 };
 
                 let body = { JsonString: bodyData };
