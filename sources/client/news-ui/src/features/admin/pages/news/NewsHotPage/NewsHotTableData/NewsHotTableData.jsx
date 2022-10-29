@@ -60,8 +60,36 @@ function NewsHotTableData(props) {
           <Tag
             color={"volcano"}
             style={{ cursor: "pointer" }}
-            onClick={() => {
-              cancelNewsHost(record);
+            onClick={(event) => {
+              event?.stopPropagation();
+              const role = commonFunc.getCookie("role");
+              if (role !== Role.ADMIN) {
+                openNotification(
+                  <>
+                    Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
+                  </>,
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              Modal.confirm({
+                title: "Xóa video",
+                icon: <ExclamationCircleOutlined />,
+                content: (
+                  <>
+                    Bạn có chắc chắn <b>Xóa</b> không?
+                  </>
+                ),
+                okText: "Xóa",
+                cancelText: "Hủy",
+                onOk: () => {
+                  if (!cancelNewsHost) {
+                    return;
+                  }
+                  cancelNewsHost(record);
+                },
+              });
             }}
           >
             Xóa
