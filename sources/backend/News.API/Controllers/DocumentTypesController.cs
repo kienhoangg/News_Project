@@ -56,11 +56,10 @@ namespace News.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDocumentFieldById([Required] int id)
         {
-            var documentType = await _documentTypeService.GetDocumentType(id);
+            var documentType = await _documentTypeService.GetDocumentTypeWithParentName(id);
             if (documentType == null) return NotFound();
 
-            var result = _mapper.Map<DocumentFieldDto>(documentType);
-            return Ok(result);
+            return Ok(documentType);
         }
 
         [HttpPut("{id:int}")]

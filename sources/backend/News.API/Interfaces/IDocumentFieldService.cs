@@ -27,5 +27,7 @@ namespace News.API.Interfaces
         Task<List<DocumentField>> GetAllDocumentFields();
 
         Task UpdateManyDocumentFieldDto(List<int> lstDocumentFieldId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+
+        Task<DocumentFieldDto> GetDocumentFieldWithParentName(int id);
     }
 }

@@ -47,13 +47,9 @@ namespace News.API.Services
         {
             var query = FindAll();
 
-            if (includeProperties.ToList().Count > 0)
-            {
-                query = FindAll(includeProperties: includeProperties);
-            }
             if (commentRequest.CategoryNewsId.HasValue)
             {
-                _categoryNewsService.GetCommentByCategoryNews(commentRequest);
+                query = _categoryNewsService.GetCommentByCategoryNews(commentRequest);
             }
             else
             {

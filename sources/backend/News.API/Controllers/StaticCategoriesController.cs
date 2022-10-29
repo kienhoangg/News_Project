@@ -88,11 +88,9 @@ namespace News.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetStaticCategoryById([Required] int id)
         {
-            StaticCategory? staticCategory = await _staticCategoryService.GetStaticCategory(id);
+            var staticCategory = await _staticCategoryService.GetStaticCategoryWithParentName(id);
             if (staticCategory == null) return NotFound();
-
-            var result = _mapper.Map<StaticCategoryDto>(staticCategory);
-            return Ok(result);
+            return Ok(staticCategory);
         }
 
         [HttpPut("{id:int}")]

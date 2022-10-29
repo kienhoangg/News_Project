@@ -8,7 +8,7 @@ namespace Models.Entities
 
         public string? Username { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public string? Address { get; set; }
 

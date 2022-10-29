@@ -39,6 +39,15 @@ namespace News.API.Services
         {
             return await GetByIdAsync(id);
         }
+        public async Task<StaticCategoryDto> GetStaticCategoryWithParentName(int id)
+        {
+            var staticCategoryDto = _mapper.Map<StaticCategoryDto>(await GetStaticCategory(id));
+            if (staticCategoryDto.ParentId.HasValue && staticCategoryDto.ParentId != 0)
+            {
+                staticCategoryDto.ParentName = (await GetStaticCategory(staticCategoryDto.ParentId.Value)).Title;
+            }
+            return staticCategoryDto;
+        }
 
         public async Task<ApiSuccessResult<StaticCategoryDto>> GetStaticCategoryByPaging(StaticCategoryRequest staticCategoryRequest, params Expression<Func<StaticCategory, object>>[] includeProperties)
         {

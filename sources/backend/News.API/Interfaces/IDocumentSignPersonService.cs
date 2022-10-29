@@ -26,5 +26,6 @@ namespace News.API.Interfaces
         Task DeleteDocumentSignPerson(int id);
         Task<List<DocumentSignPerson>> GetAllDocumentSignPersons();
         Task UpdateManyDocumentSignPersonDto(List<int> lstDocumentSignPersonId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<DocumentSignPersonDto> GetDocumentSignPersonWithParentName(int id);
     }
 }
