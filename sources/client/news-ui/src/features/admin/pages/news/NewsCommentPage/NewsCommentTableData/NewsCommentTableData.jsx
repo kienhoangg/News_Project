@@ -136,8 +136,6 @@ function NewsCommentTableData(props) {
     };
   });
 
-  console.log(dataItems);
-
   function handleOnClickStatus(values) {
     const role = commonFunc.getCookie("role");
     if (role !== Role.ADMIN) {
