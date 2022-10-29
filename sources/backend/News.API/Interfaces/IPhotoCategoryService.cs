@@ -24,5 +24,6 @@ namespace News.API.Interfaces
 
         Task DeletePhotoCategory(int id);
         Task UpdateManyPhotoCategoryDto(List<int> lstPhotoCategoryId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<PhotoCategoryDto> GetPhotoCategoryWithParentName(int id, params Expression<Func<PhotoCategory, object>>[] includeProperties);
     }
 }

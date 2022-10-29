@@ -60,11 +60,10 @@ namespace News.API.Controllers
              new Expression<Func<PhotoCategory, object>>[] {
                     (x => x.Photos)
              };
-            PhotoCategory? photoCategory = await _photoCategoryService.GetPhotoCategory(id, lstInclude);
+            var photoCategory = await _photoCategoryService.GetPhotoCategoryWithParentName(id, lstInclude);
             if (photoCategory == null) return NotFound();
 
-            var result = _mapper.Map<PhotoCategoryDto>(photoCategory);
-            return Ok(result);
+            return Ok(photoCategory);
         }
 
         [HttpPut("{id:int}")]

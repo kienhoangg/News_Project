@@ -8,6 +8,7 @@ import { Option } from 'antd/lib/mentions';
 import { FileAddFilled, SearchOutlined } from '@ant-design/icons';
 import commonFunc from 'common/commonFunc';
 import datetimeHelper from 'helpers/datetimeHelper';
+import convertHelper from 'helpers/convertHelper';
 
 const cx = classNames.bind(styles);
 
@@ -26,11 +27,16 @@ NewsListMenuSearch.defaultProps = {
 function NewsListMenuSearch(props) {
   const { setOpenCollectionEditor, setFilterNews, setActionForm, dataFilter } =
     props;
+
   const [objFilterNews, setObjFilterNews] = useState(undefined);
   const [keyword, setKeyword] = useState('');
 
   const onChangeCategoryNews = (categoryNewsId) => {
-    setObjFilterNews({ ...objFilterNews, categoryNewsId });
+    const id =
+      dataFilter?.categoryNews.find(
+        (x) => x.CategoryNewsName === categoryNewsId
+      )?.Id ?? undefined;
+    setObjFilterNews({ ...objFilterNews, categoryNewsId: id });
   };
 
   const handleOnclickCreate = () => {
@@ -61,18 +67,22 @@ function NewsListMenuSearch(props) {
   };
 
   const handleChangeFieldNews = (fieldNewsId) => {
-    setObjFilterNews({ ...objFilterNews, fieldNewsId });
+    const id =
+      dataFilter?.fieldNews.find((x) => x.Title === fieldNewsId)?.Id ??
+      undefined;
+    setObjFilterNews({ ...objFilterNews, fieldNewsId: id });
   };
 
   const renderFieldNews = (
     <Select
+      showSearch
       placeholder='Lĩnh vực'
       style={{ width: '100%' }}
       allowClear={true}
       onChange={handleChangeFieldNews}
     >
       {dataFilter?.fieldNews?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -81,7 +91,11 @@ function NewsListMenuSearch(props) {
 
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+      <TreeNode
+        value={x.CategoryNewsName}
+        title={x.CategoryNewsName}
+        key={x.Id}
+      >
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));
@@ -102,23 +116,29 @@ function NewsListMenuSearch(props) {
       treeDefaultExpandAll
       onChange={onChangeCategoryNews}
     >
-      {generateTree(commonFunc.list_to_tree(dataFilter?.categoryNews ?? []))}
+      {generateTree(
+        commonFunc.list_to_tree([...dataFilter?.categoryNews] ?? [])
+      )}
     </TreeSelect>
   );
 
   const handleChangeSourceNews = (sourceNewsId) => {
-    setObjFilterNews({ ...objFilterNews, sourceNewsId });
+    const id =
+      dataFilter?.sourceNews.find((x) => x.Title === sourceNewsId)?.Id ??
+      undefined;
+    setObjFilterNews({ ...objFilterNews, sourceNewsId: id });
   };
 
   const renderSourceNews = (
     <Select
+      showSearch
       placeholder='Nguồn tin'
       style={{ width: '100%' }}
       allowClear={true}
       onChange={handleChangeSourceNews}
     >
       {dataFilter?.sourceNews?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}

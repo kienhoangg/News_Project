@@ -75,6 +75,16 @@ namespace News.API.Services
             await UpdateAsync(product);
         }
 
+        public async Task<DocumentFieldDto> GetDocumentFieldWithParentName(int id)
+        {
+            var documentFieldDto = _mapper.Map<DocumentFieldDto>(await GetDocumentField(id));
+            if (documentFieldDto.ParentId.HasValue && documentFieldDto.ParentId != 0)
+            {
+                documentFieldDto.ParentName = (await GetDocumentField(documentFieldDto.ParentId.Value)).Title;
+            }
+            return documentFieldDto;
+        }
+
         public async Task<ApiSuccessResult<DocumentField>> GetDocumentFieldNormalByPaging(DocumentFieldRequest đocumentFieldRequest, params Expression<Func<DocumentField, object>>[] includeProperties)
         {
             var query = FindAll();

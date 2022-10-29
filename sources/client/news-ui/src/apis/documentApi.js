@@ -64,6 +64,12 @@ class DocumentApi {
     const url = "/DocumentDepartments";
     return axiosClient.post(url, body);
   };
+
+  updateSourceDocument = (id, body) => {
+    const url = "/DocumentDepartments/" + id;
+    return axiosClient.put(url, body);
+  };
+
   updatStatusSourceDocument = (body) => {
     const url = "/DocumentDepartments";
     return axiosClient.put(url, body);
@@ -82,6 +88,10 @@ class DocumentApi {
     const url = "/documentfields";
     return axiosClient.post(url, body);
   };
+  updateFieldDocument = (id, body) => {
+    const url = "/documentfields/" + id;
+    return axiosClient.put(url, body);
+  };
   updatStatusFieldDocument = (body) => {
     const url = "/documentfields";
     return axiosClient.put(url, body);
@@ -95,6 +105,10 @@ class DocumentApi {
   getDocumentSingerAll = (body) => {
     const url = "/documentsignpersons/filter";
     return axiosClient.post(url, body);
+  };
+  updateSingerDocument = (id, body) => {
+    const url = "/documentsignpersons/" + id;
+    return axiosClient.put(url, body);
   };
   insertSingerDocument = (body) => {
     const url = "/documentsignpersons";

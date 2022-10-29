@@ -31,7 +31,7 @@ namespace News.API.Controllers
 
         [HttpPost("filter")]
         public async Task<IActionResult>
-        GetDocumentFieldByPaging([FromBody] DocumentTypeRequest documentTypeRequest)
+        GetDocumentTypeByPaging([FromBody] DocumentTypeRequest documentTypeRequest)
         {
             var result =
                 await _documentTypeService.GetDocumentTypeByPaging(documentTypeRequest);
@@ -41,7 +41,7 @@ namespace News.API.Controllers
         [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
         [HttpPost]
         public async Task<IActionResult>
-        CreateDocumentFieldDto([FromBody] DocumentTypeDto documentTypeDto)
+        CreateDocumentTypeDto([FromBody] DocumentTypeDto documentTypeDto)
         {
             if (HttpContext.Items["HandledStatus"] != null)
             {
@@ -54,33 +54,32 @@ namespace News.API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetDocumentFieldById([Required] int id)
+        public async Task<IActionResult> GetDocumentTypeById([Required] int id)
         {
-            var documentType = await _documentTypeService.GetDocumentType(id);
+            var documentType = await _documentTypeService.GetDocumentTypeWithParentName(id);
             if (documentType == null) return NotFound();
 
-            var result = _mapper.Map<DocumentFieldDto>(documentType);
-            return Ok(result);
+            return Ok(documentType);
         }
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateDocumentFieldDto(
+        UpdateDocumentTypeDto(
             [Required] int id,
-            [FromBody] DocumentFieldDto documentTypeDto
+            [FromBody] DocumentTypeDto documentTypeDto
         )
         {
             documentTypeDto.Id = id;
-            var DocumentField = await _documentTypeService.GetDocumentType(id);
-            if (DocumentField == null) return NotFound();
-            var updatedDocumentField = _mapper.Map(documentTypeDto, DocumentField);
-            await _documentTypeService.UpdateDocumentType(updatedDocumentField);
-            var result = _mapper.Map<DocumentFieldDto>(updatedDocumentField);
+            var documentType = await _documentTypeService.GetDocumentType(id);
+            if (documentType == null) return NotFound();
+            var updatedDocumentType = _mapper.Map(documentTypeDto, documentType);
+            await _documentTypeService.UpdateDocumentType(updatedDocumentType);
+            var result = _mapper.Map<DocumentTypeDto>(updatedDocumentType);
             return Ok(result);
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteDocumentFieldDto([Required] int id)
+        public async Task<IActionResult> DeleteDocumentTypeDto([Required] int id)
         {
             var documentType = await _documentTypeService.GetDocumentType(id);
             if (documentType == null) return NotFound();

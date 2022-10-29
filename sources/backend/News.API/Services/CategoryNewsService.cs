@@ -45,7 +45,7 @@ namespace News.API.Services
         {
 
             var query = FindByCondition((x => x.Id == commentRequest.CategoryNewsId)).SelectMany(x => x.NewsPosts)
-                .SelectMany(x => x.Comments);
+               .SelectMany(x => x.Comments);
             if (!string.IsNullOrEmpty(commentRequest.Keyword))
             {
                 query = query.Where(x => x.Username.Contains(commentRequest.Keyword));
@@ -56,14 +56,13 @@ namespace News.API.Services
 
         public async Task<CategoryNews> GetCategoryNews(int id, params Expression<Func<CategoryNews, object>>[] includeProperties)
         {
-
             return await GetByIdAsync(id, includeProperties);
         }
 
         public async Task<CategoryNewsDto> GetCategoryNewsWithParentName(int id, params Expression<Func<CategoryNews, object>>[] includeProperties)
         {
             var categoryNewsDto = _mapper.Map<CategoryNewsDto>(await GetCategoryNews(id, includeProperties));
-            if (categoryNewsDto.ParentId.HasValue)
+            if (categoryNewsDto.ParentId.HasValue && categoryNewsDto.ParentId != 0)
             {
                 categoryNewsDto.ParentName = (await GetCategoryNews(categoryNewsDto.ParentId.Value)).CategoryNewsName;
             }

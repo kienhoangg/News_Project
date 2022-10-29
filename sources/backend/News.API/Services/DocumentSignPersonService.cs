@@ -47,6 +47,16 @@ namespace News.API.Services
             return await FindAll().ToListAsync();
         }
 
+        public async Task<DocumentSignPersonDto> GetDocumentSignPersonWithParentName(int id)
+        {
+            var documentSignPersonDto = _mapper.Map<DocumentSignPersonDto>(await GetDocumentSignPerson(id));
+            if (documentSignPersonDto.ParentId.HasValue && documentSignPersonDto.ParentId != 0)
+            {
+                documentSignPersonDto.ParentName = (await GetDocumentSignPerson(documentSignPersonDto.ParentId.Value)).Title;
+            }
+            return documentSignPersonDto;
+        }
+
         public async Task<ApiSuccessResult<DocumentSignPersonDto>> GetDocumentSignPersonByPaging(DocumentSignPersonRequest documentSignPersonRequest, params Expression<Func<DocumentSignPerson, object>>[] includeProperties)
         {
             var query = FindAll();

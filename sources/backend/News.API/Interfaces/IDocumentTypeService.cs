@@ -27,5 +27,6 @@ namespace News.API.Interfaces
 
         Task<List<DocumentType>> GetAllDocumentTypes();
         Task UpdateManyDocumentTypeDto(List<int> lstDocumentTypeId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<DocumentTypeDto> GetDocumentTypeWithParentName(int id);
     }
 }

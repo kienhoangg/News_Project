@@ -42,6 +42,16 @@ namespace News.API.Services
             return await GetByIdAsync(id, includeProperties);
         }
 
+        public async Task<PhotoCategoryDto> GetPhotoCategoryWithParentName(int id, params Expression<Func<PhotoCategory, object>>[] includeProperties)
+        {
+            var photoCategoryDto = _mapper.Map<PhotoCategoryDto>(await GetPhotoCategory(id, includeProperties));
+            if (photoCategoryDto.ParentId.HasValue && photoCategoryDto.ParentId != 0)
+            {
+                photoCategoryDto.ParentName = (await GetPhotoCategory(photoCategoryDto.ParentId.Value)).Title;
+            }
+            return photoCategoryDto;
+        }
+
         public async Task<ApiSuccessResult<PhotoCategoryDto>> GetPhotoCategoryByPaging(PhotoCategoryRequest photoCategoryRequest, params Expression<Func<PhotoCategory, object>>[] includeProperties)
         {
             var query = FindAll();

@@ -56,11 +56,10 @@ namespace News.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDocumentDepartmentById([Required] int id)
         {
-            DocumentDepartment? documentDepartment = await _documentDepartmentService.GetDocumentDepartment(id);
+            var documentDepartment = await _documentDepartmentService.GetDocumentDepartmentWithParentName(id);
             if (documentDepartment == null) return NotFound();
 
-            var result = _mapper.Map<DocumentDepartmentDto>(documentDepartment);
-            return Ok(result);
+            return Ok(documentDepartment);
         }
 
         [HttpPut("{id:int}")]

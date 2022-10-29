@@ -55,11 +55,10 @@ namespace News.API.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDocumentFieldById([Required] int id)
         {
-            DocumentField? documentField = await _documentFieldService.GetDocumentField(id);
+            var documentField = await _documentFieldService.GetDocumentFieldWithParentName(id);
             if (documentField == null) return NotFound();
 
-            var result = _mapper.Map<DocumentFieldDto>(documentField);
-            return Ok(result);
+            return Ok(documentField);
         }
 
         [HttpPut("{id:int}")]
