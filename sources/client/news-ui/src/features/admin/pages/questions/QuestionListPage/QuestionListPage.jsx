@@ -155,8 +155,21 @@ function QuestionListPage(props) {
    * Sử lý thay đổi text search
    * @param {*} textSearch Từ cần tìm
    */
-  const handleChangeTextSearch = (textSearch) => {
-    setObjFilter({ ...objFilter, keyword: textSearch });
+  const handleChangeTextSearch = (
+    textSearch,
+    questionStatus,
+    categoryQuestion
+  ) => {
+    setObjFilter({
+      ...objFilter,
+      keyword: textSearch,
+      ...(questionStatus || questionStatus === 0
+        ? { questionStatus: questionStatus }
+        : {}),
+      ...(categoryQuestion || categoryQuestion === 0
+        ? { questionCategoryId: categoryQuestion }
+        : {}),
+    });
   };
 
   /**
@@ -598,6 +611,7 @@ function QuestionListPage(props) {
               type: POPUP_TYPE.CREATE,
             });
           }}
+          dataCategoryQuestion={dataCategoryQuestion}
         />
       </div>
       <Divider style={{ margin: "0" }} />
