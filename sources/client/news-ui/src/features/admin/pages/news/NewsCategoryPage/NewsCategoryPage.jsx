@@ -16,6 +16,11 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
+const Mode = {
+  Create: 1,
+  Edit: 0,
+};
+
 const cx = classNames.bind(styles);
 
 NewsCategoryPage.propTypes = {};
@@ -41,16 +46,20 @@ function NewsCategoryPage(props) {
   const [openCollectionDetail, setOpenCollectionDetail] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const dataDetail = useRef({});
-
+  const detail = useRef({});
+  const idEdit = useRef();
+  const mode = useRef();
+  const [dataFilter, setDataFilter] = useState({
+    fieldNews: [],
+  });
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
   useEffect(() => {
-    // if (isFirstCall.current) {
-    //   isFirstCall.current = false;
-    //   return;
-    // }
+    if (isFirstCall.current) {
+      isFirstCall.current = false;
+      getDataFilter();
+    }
     fetchCategoryList();
   }, [objFilter]);
 
@@ -70,72 +79,48 @@ function NewsCategoryPage(props) {
     }
   };
 
-  const handleOnClickShowRowDetail = (values) => {
-    const fetchItem = async () => {
-      setConfirmLoading(true);
-
-      try {
-        const response = await newsApi.getNewsCategoryById(values?.id);
-        var dicDetail = [
-          {
-            type: 'string',
-            label: 'Tiêu đề',
-            content: response?.Title,
-          },
-          {
-            type: 'string',
-            label: 'Danh mục cấp cha',
-            content: response?.ParentTitle ?? '',
-          },
-          {
-            type: 'number',
-            label: 'Số thứ tự',
-            content: response?.OrderNumber,
-          },
-          {
-            type: 'ID',
-            label: 'ID',
-            content: response?.Id,
-          },
-          {
-            type: 'datetime',
-            label: 'Ngày tạo',
-            content: response?.CreatedDate,
-          },
-          {
-            type: 'datetime',
-            label: 'Ngày sửa cuối',
-            content: response?.ModifiedDate,
-          },
-          {
-            type: 'string',
-            label: 'Người tạo',
-            content: response?.CreatedBy,
-          },
-          {
-            type: 'string',
-            label: 'Người sửa',
-            content: response?.ModifiedBy,
-          },
-          {
-            type: 'string',
-            label: 'File đính kèm',
-            content: response?.FileUrl,
-          },
-        ];
-
-        dataDetail.current = dicDetail;
-        setConfirmLoading(false);
-        setOpenCollectionDetail(true);
-      } catch (error) {
-        console.log('Failed to fetch list: ', error);
-      }
+  const getDataFilter = async () => {
+    const filterAll = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
     };
+    const responseFieldNews = newsApi.getNewsFieldAll(filterAll);
+    Promise.all([responseFieldNews]).then((values) => {
+      setDataFilter({
+        fieldNews: values[0]?.PagedData?.Results ?? [],
+      });
+    });
+  };
 
-    fetchItem();
+  const handleOnClickShowRowDetail = async (Id) => {
+    const response = await getSourceNewById(Id);
+    const dicDetail = [
+      {
+        type: 'string',
+        label: 'Tiêu đề',
+        content: response?.CategoryNewsName,
+      },
+      {
+        type: 'string',
+        label: 'Danh mục cấp cha',
+        content: response?.ParentId ?? '',
+      },
+      {
+        type: 'number',
+        label: 'Số thứ tự',
+        content: response?.Order,
+      },
+    ];
+
+    detail.current = dicDetail;
+    setConfirmLoading(false);
+    setOpenCollectionDetail(true);
   };
 
   const showModal = () => {
+    mode.current = Mode.Create;
     setIsModalOpen(true);
   };
 
@@ -148,10 +133,14 @@ function NewsCategoryPage(props) {
    * Submit form tạo nguồn tin tức
    * @param {*} values Đối tượng submit form
    */
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     let parentID = null;
+    let fieldNewID = null;
     if (values.parentId) {
       parentID = parseInt(values.parentId);
+    }
+    if (values.fieldNewID) {
+      fieldNewID = parseInt(values.fieldNewID);
     }
     values = {
       CategoryNewsName: values?.title,
@@ -161,8 +150,27 @@ function NewsCategoryPage(props) {
     if (parentID) {
       values.ParentId = parentID;
     }
-    insertCategoryNews(values);
+    if (fieldNewID) {
+      values.fieldNewID = fieldNewID;
+    }
+
+    setIsModalOpen(false);
+    if (mode.current === Mode.Create) {
+      await insertCategoryNews(values);
+    } else {
+      await updateSounceNews(values);
+    }
     form.resetFields();
+    fetchCategoryList();
+  };
+
+  const updateSounceNews = async (values) => {
+    try {
+      await newsApi.updateCategoryNews(idEdit.current, values);
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
   };
 
   /**
@@ -237,6 +245,51 @@ function NewsCategoryPage(props) {
     </Select>
   );
 
+  const renderField = (
+    <Select
+      placeholder='Chọn lĩnh vực'
+      style={{ width: '100%' }}
+      allowClear={true}
+    >
+      {dataFilter?.fieldNews.map((x) => (
+        <Option value={x.Id} key={x.Id}>
+          {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  async function getSourceNewById(id) {
+    return {
+      CategoryNewsName: 'LALALAL',
+      Order: 5,
+      Keyword: 'ghfh',
+      ParentId: 4,
+    };
+    try {
+      const res = await newsApi.getNewsCategoryByID(id);
+      return res;
+    } catch (err) {
+      openNotification(
+        'Lấy chi tiết dữ liệu thất bại',
+        '',
+        NotificationType.ERROR
+      );
+      return null;
+    }
+  }
+
+  async function handleUpdate(id) {
+    const res = await getSourceNewById(id);
+    idEdit.current = id;
+    mode.current = Mode.Edit;
+    form?.setFieldsValue({
+      title: res?.Title,
+      description: res?.Description,
+      order: res?.Order,
+    });
+    setIsModalOpen(true);
+  }
   return (
     <div className={cx('wrapper')}>
       {
@@ -264,8 +317,8 @@ function NewsCategoryPage(props) {
             <Input type='number' min={0} defaultValue={0} />
           </Form.Item>
 
-          <Form.Item name='typeNews' label='Loại tin'>
-            <Input placeholder='Nhập và chọn loại tin' />
+          <Form.Item name='fieldNewID' label='Loại tin'>
+            {renderField}
           </Form.Item>
           <Form.Item name='keyword' label='Keyword'>
             <Input placeholder='Nhập Keyword' />
@@ -297,11 +350,12 @@ function NewsCategoryPage(props) {
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
+          updateData={handleUpdate}
         />
       </div>
 
       <AdminCollectionDetail
-        listData={dataDetail.current}
+        listData={detail.current}
         open={openCollectionDetail}
         onCancel={() => {
           setOpenCollectionDetail(false);
