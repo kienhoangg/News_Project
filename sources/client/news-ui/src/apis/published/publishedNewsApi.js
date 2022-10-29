@@ -54,6 +54,14 @@ class PublishedNewsApi {
         // }
         // return response;
     }
+
+    postVisitorComment(params) {
+        const url = `/home/comments`;
+        const body = params
+
+        return axiosClient.post(url, body);
+
+    }
 }
 const publishedNewsApi = new PublishedNewsApi();
 export default publishedNewsApi;
