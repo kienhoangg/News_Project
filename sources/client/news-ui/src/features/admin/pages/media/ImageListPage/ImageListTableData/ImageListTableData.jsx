@@ -2,17 +2,17 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from '@ant-design/icons';
-import { Button, Space, Table, Tag, Modal } from 'antd';
-import { commonRenderTable } from 'common/commonRender';
-import datetimeHelper from 'helpers/datetimeHelper';
-import classNames from 'classnames/bind';
-import styles from './ImageListTableData.module.scss';
-import { Direction } from 'common/enum';
-import commonFunc from 'common/commonFunc';
-import { Role } from 'common/constant';
-import { openNotification } from 'helpers/notification';
-import { NotificationType } from 'common/enum';
+} from "@ant-design/icons";
+import { Button, Space, Table, Tag, Modal } from "antd";
+import { commonRenderTable } from "common/commonRender";
+import datetimeHelper from "helpers/datetimeHelper";
+import classNames from "classnames/bind";
+import styles from "./ImageListTableData.module.scss";
+import { Direction } from "common/enum";
+import commonFunc from "common/commonFunc";
+import { Role } from "common/constant";
+import { openNotification } from "helpers/notification";
+import { NotificationType } from "common/enum";
 
 const cx = classNames.bind(styles);
 
@@ -32,27 +32,27 @@ function ImageListTableData(props) {
 
   const columns = [
     {
-      key: 'Title',
-      dataIndex: 'Title',
-      title: 'Tiêu đề',
+      key: "Title",
+      dataIndex: "Title",
+      title: "Tiêu đề",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: 'Status',
-      dataIndex: 'Status',
-      title: 'Trạng thái',
-      align: 'center',
+      key: "Status",
+      dataIndex: "Status",
+      title: "Trạng thái",
+      align: "center",
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = !Status ? 'geekblue' : 'volcano';
-        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
+        let color = !Status ? "geekblue" : "volcano";
+        let text = !Status ? "Duyệt" : "Hủy duyệt";
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
@@ -61,23 +61,41 @@ function ImageListTableData(props) {
       },
     },
     {
-      key: 'action',
+      key: "action",
       render: (_, record) => (
-        <Space size='middle'>
+        <Space size="middle">
           <Button
-            type='primary'
+            type="primary"
             icon={<EditFilled />}
             onClick={() => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi sửa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               editImage(record);
             }}
           >
             Sửa
           </Button>
           <Button
-            type='ghost'
+            type="ghost"
             danger
             icon={<DeleteFilled />}
-            onClick={() => handleDeleteCategoryNew(record)}
+            onClick={() => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi xóa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              handleDeleteCategoryNew(record);
+            }}
           >
             Xóa
           </Button>
@@ -94,27 +112,27 @@ function ImageListTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie('role');
+    const role = commonFunc.getCookie("role");
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        '',
+        "",
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: 'Cập nhật trạng thái',
+      title: "Cập nhật trạng thái",
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: 'Cập nhật',
-      cancelText: 'Hủy',
+      okText: "Cập nhật",
+      cancelText: "Hủy",
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -125,16 +143,16 @@ function ImageListTableData(props) {
   }
 
   function handleDeleteCategoryNew(values) {
-     if (values.Status) {
-       openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
-       return;
-     }
+    if (values.Status) {
+      openNotification("Hủy duyệt trước khi xóa", "", NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
-      title: 'Xóa hình ảnh',
+      title: "Xóa hình ảnh",
       icon: <ExclamationCircleOutlined />,
-      content: 'Bạn có chắc chắn xóa không?',
-      okText: 'Xóa',
-      cancelText: 'Hủy',
+      content: "Bạn có chắc chắn xóa không?",
+      okText: "Xóa",
+      cancelText: "Hủy",
       onOk: () => deleteCategoryNewCustom(values),
     });
   }
@@ -151,12 +169,12 @@ function ImageListTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.Order === 'ascend' ? Direction.ASC : Direction.DESC
+      sorter.Order === "ascend" ? Direction.ASC : Direction.DESC
     );
   };
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Table
         columns={columns}
         onChange={handleOnchangeTable}
@@ -170,7 +188,7 @@ function ImageListTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size='small'
+        size="small"
       />
     </div>
   );

@@ -85,6 +85,15 @@ function NewsCommentTableData(props) {
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi xóa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
+
               event?.stopPropagation();
               const role = commonFunc.getCookie("role");
               if (role !== Role.ADMIN) {

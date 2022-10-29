@@ -81,6 +81,14 @@ function ImageCategoryTableData(props) {
             type="primary"
             icon={<EditFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi sửa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               onEdit && onEdit(record);
               event?.stopPropagation();
             }}
@@ -92,6 +100,14 @@ function ImageCategoryTableData(props) {
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi xóa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               handleDeleteCategoryNew(record);
               event?.stopPropagation();
             }}
