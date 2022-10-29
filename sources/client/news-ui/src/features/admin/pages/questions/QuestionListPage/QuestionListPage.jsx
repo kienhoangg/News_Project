@@ -71,10 +71,12 @@ function QuestionListPage(props) {
   const POPUP_TYPE = {
     CREATE: 0,
     UPDATE: 1,
+    DETAIL: 2,
   };
   const MODAL_TYPE = {
     EDIT: 1,
     CREATE: 0,
+    DETAIL: 2,
   };
 
   const [isModalOpen, setIsModalOpen] = useState({
@@ -268,11 +270,13 @@ function QuestionListPage(props) {
       openNotification("Cập nhật tin tức thất bại", "", NotificationType.ERROR);
     }
   };
+  console.log(isModalOpen);
 
   return (
     <div className={cx("wrapper")}>
       {(
-        isModalOpen?.type === MODAL_TYPE.CREATE
+        isModalOpen?.type === MODAL_TYPE.CREATE ||
+        isModalOpen?.type === MODAL_TYPE.DETAIL
           ? isModalOpen?.show
           : questionDetail?.Id && isModalOpen?.show
       ) ? (
@@ -380,25 +384,37 @@ function QuestionListPage(props) {
             // onFinish={onFinish}
           >
             <Row>
-              <div
-                style={{
-                  marginBottom: 20,
-                }}
-              >
-                <b>Thông tin gửi câu hỏi</b>
-              </div>
               <Col>
+                <div
+                  style={{
+                    marginBottom: 20,
+                  }}
+                >
+                  <b>Thông tin gửi câu hỏi</b>
+                </div>
                 <Form.Item label="Danh mục chủ đề" name="QuestionCategoryId">
-                  <Select
-                    placeholder="Danh mục chủ đề"
-                    style={{ width: "100%" }}
-                  >
-                    {dataCategoryQuestion?.map((x) => (
-                      <Option value={x.Id} key={x.Id}>
-                        {x.Title}
-                      </Option>
-                    ))}
-                  </Select>
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>
+                      {
+                        dataCategoryQuestion?.find(
+                          (item) =>
+                            item?.Id ===
+                            isModalOpen?.content?.QuestionCategoryId
+                        )?.Title
+                      }
+                    </div>
+                  ) : (
+                    <Select
+                      placeholder="Danh mục chủ đề"
+                      style={{ width: "100%" }}
+                    >
+                      {dataCategoryQuestion?.map((x) => (
+                        <Option value={x.Id} key={x.Id}>
+                          {x.Title}
+                        </Option>
+                      ))}
+                    </Select>
+                  )}
                 </Form.Item>
                 <Form.Item
                   label="Tiêu đề"
@@ -410,28 +426,60 @@ function QuestionListPage(props) {
                     },
                   ]}
                 >
-                  <Input />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>{isModalOpen?.content?.Title}</div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
                 <Form.Item label="Người hỏi" name="AskedPersonName">
-                  <Input />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>{isModalOpen?.content?.AskedPersonName}</div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
                 <Form.Item label="Cơ quan" name="Department">
-                  <Input />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>{isModalOpen?.content?.Department}</div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
                 <Form.Item label="Địa chỉ" name="Address">
-                  <Input />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>{isModalOpen?.content?.Address}</div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
                 <Form.Item label="Điện thoại" name="Phone">
-                  <Input />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>{isModalOpen?.content?.Phone}</div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
                 <Form.Item label="Email" name="Email">
-                  <Input />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>{isModalOpen?.content?.Email}</div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
                 <Form.Item label="Ngày gửi câu hỏi" name="QuestionDate">
-                  <DatePicker
-                    placeholder="Ngày gửi câu hỏi"
-                    style={{ width: "100%" }}
-                  />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>
+                      {moment(isModalOpen?.content?.QuestionDate).format(
+                        "DD/MM/YYYY"
+                      )}
+                    </div>
+                  ) : (
+                    <DatePicker
+                      placeholder="Ngày gửi câu hỏi"
+                      style={{ width: "100%" }}
+                    />
+                  )}
                 </Form.Item>
                 <Form.Item
                   style={{ marginBottom: 0 }}
@@ -439,60 +487,74 @@ function QuestionListPage(props) {
                   valuePropName="checked"
                   label={"Cẩu hỏi chú ý"}
                 >
-                  <Checkbox></Checkbox>
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <Checkbox
+                      checked={isModalOpen?.content?.IsNoticed}
+                    ></Checkbox>
+                  ) : (
+                    <Checkbox></Checkbox>
+                  )}
                 </Form.Item>
                 <Form.Item label="Nội dung văn bản" name="QuestionContent">
-                  <CKEditor
-                    initData={questionDetail?.QuestionContent}
-                    // onChange={onEditorChange}
-                    config={{
-                      language: "vi",
-                      toolbarGroups: [
-                        {
-                          name: "document",
-                          groups: ["mode", "document", "doctools"],
-                        },
-                        { name: "clipboard", groups: ["clipboard", "undo"] },
-                        {
-                          name: "editing",
-                          groups: [
-                            "find",
-                            "selection",
-                            "spellchecker",
-                            "editing",
-                          ],
-                        },
-                        { name: "forms", groups: ["forms"] },
-                        "/",
-                        "/",
-                        {
-                          name: "basicstyles",
-                          groups: ["basicstyles", "cleanup"],
-                        },
-                        {
-                          name: "paragraph",
-                          groups: [
-                            "list",
-                            "indent",
-                            "blocks",
-                            "align",
-                            "bidi",
-                            "paragraph",
-                          ],
-                        },
-                        { name: "links", groups: ["links"] },
-                        { name: "insert", groups: ["insert"] },
-                        "/",
-                        { name: "styles", groups: ["styles"] },
-                        { name: "colors", groups: ["colors"] },
-                        { name: "tools", groups: ["tools"] },
-                        { name: "others", groups: ["others"] },
-                        { name: "about", groups: ["about"] },
-                      ],
-                      extraPlugins: "justify,font,colorbutton,forms",
-                      removeButtons: "Scayt,HiddenField,CopyFormatting,About",
-                    }}
-                  />
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: isModalOpen?.content?.QuestionContent,
+                      }}
+                    ></div>
+                  ) : (
+                    <CKEditor
+                      initData={questionDetail?.QuestionContent}
+                      // onChange={onEditorChange}
+                      config={{
+                        language: "vi",
+                        toolbarGroups: [
+                          {
+                            name: "document",
+                            groups: ["mode", "document", "doctools"],
+                          },
+                          { name: "clipboard", groups: ["clipboard", "undo"] },
+                          {
+                            name: "editing",
+                            groups: [
+                              "find",
+                              "selection",
+                              "spellchecker",
+                              "editing",
+                            ],
+                          },
+                          { name: "forms", groups: ["forms"] },
+                          "/",
+                          "/",
+                          {
+                            name: "basicstyles",
+                            groups: ["basicstyles", "cleanup"],
+                          },
+                          {
+                            name: "paragraph",
+                            groups: [
+                              "list",
+                              "indent",
+                              "blocks",
+                              "align",
+                              "bidi",
+                              "paragraph",
+                            ],
+                          },
+                          { name: "links", groups: ["links"] },
+                          { name: "insert", groups: ["insert"] },
+                          "/",
+                          { name: "styles", groups: ["styles"] },
+                          { name: "colors", groups: ["colors"] },
+                          { name: "tools", groups: ["tools"] },
+                          { name: "others", groups: ["others"] },
+                          { name: "about", groups: ["about"] },
+                        ],
+                        extraPlugins: "justify,font,colorbutton,forms",
+                        removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                      }}
+                    />
+                  )}
                 </Form.Item>
               </Col>
 
@@ -505,91 +567,166 @@ function QuestionListPage(props) {
                   <b>Thông tin trả lời</b>
                 </div>
                 <Form.Item label="Trạng thái" name="QuestionStatus">
-                  <Select placeholder="Trạng thái" style={{ width: "100%" }}>
-                    {QuestionStatus?.map((x) => (
-                      <Option value={x.id} key={x.id}>
-                        {x.label}
-                      </Option>
-                    ))}
-                  </Select>
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>
+                      {
+                        QuestionStatus?.find(
+                          (item) =>
+                            item?.id === isModalOpen?.content?.QuestionStatus
+                        )?.label
+                      }
+                    </div>
+                  ) : (
+                    <Select placeholder="Trạng thái" style={{ width: "100%" }}>
+                      {QuestionStatus?.map((x) => (
+                        <Option value={x.id} key={x.id}>
+                          {x.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  )}
                 </Form.Item>
-                <Form.Item label="Người trả lời" name="AnswerPersonName">
-                  <Input />
+                <Form.Item
+                  label="Người trả lời"
+                  name="AnswerPersonName"
+                  style={
+                    isModalOpen?.type === MODAL_TYPE.DETAIL
+                      ? { width: 300 }
+                      : {}
+                  }
+                >
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div style={{ marginLeft: 5 }}>
+                      {isModalOpen?.content?.AnswerPersonName}
+                    </div>
+                  ) : (
+                    <Input />
+                  )}
                 </Form.Item>
-                <Form.Item label="Nội dung trả lời" name="AnswerContent">
-                  <CKEditor
-                    initData={questionDetail?.AnswerContent}
-                    // onChange={onEditorChange}
-                    config={{
-                      language: "vi",
-                      toolbarGroups: [
-                        {
-                          name: "document",
-                          groups: ["mode", "document", "doctools"],
-                        },
-                        { name: "clipboard", groups: ["clipboard", "undo"] },
-                        {
-                          name: "editing",
-                          groups: [
-                            "find",
-                            "selection",
-                            "spellchecker",
-                            "editing",
-                          ],
-                        },
-                        { name: "forms", groups: ["forms"] },
-                        "/",
-                        "/",
-                        {
-                          name: "basicstyles",
-                          groups: ["basicstyles", "cleanup"],
-                        },
-                        {
-                          name: "paragraph",
-                          groups: [
-                            "list",
-                            "indent",
-                            "blocks",
-                            "align",
-                            "bidi",
-                            "paragraph",
-                          ],
-                        },
-                        { name: "links", groups: ["links"] },
-                        { name: "insert", groups: ["insert"] },
-                        "/",
-                        { name: "styles", groups: ["styles"] },
-                        { name: "colors", groups: ["colors"] },
-                        { name: "tools", groups: ["tools"] },
-                        { name: "others", groups: ["others"] },
-                        { name: "about", groups: ["about"] },
-                      ],
-                      extraPlugins: "justify,font,colorbutton,forms",
-                      removeButtons: "Scayt,HiddenField,CopyFormatting,About",
-                    }}
-                  />
+                <Form.Item
+                  label="Nội dung trả lời"
+                  name="AnswerContent"
+                  style={
+                    isModalOpen?.type === MODAL_TYPE.DETAIL
+                      ? { width: 300 }
+                      : {}
+                  }
+                >
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: isModalOpen?.content?.AnswerContent,
+                      }}
+                    ></div>
+                  ) : (
+                    <CKEditor
+                      initData={questionDetail?.AnswerContent}
+                      // onChange={onEditorChange}
+                      config={{
+                        language: "vi",
+                        toolbarGroups: [
+                          {
+                            name: "document",
+                            groups: ["mode", "document", "doctools"],
+                          },
+                          { name: "clipboard", groups: ["clipboard", "undo"] },
+                          {
+                            name: "editing",
+                            groups: [
+                              "find",
+                              "selection",
+                              "spellchecker",
+                              "editing",
+                            ],
+                          },
+                          { name: "forms", groups: ["forms"] },
+                          "/",
+                          "/",
+                          {
+                            name: "basicstyles",
+                            groups: ["basicstyles", "cleanup"],
+                          },
+                          {
+                            name: "paragraph",
+                            groups: [
+                              "list",
+                              "indent",
+                              "blocks",
+                              "align",
+                              "bidi",
+                              "paragraph",
+                            ],
+                          },
+                          { name: "links", groups: ["links"] },
+                          { name: "insert", groups: ["insert"] },
+                          "/",
+                          { name: "styles", groups: ["styles"] },
+                          { name: "colors", groups: ["colors"] },
+                          { name: "tools", groups: ["tools"] },
+                          { name: "others", groups: ["others"] },
+                          { name: "about", groups: ["about"] },
+                        ],
+                        extraPlugins: "justify,font,colorbutton,forms",
+                        removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                      }}
+                    />
+                  )}
                 </Form.Item>
-                <Form.Item label="Ngày trả lời" name="AnswerDate">
-                  <DatePicker
-                    placeholder="NNgày trả lời"
-                    style={{ width: "100%" }}
-                  />
+                <Form.Item
+                  label="Ngàytrả lời"
+                  name="AnswerDate"
+                  style={
+                    isModalOpen?.type === MODAL_TYPE.DETAIL
+                      ? { width: 300 }
+                      : {}
+                  }
+                >
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <div>
+                      {moment(isModalOpen?.content?.AnswerDate).format(
+                        "DD/MM/YYYY"
+                      )}
+                    </div>
+                  ) : (
+                    <DatePicker
+                      placeholder="NNgày trả lời"
+                      style={{ width: "100%" }}
+                    />
+                  )}
                 </Form.Item>
-                <Form.Item name="lb-attachment" label="Tệp đính kèm">
-                  <Upload
-                    listType="picture"
-                    maxCount={1}
-                    fileList={fileListAttachment}
-                    onChange={handleChangeAttachment}
-                    customRequest={commonFunc.dummyRequest}
-                    style={{
-                      left: 20,
-                    }}
-                  >
-                    {fileListAttachment.length < 1 ? (
-                      <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-                    ) : null}
-                  </Upload>
+                <Form.Item
+                  name="lb-attachment"
+                  label="Tệp đính kèm"
+                  style={
+                    isModalOpen?.type === MODAL_TYPE.DETAIL
+                      ? { width: 300 }
+                      : {}
+                  }
+                >
+                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                    <a
+                      href={imageHelper.getLinkImageUrl(
+                        isModalOpen?.content?.FilePath
+                      )}
+                    >
+                      {imageHelper.getNameFile(isModalOpen?.content?.FilePath)}
+                    </a>
+                  ) : (
+                    <Upload
+                      listType="picture"
+                      maxCount={1}
+                      fileList={fileListAttachment}
+                      onChange={handleChangeAttachment}
+                      customRequest={commonFunc.dummyRequest}
+                      style={{
+                        left: 20,
+                      }}
+                    >
+                      {fileListAttachment.length < 1 ? (
+                        <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                      ) : null}
+                    </Upload>
+                  )}
                 </Form.Item>
               </Col>
             </Row>
@@ -628,6 +765,15 @@ function QuestionListPage(props) {
               type: POPUP_TYPE.UPDATE,
             });
             callApiGetDetail(Id);
+          }}
+          onClickRow={(res) => {
+            console.log(res);
+            setIsModalOpen({
+              id: res?.Id,
+              show: true,
+              type: POPUP_TYPE.DETAIL,
+              content: res,
+            });
           }}
         />
       </div>

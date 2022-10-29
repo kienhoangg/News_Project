@@ -25,6 +25,10 @@ class QuestionApi {
     // return response;
   };
 
+  getQuestionCategoryByID = (id) => {
+    const url = `/questioncategories/${id}`;
+    return axiosClient.get(url);
+  };
 
   insertQuestionCategory = (body) => {
     const url = '/questioncategories';
@@ -33,12 +37,17 @@ class QuestionApi {
 
   updateQuestionCategory = (id, body) => {
     const url = '/questioncategories/' + id;
-    return axiosClient.post(url, body);
+    return axiosClient.put(url, body);
   };
 
   updateStatusQuestionCategory = (body) => {
     const url = '/questioncategories';
     return axiosClient.put(url, body);
+  };
+
+  deleteStatusQuestionCategory = (id) => {
+    const url = `/questioncategories/${id}`;
+    return axiosClient.delete(url);
   };
 
   updateStatusQuestion = (body) => {

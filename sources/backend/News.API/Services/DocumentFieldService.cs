@@ -97,6 +97,11 @@ namespace News.API.Services
             {
                 query = query.Where(x => đocumentFieldRequest.Ids.Contains(x.Id));
             }
+
+            if (đocumentFieldRequest.ParentId.HasValue)
+            {
+                query = query.Where(x => x.ParentId == đocumentFieldRequest.ParentId.Value);
+            }
             PagedResult<DocumentField>? sourcePaging = await query.PaginatedListAsync(đocumentFieldRequest.CurrentPage
                                                                                               ?? 0, đocumentFieldRequest.PageSize ?? 0, đocumentFieldRequest.OrderBy, đocumentFieldRequest.Direction);
             ApiSuccessResult<DocumentField>? result = new(sourcePaging);

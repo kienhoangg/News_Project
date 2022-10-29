@@ -74,6 +74,10 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.Status == documentDepartmentRequest.Status.Value);
             }
+            if (documentDepartmentRequest.ParentId.HasValue)
+            {
+                query = query.Where(x => x.ParentId == documentDepartmentRequest.ParentId.Value);
+            }
             PagedResult<DocumentDepartment>? sourcePaging = await query.PaginatedListAsync(documentDepartmentRequest.CurrentPage
                                                                                              ?? 1, documentDepartmentRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentDepartmentRequest.OrderBy, documentDepartmentRequest.Direction);
             var lstDto = _mapper.Map<List<DocumentDepartmentDto>>(sourcePaging.Results);
