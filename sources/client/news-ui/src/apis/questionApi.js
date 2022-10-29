@@ -14,16 +14,31 @@ class QuestionApi {
     return axiosClient.delete(url);
   };
 
-  getCategoryAll = (params) => {
-    // const url = '/news';
-    // return axiosClient.get(url, { params });
+  getCategoryFilter = (body) => {
+    const url = '/questioncategories/filter';
+    return axiosClient.post(url, body);
 
-    var response = {
-      data: datafakeQuestion.category.examples,
-      total: 5,
-    };
-    // var response = commonFunc.generateFakeData(20, 50, datafakeQuestion.category.objectExample);
-    return response;
+    // var response = {
+    //   data: datafakeQuestion.category.examples,
+    //   total: 5,
+    // };
+    // return response;
+  };
+
+
+  insertQuestionCategory = (body) => {
+    const url = '/questioncategories';
+    return axiosClient.post(url, body);
+  };
+
+  updateQuestionCategory = (id, body) => {
+    const url = '/questioncategories/' + id;
+    return axiosClient.post(url, body);
+  };
+
+  updateStatusQuestionCategory = (body) => {
+    const url = '/questioncategories';
+    return axiosClient.put(url, body);
   };
 
   updateStatusQuestion = (body) => {
