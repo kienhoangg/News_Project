@@ -1,4 +1,4 @@
-import { Divider, Form, Button, Input, Modal } from 'antd';
+import { Divider, Form, Button, Input, Modal, Row, Col } from 'antd';
 import newsApi from 'apis/newsApi';
 import { useEffect, useState, useRef } from 'react';
 import NewsFieldPageSearch from './NewsFieldPageSearch/NewsFieldPageSearch';
@@ -14,6 +14,10 @@ const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
+};
+const Mode = {
+  Create: 1,
+  Edit: 0,
 };
 const cx = classNames.bind(styles);
 
@@ -34,6 +38,10 @@ function NewsFieldPage(props) {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const detail = useRef({});
+  const [isShowDetail, setIsShowDetail] = useState(false);
+  const idEdit = useRef();
+  const mode = useRef();
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -84,10 +92,10 @@ function NewsFieldPage(props) {
   const handleDeleteFieldNews = async (id) => {
     try {
       await newsApi.deleteFieldNews(id);
-      openNotification('Xóa nguồn tin thành công');
+      openNotification('Xóa thành công');
       fetchProductList();
     } catch (error) {
-      openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+      openNotification('Xóa thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -106,6 +114,7 @@ function NewsFieldPage(props) {
   };
 
   const showModal = () => {
+    mode.current = Mode.Create;
     setIsModalOpen(true);
   };
 
@@ -118,7 +127,7 @@ function NewsFieldPage(props) {
    * Submit form tạo nguồn tin tức
    * @param {*} values Đối tượng submit form
    */
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     values = {
       Title: values?.title ?? '',
       Description: values?.description ?? '',
@@ -126,8 +135,14 @@ function NewsFieldPage(props) {
       Factor: parseInt(values?.factor ?? 0),
       BiggestFactor: parseInt(values?.biggestFactor ?? 0),
     };
-    insertFieldNews(values);
+    setIsModalOpen(false);
+    if (mode.current === Mode.Create) {
+      await insertFieldNews(values);
+    } else {
+      await updateSounceNews(values);
+    }
     form.resetFields();
+    fetchProductList();
   };
   /**
    * Gọi api lấy dữ liệu danh sách nguồi tin tức
@@ -135,13 +150,54 @@ function NewsFieldPage(props) {
   const insertFieldNews = async (values) => {
     try {
       await newsApi.insertFieldNews(values);
-      setIsModalOpen(false);
-      fetchProductList();
+
       openNotification('Tạo mới lĩnh vực thành công');
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
     }
   };
+
+  const updateSounceNews = async (values) => {
+    try {
+      await newsApi.updateFieldNews(idEdit.current, values);
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
+  async function handleShowDetail(Id) {
+    const res = await getSourceNewById(Id);
+    detail.current = res;
+    setIsShowDetail(true);
+  }
+
+  async function getSourceNewById(id) {
+    try {
+      const res = await newsApi.getNewsFieldByID(id);
+      return res;
+    } catch (err) {
+      openNotification(
+        'Lấy chi tiết dữ liệu thất bại',
+        '',
+        NotificationType.ERROR
+      );
+      return null;
+    }
+  }
+
+  async function handleUpdate(id) {
+    const res = await getSourceNewById(id);
+    idEdit.current = id;
+    mode.current = Mode.Edit;
+    form?.setFieldsValue({
+      title: res?.Title,
+      description: res?.Description,
+      order: res?.Order,
+      factor: res?.Factor,
+      biggestFactor: res?.BiggestFactor,
+    });
+    setIsModalOpen(true);
+  }
   return (
     <div className={cx('wrapper')}>
       {
@@ -149,7 +205,9 @@ function NewsFieldPage(props) {
       }
       <Modal
         className={cx('modal-insert-source-news')}
-        title='Thêm mới lĩnh vực'
+        title={
+          mode.current === Mode.Edit ? 'Cập nhật lĩnh vực' : 'Tạo mới lĩnh vực'
+        }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -176,8 +234,11 @@ function NewsFieldPage(props) {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='Tạo mới'>
-              Tạo mới
+            <Button
+              type='primary'
+              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+            >
+              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>
@@ -203,8 +264,73 @@ function NewsFieldPage(props) {
           setPagination={handleChangePagination}
           deleteFieldsNew={handleDeleteFieldNews}
           updateStatusNew={handleUpdateStatusNew}
+          showDetail={handleShowDetail}
+          updateData={handleUpdate}
         />
       </div>
+
+      <Modal
+        open={isShowDetail}
+        title='Hiển thị thông tin'
+        okButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        cancelText='Thoát'
+        onCancel={() => {
+          setIsShowDetail(false);
+        }}
+      >
+        <Row gutter={8}>
+          <Col span={16}>
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Tiêu đề</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Title}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Mô tả</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Description}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Số thứ tự</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Order}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Hệ số</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Factor}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Hệ số lớn nhất</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.BiggestFactor}</div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 }

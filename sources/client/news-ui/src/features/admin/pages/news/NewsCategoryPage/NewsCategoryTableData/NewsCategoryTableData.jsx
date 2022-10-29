@@ -38,7 +38,7 @@ function NewsCategoryTableData(props) {
   } = props;
 
   const handleOnClickTitle = (values) => {
-    if (onClickShowRowDetail) onClickShowRowDetail(values);
+    if (onClickShowRowDetail) onClickShowRowDetail(values.Id);
   };
 
   const columns = [
@@ -46,11 +46,11 @@ function NewsCategoryTableData(props) {
       key: 'CategoryNewsName',
       dataIndex: 'CategoryNewsName',
       title: 'Tiêu đề',
-      render: (_, { id, CategoryNewsName }) => (
+      render: (_, { Id, CategoryNewsName }) => (
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            handleOnClickTitle({ id, CategoryNewsName });
+            handleOnClickTitle({ Id, CategoryNewsName });
           }}
         >
           {CategoryNewsName}
@@ -93,7 +93,11 @@ function NewsCategoryTableData(props) {
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
-          <Button type='primary' icon={<EditFilled />}>
+          <Button
+            type='primary'
+            icon={<EditFilled />}
+            onClick={() => handleChangeSourceNew(record)}
+          >
             Sửa
           </Button>
           <Button
@@ -117,7 +121,13 @@ function NewsCategoryTableData(props) {
   });
 
   function handleChangeSourceNew(values) {
-    console.log(values);
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
+      return;
+    }
+    if (props.updateData) {
+      props.updateData(values.Id);
+    }
   }
 
   function handleDeleteCategoryNew(values) {

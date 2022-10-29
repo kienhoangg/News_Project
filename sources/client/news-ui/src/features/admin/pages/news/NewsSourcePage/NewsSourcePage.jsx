@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Modal } from 'antd';
+import { Button, Divider, Form, Input, Modal, Row, Col } from 'antd';
 import newsApi from 'apis/newsApi';
 import classNames from 'classnames/bind';
 import { Direction, NotificationType } from 'common/enum';
@@ -13,6 +13,10 @@ const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
+};
+const Mode = {
+  Create: 1,
+  Edit: 0,
 };
 
 const cx = classNames.bind(styles);
@@ -33,6 +37,10 @@ function NewsSourcePage(props) {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const detail = useRef({});
+  const [isShowDetail, setIsShowDetail] = useState(false);
+  const idEdit = useRef();
+  const mode = useRef();
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -91,6 +99,7 @@ function NewsSourcePage(props) {
   };
 
   const showModal = () => {
+    mode.current = Mode.Create;
     setIsModalOpen(true);
   };
 
@@ -103,25 +112,34 @@ function NewsSourcePage(props) {
    * Submit form tạo nguồn tin tức
    * @param {*} values Đối tượng submit form
    */
-  const onFinish = (values) => {
-    insertSounceNews(values);
+  const onFinish = async (values) => {
+    setIsModalOpen(false);
+    if (mode.current === Mode.Create) {
+      await insertSounceNews(values);
+    } else {
+      await updateSounceNews(values);
+    }
     form.resetFields();
+    fetchProductList();
   };
 
-  /**
-   * Gọi api lấy dữ liệu danh sách nguồi tin tức
-   */
   const insertSounceNews = async (values) => {
     try {
       await newsApi.insertSourceNew(values);
-      setIsModalOpen(false);
-      fetchProductList();
       openNotification('Tạo mới nguồn tin tức thành công');
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
     }
   };
 
+  const updateSounceNews = async (values) => {
+    try {
+      await newsApi.updateSourceNew(idEdit.current, values);
+      openNotification('Cập nhật thành công');
+    } catch (error) {
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    }
+  };
   const handleUpdateStatusNew = async (values) => {
     try {
       await newsApi.updateStatusSourceNew({
@@ -135,6 +153,38 @@ function NewsSourcePage(props) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
+
+  async function handleShowDetail(Id) {
+    const res = await getSourceNewById(Id);
+    detail.current = res;
+    setIsShowDetail(true);
+  }
+
+  async function getSourceNewById(id) {
+    try {
+      const res = await newsApi.getSourceNewByID(id);
+      return res;
+    } catch (err) {
+      openNotification(
+        'Lấy chi tiết dữ liệu thất bại',
+        '',
+        NotificationType.ERROR
+      );
+      return null;
+    }
+  }
+
+  async function handleUpdate(id) {
+    const res = await getSourceNewById(id);
+    idEdit.current = id;
+    mode.current = Mode.Edit;
+    form?.setFieldsValue({
+      title: res?.Title,
+      description: res?.Description,
+      order: res?.Order,
+    });
+    setIsModalOpen(true);
+  }
 
   return (
     <div className={cx('wrapper')}>
@@ -166,15 +216,13 @@ function NewsSourcePage(props) {
           <Form.Item name='description' label='Mô tả'>
             <TextArea />
           </Form.Item>
-          {/* <Form.Item name='status' label='Trạng thái' valuePropName='0'>
-            <Select>
-              <Option value='0'>Hủy duyệt</Option>
-              <Option value='1'>Duyệt</Option>
-            </Select>
-          </Form.Item> */}
+
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='Tạo mới'>
-              Tạo mới
+            <Button
+              type='primary'
+              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+            >
+              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>
@@ -195,8 +243,55 @@ function NewsSourcePage(props) {
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
           updateStatusNew={handleUpdateStatusNew}
+          showDetail={handleShowDetail}
+          updateData={handleUpdate}
         />
       </div>
+
+      <Modal
+        open={isShowDetail}
+        title='Hiển thị thông tin'
+        okButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        cancelText='Thoát'
+        onCancel={() => {
+          setIsShowDetail(false);
+        }}
+      >
+        <Row gutter={8}>
+          <Col span={16}>
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Tiêu đề</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Title}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Số thứ tự</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Order}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={8}>
+                <div className={cx('row-item-label')}>Mô tả</div>
+              </Col>
+              <Col span={16}>
+                <div>{detail.current?.Description}</div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 }
