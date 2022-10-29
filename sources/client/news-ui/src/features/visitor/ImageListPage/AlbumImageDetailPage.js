@@ -59,7 +59,7 @@ export default function AlbumImageDetailPage() {
    */
   const callApiGetListAlbum = async () => {
     try {
-      const res = await axiosClient.post("/photocategories/filter", {
+      const res = await axiosClient.post("/hone/photocategories/filter", {
         pageSize: PAGE_SIZE,
         currentPage: paging,
         direction: -1,
@@ -69,14 +69,14 @@ export default function AlbumImageDetailPage() {
       if (isFirstRender.current) {
         getDetailAlbum(
           new URLSearchParams(window.location.search).get("albumid") ||
-            res?.PagedData?.Results?.[0]?.Id
+          res?.PagedData?.Results?.[0]?.Id
         );
         if (isFirstRender.current) isFirstRender.current = false;
       }
 
       setListAlbum(res?.PagedData?.Results);
       setTotalInDB(res?.PagedData?.RowCount);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   /**
@@ -85,7 +85,7 @@ export default function AlbumImageDetailPage() {
    */
   const getDetailAlbum = async (idAlbum) => {
     try {
-      const res = await axiosClient.get("/photocategories/" + idAlbum);
+      const res = await axiosClient.get("/hone/photocategories/" + idAlbum);
 
       const images = [];
       res?.Photos?.map((item) => {
@@ -107,7 +107,7 @@ export default function AlbumImageDetailPage() {
       });
 
       setIndexImageCaroucel(0);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   /**
