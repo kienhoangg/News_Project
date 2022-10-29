@@ -82,6 +82,15 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.CategoryNewsName.Contains(categoryNewsRequest.Keyword)));
             }
+
+            if (!string.IsNullOrEmpty(categoryNewsRequest.Keyword))
+            {
+                query = query.Where((x => x.CategoryNewsName.Contains(categoryNewsRequest.Keyword)));
+            }
+            if (categoryNewsRequest.ParentId.HasValue)
+            {
+                query = query.Where(x => x.ParentId == categoryNewsRequest.ParentId.Value);
+            }
             if (categoryNewsRequest.Status.HasValue)
             {
                 query = query.Where(x => x.Status == categoryNewsRequest.Status.Value);

@@ -59,6 +59,10 @@ class MediaApi {
     const url = "/PhotoCategories";
     return axiosClient.post(url, body);
   };
+  updateImageCategory = (id, body) => {
+    const url = "/PhotoCategories/" + id;
+    return axiosClient.put(url, body);
+  };
   updateStatusImageCategory = (body) => {
     const url = "/PhotoCategories";
     return axiosClient.put(url, body);
