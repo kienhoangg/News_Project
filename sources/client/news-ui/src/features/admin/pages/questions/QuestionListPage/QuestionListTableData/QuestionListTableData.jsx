@@ -20,8 +20,14 @@ QuestionListTableData.propTypes = {};
 QuestionListTableData.defaultProps = {};
 
 function QuestionListTableData(props) {
-  const { data, setPagination, updateStatusNew, deleteCategoryNew, onEdit } =
-    props;
+  const {
+    data,
+    setPagination,
+    updateStatusNew,
+    deleteCategoryNew,
+    onEdit,
+    onClickRow,
+  } = props;
 
   function handleOnClickStatus(values) {
     const role = commonFunc.getCookie("role");
@@ -86,7 +92,10 @@ function QuestionListTableData(props) {
             color={color}
             key={Id}
             style={{ cursor: "pointer" }}
-            onClick={() => handleOnClickStatus({ Id, Status })}
+            onClick={(event) => {
+              handleOnClickStatus({ Id, Status });
+              event?.stopPropagation();
+            }}
           >
             {text}
           </Tag>
@@ -100,7 +109,10 @@ function QuestionListTableData(props) {
           <Button
             type="primary"
             icon={<EditFilled />}
-            onClick={() => onEdit(record?.Id)}
+            onClick={(event) => {
+              onEdit(record?.Id);
+              event.stopPropagation();
+            }}
           >
             Sửa
           </Button>
@@ -108,7 +120,8 @@ function QuestionListTableData(props) {
             type="ghost"
             danger
             icon={<DeleteFilled />}
-            onClick={() => {
+            onClick={(event) => {
+              event?.stopPropagation();
               const role = commonFunc.getCookie("role");
               if (role !== Role.ADMIN) {
                 openNotification(
@@ -176,6 +189,9 @@ function QuestionListTableData(props) {
         }}
         dataSource={dataItems}
         size="small"
+        onRow={(item) => ({
+          onClick: () => onClickRow && onClickRow(item),
+        })}
       />
     </div>
   );
