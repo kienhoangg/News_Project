@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, Modal, Select } from 'antd';
+import { Button, Col, Divider, Form, Input, Modal, Row, Select } from 'antd';
 import documentApi from 'apis/documentApi';
 import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { openNotification } from 'helpers/notification';
 import { TypeUpdate } from 'common/constant';
+import datetimeHelper from 'helpers/datetimeHelper';
 
 const cx = classNames.bind(styles);
 
@@ -37,7 +38,7 @@ function QuestionCategoryPage(props) {
         currentPage: 1,
         pageSize: 10,
         direction: Direction.DESC,
-        orderBy: 'CreatedDate',
+        orderBy: 'LastModifiedDate',
         keyword: '',
     });
 
@@ -46,6 +47,9 @@ function QuestionCategoryPage(props) {
 
     const mode = useRef();
     const idEdit = useRef();
+
+    const [isShowDetail, setIsShowDetail] = useState(false);
+    const detail = useRef({});
 
     const fetchList = async () => {
         try {
@@ -83,7 +87,7 @@ function QuestionCategoryPage(props) {
     };
 
     // MODEL tạo mới
-    const renderOption = (
+    const renderOptionParentData = (
         <Select placeholder='Chọn cấp cha' style={{ width: '100%' }} allowClear={true} showSearch>
             {Array.isArray(parentData) &&
                 parentData.map((x) => (
@@ -104,7 +108,7 @@ function QuestionCategoryPage(props) {
         if (mode.current === Mode.Create) {
             await insertCategory(values);
         } else {
-            await updateSounceNews(values);
+            await updateQuestionCategory(values);
         }
         form.resetFields();
         fetchList();
@@ -119,7 +123,7 @@ function QuestionCategoryPage(props) {
         }
     };
 
-    const updateSounceNews = async (values) => {
+    const updateQuestionCategory = async (values) => {
         try {
             await questionApi.updateQuestionCategory(idEdit.current, values);
             openNotification('Cập nhật thành công');
@@ -143,6 +147,46 @@ function QuestionCategoryPage(props) {
         }
     };
 
+    async function handleDelete(values) {
+        try {
+            await questionApi.deleteStatusQuestionCategory(values?.Id);
+            openNotification('Xóa thành công');
+            fetchList();
+        } catch (error) {
+            openNotification('Xóa thất bại', '', NotificationType.ERROR);
+        }
+    }
+
+    async function handleUpdate(id) {
+        const res = await getQuestionCategoryByID(id);
+        idEdit.current = id;
+        mode.current = Mode.Edit;
+
+        await fetchProductListAll();
+        let valuesForm = { title: res?.Title, description: res?.Description, order: res?.Order };
+        if (res?.ParentId) {
+            valuesForm.parentId = res.ParentId;
+        }
+        form?.setFieldsValue(valuesForm);
+        setIsModalOpen(true);
+    }
+
+    async function getQuestionCategoryByID(id) {
+        try {
+            const res = await questionApi.getQuestionCategoryByID(id);
+            return res;
+        } catch (err) {
+            openNotification('Lấy chi tiết dữ liệu thất bại', '', NotificationType.ERROR);
+            return null;
+        }
+    }
+
+    async function handleShowDetail(Id) {
+        const res = await getQuestionCategoryByID(Id);
+        detail.current = res;
+        setIsShowDetail(true);
+    }
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('top')}>
@@ -157,7 +201,14 @@ function QuestionCategoryPage(props) {
             </div>
             <Divider style={{ margin: '0' }} />
             <div className={cx('table-data')}>
-                <QuestionCategoryTableData data={newsData} setPagination={handleChangePagination} toggleStatus={handleUpdateStatus} />
+                <QuestionCategoryTableData
+                    data={newsData}
+                    setPagination={handleChangePagination}
+                    toggleStatus={handleUpdateStatus}
+                    handleDelete={handleDelete}
+                    handleUpdate={handleUpdate}
+                    showDetail={handleShowDetail}
+                />
             </div>
 
             {/* MODEL */}
@@ -167,7 +218,7 @@ function QuestionCategoryPage(props) {
                         <Input />
                     </Form.Item>
                     <Form.Item name='parentId' label='Danh mục cấp cha'>
-                        {renderOption}
+                        {renderOptionParentData}
                     </Form.Item>
                     <Form.Item name='order' label='Số thứ tự'>
                         <Input type='number' min={0} />
@@ -183,6 +234,77 @@ function QuestionCategoryPage(props) {
                         </Button>
                     </Form.Item>
                 </Form>
+            </Modal>
+
+            <Modal
+                open={isShowDetail}
+                title='Hiển thị thông tin'
+                okButtonProps={{
+                    style: {
+                        display: 'none',
+                    },
+                }}
+                cancelText='Thoát'
+                onCancel={() => {
+                    setIsShowDetail(false);
+                }}
+            >
+                <Row gutter={8}>
+                    <Col span={16}>
+                        <Row gutter={16} className={cx('row-item')}>
+                            <Col span={8}>
+                                <div className={cx('row-item-label')}>Tiêu đề</div>
+                            </Col>
+                            <Col span={16}>
+                                <div>{detail.current?.Title}</div>
+                            </Col>
+                        </Row>
+
+                        {/* {detail.current?.ParentId && (
+                            <Row gutter={16} className={cx('row-item')}>
+                                <Col span={8}>
+                                    <div className={cx('row-item-label')}>Danh mục cấp cha</div>
+                                </Col>
+                                <Col span={16}>
+                                    <div>{detail.current?.ParentId}</div>
+                                </Col>
+                            </Row>
+                        )} */}
+
+                        <Row gutter={16} className={cx('row-item')}>
+                            <Col span={8}>
+                                <div className={cx('row-item-label')}>Số thứ tự</div>
+                            </Col>
+                            <Col span={16}>
+                                <div>{detail.current?.Order}</div>
+                            </Col>
+                        </Row>
+                        <Row gutter={16} className={cx('row-item')}>
+                            <Col span={8}>
+                                <div className={cx('row-item-label')}>Mô tả</div>
+                            </Col>
+                            <Col span={16}>
+                                <div>{detail.current?.Description}</div>
+                            </Col>
+                        </Row>
+                        <Row gutter={16} className={cx('row-item')}>
+                            <Col span={8}>
+                                <div className={cx('row-item-label')}>Ngày tạo</div>
+                            </Col>
+                            <Col span={16}>
+                                <div>{datetimeHelper.formatDatetimeToDateVN(detail.current?.CreatedDate)}</div>
+                            </Col>
+                        </Row>
+                        <Row gutter={16} className={cx('row-item')}>
+                            <Col span={8}>
+                                <div className={cx('row-item-label')}>Ngày sửa cuối</div>
+                            </Col>
+                            <Col span={16}>
+                                <div>{datetimeHelper.formatDatetimeToDateVN(detail.current?.LastModifiedDate)}</div>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
             </Modal>
         </div>
     );

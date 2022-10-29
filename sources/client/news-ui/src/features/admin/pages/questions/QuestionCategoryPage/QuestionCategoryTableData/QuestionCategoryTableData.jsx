@@ -15,9 +15,10 @@ const cx = classNames.bind(styles);
 QuestionCategoryTableData.propTypes = {
     setPagination: PropTypes.func,
     data: PropTypes.object,
-    update: PropTypes.func,
-    delete: PropTypes.func,
+    handleUpdate: PropTypes.func,
+    handleDelete: PropTypes.func,
     toggleStatus: PropTypes.func,
+    showDetail: PropTypes.func,
 };
 
 QuestionCategoryTableData.defaultProps = {
@@ -25,7 +26,7 @@ QuestionCategoryTableData.defaultProps = {
 };
 
 function QuestionCategoryTableData(props) {
-    const { setPagination, data, update, toggleStatus } = props;
+    const { setPagination, data, handleUpdate, handleDelete, toggleStatus } = props;
 
     const handleOnchangeTable = (pagination, filters, sorter, extra) => {
         if (setPagination) {
@@ -38,7 +39,18 @@ function QuestionCategoryTableData(props) {
             key: 'Title',
             dataIndex: 'Title',
             title: 'Tiêu đề',
-            render: (text) => <a>{text}</a>,
+            render: (_, { Id, Title }) => (
+                <div
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                        if (props.showDetail) {
+                            props.showDetail(Id);
+                        }
+                    }}
+                >
+                    {Title}
+                </div>
+            ),
             sorter: (a, b) => a.title - b.title,
         },
         {
@@ -70,10 +82,10 @@ function QuestionCategoryTableData(props) {
             key: 'action',
             render: (_, record) => (
                 <Space size='middle'>
-                    <Button type='primary' icon={<EditFilled />}>
+                    <Button type='primary' icon={<EditFilled />} onClick={() => onEdit(record)}>
                         Sửa
                     </Button>
-                    <Button type='ghost' danger icon={<DeleteFilled />}>
+                    <Button type='ghost' danger icon={<DeleteFilled />} onClick={() => onDeleteRecord(record)}>
                         Xóa
                     </Button>
                 </Space>
@@ -114,6 +126,31 @@ function QuestionCategoryTableData(props) {
                 if (toggleStatus) toggleStatus(values);
             },
         });
+    }
+
+    function onDeleteRecord(values) {
+        if (values.Status) {
+            openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+            return;
+        }
+        return Modal.confirm({
+            title: 'Xóa',
+            icon: <ExclamationCircleOutlined />,
+            content: 'Bạn có chắc chắn xóa không?',
+            okText: 'Xóa',
+            cancelText: 'Hủy',
+            onOk: () => handleDelete(values),
+        });
+    }
+
+    function onEdit(values) {
+        if (values.Status) {
+            openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
+            return;
+        }
+        if (handleUpdate) {
+            handleUpdate(values.Id);
+        }
     }
 
     return (
