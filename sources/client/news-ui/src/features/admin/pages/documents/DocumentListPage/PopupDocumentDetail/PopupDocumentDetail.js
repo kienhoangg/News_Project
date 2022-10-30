@@ -48,7 +48,9 @@ const PopupDocumentDetail = (props) => {
         <Col span={16}>
           <Row gutter={16} className={cx("row-item")}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Số ký hiệu</div>
+              <div className={cx("row-item-label")}>
+                <span style={{ color: "red" }}>* </span>Số ký hiệu
+              </div>
             </Col>
             <Col span={20}>
               <div>{newsDetail?.Code}</div>
