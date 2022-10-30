@@ -261,4 +261,12 @@
             height: auto;
         }
     }
+
+    .album-image-detail-page__bottom__list-album__item {
+        background-position: center center;
+    }
+    .album-image-detail-page__bottom__list-album__item > div {
+        width: 30%;
+        height: 30%;
+    }
 }
