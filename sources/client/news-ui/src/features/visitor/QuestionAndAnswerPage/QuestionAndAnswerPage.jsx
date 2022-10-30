@@ -41,6 +41,7 @@ function QuestionAndAnswerPage() {
     title: false,
     content: false,
   });
+
   const [fileName, setFileName] = useState("");
 
   const elInputFile = useRef();
@@ -88,7 +89,7 @@ function QuestionAndAnswerPage() {
    * @author TDBA (16/10/2022)
    */
   useEffect(() => {
-    callApiGetQuestionCategories();
+    // callApiGetQuestionCategories();
     callApiGetQuestionMaster();
   }, []);
 
@@ -139,12 +140,10 @@ function QuestionAndAnswerPage() {
           label: item?.Title,
         }))
       );
-
-      callApiGetDataQuestionTable();
     } catch (err) {}
   };
 
-  const PAGE_SIZE = 20;
+  const PAGE_SIZE = 10;
 
   /**
    * CallAPI lấy dữ liệu câu hỏi
@@ -154,9 +153,11 @@ function QuestionAndAnswerPage() {
     try {
       const res = await axiosClient.post("/home/question/filter", {
         pageSize: PAGE_SIZE,
-        currentPage: 1,
+        currentPage: pageCurrent,
         direction: -1,
-        orderBy: "CreatedDate",
+        orderBy: "LastModifiedDate",
+        direction2ndColumn: -1,
+        orderBy2ndColumn: "Order",
       });
 
       setDataQuestionTable(res?.PagedData?.Results);
@@ -196,12 +197,16 @@ function QuestionAndAnswerPage() {
 
       formDataRef.current?.delete("JsonString");
       formDataRef.current?.append("JsonString", JSON.stringify(body));
-      const res = await axiosClient.post("home/question", formDataRef.current, {
-        headers: {
-          Prefer: "code=200, example=200GetReturn2Record",
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await axiosClient.post(
+        "home/questions",
+        formDataRef.current,
+        {
+          headers: {
+            Prefer: "code=200, example=200GetReturn2Record",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       setDataForm(DATA_FORM_DEFAULT);
       elInputRef.current?.map((item) => (item.value = ""));
@@ -254,6 +259,15 @@ function QuestionAndAnswerPage() {
         NewQuestions: res?.NewQuestions,
         MostViewQuestions: res?.MostViewQuestions,
       });
+
+      setQuestionCategories(
+        res?.QuestionCategories?.map((item) => ({
+          value: item?.Id,
+          label: item?.Title,
+        }))
+      );
+
+      callApiGetDataQuestionTable();
     } catch (err) {}
   };
 
@@ -271,7 +285,7 @@ function QuestionAndAnswerPage() {
         QUESTION: item?.Title,
         QUESTIONER: item?.AskedPersonName,
         RESPONDENT: moment(item?.CreatedDate).format("DD/MM/YYYY"),
-        ANSWERING_UNIT: item?.Department,
+        ANSWERING_UNIT: item?.AnswerPersonName,
       };
     });
   };

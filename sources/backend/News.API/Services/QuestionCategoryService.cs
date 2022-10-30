@@ -68,7 +68,7 @@ namespace News.API.Services
                 query = query.Where(x => x.ParentId == questionCategoryRequest.ParentId.Value);
             }
             PagedResult<QuestionCategory>? sourcePaging = await query.PaginatedListAsync(questionCategoryRequest.CurrentPage
-                                                                                             ?? 1, questionCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, questionCategoryRequest.OrderBy, questionCategoryRequest.Direction);
+                                                                                             ?? 1, questionCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, questionCategoryRequest.OrderBy2ndColumn, questionCategoryRequest.Direction2ndColumn, questionCategoryRequest.OrderBy, questionCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<QuestionCategoryDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<QuestionCategoryDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<QuestionCategoryDto>? result = new(paginationSet);

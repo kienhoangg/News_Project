@@ -21,7 +21,7 @@
                 align-items: center;
                 justify-content: center;
 
-                &>b {
+                & > b {
                     color: #ffffff;
                 }
             }
@@ -74,7 +74,7 @@
                 align-items: center;
                 position: relative;
 
-                &>a {
+                & > a {
                     display: inline-block;
                     width: 100%;
                     height: 100%;
@@ -86,7 +86,7 @@
                     text-decoration: none;
                 }
 
-                &>div {
+                & > div {
                     width: 17px;
                     height: 17px;
                     transform: rotateZ(45deg);
@@ -99,6 +99,21 @@
 
         &__body {
             margin-top: 10px;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .question-detail-page {
+        flex-direction: column-reverse;
+
+        .question-detail-page__left {
+            width: 100%;
+        }
+
+        .question-detail-page__right {
+            width: 100%;
+            margin-left: 0;
         }
     }
 }

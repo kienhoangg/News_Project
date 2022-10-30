@@ -273,7 +273,7 @@ namespace News.API.Services
                 query = query.Where(x => newsPostRequest.ListNewsPostId.Contains(x.Id));
             }
             PagedResult<NewsPost>? sourcePaging = await query.PaginatedListAsync(newsPostRequest.CurrentPage
-                                                                                              ?? 0, newsPostRequest.PageSize ?? 0, newsPostRequest.OrderBy, newsPostRequest.Direction);
+                                                                                              ?? 0, newsPostRequest.PageSize ?? 0, newsPostRequest.OrderBy2ndColumn, newsPostRequest.Direction2ndColumn, newsPostRequest.OrderBy, newsPostRequest.Direction);
             var lstDto = _mapper.Map<List<NewsPostDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<NewsPostDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<NewsPostDto>? result = new(paginationSet);

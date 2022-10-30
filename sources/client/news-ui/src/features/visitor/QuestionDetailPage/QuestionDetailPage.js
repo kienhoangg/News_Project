@@ -50,7 +50,7 @@ function QuestionDetailPage() {
    */
   const callApiGetQuestionDetail = async (id) => {
     try {
-      const res = await axiosClient.get("/home/question/" + id);
+      const res = await axiosClient.get("/home/questions/" + id);
 
       setQuestionDetail(res);
     } catch (err) {}
@@ -150,7 +150,11 @@ function QuestionDetailPage() {
             <b>Địa chỉ: </b>
             <i>{questionDetail?.Address}&nbsp; /&nbsp; </i>
             <b>Ngày hỏi: </b>
-            <i>{moment(questionDetail?.CreatedDate).format("DD/MM/YYYY")}</i>
+            <i>
+              {questionDetail?.CreatedDate
+                ? moment(questionDetail?.CreatedDate).format("DD/MM/YYYY")
+                : null}
+            </i>
           </div>
 
           <div
@@ -168,7 +172,12 @@ function QuestionDetailPage() {
             </b>
           </div>
 
-          <div style={{ marginTop: 10 }}>{questionDetail?.AnswerContent}</div>
+          <div
+            style={{ marginTop: 10 }}
+            dangerouslySetInnerHTML={{
+              __html: questionDetail?.AnswerContent,
+            }}
+          ></div>
 
           <div style={{ marginTop: 10 }}>
             <b>
@@ -189,7 +198,11 @@ function QuestionDetailPage() {
 
           <div style={{ marginTop: 10, marginBottom: 10 }}>
             <b>Ngày trả lời: </b>{" "}
-            <i>{moment(questionDetail?.AnswerDate).format("DD/MM/YYYY")}</i>
+            <i>
+              {questionDetail?.AnswerDate
+                ? moment(questionDetail?.AnswerDate).format("DD/MM/YYYY")
+                : null}
+            </i>
           </div>
         </div>
       </div>

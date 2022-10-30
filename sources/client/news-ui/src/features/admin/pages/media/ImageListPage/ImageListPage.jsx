@@ -3,22 +3,22 @@ import { useEffect, useState } from "react";
 import ImageListPageSearch from "./ImageListPageSearch/ImageListPageSearch";
 import ImageListTableData from "./ImageListTableData/ImageListTableData";
 
-import mediaApi from 'apis/mediaApi';
-import classNames from 'classnames/bind';
-import styles from './ImageListPage.module.scss';
-import { Direction } from 'common/enum';
-import { useRef } from 'react';
-import { openNotification } from 'helpers/notification';
-import { NotificationType } from 'common/enum';
-import { Button } from 'antd';
-import TextArea from 'antd/lib/input/TextArea';
-import { Option } from 'antd/lib/mentions';
-import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
-import commonFunc from 'common/commonFunc';
-import convertHelper from 'helpers/convertHelper';
-import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
-import { envDomainBackend } from 'common/enviroments';
-import imageHelper from 'helpers/imageHelper';
+import mediaApi from "apis/mediaApi";
+import classNames from "classnames/bind";
+import styles from "./ImageListPage.module.scss";
+import { Direction } from "common/enum";
+import { useRef } from "react";
+import { openNotification } from "helpers/notification";
+import { NotificationType } from "common/enum";
+import { Button } from "antd";
+import TextArea from "antd/lib/input/TextArea";
+import { Option } from "antd/lib/mentions";
+import { FileAddFilled, UploadOutlined } from "@ant-design/icons";
+import commonFunc from "common/commonFunc";
+import convertHelper from "helpers/convertHelper";
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from "common/constant";
+import { envDomainBackend } from "common/enviroments";
+import imageHelper from "helpers/imageHelper";
 
 const cx = classNames.bind(styles);
 const layout = {
@@ -52,7 +52,7 @@ function ImageListPage(props) {
     pageSize: 10,
     direction: Direction.DESC,
     orderBy: DEFAULT_COLUMN_ORDER_BY,
-    keyword: '',
+    keyword: "",
   });
   const [isModalOpen, setIsModalOpen] = useState({
     imageDetail: null,
@@ -358,9 +358,6 @@ function ImageListPage(props) {
                   message: "Tiêu đề không được để trống",
                 },
               ]}
-              style={{
-                width: "300px",
-              }}
             >
               {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                 <div>{isModalOpen?.imageDetail?.Title}</div>

@@ -64,12 +64,6 @@ function LibVideoListPage(props) {
         contentVideoRes = res?.LinkVideo;
       }
 
-      console.log(
-        "contentVideoRes, contentVideo.current",
-        res.Id,
-        contentVideo.current
-      );
-
       if (res.Id != contentVideo.current) {
         addScriptVideo(contentVideoRes);
       }
@@ -91,7 +85,9 @@ function LibVideoListPage(props) {
         pageSize: 99999,
         currentPage: 1,
         direction: -1,
-        orderBy: "CreatedDate",
+        orderBy: "LastModifiedDate",
+        direction2ndColumn: -1,
+        orderBy2ndColumn: "Order",
       };
 
       const res = await axiosClient.post("/home/videocategories/filter", body);
@@ -121,7 +117,7 @@ function LibVideoListPage(props) {
         videoCategoryId: id,
       };
 
-      const res = await axiosClient.post("videos/filter", body);
+      const res = await axiosClient.post("/home/videos/filter", body);
       setListVideo({
         data: res?.PagedData?.Results,
         totalInDB: res?.PagedData?.RowCount,

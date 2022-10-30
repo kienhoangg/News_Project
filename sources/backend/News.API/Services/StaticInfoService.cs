@@ -58,7 +58,7 @@ namespace News.API.Services
                 query = query.Where(x => x.Status == staticInfoRequest.Status.Value);
             }
             PagedResult<StaticInfo>? sourcePaging = await query.PaginatedListAsync(staticInfoRequest.CurrentPage
-                                                                                             ?? 1, staticInfoRequest.PageSize ?? CommonConstants.PAGE_SIZE, staticInfoRequest.OrderBy, staticInfoRequest.Direction);
+                                                                                             ?? 1, staticInfoRequest.PageSize ?? CommonConstants.PAGE_SIZE, staticInfoRequest.OrderBy2ndColumn, staticInfoRequest.Direction2ndColumn, staticInfoRequest.OrderBy, staticInfoRequest.Direction);
             var lstDto = _mapper.Map<List<StaticInfoDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<StaticInfoDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<StaticInfoDto>? result = new(paginationSet);

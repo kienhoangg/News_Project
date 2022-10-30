@@ -182,6 +182,7 @@ function OperatingDocumentsPage(props) {
         documentFieldId: getId(fieldOfDocument),
         documentSignPersonId: getId(signer),
         documentTypeId: getId(documentType),
+        status: 1,
       };
 
       const res = await axiosClient.post("/home/documents/filter", body);
@@ -362,7 +363,7 @@ function OperatingDocumentsPage(props) {
                     options={fieldOfDocument}
                     onChange={(val) => {
                       setFieldOfDocument(
-                        documentType?.map((item) => ({
+                        fieldOfDocument?.map((item) => ({
                           ...item,
                           isSelected: item?.value === val,
                         }))
@@ -394,7 +395,7 @@ function OperatingDocumentsPage(props) {
                     options={agencyIssued}
                     onChange={(val) => {
                       setAgencyIssued(
-                        documentType?.map((item) => ({
+                        agencyIssued?.map((item) => ({
                           ...item,
                           isSelected: item?.value === val,
                         }))
@@ -426,7 +427,7 @@ function OperatingDocumentsPage(props) {
                     options={signer}
                     onChange={(val) => {
                       setSigner(
-                        documentType?.map((item) => ({
+                        signer?.map((item) => ({
                           ...item,
                           isSelected: item?.value === val,
                         }))

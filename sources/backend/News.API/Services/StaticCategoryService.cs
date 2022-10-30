@@ -71,7 +71,7 @@ namespace News.API.Services
                 query = query.Where(x => x.ParentId == staticCategoryRequest.ParentId.Value);
             }
             PagedResult<StaticCategory>? sourcePaging = await query.PaginatedListAsync(staticCategoryRequest.CurrentPage
-                                                                                             ?? 1, staticCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, staticCategoryRequest.OrderBy, staticCategoryRequest.Direction);
+                                                                                             ?? 1, staticCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, staticCategoryRequest.OrderBy2ndColumn, staticCategoryRequest.Direction2ndColumn, staticCategoryRequest.OrderBy, staticCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<StaticCategoryDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<StaticCategoryDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<StaticCategoryDto>? result = new(paginationSet);
