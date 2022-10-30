@@ -46,7 +46,7 @@ namespace News.API.Services
             var lstRootMenu = (await GetMenuByPaging(new MenuRequest()
             {
                 ParentId = 0,
-                OrderBy = "LastModifedDate",
+                OrderBy = "LastModifiedDate",
                 Direction = -1,
                 Status = Status.Enabled
             })).PagedData.Results.ToList();
@@ -55,7 +55,7 @@ namespace News.API.Services
                 var lstChildMenu = (await GetMenuByPaging(new MenuRequest()
                 {
                     ParentId = item.Id,
-                    OrderBy = "LastModifedDate",
+                    OrderBy = "LastModifiedDate",
                     Direction = -1,
                     Status = Status.Enabled
                 })).PagedData.Results.ToList();
