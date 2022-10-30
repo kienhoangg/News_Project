@@ -65,7 +65,7 @@ namespace News.API.Services
             }
 
             PagedResult<Question>? sourcePaging = await query.PaginatedListAsync(questionRequest.CurrentPage
-                                                                                             ?? 1, questionRequest.PageSize ?? CommonConstants.PAGE_SIZE, questionRequest.OrderBy, questionRequest.Direction);
+                                                                                             ?? 1, questionRequest.PageSize ?? CommonConstants.PAGE_SIZE, questionRequest.OrderBy2ndColumn, questionRequest.Direction2ndColumn, questionRequest.OrderBy, questionRequest.Direction);
             var lstDto = _mapper.Map<List<QuestionDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<QuestionDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<QuestionDto>? result = new(paginationSet);

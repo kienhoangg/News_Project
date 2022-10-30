@@ -58,7 +58,7 @@ namespace News.API.Services
                 query = query.Where(x => x.Status == fieldNewsRequest.Status.Value);
             }
             PagedResult<FieldNews>? sourcePaging = await query.PaginatedListAsync(fieldNewsRequest.CurrentPage
-                                                                                             ?? 1, fieldNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, fieldNewsRequest.OrderBy, fieldNewsRequest.Direction);
+                                                                                             ?? 1, fieldNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, fieldNewsRequest.OrderBy2ndColumn, fieldNewsRequest.Direction2ndColumn, fieldNewsRequest.OrderBy, fieldNewsRequest.Direction);
             var lstDto = _mapper.Map<List<FieldNewsDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<FieldNewsDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<FieldNewsDto>? result = new(paginationSet);

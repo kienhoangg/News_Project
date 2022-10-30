@@ -62,7 +62,7 @@ namespace News.API.Services
                 query = query.Where(x => x.Status == videoRequest.Status.Value);
             }
             PagedResult<Video>? sourcePaging = await query.PaginatedListAsync(videoRequest.CurrentPage
-                                                                                             ?? 1, videoRequest.PageSize ?? CommonConstants.PAGE_SIZE, videoRequest.OrderBy, videoRequest.Direction);
+                                                                                             ?? 1, videoRequest.PageSize ?? CommonConstants.PAGE_SIZE, videoRequest.OrderBy2ndColumn, videoRequest.Direction2ndColumn, videoRequest.OrderBy, videoRequest.Direction);
             var lstDto = _mapper.Map<List<VideoDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<VideoDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<VideoDto>? result = new(paginationSet);

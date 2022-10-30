@@ -63,20 +63,20 @@ export default function AlbumImageDetailPage() {
         pageSize: PAGE_SIZE,
         currentPage: paging,
         direction: -1,
-        orderBy: "CreatedDate",
-    });
+        orderBy: "LastModifiedDate",
+      });
 
       if (isFirstRender.current) {
         getDetailAlbum(
           new URLSearchParams(window.location.search).get("albumid") ||
-          res?.PagedData?.Results?.[0]?.Id
+            res?.PagedData?.Results?.[0]?.Id
         );
         if (isFirstRender.current) isFirstRender.current = false;
       }
 
       setListAlbum(res?.PagedData?.Results);
       setTotalInDB(res?.PagedData?.RowCount);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   /**
@@ -107,7 +107,7 @@ export default function AlbumImageDetailPage() {
       });
 
       setIndexImageCaroucel(0);
-    } catch (error) { }
+    } catch (error) {}
   };
 
   /**

@@ -127,7 +127,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.Status == menuRequest.Status.Value);
             }
-            PagedResult<Menu>? sourcePaging = await query.PaginatedListAsync(menuRequest.CurrentPage ?? 0, menuRequest.PageSize ?? 0, menuRequest.OrderBy, menuRequest.Direction);
+            PagedResult<Menu>? sourcePaging = await query.PaginatedListAsync(menuRequest.CurrentPage ?? 0, menuRequest.PageSize ?? 0, menuRequest.OrderBy2ndColumn, menuRequest.Direction2ndColumn, menuRequest.OrderBy, menuRequest.Direction);
             var lstDto = _mapper.Map<List<MenuDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<MenuDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<MenuDto>? result = new(paginationSet);

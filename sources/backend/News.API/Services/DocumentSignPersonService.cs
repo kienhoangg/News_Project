@@ -78,7 +78,7 @@ namespace News.API.Services
                 query = query.Where(x => x.ParentId == documentSignPersonRequest.ParentId.Value);
             }
             PagedResult<DocumentSignPerson>? sourcePaging = await query.PaginatedListAsync(documentSignPersonRequest.CurrentPage
-                                                                                             ?? 1, documentSignPersonRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentSignPersonRequest.OrderBy, documentSignPersonRequest.Direction);
+                                                                                             ?? 1, documentSignPersonRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentSignPersonRequest.OrderBy2ndColumn, documentSignPersonRequest.Direction2ndColumn, documentSignPersonRequest.OrderBy, documentSignPersonRequest.Direction);
             var lstDto = _mapper.Map<List<DocumentSignPersonDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<DocumentSignPersonDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<DocumentSignPersonDto>? result = new(paginationSet);

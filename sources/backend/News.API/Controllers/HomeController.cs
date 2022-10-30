@@ -396,7 +396,7 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("filter")]
+        [HttpPost("videos/filter")]
         public async Task<IActionResult>
        GetVideoByPaging([FromBody] VideoRequest videoRequest)
         {

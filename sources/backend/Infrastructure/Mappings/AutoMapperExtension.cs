@@ -41,6 +41,8 @@ namespace Infrastructure.Mappings
             this IQueryable<TDestination> queryable,
             int pageIndex,
             int pageSize,
+            string orderBy2ndColumn,
+            int? direction2ndColumn = -1,
             string orderBy = "LastModifiedDate",
             int? direction = -1
         )
@@ -51,7 +53,7 @@ namespace Infrastructure.Mappings
                 pageIndex,
                 pageSize,
                 string.IsNullOrEmpty(orderBy) ? "LastModifiedDate" : orderBy,
-                direction);
+                direction, orderBy2ndColumn, direction2ndColumn);
         }
     }
 }
