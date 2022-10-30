@@ -2,17 +2,17 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from '@ant-design/icons';
-import { Button, Space, Table, Tag, Modal } from 'antd';
-import { commonRenderTable } from 'common/commonRender';
-import datetimeHelper from 'helpers/datetimeHelper';
-import classNames from 'classnames/bind';
-import styles from './NewsHotTableData.module.scss';
-import { Direction } from 'common/enum';
-import commonFunc from 'common/commonFunc';
-import { openNotification } from 'helpers/notification';
-import { NotificationType } from 'common/enum';
-import { DEFAULT_COLUMN_ORDER_BY, Role } from 'common/constant';
+} from "@ant-design/icons";
+import { Button, Space, Table, Tag, Modal } from "antd";
+import { commonRenderTable } from "common/commonRender";
+import datetimeHelper from "helpers/datetimeHelper";
+import classNames from "classnames/bind";
+import styles from "./NewsHotTableData.module.scss";
+import { Direction } from "common/enum";
+import commonFunc from "common/commonFunc";
+import { openNotification } from "helpers/notification";
+import { NotificationType } from "common/enum";
+import { DEFAULT_COLUMN_ORDER_BY, Role } from "common/constant";
 
 const cx = classNames.bind(styles);
 
@@ -25,27 +25,27 @@ function NewsHotTableData(props) {
 
   const columns = [
     {
-      key: 'title',
+      key: 'Title',
       dataIndex: 'Title',
       title: 'Tiêu đề',
       render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.title - b.title,
+      sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: 'status',
+      key: 'Status',
       dataIndex: 'Status',
       title: 'Trạng thái',
       align: 'center',
       width: 100,
       sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
-        let color = !Status ? 'geekblue' : 'volcano';
-        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
+        let color = !Status ? "geekblue" : "volcano";
+        let text = !Status ? "Duyệt" : "Hủy duyệt";
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
@@ -54,44 +54,44 @@ function NewsHotTableData(props) {
       },
     },
     {
-      key: 'action',
+      key: "action",
       render: (_, record) => (
-        <Space size='middle'>
+        <Space size="middle">
           <Tag
-            color={'volcano'}
-            style={{ cursor: 'pointer' }}
+            color={"volcano"}
+            style={{ cursor: "pointer" }}
             onClick={(event) => {
               if (record?.Status) {
                 openNotification(
-                  'Hủy duyệt trước khi xóa',
-                  '',
+                  "Hủy duyệt trước khi xóa",
+                  "",
                   NotificationType.ERROR
                 );
                 return;
               }
 
               event?.stopPropagation();
-              const role = commonFunc.getCookie('role');
+              const role = commonFunc.getCookie("role");
               if (role !== Role.ADMIN) {
                 openNotification(
                   <>
                     Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
                   </>,
-                  '',
+                  "",
                   NotificationType.ERROR
                 );
                 return;
               }
               Modal.confirm({
-                title: 'Xóa video',
+                title: "Xóa video",
                 icon: <ExclamationCircleOutlined />,
                 content: (
                   <>
                     Bạn có chắc chắn <b>Xóa</b> không?
                   </>
                 ),
-                okText: 'Xóa',
-                cancelText: 'Hủy',
+                okText: "Xóa",
+                cancelText: "Hủy",
                 onOk: () => {
                   if (!cancelNewsHost) {
                     return;
@@ -112,20 +112,20 @@ function NewsHotTableData(props) {
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
-    return { ...item, CreatedDate: createdDate, key: item.Key };
+    return { ...item, CreatedDate: createdDate, key: item.Id };
   });
 
   function handleDeleteHotNew(values) {
     if (values.Status) {
-      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      openNotification("Hủy duyệt trước khi xóa", "", NotificationType.ERROR);
       return;
     }
     return Modal.confirm({
-      title: 'Xóa tin nổi bật',
+      title: "Xóa tin nổi bật",
       icon: <ExclamationCircleOutlined />,
-      content: 'Bạn có chắc chắn xóa không?',
-      okText: 'Xóa',
-      cancelText: 'Hủy',
+      content: "Bạn có chắc chắn xóa không?",
+      okText: "Xóa",
+      cancelText: "Hủy",
       onOk: () => deleteHotNewCustom(values),
     });
   }
@@ -138,27 +138,27 @@ function NewsHotTableData(props) {
   };
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie('role');
+    const role = commonFunc.getCookie("role");
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        '',
+        "",
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: 'Cập nhật trạng thái',
+      title: "Cập nhật trạng thái",
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: 'Cập nhật',
-      cancelText: 'Hủy',
+      okText: "Cập nhật",
+      cancelText: "Hủy",
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -170,7 +170,7 @@ function NewsHotTableData(props) {
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
     let columnKey = sorter.columnKey;
-    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    let order = sorter.order === "ascend" ? Direction.ASC : Direction.DESC;
     if (sorter.order === undefined) {
       columnKey = DEFAULT_COLUMN_ORDER_BY;
       order = Direction.DESC;
@@ -181,11 +181,11 @@ function NewsHotTableData(props) {
       pagination.pageSize,
       columnKey,
       order,
-      'hotnew'
+      "hotnew"
     );
   };
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -198,7 +198,7 @@ function NewsHotTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size='small'
+        size="small"
       />
     </div>
   );

@@ -156,6 +156,8 @@ function QuestionAndAnswerPage() {
         currentPage: pageCurrent,
         direction: -1,
         orderBy: "LastModifiedDate",
+        direction2ndColumn: -1,
+        orderBy2ndColumn: "Order",
       });
 
       setDataQuestionTable(res?.PagedData?.Results);
@@ -283,7 +285,7 @@ function QuestionAndAnswerPage() {
         QUESTION: item?.Title,
         QUESTIONER: item?.AskedPersonName,
         RESPONDENT: moment(item?.CreatedDate).format("DD/MM/YYYY"),
-        ANSWERING_UNIT: item?.Department,
+        ANSWERING_UNIT: item?.AnswerPersonName,
       };
     });
   };

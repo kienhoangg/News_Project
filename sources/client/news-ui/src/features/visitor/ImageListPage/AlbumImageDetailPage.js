@@ -64,6 +64,8 @@ export default function AlbumImageDetailPage() {
         currentPage: paging,
         direction: -1,
         orderBy: "LastModifiedDate",
+        direction2ndColumn: -1,
+        orderBy2ndColumn: "Order",
       });
 
       if (isFirstRender.current) {

@@ -27,7 +27,7 @@
                 width: 100%;
                 border-radius: 3px;
 
-                &>.ant-select-selector {
+                & > .ant-select-selector {
                     height: 30px;
                     border: 1px solid #ababab !important;
                     box-shadow: none !important;
@@ -58,11 +58,12 @@
                 cursor: pointer;
                 margin-top: 10px;
 
-                &:nth-child(1), &:nth-child(5)  {
+                &:nth-child(1),
+                &:nth-child(5) {
                     margin-left: 0px;
                 }
 
-                &:hover &__title{
+                &:hover &__title {
                     color: red;
                 }
 
@@ -90,13 +91,29 @@
             margin-bottom: 20px;
 
             .ant-pagination {
-
                 .ant-pagination-item-link {
                     border-radius: 3px !important;
-
                 }
             }
-
         }
+    }
+}
+
+@media (max-width: 767px) {
+    .lib-video-list-page__bottom__list-video {
+        padding: 8px;
+
+        .lib-video-list-page__bottom__list-video__item {
+            width: 100%;
+            margin-left: 0;
+
+            .lib-video-list-page__bottom__list-video__item__avatar {
+                height: 200px;
+            }
+        }
+    }
+
+    .lib-video-list-page__bottom__wrap-video-main {
+        height: 300px;
     }
 }

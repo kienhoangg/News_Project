@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 import {
   Button,
   Checkbox,
@@ -13,30 +13,30 @@ import {
   Select,
   TreeSelect,
   Upload,
-} from 'antd';
-import classNames from 'classnames/bind';
-import { TreeNode } from 'antd/lib/tree-select';
+} from "antd";
+import classNames from "classnames/bind";
+import { TreeNode } from "antd/lib/tree-select";
 import {
   FileImageFilled,
   PlusOutlined,
   UploadOutlined,
-} from '@ant-design/icons';
-import TextArea from 'antd/lib/input/TextArea';
-import { Option } from 'antd/lib/mentions';
-import { CKEditor } from 'ckeditor4-react';
-import { useState } from 'react';
-import { openNotification } from 'helpers/notification';
-import { Direction, NotificationType } from 'common/enum';
-import datetimeHelper from 'helpers/datetimeHelper';
-import { useEffect } from 'react';
-import commonFunc from 'common/commonFunc';
-import newsApi from 'apis/newsApi';
-import axiosClient from 'apis/axiosClient';
-import moment from 'moment';
-import { envDomainBackend } from 'common/enviroments';
-import convertHelper from 'helpers/convertHelper';
-import documentApi from 'apis/documentApi';
-import { DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+} from "@ant-design/icons";
+import TextArea from "antd/lib/input/TextArea";
+import { Option } from "antd/lib/mentions";
+import { CKEditor } from "ckeditor4-react";
+import { useState } from "react";
+import { openNotification } from "helpers/notification";
+import { Direction, NotificationType } from "common/enum";
+import datetimeHelper from "helpers/datetimeHelper";
+import { useEffect } from "react";
+import commonFunc from "common/commonFunc";
+import newsApi from "apis/newsApi";
+import axiosClient from "apis/axiosClient";
+import moment from "moment";
+import { envDomainBackend } from "common/enviroments";
+import convertHelper from "helpers/convertHelper";
+import documentApi from "apis/documentApi";
+import { DEFAULT_COLUMN_ORDER_BY } from "common/constant";
 
 /**
  * Popup chỉnh sửa bài viết
@@ -70,20 +70,20 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
   const onUpdate = async (values) => {
     try {
       var formData = new FormData();
-      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+      formData.append("JsonString", convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
-        formData.append('FileAttachment', values.FileAttachment);
+        formData.append("FileAttachment", values.FileAttachment);
       }
 
       if (values.Avatar) {
-        formData.append('Avatar', values.Avatar);
+        formData.append("Avatar", values.Avatar);
       }
       await newsApi.updatNewsByID(idNews, formData);
-      openNotification('Cập nhật tin tức thành công');
+      openNotification("Cập nhật tin tức thành công");
       onSuccess();
     } catch (error) {
-      openNotification('Cập nhật tin tức thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật tin tức thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -94,24 +94,24 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
   const callApiGetDetailNews = async (id) => {
     if (!id) return;
     try {
-      const res = await axiosClient.get('/newspost/' + id);
+      const res = await axiosClient.get("/newspost/" + id);
       setNewsDetail(res);
 
       res?.Avatar &&
         setFileList([
           {
             isFileFormServer: true,
-            uid: '1',
+            uid: "1",
             name: res?.Avatar,
-            status: 'done',
+            status: "done",
             url:
-              res?.Avatar?.indexOf('https://') === 0 ||
-              res?.Avatar?.indexOf('http://') === 0
+              res?.Avatar?.indexOf("https://") === 0 ||
+              res?.Avatar?.indexOf("http://") === 0
                 ? res?.Avatar
                 : envDomainBackend +
-                  (res?.Avatar?.indexOf('/') === 0
+                  (res?.Avatar?.indexOf("/") === 0
                     ? res?.Avatar
-                    : '/' + res?.Avatar),
+                    : "/" + res?.Avatar),
           },
         ]);
 
@@ -119,22 +119,22 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
         setFileListAttachment([
           {
             isFileFormServer: true,
-            uid: '1',
+            uid: "1",
             name: res?.FilePath,
-            status: 'done',
+            status: "done",
             url:
-              res?.FilePath?.indexOf('https://') === 0 ||
-              res?.FilePath?.indexOf('http://') === 0
+              res?.FilePath?.indexOf("https://") === 0 ||
+              res?.FilePath?.indexOf("http://") === 0
                 ? res?.FilePath
                 : envDomainBackend +
-                  (res?.FilePath?.indexOf('/') === 0
+                  (res?.FilePath?.indexOf("/") === 0
                     ? res?.FilePath
-                    : '/' + res?.FilePath),
+                    : "/" + res?.FilePath),
           },
         ]);
 
       form?.setFieldsValue({
-        category: res?.CategoryNews?.CategoryNewsName,
+        category: res?.CategoryNews?.Id,
         title: res?.Title,
         publishedDate: moment(res?.CreatedDate),
         IsDocumentNews: res?.IsDocumentNews,
@@ -145,7 +145,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
         avatarTitle: res?.AvatarTitle,
         description: res?.Description,
         field: res?.FieldNews?.Title,
-        source: res?.SourceNews?.Title,
+        source: res?.SourceNews?.Id,
         content: res?.Content,
       });
     } catch (err) {}
@@ -189,7 +189,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
   );
 
   const renderFieldNews = (
-    <Select placeholder='Lĩnh vực' style={{ width: '100%' }} showSearch>
+    <Select placeholder="Lĩnh vực" style={{ width: "100%" }} showSearch>
       {dataFilter?.fieldNews?.map((x) => (
         <Option value={x.Title} key={x.Id}>
           {x.Title}
@@ -199,9 +199,9 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
   );
 
   const renderSourceNews = (
-    <Select placeholder='Nguồn tin' style={{ width: '100%' }} showSearch>
+    <Select placeholder="Nguồn tin" style={{ width: "100%" }} showSearch>
       {dataFilter?.sourceNews?.map((x) => (
-        <Option value={x.Title} key={x.Id}>
+        <Option value={x.Id} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -210,11 +210,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
 
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode
-        value={x.CategoryNewsName}
-        title={x.CategoryNewsName}
-        key={x.Id}
-      >
+      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));
@@ -224,13 +220,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
     <TreeSelect
       showSearch
       style={{
-        width: '100%',
+        width: "100%",
       }}
       dropdownStyle={{
         maxHeight: 400,
-        overflow: 'auto',
+        overflow: "auto",
       }}
-      placeholder='Chọn loại tin tức'
+      placeholder="Chọn loại tin tức"
       allowClear
       treeDefaultExpandAll
       onChange={(res) => console.log(res)}
@@ -240,13 +236,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
   );
 
   return (
-    <div className='popup-update-news'>
+    <div className="popup-update-news">
       {newsDetail?.Id ? (
         <Modal
           open={true}
-          title='Chỉnh sửa tin tức TDBA'
-          okText='Cập nhật'
-          cancelText='Thoát'
+          title="Chỉnh sửa tin tức"
+          okText="Cập nhật"
+          cancelText="Thoát"
           onCancel={() => {
             onCancel();
           }}
@@ -258,7 +254,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
               .then((values) => {
                 values.content = values.content?.editor?.getData();
                 const date =
-                  values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+                  values?.publishedDate?._d ?? "0001-01-01 00:00:00.0000000";
                 const publishedDate =
                   datetimeHelper.formatDatetimeToDateSerer(date);
                 const {
@@ -295,14 +291,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 }
                 if (source) {
                   bodyData.SourceNewsId =
-                    dataFilter?.sourceNews.find((x) => x.Title === source)
-                      ?.Id ?? undefined;
+                    dataFilter?.sourceNews.find((x) => x.Id === source)?.Id ??
+                    undefined;
                 }
                 if (category) {
                   bodyData.CategoryNewsId =
-                    dataFilter?.categoryNews.find(
-                      (x) => x.CategoryNewsName === category
-                    )?.Id ?? undefined;
+                    dataFilter?.categoryNews.find((x) => x?.Id === category)
+                      ?.Id ?? undefined;
                 }
 
                 let body = { JsonString: bodyData };
@@ -311,8 +306,8 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                   const file = fileList[0].originFileObj;
                   if (file.size > LIMIT_UP_LOAD_FILE) {
                     openNotification(
-                      'File ảnh đã lớn hơn 2MB',
-                      '',
+                      "File ảnh đã lớn hơn 2MB",
+                      "",
                       NotificationType.ERROR
                     );
                     return;
@@ -337,8 +332,8 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                   const file = fileListAttachment[0].originFileObj;
                   if (file.size > LIMIT_UP_LOAD_FILE) {
                     openNotification(
-                      'File đính kèm đã lớn hơn 2MB',
-                      '',
+                      "File đính kèm đã lớn hơn 2MB",
+                      "",
                       NotificationType.ERROR
                     );
                     return;
@@ -363,7 +358,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 onUpdate(body);
               })
               .catch((info) => {
-                console.log('Validate Failed:', info);
+                console.log("Validate Failed:", info);
               });
           }}
         >
@@ -371,11 +366,11 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             form={form}
             // size={'small'}
             // layout='vertical'
-            name='form_in_modal'
+            name="form_in_modal"
             labelCol={{ span: 2 }}
             // wrapperCol={{ span: 21 }}
             initialValues={{
-              modifier: 'public',
+              modifier: "public",
               IsDocumentNews: false,
               IsNewsHot: false,
               IsNewsVideo: false,
@@ -384,49 +379,49 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
               IsComment: false,
             }}
           >
-            <Form.Item label='Danh mục'>
+            <Form.Item label="Danh mục">
               <Row gutter={8}>
                 <Col span={5}>
-                  <Form.Item style={{ marginBottom: 0 }} name='category'>
+                  <Form.Item style={{ marginBottom: 0 }} name="category">
                     {renderCategoryNews}
                   </Form.Item>
                 </Col>
                 <Col span={13}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name='title'
-                    label='Tiêu đề'
+                    name="title"
+                    label="Tiêu đề"
                     rules={[
                       {
                         required: true,
-                        message: 'Nhập tiêu đề',
+                        message: "Nhập tiêu đề",
                       },
                     ]}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
-                <Col span={6}>
+                {/* <Col span={6}>
                   <Form.Item
-                    name='publishedDate'
-                    label='Ngày tạo'
+                    name="publishedDate"
+                    label="Ngày tạo"
                     style={{ marginBottom: 0 }}
                   >
                     <DatePicker
-                      placeholder='Ngày tạo'
-                      style={{ width: '100%' }}
+                      placeholder="Ngày tạo"
+                      style={{ width: "100%" }}
                     />
                   </Form.Item>
-                </Col>
+                </Col> */}
               </Row>
             </Form.Item>
-            <Form.Item label='Tin hành chính'>
+            <Form.Item label="Tin hành chính">
               <Row gutter={8}>
                 <Col span={4}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name='IsDocumentNews'
-                    valuePropName='checked'
+                    name="IsDocumentNews"
+                    valuePropName="checked"
                   >
                     <Checkbox></Checkbox>
                   </Form.Item>
@@ -484,16 +479,16 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
               </Row>
             </Form.Item>
 
-            <Form.Item name='lb-avatar' label='Ảnh đại diện'>
+            <Form.Item name="lb-avatar" label="Ảnh đại diện">
               <Row gutter={8}>
                 <Col span={8}>
                   <Upload
-                    listType='picture'
+                    listType="picture"
                     maxCount={1}
                     fileList={fileList}
                     // onPreview={handlePreview}
                     onChange={handleChange}
-                    accept='.jpg,.png,.jpeg'
+                    accept=".jpg,.png,.jpeg"
                     customRequest={commonFunc.dummyRequest}
                   >
                     {fileList.length < 1 ? uploadButton : null}
@@ -502,12 +497,12 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 <Col span={16}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name='avatarTitle'
-                    label='Tiêu đề ảnh'
+                    name="avatarTitle"
+                    label="Tiêu đề ảnh"
                     rules={[
                       {
                         required: true,
-                        message: 'Nhập tiêu đề ảnh',
+                        message: "Nhập tiêu đề ảnh",
                       },
                     ]}
                   >
@@ -518,8 +513,8 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             </Form.Item>
 
             <Form.Item
-              name='description'
-              label='Mô tả'
+              name="description"
+              label="Mô tả"
               style={{ marginBottom: 0 }}
             >
               <TextArea
@@ -530,72 +525,72 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 }}
               />
             </Form.Item>
-            <Form.Item name='content' label='Nội dung'>
+            <Form.Item name="content" label="Nội dung">
               <CKEditor
                 initData={newsDetail?.Content}
                 onChange={onEditorChange}
                 config={{
-                  language: 'vi',
+                  language: "vi",
                   toolbarGroups: [
                     {
-                      name: 'document',
-                      groups: ['mode', 'document', 'doctools'],
+                      name: "document",
+                      groups: ["mode", "document", "doctools"],
                     },
-                    { name: 'clipboard', groups: ['clipboard', 'undo'] },
+                    { name: "clipboard", groups: ["clipboard", "undo"] },
                     {
-                      name: 'editing',
-                      groups: ['find', 'selection', 'spellchecker', 'editing'],
+                      name: "editing",
+                      groups: ["find", "selection", "spellchecker", "editing"],
                     },
-                    { name: 'forms', groups: ['forms'] },
-                    '/',
-                    '/',
-                    { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                    { name: "forms", groups: ["forms"] },
+                    "/",
+                    "/",
+                    { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
                     {
-                      name: 'paragraph',
+                      name: "paragraph",
                       groups: [
-                        'list',
-                        'indent',
-                        'blocks',
-                        'align',
-                        'bidi',
-                        'paragraph',
+                        "list",
+                        "indent",
+                        "blocks",
+                        "align",
+                        "bidi",
+                        "paragraph",
                       ],
                     },
-                    { name: 'links', groups: ['links'] },
-                    { name: 'insert', groups: ['insert'] },
-                    '/',
-                    { name: 'styles', groups: ['styles'] },
-                    { name: 'colors', groups: ['colors'] },
-                    { name: 'tools', groups: ['tools'] },
-                    { name: 'others', groups: ['others'] },
-                    { name: 'about', groups: ['about'] },
+                    { name: "links", groups: ["links"] },
+                    { name: "insert", groups: ["insert"] },
+                    "/",
+                    { name: "styles", groups: ["styles"] },
+                    { name: "colors", groups: ["colors"] },
+                    { name: "tools", groups: ["tools"] },
+                    { name: "others", groups: ["others"] },
+                    { name: "about", groups: ["about"] },
                   ],
-                  extraPlugins: 'justify,font,colorbutton,forms',
-                  removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+                  extraPlugins: "justify,font,colorbutton,forms",
+                  removeButtons: "Scayt,HiddenField,CopyFormatting,About",
                 }}
               />
             </Form.Item>
             <Form.Item
-              name='lb-avatar'
-              label='Lĩnh vực'
+              name="lb-avatar"
+              label="Lĩnh vực"
               style={{ marginBottom: 0 }}
             >
               <Row gutter={16}>
                 <Col span={6}>
-                  <Form.Item name='field'>{renderFieldNews}</Form.Item>
+                  <Form.Item name="field">{renderFieldNews}</Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item name='source' label='Nguồn tin'>
+                  <Form.Item name="source" label="Nguồn tin">
                     {renderSourceNews}
                   </Form.Item>
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item name='lb-attachment' label='Tệp đính kèm'>
+            <Form.Item name="lb-attachment" label="Tệp đính kèm">
               <Row gutter={8}>
                 <Col span={8}>
                   <Upload
-                    listType='picture'
+                    listType="picture"
                     maxCount={1}
                     fileList={fileListAttachment}
                     onChange={handleChangeAttachment}
