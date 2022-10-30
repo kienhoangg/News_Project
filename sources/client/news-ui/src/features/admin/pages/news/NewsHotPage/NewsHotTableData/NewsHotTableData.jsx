@@ -25,17 +25,17 @@ function NewsHotTableData(props) {
 
   const columns = [
     {
-      key: "title",
-      dataIndex: "Title",
-      title: "Tiêu đề",
+      key: 'Title',
+      dataIndex: 'Title',
+      title: 'Tiêu đề',
       render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.title - b.title,
+      sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: "status",
-      dataIndex: "Status",
-      title: "Trạng thái",
-      align: "center",
+      key: 'Status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
       width: 100,
       sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
@@ -112,7 +112,7 @@ function NewsHotTableData(props) {
   let dataItems = data?.data ?? [];
   dataItems = dataItems.map((item) => {
     var createdDate = datetimeHelper.formatDateToDateVN(item.CreatedDate);
-    return { ...item, CreatedDate: createdDate, key: item.Key };
+    return { ...item, CreatedDate: createdDate, key: item.Id };
   });
 
   function handleDeleteHotNew(values) {
