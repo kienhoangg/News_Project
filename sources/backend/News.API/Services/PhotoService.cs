@@ -62,7 +62,7 @@ namespace News.API.Services
                 query = query.Where(x => x.Status == photoRequest.Status.Value);
             }
             PagedResult<Photo>? sourcePaging = await query.PaginatedListAsync(photoRequest.CurrentPage
-                                                                                             ?? 1, photoRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoRequest.OrderBy, photoRequest.Direction);
+                                                                                             ?? 1, photoRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoRequest.OrderBy2ndColumn, photoRequest.Direction2ndColumn, photoRequest.OrderBy, photoRequest.Direction);
             var lstDto = _mapper.Map<List<PhotoDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<PhotoDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<PhotoDto>? result = new(paginationSet);

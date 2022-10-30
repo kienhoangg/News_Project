@@ -66,7 +66,7 @@ namespace News.API.Services
 
 
             PagedResult<Comment>? sourcePaging = await query.PaginatedListAsync(commentRequest.CurrentPage
-                                                                                             ?? 1, commentRequest.PageSize ?? CommonConstants.PAGE_SIZE, commentRequest.OrderBy, commentRequest.Direction);
+                                                                                             ?? 1, commentRequest.PageSize ?? CommonConstants.PAGE_SIZE, commentRequest.OrderBy2ndColumn, commentRequest.Direction2ndColumn, commentRequest.OrderBy, commentRequest.Direction);
             var lstDto = _mapper.Map<List<CommentDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<CommentDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<CommentDto>? result = new(paginationSet);

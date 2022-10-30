@@ -13,6 +13,10 @@ namespace Infrastructure.Shared.SeedWork
         public int? Direction { get; set; }
 
         public string OrderBy { get; set; }
+
+        public int? Direction2ndColumn { get; set; }
+
+        public string OrderBy2ndColumn { get; set; }
         public List<int> Ids { get; set; }
     }
 }

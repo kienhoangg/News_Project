@@ -55,7 +55,7 @@ namespace News.API.Services
             }
             IQueryable<CollaboratorDto>? mappingQuery = query.ProjectTo<CollaboratorDto>(_mapper.ConfigurationProvider);
             PagedResult<CollaboratorDto>? paginationSet = await mappingQuery.PaginatedListAsync(collaboratorRequest.CurrentPage
-                                                                                             ?? 1, collaboratorRequest.PageSize ?? CommonConstants.PAGE_SIZE, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
+                                                                                             ?? 1, collaboratorRequest.PageSize ?? CommonConstants.PAGE_SIZE, collaboratorRequest.OrderBy2ndColumn, collaboratorRequest.Direction2ndColumn, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
 
             ApiSuccessResult<CollaboratorDto>? result = new(paginationSet);
             return result;

@@ -34,21 +34,53 @@ namespace Infrastructure.Shared.Paging
             int pageNumber,
             int pageSize,
             string orderBy,
-            int? direction
+            int? direction,
+            string orderBy2ndColumn,
+            int? direction2ndColumn = -1
         )
         {
             var count = await source.CountAsync();
             if (direction > 0)
             {
-                // asc
-                source = source.OrderBy(LinqUltilities.ToLambda<T>(orderBy));
+
+                if (!String.IsNullOrEmpty(orderBy2ndColumn))
+                {
+                    if (direction2ndColumn > 0)
+                    {
+                        source = source.OrderBy(LinqUltilities.ToLambda<T>(orderBy)).ThenBy(LinqUltilities.ToLambda<T>(orderBy2ndColumn));
+                    }
+                    else
+                    {
+                        source = source.OrderBy(LinqUltilities.ToLambda<T>(orderBy)).ThenByDescending(LinqUltilities.ToLambda<T>(orderBy2ndColumn));
+                    }
+                }
+                else
+                {
+                    // asc
+                    source = source.OrderBy(LinqUltilities.ToLambda<T>(orderBy));
+                }
+
             }
             else
             {
-                // desc
-                source =
-                    source
-                        .OrderByDescending(LinqUltilities.ToLambda<T>(orderBy));
+                if (!String.IsNullOrEmpty(orderBy2ndColumn))
+                {
+                    if (direction2ndColumn > 0)
+                    {
+                        source = source.OrderByDescending(LinqUltilities.ToLambda<T>(orderBy)).ThenBy(LinqUltilities.ToLambda<T>(orderBy2ndColumn));
+                    }
+                    else
+                    {
+                        source = source.OrderByDescending(LinqUltilities.ToLambda<T>(orderBy)).ThenByDescending(LinqUltilities.ToLambda<T>(orderBy2ndColumn));
+                    }
+                }
+                else
+                {
+                    // desc
+                    source =
+                        source
+                                .OrderByDescending(LinqUltilities.ToLambda<T>(orderBy));
+                }
             }
             var items = new List<T>();
             if (pageNumber == 0 && pageSize == 0)

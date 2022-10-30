@@ -58,7 +58,7 @@ namespace News.API.Services
                 query = query.Where(x => x.Status == linkInfoCategoryRequest.Status.Value);
             }
             PagedResult<LinkInfoCategory>? sourcePaging = await query.PaginatedListAsync(linkInfoCategoryRequest.CurrentPage
-                                                                                             ?? 1, linkInfoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, linkInfoCategoryRequest.OrderBy, linkInfoCategoryRequest.Direction);
+                                                                                             ?? 1, linkInfoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, linkInfoCategoryRequest.OrderBy2ndColumn, linkInfoCategoryRequest.Direction2ndColumn, linkInfoCategoryRequest.OrderBy, linkInfoCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<LinkInfoCategoryDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<LinkInfoCategoryDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<LinkInfoCategoryDto>? result = new(paginationSet);

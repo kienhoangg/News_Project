@@ -103,7 +103,7 @@ namespace News.API.Services
                 query = query.Where(x => x.ParentId == đocumentFieldRequest.ParentId.Value);
             }
             PagedResult<DocumentField>? sourcePaging = await query.PaginatedListAsync(đocumentFieldRequest.CurrentPage
-                                                                                              ?? 0, đocumentFieldRequest.PageSize ?? 0, đocumentFieldRequest.OrderBy, đocumentFieldRequest.Direction);
+                                                                                              ?? 0, đocumentFieldRequest.PageSize ?? 0, đocumentFieldRequest.OrderBy2ndColumn, đocumentFieldRequest.Direction2ndColumn, đocumentFieldRequest.OrderBy, đocumentFieldRequest.Direction);
             ApiSuccessResult<DocumentField>? result = new(sourcePaging);
             return result;
         }

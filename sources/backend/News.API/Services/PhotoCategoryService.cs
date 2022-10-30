@@ -75,7 +75,7 @@ namespace News.API.Services
                 query = query.Where(x => x.ParentId == photoCategoryRequest.ParentId.Value);
             }
             PagedResult<PhotoCategory>? sourcePaging = await query.PaginatedListAsync(photoCategoryRequest.CurrentPage
-                                                                                             ?? 1, photoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoCategoryRequest.OrderBy, photoCategoryRequest.Direction);
+                                                                                             ?? 1, photoCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, photoCategoryRequest.OrderBy2ndColumn, photoCategoryRequest.Direction2ndColumn, photoCategoryRequest.OrderBy, photoCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<PhotoCategoryDto>>(sourcePaging.Results);
             foreach (var item in lstDto)
             {
