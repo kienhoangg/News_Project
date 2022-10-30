@@ -8,7 +8,7 @@ import linkAndCompanyApi from 'apis/linkAndCompanyApi';
 import { useRef } from 'react';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
-import { TypeUpdate } from 'common/constant';
+import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
 import { Modal } from 'antd';
 import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
 import { Option } from 'antd/lib/mentions';
@@ -21,12 +21,6 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-const filterAll = {
-  currentPage: 1,
-  pageSize: 9_999_999,
-  direction: Direction.DESC,
-  orderBy: 'CreatedDate',
-};
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 const Mode = {
   Create: 1,
@@ -40,13 +34,19 @@ CompanyListPage.propTypes = {};
 CompanyListPage.defaultProps = {};
 
 function CompanyListPage(props) {
+  const filterAll = {
+    currentPage: 1,
+    pageSize: 9_999_999,
+    direction: Direction.DESC,
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+  };
   const [newsData, setNewsData] = useState({});
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -36,6 +36,7 @@ import moment from 'moment';
 import { envDomainBackend } from 'common/enviroments';
 import convertHelper from 'helpers/convertHelper';
 import documentApi from 'apis/documentApi';
+import { DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 
 /**
  * Popup chỉnh sửa bài viết
@@ -154,7 +155,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
     };
 
     const responseCategoryNews = newsApi.getNewsCategoryAll(filterAll);

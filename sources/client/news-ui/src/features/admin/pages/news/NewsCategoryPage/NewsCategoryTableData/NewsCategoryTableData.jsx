@@ -2,18 +2,18 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Space, Table, Tag, Modal } from "antd";
-import PropTypes from "prop-types";
-import { commonRenderTable } from "common/commonRender";
-import datetimeHelper from "helpers/datetimeHelper";
-import styles from "./NewsCategoryTableData.module.scss";
-import classNames from "classnames/bind";
-import { Direction } from "common/enum";
-import { NotificationType } from "common/enum";
-import { openNotification } from "helpers/notification";
-import { Role } from "common/constant";
-import commonFunc from "common/commonFunc";
+} from '@ant-design/icons';
+import { Button, Space, Table, Tag, Modal } from 'antd';
+import PropTypes from 'prop-types';
+import { commonRenderTable } from 'common/commonRender';
+import datetimeHelper from 'helpers/datetimeHelper';
+import styles from './NewsCategoryTableData.module.scss';
+import classNames from 'classnames/bind';
+import { Direction } from 'common/enum';
+import { NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import commonFunc from 'common/commonFunc';
 
 const cx = classNames.bind(styles);
 
@@ -43,12 +43,12 @@ function NewsCategoryTableData(props) {
 
   const columns = [
     {
-      key: "CategoryNewsName",
-      dataIndex: "CategoryNewsName",
-      title: "Tiêu đề",
+      key: 'CategoryNewsName',
+      dataIndex: 'CategoryNewsName',
+      title: 'Tiêu đề',
       render: (_, { Id, CategoryNewsName }) => (
         <div
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             handleOnClickTitle({ Id, CategoryNewsName });
           }}
@@ -59,29 +59,29 @@ function NewsCategoryTableData(props) {
       sorter: (a, b) => a.CategoryNewsName - b.CategoryNewsName,
     },
     {
-      key: "Order",
-      dataIndex: "Order",
-      title: "Số thứ tự",
+      key: 'Order',
+      dataIndex: 'Order',
+      title: 'Số thứ tự',
       render: (Order) => <>{Order}</>,
       sorter: (a, b) => a.Order - b.Order,
       width: 100,
-      align: "right",
+      align: 'right',
     },
     {
-      key: "status",
-      dataIndex: "Status",
-      title: "Trạng thái",
-      align: "center",
+      key: 'status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
@@ -90,17 +90,17 @@ function NewsCategoryTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="primary"
+            type='primary'
             icon={<EditFilled />}
             onClick={() => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi sửa",
-                  "",
+                  'Hủy duyệt trước khi sửa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -111,14 +111,14 @@ function NewsCategoryTableData(props) {
             Sửa
           </Button>
           <Button
-            type="ghost"
+            type='ghost'
             danger
             icon={<DeleteFilled />}
             onClick={() => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi xóa",
-                  "",
+                  'Hủy duyệt trước khi xóa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -142,7 +142,7 @@ function NewsCategoryTableData(props) {
 
   function handleChangeSourceNew(values) {
     if (values.Status) {
-      openNotification("Hủy duyệt trước khi sửa", "", NotificationType.ERROR);
+      openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
       return;
     }
     if (props.updateData) {
@@ -152,15 +152,15 @@ function NewsCategoryTableData(props) {
 
   function handleDeleteCategoryNew(values) {
     if (values.Status) {
-      openNotification("Hủy duyệt trước khi xóa", "", NotificationType.ERROR);
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
       return;
     }
     return Modal.confirm({
-      title: "Xóa danh mục tin",
+      title: 'Xóa danh mục tin',
       icon: <ExclamationCircleOutlined />,
-      content: "Bạn có chắc chắn xóa không?",
-      okText: "Xóa",
-      cancelText: "Hủy",
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
       onOk: () => deleteCategoryNewCustom(values),
     });
   }
@@ -173,27 +173,27 @@ function NewsCategoryTableData(props) {
   };
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -204,16 +204,18 @@ function NewsCategoryTableData(props) {
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.Order === "ascend" ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         columns={columns}
         onChange={handleOnchangeTable}
@@ -226,7 +228,7 @@ function NewsCategoryTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
+        size='small'
       />
     </div>
   );

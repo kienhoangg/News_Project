@@ -14,7 +14,7 @@ import commonFunc from 'common/commonFunc';
 import { UploadOutlined } from '@ant-design/icons';
 import imageHelper from 'helpers/imageHelper';
 import TextArea from 'antd/lib/input/TextArea';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -31,7 +31,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: 'CreatedDate',
+  orderBy: DEFAULT_COLUMN_ORDER_BY,
 };
 
 function VideoListPage(props) {
@@ -39,7 +39,7 @@ function VideoListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [newsData, setNewsData] = useState({

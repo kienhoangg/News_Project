@@ -9,7 +9,7 @@ import DocumentCategoryPageSearch from './DocumentCategoryPageSearch/DocumentCat
 import DocumentCategoryTableData from './DocumentCategoryTableData/DocumentCategoryTableData';
 import { FileAddFilled } from '@ant-design/icons';
 import { Option } from 'antd/lib/mentions';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -32,7 +32,7 @@ function DocumentCategoryPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
 
@@ -86,7 +86,7 @@ function DocumentCategoryPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
       keyword: '',
       parentId: 0,
     };

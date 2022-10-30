@@ -2,16 +2,16 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Modal, Space, Table, Tag } from "antd";
-import { commonRenderTable } from "common/commonRender";
-import datetimeHelper from "helpers/datetimeHelper";
-import styles from "./NewsCommentTableData.module.scss";
-import classNames from "classnames/bind";
-import { Direction, NotificationType } from "common/enum";
-import commonFunc from "common/commonFunc";
-import { Role } from "common/constant";
-import { openNotification } from "helpers/notification";
+} from '@ant-design/icons';
+import { Button, Modal, Space, Table, Tag } from 'antd';
+import { commonRenderTable } from 'common/commonRender';
+import datetimeHelper from 'helpers/datetimeHelper';
+import styles from './NewsCommentTableData.module.scss';
+import classNames from 'classnames/bind';
+import { Direction, NotificationType } from 'common/enum';
+import commonFunc from 'common/commonFunc';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import { openNotification } from 'helpers/notification';
 
 const cx = classNames.bind(styles);
 
@@ -30,42 +30,42 @@ function NewsCommentTableData(props) {
 
   const columns = [
     {
-      key: "Username",
-      dataIndex: "Username",
-      title: "Người gửi",
+      key: 'Username',
+      dataIndex: 'Username',
+      title: 'Người gửi',
       render: (text) => <>{text}</>,
       sorter: (a, b) => a.Name - b.Name,
       width: 150,
     },
     {
-      key: "NewsPostTitle",
-      dataIndex: "NewsPostTitle",
-      title: "Tiêu đề tin",
+      key: 'NewsPostTitle',
+      dataIndex: 'NewsPostTitle',
+      title: 'Tiêu đề tin',
       render: (text) => <>{text}</>,
       sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: "CreatedDate",
-      dataIndex: "CreatedDate",
-      title: "Ngày gửi",
+      key: 'CreatedDate',
+      dataIndex: 'CreatedDate',
+      title: 'Ngày gửi',
       width: 110,
       sorter: (a, b) => a.SendDate - b.SendDate,
     },
     {
-      key: "Status",
-      dataIndex: "Status",
-      title: "Trạng thái",
-      align: "center",
+      key: 'Status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={(event) => {
               handleOnClickStatus({ Id, Status });
               event?.stopPropagation();
@@ -77,45 +77,45 @@ function NewsCommentTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="ghost"
+            type='ghost'
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi xóa",
-                  "",
+                  'Hủy duyệt trước khi xóa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
               }
 
               event?.stopPropagation();
-              const role = commonFunc.getCookie("role");
+              const role = commonFunc.getCookie('role');
               if (role !== Role.ADMIN) {
                 openNotification(
                   <>
                     Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
                   </>,
-                  "",
+                  '',
                   NotificationType.ERROR
                 );
                 return;
               }
               Modal.confirm({
-                title: "Xóa video",
+                title: 'Xóa video',
                 icon: <ExclamationCircleOutlined />,
                 content: (
                   <>
                     Bạn có chắc chắn <b>Xóa</b> không?
                   </>
                 ),
-                okText: "Xóa",
-                cancelText: "Hủy",
+                okText: 'Xóa',
+                cancelText: 'Hủy',
                 onOk: () => {
                   if (!deleteCategoryNew) {
                     return;
@@ -146,27 +146,27 @@ function NewsCommentTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -177,16 +177,18 @@ function NewsCommentTableData(props) {
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -198,7 +200,7 @@ function NewsCommentTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
+        size='small'
         onRow={(item) => ({
           onClick: () => onClickRow && onClickRow(item),
         })}

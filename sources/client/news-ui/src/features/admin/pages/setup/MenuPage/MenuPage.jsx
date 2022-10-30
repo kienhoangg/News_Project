@@ -27,7 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './MenuPage.module.scss';
 import MenuSearch from './MenuSearch/MenuSearch';
 import { Option } from 'antd/lib/mentions';
-import { TypeUpdate, Role } from 'common/constant';
+import { TypeUpdate, Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 const { DirectoryTree } = Tree;
 const layout = {
   labelCol: { span: 8 },
@@ -42,7 +42,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: 'Title',
+  orderBy: DEFAULT_COLUMN_ORDER_BY,
 };
 
 const Mode = {

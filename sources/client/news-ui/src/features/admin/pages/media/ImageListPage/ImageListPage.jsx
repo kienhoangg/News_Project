@@ -16,7 +16,7 @@ import { Option } from 'antd/lib/mentions';
 import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
 import commonFunc from 'common/commonFunc';
 import convertHelper from 'helpers/convertHelper';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import { envDomainBackend } from 'common/enviroments';
 import imageHelper from 'helpers/imageHelper';
 
@@ -25,12 +25,7 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
-const filterAll = {
-  currentPage: 1,
-  pageSize: 9_999_999,
-  direction: Direction.DESC,
-  orderBy: 'CreatedDate',
-};
+
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
 ImageListPage.propTypes = {};
@@ -38,6 +33,12 @@ ImageListPage.propTypes = {};
 ImageListPage.defaultProps = {};
 
 function ImageListPage(props) {
+  const filterAll = {
+    currentPage: 1,
+    pageSize: 9_999_999,
+    direction: Direction.DESC,
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+  };
   const [newsData, setNewsData] = useState({
     data: [],
     total: 0,
@@ -50,7 +51,7 @@ function ImageListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState({

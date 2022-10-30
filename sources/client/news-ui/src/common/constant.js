@@ -20,4 +20,6 @@ export const Role = {
   SITE_ADMIN: 'SITE_ADMIN',
 };
 
+export const DEFAULT_COLUMN_ORDER_BY = 'LastModifiedDate';
+
 export default constant;

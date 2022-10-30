@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import { FileAddFilled } from '@ant-design/icons';
-import { TypeUpdate } from 'common/constant';
+import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 
 const layout = {
@@ -32,7 +32,7 @@ function NewsFieldPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
 

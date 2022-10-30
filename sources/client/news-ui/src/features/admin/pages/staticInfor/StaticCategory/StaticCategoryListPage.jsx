@@ -23,7 +23,7 @@ import StaticCategoryPageSearch from './StaticCategoryPageSearch/StaticCategoryP
 import StaticCategoryTableData from './StaticCategoryTableData/StaticCategoryTableData';
 import { Select } from 'antd';
 import { Option } from 'antd/lib/mentions';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import imageHelper from 'helpers/imageHelper';
 import { envDomainBackend } from 'common/enviroments';
 
@@ -51,7 +51,7 @@ function StaticCategoryListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -169,7 +169,7 @@ function StaticCategoryListPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
       keyword: '',
       parentId: 0,
     };

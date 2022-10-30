@@ -11,7 +11,7 @@ import stringHelper from 'helpers/stringHelper';
 import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { openNotification } from 'helpers/notification';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import datetimeHelper from 'helpers/datetimeHelper';
 
 const cx = classNames.bind(styles);
@@ -38,7 +38,7 @@ function QuestionCategoryPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'LastModifiedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
 
