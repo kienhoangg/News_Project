@@ -1,4 +1,4 @@
-import { Divider, Form, Input, Upload, Button, Select } from 'antd';
+import { Divider, Form, Input, Upload, Button, Select, Row, Col } from 'antd';
 import { useEffect, useState } from 'react';
 import ConnectionListPageSearch from './ConnectionListPageSearch/ConnectionListPageSearch';
 import ConnectionTableData from './ConnectionTableData/ConnectionTableData';
@@ -56,13 +56,12 @@ function ConnectionListPage(props) {
     id: null,
     show: false,
   });
-  const dataDetail = useRef({});
-  const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
-    useState(false);
   const [dataFilter, setDataFilter] = useState({
     categoryAll: [],
   });
   const [fileListAttachment, setFileListAttachment] = useState([]);
+  const detail = useRef({});
+  const [isShowDetail, setIsShowDetail] = useState(false);
   const mode = useRef(Mode.Create);
   const idEdit = useRef(-1);
   const handleChangeAttachment = ({ fileList: newFileList }) => {
@@ -160,7 +159,10 @@ function ConnectionListPage(props) {
       Link,
     };
     if (LinkInfoCategoryId) {
-      bodyData.LinkInfoCategoryId = parseInt(LinkInfoCategoryId);
+      bodyData.LinkInfoCategoryId = parseInt(
+        dataFilter?.categoryAll.find((x) => x.Title === LinkInfoCategoryId)
+          ?.Id ?? undefined
+      );
     }
     let body = { JsonString: bodyData };
 
@@ -240,8 +242,8 @@ function ConnectionListPage(props) {
     if (!detailRow) {
       return;
     }
-    dataDetail.current = detailRow;
-    setOpenCollectionNewsDetail(true);
+    detail.current = detailRow;
+    setIsShowDetail(true);
   };
 
   const fetchItem = async (values) => {
@@ -258,9 +260,10 @@ function ConnectionListPage(props) {
       placeholder='Chọn danh mục'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataFilter?.categoryAll.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -274,7 +277,9 @@ function ConnectionListPage(props) {
     form?.setFieldsValue({
       Title: res?.Title,
       Link: res?.Link,
-      LinkInfoCategoryId: res?.LinkInfoCategoryId,
+      LinkInfoCategoryId:
+        dataFilter?.categoryAll.find((x) => x.Id === res?.LinkInfoCategoryId)
+          ?.Title ?? undefined,
       Order: res?.Order,
     });
 
@@ -354,6 +359,7 @@ function ConnectionListPage(props) {
       <div className={cx('table-data')}>
         <ConnectionTableData
           data={newsData}
+          categoryAll={dataFilter.categoryAll}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteSourceNew}
           updateStatusNew={handleUpdateStatusNew}
@@ -361,6 +367,79 @@ function ConnectionListPage(props) {
           onClickEdit={handleEdit}
         />
       </div>
+
+      <Modal
+        open={isShowDetail}
+        title='Hiển thị thông tin'
+        okButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        cancelText='Thoát'
+        onCancel={() => {
+          setIsShowDetail(false);
+        }}
+      >
+        <Row gutter={8}>
+          <Col span={20}>
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Tiêu đề</div>
+              </Col>
+              <Col span={14}>
+                <div>{detail.current?.Title}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Danh mục liên kết</div>
+              </Col>
+              <Col span={14}>
+                <div>
+                  {dataFilter?.categoryAll.find(
+                    (x) => x.Id === detail.current?.LinkInfoCategoryId
+                  )?.Title ?? undefined}
+                </div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Địa chỉ (link)</div>
+              </Col>
+              <Col span={14}>
+                <div>{detail.current?.Link}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Số thứ tự</div>
+              </Col>
+              <Col span={14}>
+                <div>{detail.current?.Order}</div>
+              </Col>
+            </Row>
+
+            <Row gutter={16} className={cx('row-item')}>
+              <Col span={10}>
+                <div className={cx('row-item-label')}>Ảnh đại diện</div>
+              </Col>
+              <Col span={14}>
+                <div>
+                  <img
+                    alt=''
+                    style={{ width: '10vw' }}
+                    src={imageHelper.getLinkImageUrl(detail.current?.Avatar)}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Modal>
     </div>
   );
 }

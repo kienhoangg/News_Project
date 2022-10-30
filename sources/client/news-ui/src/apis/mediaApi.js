@@ -59,6 +59,10 @@ class MediaApi {
     const url = "/PhotoCategories";
     return axiosClient.post(url, body);
   };
+  updateImageCategory = (id, body) => {
+    const url = "/PhotoCategories/" + id;
+    return axiosClient.put(url, body);
+  };
   updateStatusImageCategory = (body) => {
     const url = "/PhotoCategories";
     return axiosClient.put(url, body);
@@ -68,15 +72,43 @@ class MediaApi {
     return axiosClient.delete(url);
   };
 
-  getVideoCategoryAll = (body) => {
-    const url = "/VideoCategories/filter";
-    return axiosClient.post(url, body);
-  };
-
   getVideoAll = (params = {}) => {
     const url = "/videos/filter";
     return axiosClient.post(url, params);
   };
+
+
+  //Video category
+  getVideoCategoryFilter = (body) => {
+    const url = '/videocategories/filter';
+    return axiosClient.post(url, body);
+  };
+
+  getVideoCategoryByID = (id) => {
+    const url = `/videocategories/${id}`;
+    return axiosClient.get(url);
+  };
+
+  insertVideoCategory = (body) => {
+    const url = '/videocategories';
+    return axiosClient.post(url, body);
+  };
+
+  updateVideoCategory = (id, body) => {
+    const url = '/videocategories/' + id;
+    return axiosClient.put(url, body);
+  };
+
+  updateStatusVideoCategory = (body) => {
+    const url = '/videocategories';
+    return axiosClient.put(url, body);
+  };
+
+  deleteStatusVideoCategory = (id) => {
+    const url = `/videocategories/${id}`;
+    return axiosClient.delete(url);
+  };
+
 }
 const mediaApi = new MediaApi();
 export default mediaApi;

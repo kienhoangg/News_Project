@@ -1,15 +1,15 @@
-import { Divider, Form, Button, Input, Modal, Select } from "antd";
-import { Direction, NotificationType } from "common/enum";
-import { openNotification } from "helpers/notification";
-import documentApi from "apis/documentApi";
-import classNames from "classnames/bind";
-import { useEffect, useState, useRef } from "react";
-import styles from "./DocumentCategoryPage.module.scss";
-import DocumentCategoryPageSearch from "./DocumentCategoryPageSearch/DocumentCategoryPageSearch";
-import DocumentCategoryTableData from "./DocumentCategoryTableData/DocumentCategoryTableData";
-import { FileAddFilled } from "@ant-design/icons";
-import { Option } from "antd/lib/mentions";
-import { TypeUpdate } from "common/constant";
+import { Divider, Form, Button, Input, Modal, Select } from 'antd';
+import { Direction, NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
+import documentApi from 'apis/documentApi';
+import classNames from 'classnames/bind';
+import { useEffect, useState, useRef } from 'react';
+import styles from './DocumentCategoryPage.module.scss';
+import DocumentCategoryPageSearch from './DocumentCategoryPageSearch/DocumentCategoryPageSearch';
+import DocumentCategoryTableData from './DocumentCategoryTableData/DocumentCategoryTableData';
+import { FileAddFilled } from '@ant-design/icons';
+import { Option } from 'antd/lib/mentions';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -26,13 +26,14 @@ function DocumentCategoryPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
 
   const MODAL_TYPE = {
@@ -71,12 +72,26 @@ function DocumentCategoryPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification("Lấy loại văn bản thất bại", "", NotificationType.ERROR);
+      openNotification('Lấy loại văn bản thất bại', '', NotificationType.ERROR);
     }
   };
 
-  const showModal = () => {
+  const showModal = async () => {
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await documentApi.getDocumentCategoryAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const handleCancel = () => {
@@ -95,7 +110,9 @@ function DocumentCategoryPage(props) {
   const onFinish = (values) => {
     let parentID = null;
     if (values.parentId) {
-      parentID = parseInt(values.parentId);
+      parentID = parseInt(
+        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? '0'
+      );
     }
     values = {
       Title: values?.title,
@@ -119,9 +136,9 @@ function DocumentCategoryPage(props) {
       await documentApi.updateCategoryDocument(document?.content?.Id, values);
       handleCancel();
       fetchCategoryList();
-      openNotification("Sửa loại văn bản thành công");
+      openNotification('Sửa loại văn bản thành công');
     } catch (error) {
-      openNotification("Sửa loại văn bản thất bại", "", NotificationType.ERROR);
+      openNotification('Sửa loại văn bản thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -133,11 +150,11 @@ function DocumentCategoryPage(props) {
       await documentApi.insertCategoryDocument(values);
       handleCancel();
       fetchCategoryList();
-      openNotification("Tạo mới loại văn bản thành công");
+      openNotification('Tạo mới loại văn bản thành công');
     } catch (error) {
       openNotification(
-        "Tạo mới loại văn bản thất bại",
-        "",
+        'Tạo mới loại văn bản thất bại',
+        '',
         NotificationType.ERROR
       );
     }
@@ -166,21 +183,22 @@ function DocumentCategoryPage(props) {
   const handleDeleteCategoryNew = async (id) => {
     try {
       await documentApi.deleteCategoryDocument(id);
-      openNotification("Xóa loại văn bản thành công");
+      openNotification('Xóa loại văn bản thành công');
       fetchCategoryList();
     } catch (error) {
-      openNotification("Xóa loại văn bản thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa loại văn bản thất bại', '', NotificationType.ERROR);
     }
   };
 
   const renderOption = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
-      allowClear={true}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
+      allowClear
+      showSearch
     >
-      {newsData?.data.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+      {dataRoot.map((x) => (
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -195,35 +213,35 @@ function DocumentCategoryPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       {
         //#region popup thêm mới
       }
       <Modal
-        className={cx("modal-category-news")}
+        className={cx('modal-category-news')}
         title={
           document?.type === MODAL_TYPE.DETAIL
-            ? "Xem chi tiết"
+            ? 'Xem chi tiết'
             : document?.type === MODAL_TYPE.EDIT
-            ? "Chỉnh sửa"
-            : "Thêm mới loại văn bản tin"
+            ? 'Chỉnh sửa'
+            : 'Thêm mới loại văn bản tin'
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
           <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
+            name='title'
+            label='Tiêu đề'
+            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
           >
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Title}</div>
@@ -231,11 +249,11 @@ function DocumentCategoryPage(props) {
               <Input />
             )}
           </Form.Item>
-          <Form.Item name="parentId" label="Danh mục cấp cha">
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>
                 {
-                  newsData?.data?.find(
+                  dataRoot?.find(
                     (item) => item?.Id === document?.content?.ParentId
                   )?.Title
                 }
@@ -244,14 +262,14 @@ function DocumentCategoryPage(props) {
               renderOption
             )}
           </Form.Item>
-          <Form.Item name="order" label="Số thứ tự">
+          <Form.Item name='order' label='Số thứ tự'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Order}</div>
             ) : (
-              <Input type="number" min={0} defaultValue={0} />
+              <Input type='number' min={0} defaultValue={0} />
             )}
           </Form.Item>
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name='description' label='Mô tả'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Description}</div>
             ) : (
@@ -261,12 +279,12 @@ function DocumentCategoryPage(props) {
           {document?.type === MODAL_TYPE.DETAIL ? null : (
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button
-                type="primary"
+                type='primary'
                 htmlType={
-                  document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"
+                  document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'
                 }
               >
-                {document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"}
+                {document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'}
               </Button>
             </Form.Item>
           )}
@@ -276,22 +294,23 @@ function DocumentCategoryPage(props) {
         //#endregion
       }
 
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <DocumentCategoryPageSearch setTextSearch={handleChangeTextSearch} />
-        <div className={cx("btn-add-field-document")}>
-          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
+        <div className={cx('btn-add-field-document')}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <DocumentCategoryTableData
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
           onEdit={(res) => {
+            // const record = await fetchItem(res?.Id);
             showModal();
             setDocument({
               content: res,
@@ -299,7 +318,8 @@ function DocumentCategoryPage(props) {
             });
             form.setFieldsValue({
               title: res?.Title,
-              parentId: res?.ParentId,
+              parentId: dataRoot?.find((item) => item?.Id === res?.ParentId)
+                ?.Title,
               order: res?.Order,
               description: res?.Description,
             });

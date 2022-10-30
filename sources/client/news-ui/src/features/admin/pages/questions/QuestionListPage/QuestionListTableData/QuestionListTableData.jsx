@@ -2,16 +2,16 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Modal, Space, Table, Tag } from "antd";
-import classNames from "classnames/bind";
-import commonFunc from "common/commonFunc";
-import { commonRenderTable } from "common/commonRender";
-import { Role } from "common/constant";
-import { Direction, NotificationType } from "common/enum";
-import datetimeHelper from "helpers/datetimeHelper";
-import { openNotification } from "helpers/notification";
-import styles from "./QuestionListTableData.module.scss";
+} from '@ant-design/icons';
+import { Button, Modal, Space, Table, Tag } from 'antd';
+import classNames from 'classnames/bind';
+import commonFunc from 'common/commonFunc';
+import { commonRenderTable } from 'common/commonRender';
+import { Role } from 'common/constant';
+import { Direction, NotificationType } from 'common/enum';
+import datetimeHelper from 'helpers/datetimeHelper';
+import { openNotification } from 'helpers/notification';
+import styles from './QuestionListTableData.module.scss';
 
 const cx = classNames.bind(styles);
 
@@ -20,31 +20,37 @@ QuestionListTableData.propTypes = {};
 QuestionListTableData.defaultProps = {};
 
 function QuestionListTableData(props) {
-  const { data, setPagination, updateStatusNew, deleteCategoryNew, onEdit } =
-    props;
+  const {
+    data,
+    setPagination,
+    updateStatusNew,
+    deleteCategoryNew,
+    onEdit,
+    onClickRow,
+  } = props;
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -56,37 +62,49 @@ function QuestionListTableData(props) {
 
   const columns = [
     {
-      key: "Title",
-      dataIndex: "Title",
-      title: "Tiêu đề",
-      render: (text) => <a>{text}</a>,
+      key: 'Title',
+      dataIndex: 'Title',
+      title: 'Tiêu đề',
+      render: (_, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            onClickRow && onClickRow(record);
+          }}
+        >
+          {record.Title}
+        </div>
+      ),
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "Order",
-      dataIndex: "Order",
-      title: "Số thứ tự",
+      key: 'Order',
+      dataIndex: 'Order',
+      title: 'Số thứ tự',
       render: (OrderNumber) => <>{OrderNumber}</>,
       sorter: (a, b) => a.OrderNumber - b.OrderNumber,
       width: 100,
-      align: "right",
+      align: 'right',
     },
     {
-      key: "Status",
-      dataIndex: "Status",
-      title: "Trạng thái",
-      align: "center",
+      key: 'Status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
-            onClick={() => handleOnClickStatus({ Id, Status })}
+            style={{ cursor: 'pointer' }}
+            onClick={(event) => {
+              handleOnClickStatus({ Id, Status });
+              event?.stopPropagation();
+            }}
           >
             {text}
           </Tag>
@@ -94,42 +112,63 @@ function QuestionListTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="primary"
+            type='primary'
             icon={<EditFilled />}
-            onClick={() => onEdit(record?.Id)}
+            onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  'Hủy duyệt trước khi sửa',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
+              onEdit(record?.Id);
+              event.stopPropagation();
+            }}
           >
             Sửa
           </Button>
           <Button
-            type="ghost"
+            type='ghost'
             danger
             icon={<DeleteFilled />}
-            onClick={() => {
-              const role = commonFunc.getCookie("role");
+            onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  'Hủy duyệt trước khi xóa',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
+
+              event?.stopPropagation();
+              const role = commonFunc.getCookie('role');
               if (role !== Role.ADMIN) {
                 openNotification(
                   <>
                     Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
                   </>,
-                  "",
+                  '',
                   NotificationType.ERROR
                 );
                 return;
               }
               Modal.confirm({
-                title: "Xóa video",
+                title: 'Xóa video',
                 icon: <ExclamationCircleOutlined />,
                 content: (
                   <>
                     Bạn có chắc chắn <b>Xóa</b> không?
                   </>
                 ),
-                okText: "Xóa",
-                cancelText: "Hủy",
+                okText: 'Xóa',
+                cancelText: 'Hủy',
                 onOk: () => {
                   if (!deleteCategoryNew) {
                     return;
@@ -158,12 +197,12 @@ function QuestionListTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
+      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
     );
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -175,7 +214,7 @@ function QuestionListTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
+        size='small'
       />
     </div>
   );

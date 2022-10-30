@@ -1,23 +1,23 @@
-import { Divider, Form, TreeSelect, Button, Modal, Input } from 'antd';
-import { useEffect, useState } from 'react';
-import ImageCategoryPageSearch from './ImageCategoryPageSearch/ImageCategoryPageSearch';
-import ImageCategoryTableData from './ImageCategoryTableData/ImageCategoryTableData';
+import { Divider, Form, TreeSelect, Button, Modal, Input } from "antd";
+import { useEffect, useState } from "react";
+import ImageCategoryPageSearch from "./ImageCategoryPageSearch/ImageCategoryPageSearch";
+import ImageCategoryTableData from "./ImageCategoryTableData/ImageCategoryTableData";
 
-import mediaApi from 'apis/mediaApi';
-import classNames from 'classnames/bind';
-import styles from './ImageCategoryPage.module.scss';
-import { useRef } from 'react';
-import { Direction } from 'common/enum';
-import { openNotification } from 'helpers/notification';
-import { NotificationType } from 'common/enum';
-import commonFunc from 'common/commonFunc';
-import { TreeNode } from 'antd/lib/tree-select';
-import convertHelper from 'helpers/convertHelper';
-import { FileAddFilled } from '@ant-design/icons';
-import TextArea from 'antd/lib/input/TextArea';
-import { Option } from 'antd/lib/mentions';
-import { Select } from 'antd';
-import { TypeUpdate } from 'common/constant';
+import mediaApi from "apis/mediaApi";
+import classNames from "classnames/bind";
+import styles from "./ImageCategoryPage.module.scss";
+import { useRef } from "react";
+import { Direction } from "common/enum";
+import { openNotification } from "helpers/notification";
+import { NotificationType } from "common/enum";
+import commonFunc from "common/commonFunc";
+import { TreeNode } from "antd/lib/tree-select";
+import convertHelper from "helpers/convertHelper";
+import { FileAddFilled } from "@ant-design/icons";
+import TextArea from "antd/lib/input/TextArea";
+import { Option } from "antd/lib/mentions";
+import { Select } from "antd";
+import { TypeUpdate } from "common/constant";
 
 const cx = classNames.bind(styles);
 const layout = {
@@ -34,13 +34,22 @@ function ImageCategoryPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
+  const MODAL_TYPE = {
+    EDIT: 0,
+    DETAIL: 1,
+  };
+  const [document, setDocument] = useState({
+    content: null,
+    type: null,
+  });
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
-    keyword: '',
+    orderBy: "CreatedDate",
+    keyword: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -65,7 +74,7 @@ function ImageCategoryPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification('Lấy loại văn bản thất bại', '', NotificationType.ERROR);
+      openNotification("Lấy loại văn bản thất bại", "", NotificationType.ERROR);
     }
   };
   /**
@@ -83,12 +92,12 @@ function ImageCategoryPage(props) {
   const handleDeleteCategoryNew = async (id) => {
     try {
       await mediaApi.deleteImageCategory(id);
-      openNotification('Xóa danh mục hình ảnh thành công');
+      openNotification("Xóa danh mục hình ảnh thành công");
       fetchCategoryList();
     } catch (error) {
       openNotification(
-        'Xóa danh mục hình ảnh thất bại',
-        '',
+        "Xóa danh mục hình ảnh thất bại",
+        "",
         NotificationType.ERROR
       );
     }
@@ -101,9 +110,9 @@ function ImageCategoryPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -117,32 +126,65 @@ function ImageCategoryPage(props) {
 
   const onCancel = () => {
     setIsModalOpen(false);
+    setDocument({
+      content: null,
+      type: null,
+    });
   };
   const onCreate = async (values) => {
     try {
-      await mediaApi.insertImageCategory(values);
-      openNotification('Tạo mới danh mục hình ảnh thành công');
+      if (document?.type === MODAL_TYPE.EDIT) {
+        await mediaApi.updateImageCategory(document?.content?.Id, values);
+        openNotification("Sửa danh mục hình ảnh thành công");
+      } else {
+        await mediaApi.insertImageCategory(values);
+        openNotification("Tạo mới danh mục hình ảnh thành công");
+      }
+
       fetchCategoryList();
+      onCancel();
     } catch (error) {
-      openNotification(
-        'Tạo mới danh mục hình ảnh thất bại',
-        '',
-        NotificationType.ERROR
-      );
+      if (document?.type === MODAL_TYPE.EDIT) {
+        openNotification(
+          "Sửa danh mục hình ảnh thất bại",
+          "",
+          NotificationType.ERROR
+        );
+      } else {
+        openNotification(
+          "Tạo mới danh mục hình ảnh thất bại",
+          "",
+          NotificationType.ERROR
+        );
+      }
     }
   };
 
-  const showModal = () => {
+  const showModal = async () => {
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await mediaApi.getImageCategoryAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const renderStaticCategoryId = (
     <Select
-      placeholder='Chọn cấp cha'
-      style={{ width: '100%' }}
+      placeholder="Chọn cấp cha"
+      style={{ width: "100%" }}
       allowClear={true}
     >
-      {newsData?.data.map((x) => (
+      {dataRoot.map((x) => (
         <Option value={x.Id} key={x.Id}>
           {x.Title}
         </Option>
@@ -169,64 +211,119 @@ function ImageCategoryPage(props) {
   };
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Modal
         open={isModalOpen}
-        title='Tạo mới danh mục hình ảnh'
-        okText='Thêm mới'
-        cancelText='Thoát'
+        title={
+          document?.type === MODAL_TYPE.DETAIL
+            ? "Xem chi tiết"
+            : document?.type === MODAL_TYPE.EDIT
+            ? "Chỉnh sửa"
+            : "Thêm mới"
+        }
+        okText="Thêm mới"
+        cancelText="Thoát"
         onCancel={onCancel}
         footer={null}
       >
-        <Form form={form} {...layout} name='control-hooks' onFinish={onFinish}>
+        <Form form={form} {...layout} name="control-hooks" onFinish={onFinish}>
           <Form.Item
-            label='Tiêu đề'
-            name='Title'
+            label="Tiêu đề"
+            name="Title"
             rules={[
               {
                 required: true,
-                message: 'Tiêu đề không được để trống',
+                message: "Tiêu đề không được để trống",
               },
             ]}
           >
-            <Input />
+            {document?.type === MODAL_TYPE.DETAIL ? (
+              <div>{document?.content?.Title}</div>
+            ) : (
+              <Input />
+            )}
           </Form.Item>
 
-          <Form.Item name='Order' label='Số thứ tự'>
-            <Input type='number' min={0} />
+          <Form.Item name="Order" label="Số thứ tự">
+            {document?.type === MODAL_TYPE.DETAIL ? (
+              <div>{document?.content?.Order}</div>
+            ) : (
+              <Input type="number" min={0} />
+            )}
           </Form.Item>
 
-          <Form.Item label='Danh mục' name='ParentId'>
-            {renderStaticCategoryId}
+          <Form.Item label="Danh mục" name="ParentId">
+            {document?.type === MODAL_TYPE.DETAIL ? (
+              <div>
+                {
+                  newsData?.data?.find(
+                    (item) => item?.Id === document?.content?.ParentId
+                  )?.Title
+                }
+              </div>
+            ) : (
+              renderStaticCategoryId
+            )}
           </Form.Item>
 
-          <Form.Item label='Mô tả' name='Description'>
-            <TextArea />
+          <Form.Item label="Mô tả" name="Description">
+            {document?.type === MODAL_TYPE.DETAIL ? (
+              <div>{document?.content?.Description}</div>
+            ) : (
+              <TextArea />
+            )}
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type='primary' htmlType='Tạo mới'>
-              Tạo mới
-            </Button>
-          </Form.Item>
+          {document?.type === MODAL_TYPE.DETAIL ? null : (
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button
+                type="primary"
+                htmlType={
+                  document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"
+                }
+              >
+                {document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"}
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </Modal>
 
-      <div className={cx('top')}>
+      <div className={cx("top")}>
         <ImageCategoryPageSearch setTextSearch={handleChangeTextSearch} />
         <div>
-          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
+          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
             Tạo mới
           </Button>
         </div>
       </div>
       <Divider style={{ margin: 0 }} />
-      <div className={cx('table-data')}>
+      <div className={cx("table-data")}>
         <ImageCategoryTableData
           data={newsData}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
+          onEdit={(res) => {
+            showModal();
+            setDocument({
+              content: res,
+              type: MODAL_TYPE.EDIT,
+            });
+            form.setFieldsValue({
+              Title: res?.Title,
+              ParentId: res?.ParentId,
+              Order: res?.Order,
+              Description: res?.Description,
+            });
+          }}
+          onClickRow={(res) => {
+            showModal();
+            setDocument({
+              content: res,
+              type: MODAL_TYPE.DETAIL,
+            });
+          }}
         />
       </div>
     </div>

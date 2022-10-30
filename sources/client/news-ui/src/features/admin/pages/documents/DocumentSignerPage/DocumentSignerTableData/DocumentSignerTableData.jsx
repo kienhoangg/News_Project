@@ -2,18 +2,18 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Space, Table, Tag, Modal } from "antd";
-import { commonRenderTable } from "common/commonRender";
-import datetimeHelper from "helpers/datetimeHelper";
-import classNames from "classnames/bind";
-import styles from "./DocumentSignerTableData.module.scss";
-import { Direction } from "common/enum";
-import { PropTypes } from "prop-types";
-import commonFunc from "common/commonFunc";
-import { Role } from "common/constant";
-import { openNotification } from "helpers/notification";
-import { NotificationType } from "common/enum";
+} from '@ant-design/icons';
+import { Button, Space, Table, Tag, Modal } from 'antd';
+import { commonRenderTable } from 'common/commonRender';
+import datetimeHelper from 'helpers/datetimeHelper';
+import classNames from 'classnames/bind';
+import styles from './DocumentSignerTableData.module.scss';
+import { Direction } from 'common/enum';
+import { PropTypes } from 'prop-types';
+import commonFunc from 'common/commonFunc';
+import { Role } from 'common/constant';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
@@ -46,35 +46,44 @@ function DocumentSignerTableData(props) {
 
   const columns = [
     {
-      key: "title",
-      dataIndex: "Title",
-      title: "Tiêu đề",
-      render: (text) => <a>{text}</a>,
+      key: 'title',
+      dataIndex: 'Title',
+      title: 'Tiêu đề',
+      render: (_, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            onClickRow && onClickRow(record);
+          }}
+        >
+          {record.Title}
+        </div>
+      ),
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "Order",
-      dataIndex: "Order",
-      title: "Số thứ tự",
+      key: 'Order',
+      dataIndex: 'Order',
+      title: 'Số thứ tự',
       render: (Order) => <>{Order}</>,
       sorter: (a, b) => a.Order - b.Order,
       width: 100,
-      align: "right",
+      align: 'right',
     },
     {
-      key: "status",
-      dataIndex: "Status",
-      title: "Trạng thái",
+      key: 'status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={(event) => {
               handleOnClickStatus({ Id, Status });
               event?.stopPropagation();
@@ -86,13 +95,21 @@ function DocumentSignerTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="primary"
+            type='primary'
             icon={<EditFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  'Hủy duyệt trước khi sửa',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
               onEdit && onEdit(record);
               event?.stopPropagation();
             }}
@@ -100,8 +117,16 @@ function DocumentSignerTableData(props) {
             Sửa
           </Button>
           <Button
-            type="ghost"
+            type='ghost'
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  'Hủy duyệt trước khi xóa',
+                  '',
+                  NotificationType.ERROR
+                );
+                return;
+              }
               handleDeleteSourceNew(record);
               event?.stopPropagation();
             }}
@@ -128,15 +153,15 @@ function DocumentSignerTableData(props) {
 
   function handleDeleteSourceNew(values) {
     if (values.Status) {
-      openNotification("Hủy duyệt trước khi xóa", "", NotificationType.ERROR);
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
       return;
     }
     return Modal.confirm({
-      title: "Xóa nguồn tin",
+      title: 'Xóa nguồn tin',
       icon: <ExclamationCircleOutlined />,
-      content: "Bạn có chắc chắn xóa không?",
-      okText: "Xóa",
-      cancelText: "Hủy",
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
       onOk: () => deleteSourceNewCustom(values),
     });
   }
@@ -149,27 +174,27 @@ function DocumentSignerTableData(props) {
   };
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -184,12 +209,12 @@ function DocumentSignerTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
+      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
     );
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -202,10 +227,7 @@ function DocumentSignerTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
-        onRow={(item) => ({
-          onClick: () => onClickRow && onClickRow(item),
-        })}
+        size='small'
       />
     </div>
   );
