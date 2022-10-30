@@ -79,7 +79,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
       if (values.Avatar) {
         formData.append('Avatar', values.Avatar);
       }
-      await documentApi.updateNewPost(idNews, formData);
+      await newsApi.updatNewsByID(idNews, formData);
       openNotification('Cập nhật tin tức thành công');
       onSuccess();
     } catch (error) {
@@ -256,6 +256,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             form
               .validateFields()
               .then((values) => {
+                values.content = values.content?.editor?.getData();
                 const date =
                   values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
                 const publishedDate =
