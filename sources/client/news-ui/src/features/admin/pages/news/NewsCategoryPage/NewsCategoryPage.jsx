@@ -1,16 +1,16 @@
-import { Divider, Form, Button, Input, Modal, Select } from 'antd';
-import newsApi from 'apis/newsApi';
-import { useEffect, useRef, useState } from 'react';
-import NewsCategoryPageSearch from './NewsCategoryPageSearch/NewsCategoryPageSearch';
-import NewsCategoryTableData from './NewsCategoryTableData/NewsCategoryTableData';
-import styles from './NewsCategoryPage.module.scss';
-import classNames from 'classnames/bind';
-import AdminCollectionDetail from 'features/admin/components/AdminCollectionDetail/AdminCollectionDetail';
-import { Direction, NotificationType } from 'common/enum';
-import { openNotification } from 'helpers/notification';
-import { Option } from 'antd/lib/mentions';
-import { FileAddFilled } from '@ant-design/icons';
-import { TypeUpdate } from 'common/constant';
+import { Divider, Form, Button, Input, Modal, Select } from "antd";
+import newsApi from "apis/newsApi";
+import { useEffect, useRef, useState } from "react";
+import NewsCategoryPageSearch from "./NewsCategoryPageSearch/NewsCategoryPageSearch";
+import NewsCategoryTableData from "./NewsCategoryTableData/NewsCategoryTableData";
+import styles from "./NewsCategoryPage.module.scss";
+import classNames from "classnames/bind";
+import AdminCollectionDetail from "features/admin/components/AdminCollectionDetail/AdminCollectionDetail";
+import { Direction, NotificationType } from "common/enum";
+import { openNotification } from "helpers/notification";
+import { Option } from "antd/lib/mentions";
+import { FileAddFilled } from "@ant-design/icons";
+import { TypeUpdate } from "common/constant";
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -38,8 +38,8 @@ function NewsCategoryPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
-    keyword: '',
+    orderBy: "CreatedDate",
+    keyword: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -76,7 +76,7 @@ function NewsCategoryPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification('Lấy  danh mục thất bại', '', NotificationType.ERROR);
+      openNotification("Lấy  danh mục thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -85,7 +85,7 @@ function NewsCategoryPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: "CreatedDate",
     };
     const responseFieldNews = newsApi.getNewsFieldAll(filterAll);
     Promise.all([responseFieldNews]).then((values) => {
@@ -99,31 +99,31 @@ function NewsCategoryPage(props) {
     const response = await getSourceNewById(Id);
     const dicDetail = [
       {
-        type: 'string',
-        label: 'Danh mục cấp cha',
-        content: response?.ParentName ?? '',
+        type: "string",
+        label: "Danh mục cấp cha",
+        content: response?.ParentName ?? "",
       },
       {
-        type: 'string',
-        label: 'Tiêu đề',
+        type: "string",
+        label: "Tiêu đề",
         content: response?.CategoryNewsName,
       },
       {
-        type: 'number',
-        label: 'Số thứ tự',
+        type: "number",
+        label: "Số thứ tự",
         content: response?.Order,
       },
       {
-        type: 'string',
-        label: 'Loại tin',
+        type: "string",
+        label: "Loại tin",
         content:
           dataFilter?.fieldNews.find((x) => x.Id === response?.FieldNews_SK_FK)
-            ?.Title ?? '',
+            ?.Title ?? "",
       },
       {
-        type: 'string',
-        label: 'Keyword',
-        content: response?.Keyword ?? '',
+        type: "string",
+        label: "Keyword",
+        content: response?.Keyword ?? "",
       },
     ];
 
@@ -144,8 +144,8 @@ function NewsCategoryPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
-      keyword: '',
+      orderBy: "CreatedDate",
+      keyword: "",
       parentId: 0,
     };
     const response = await newsApi.getNewsCategoryAll(filterRoot);
@@ -166,13 +166,13 @@ function NewsCategoryPage(props) {
     let fieldNews_SK_FK = null;
     if (values.parentId) {
       parentID = parseInt(
-        dataRoot.find((x) => x.CategoryNewsName === values.parentId)?.Id ?? '0'
+        dataRoot.find((x) => x.CategoryNewsName === values.parentId)?.Id ?? "0"
       );
     }
     if (values.FieldNews_SK_FK) {
       fieldNews_SK_FK = parseInt(
         dataFilter?.fieldNews.find((x) => x.Title === values.FieldNews_SK_FK)
-          ?.Id ?? '0'
+          ?.Id ?? "0"
       );
     }
     values = {
@@ -180,9 +180,7 @@ function NewsCategoryPage(props) {
       Order: parseInt(values?.order ?? 0),
       Keyword: values?.keyword,
     };
-    if (parentID) {
-      values.ParentId = parentID;
-    }
+    values.ParentId = parentID || 0;
     if (fieldNews_SK_FK) {
       values.FieldNews_SK_FK = fieldNews_SK_FK;
     }
@@ -200,9 +198,9 @@ function NewsCategoryPage(props) {
   const updateSounceNews = async (values) => {
     try {
       await newsApi.updateCategoryNews(idEdit.current, values);
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -214,9 +212,9 @@ function NewsCategoryPage(props) {
       await newsApi.insertCategoryNews(values);
       setIsModalOpen(false);
       fetchCategoryList();
-      openNotification('Tạo mới danh mục thành công');
+      openNotification("Tạo mới danh mục thành công");
     } catch (error) {
-      openNotification('Tạo mới danh mục thất bại', '', NotificationType.ERROR);
+      openNotification("Tạo mới danh mục thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -243,10 +241,10 @@ function NewsCategoryPage(props) {
   const handleDeleteCategoryNew = async (id) => {
     try {
       await newsApi.deleteCategoryNews(id);
-      openNotification('Xóa danh mục thành công');
+      openNotification("Xóa danh mục thành công");
       fetchCategoryList();
     } catch (error) {
-      openNotification('Xóa danh mục thất bại', '', NotificationType.ERROR);
+      openNotification("Xóa danh mục thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -258,17 +256,17 @@ function NewsCategoryPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     }
   };
 
   const renderOption = (
     <Select
       showSearch
-      placeholder='Chọn cấp cha'
-      style={{ width: '100%' }}
+      placeholder="Chọn cấp cha"
+      style={{ width: "100%" }}
       allowClear={true}
     >
       {dataRoot.map((x) => (
@@ -282,8 +280,8 @@ function NewsCategoryPage(props) {
   const renderField = (
     <Select
       showSearch
-      placeholder='Chọn lĩnh vực'
-      style={{ width: '100%' }}
+      placeholder="Chọn lĩnh vực"
+      style={{ width: "100%" }}
       allowClear={true}
     >
       {dataFilter?.fieldNews.map((x) => (
@@ -300,8 +298,8 @@ function NewsCategoryPage(props) {
       return res;
     } catch (err) {
       openNotification(
-        'Lấy chi tiết dữ liệu thất bại',
-        '',
+        "Lấy chi tiết dữ liệu thất bại",
+        "",
         NotificationType.ERROR
       );
       return null;
@@ -317,57 +315,57 @@ function NewsCategoryPage(props) {
       title: res?.CategoryNewsName,
       FieldNews_SK_FK:
         dataFilter?.fieldNews.find((x) => x.Id === res?.FieldNews_SK_FK)
-          ?.Title ?? '',
+          ?.Title ?? "",
       description: res?.Description,
       order: res?.Order,
       keyword: res?.Keyword,
-      parentId: res?.ParentName,
+      parentId: res?.ParentName || null,
     });
     setIsModalOpen(true);
   }
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       {
         //#region popup thêm mới
       }
       <Modal
-        className={cx('modal-category-news')}
+        className={cx("modal-category-news")}
         title={
           mode.current === Mode.Edit
-            ? 'Cập nhật danh mục tin'
-            : 'Tạo mới danh mục tin'
+            ? "Cập nhật danh mục tin"
+            : "Tạo mới danh mục tin"
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
-          <Form.Item name='parentId' label='Danh mục cấp cha'>
+        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+          <Form.Item name="parentId" label="Danh mục cấp cha">
             {renderOption}
           </Form.Item>
           <Form.Item
-            name='title'
-            label='Tiêu đề'
-            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
+            name="title"
+            label="Tiêu đề"
+            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name='order' label='Số thứ tự'>
-            <Input type='number' min={0} defaultValue={0} />
+          <Form.Item name="order" label="Số thứ tự">
+            <Input type="number" min={0} defaultValue={0} />
           </Form.Item>
 
-          <Form.Item name='FieldNews_SK_FK' label='Loại tin'>
+          <Form.Item name="FieldNews_SK_FK" label="Loại tin">
             {renderField}
           </Form.Item>
-          <Form.Item name='keyword' label='Keyword'>
-            <Input placeholder='Nhập Keyword' />
+          <Form.Item name="keyword" label="Keyword">
+            <Input placeholder="Nhập Keyword" />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button
-              type='primary'
-              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+              type="primary"
+              htmlType={mode.current === Mode.Edit ? "Cập nhật" : "Tạo mới"}
             >
-              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+              {mode.current === Mode.Edit ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Form.Item>
         </Form>
@@ -376,16 +374,16 @@ function NewsCategoryPage(props) {
         //#endregion
       }
 
-      <div className={cx('top')}>
+      <div className={cx("top")}>
         <NewsCategoryPageSearch setTextSearch={handleChangeTextSearch} />
-        <div className={cx('btn-add-category-news')}>
-          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
+        <div className={cx("btn-add-category-news")}>
+          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: '0' }} />
-      <div className={cx('table-data')}>
+      <Divider style={{ margin: "0" }} />
+      <div className={cx("table-data")}>
         <NewsCategoryTableData
           data={newsData}
           onClickShowRowDetail={handleOnClickShowRowDetail}
