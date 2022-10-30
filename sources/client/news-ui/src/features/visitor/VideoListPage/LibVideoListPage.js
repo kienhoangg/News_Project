@@ -104,7 +104,7 @@ function LibVideoListPage(props) {
       );
 
       setLibVideoSelected(res?.PagedData?.Results?.[0]?.Id);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   /**
@@ -121,7 +121,7 @@ function LibVideoListPage(props) {
         videoCategoryId: id,
       };
 
-      const res = await axiosClient.post("videos/filter", body);
+      const res = await axiosClient.post("/home/videos/filter", body);
       setListVideo({
         data: res?.PagedData?.Results,
         totalInDB: res?.PagedData?.RowCount,
@@ -137,7 +137,7 @@ function LibVideoListPage(props) {
 
         isFirstRender.current = false;
       }
-    } catch (err) {}
+    } catch (err) { }
   };
 
   /**
