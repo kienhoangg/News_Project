@@ -21,6 +21,7 @@ namespace Models.Dtos
         public bool? IsShowComment { get; set; }
 
         public string? AvatarTitle { get; set; }
+        public bool IsDocumentNews { get; set; }
 
         public string? Description { get; set; }
 

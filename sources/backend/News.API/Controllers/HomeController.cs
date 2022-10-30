@@ -339,7 +339,7 @@ namespace News.API.Controllers
                                PageSize = 15,
                                CurrentPage = 1,
                                OrderBy = "Order",
-                               Direction = -1,
+                               Direction = 1,
                                Status = Status.Enabled
                            })).PagedData.Results.ToList();
             if (
