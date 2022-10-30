@@ -117,8 +117,15 @@ function CollectionNewsDetail(props) {
               <div>{dataDetail?.SourceNews?.Title}</div>
             </Col>
           </Row>
-
           <Row gutter={16} className={cx('row-item')}>
+            <Col span={4}>
+              <div className={cx('row-item-label')}>Tin hành chính</div>
+            </Col>
+            <Col span={20}>
+              <div>{dataDetail?.IsDocumentNews ? 'Có' : 'Không'}</div>
+            </Col>
+          </Row>
+          {/* <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
               <div className={cx('row-item-label')}>Tin nổi bật</div>
             </Col>
@@ -152,7 +159,7 @@ function CollectionNewsDetail(props) {
             <Col span={20}>
               <div>{dataDetail?.IsShowComment ? 'Có' : 'Không'}</div>
             </Col>
-          </Row>
+          </Row> */}
 
           <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
