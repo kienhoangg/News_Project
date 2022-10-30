@@ -86,6 +86,8 @@ function LibVideoListPage(props) {
         currentPage: 1,
         direction: -1,
         orderBy: "LastModifiedDate",
+        direction2ndColumn: -1,
+        orderBy2ndColumn: "Order",
       };
 
       const res = await axiosClient.post("/home/videocategories/filter", body);
@@ -98,7 +100,7 @@ function LibVideoListPage(props) {
       );
 
       setLibVideoSelected(res?.PagedData?.Results?.[0]?.Id);
-    } catch (err) { }
+    } catch (err) {}
   };
 
   /**
@@ -131,7 +133,7 @@ function LibVideoListPage(props) {
 
         isFirstRender.current = false;
       }
-    } catch (err) { }
+    } catch (err) {}
   };
 
   /**
