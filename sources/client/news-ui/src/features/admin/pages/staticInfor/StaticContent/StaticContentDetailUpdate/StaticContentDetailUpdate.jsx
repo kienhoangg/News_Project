@@ -172,13 +172,11 @@ function StaticContentDetailUpdate(props) {
             form
               .validateFields()
               .then((values) => {
-                values.content = values.Content?.editor?.getData();
-                const { Title, Descritpion, StaticCategoryId, content } =
-                  values;
+                const { Title, Descritpion, StaticCategoryId } = values;
                 let bodyData = {
                   Title,
                   Descritpion,
-                  content,
+                  content: documentDetail?.Content,
                 };
                 if (StaticCategoryId) {
                   bodyData.StaticCategoryId = parseInt(
