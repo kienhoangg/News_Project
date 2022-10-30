@@ -396,6 +396,16 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("filter")]
+        public async Task<IActionResult>
+       GetVideoByPaging([FromBody] VideoRequest videoRequest)
+        {
+            var result =
+                await _videoService.GetVideoByPaging(videoRequest);
+            return Ok(result);
+        }
+
+
         [HttpPost("videocategories/filter")]
         public async Task<IActionResult>
         GetVideoCategoryByPaging([FromBody] VideoCategoryRequest videoCategoryRequest)
@@ -419,6 +429,15 @@ namespace News.API.Controllers
             if (document == null) return NotFound();
 
             var result = _mapper.Map<DocumentDto>(document);
+            return Ok(result);
+        }
+
+        [HttpPost("filter")]
+        public async Task<IActionResult>
+     GetQuestionCategoryByPaging([FromBody] QuestionCategoryRequest questionCategoryRequest)
+        {
+            var result =
+                await _questionCategoryService.GetQuestionCategoryByPaging(questionCategoryRequest);
             return Ok(result);
         }
         [HttpGet("videos/{id:int}")]
