@@ -14,13 +14,25 @@ namespace Infrastructure.Mappings
         )
         {
             var flags = BindingFlags.Public | BindingFlags.Instance;
-            var sourceType = typeof (TSource);
+            var sourceType = typeof(TSource);
             var destinationProperties =
-                typeof (TDestination).GetProperties(flags);
+                typeof(TDestination).GetProperties(flags);
 
             foreach (var property in destinationProperties)
-            if (sourceType.GetProperty(property.Name, flags) == null)
-                expression.ForMember(property.Name, opt => opt.Ignore());
+            {
+                if (sourceType.GetProperty(property.Name, flags) == null)
+                {
+                    expression.ForMember(property.Name, opt => opt.Ignore());
+
+                }
+                if (property.Name == "CreatedDate")
+                {
+  expression.ForMember(property.Name, opt => opt.Ignore());
+                }
+
+
+            }
+
             return expression;
         }
 

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Common.Enums;
 using Infrastructure.Shared.SeedWork;
 using Models.Dtos;
@@ -8,10 +9,7 @@ namespace News.API.Interfaces
 {
     public interface ISourceNewsService
     {
-        Task<ApiSuccessResult<SourceNewsDto>>
-        GetSourceNewsByPaging(
-            SourceNewsRequest sourceNewsRequest
-        );
+        Task<ApiSuccessResult<SourceNewsDto>> GetSourceNewsByPaging(SourceNewsRequest sourceNewsRequest, params Expression<Func<SourceNews, object>>[] includeProperties);
 
         Task<SourceNews> GetSourceNews(int id);
 

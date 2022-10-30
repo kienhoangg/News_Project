@@ -203,9 +203,7 @@ function ImageCategoryPage(props) {
       Order,
       Description,
     };
-    if (ParentId) {
-      bodyData.ParentId = parseInt(ParentId);
-    }
+    bodyData.ParentId = parseInt(ParentId) || 0;
     form.resetFields();
     onCreate(bodyData);
   };
@@ -312,7 +310,7 @@ function ImageCategoryPage(props) {
             });
             form.setFieldsValue({
               Title: res?.Title,
-              ParentId: res?.ParentId,
+              ParentId: res?.ParentId || null,
               Order: res?.Order,
               Description: res?.Description,
             });

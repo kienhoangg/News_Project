@@ -72,6 +72,7 @@ namespace News.API.Persistence
                         if (item.Entity is IDateTracking addedEntity)
                         {
                             addedEntity.CreatedDate = DateTime.UtcNow;
+                            addedEntity.LastModifiedDate = DateTime.UtcNow;
                             item.State = EntityState.Added;
                         }
 

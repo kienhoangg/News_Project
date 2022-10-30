@@ -28,6 +28,7 @@ function ImageListTableData(props) {
     deleteCategoryNew,
     updateStatusNew,
     editImage,
+    onClickRow,
   } = props;
 
   const columns = [
@@ -52,8 +53,11 @@ function ImageListTableData(props) {
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleOnClickStatus({ Id, Status })}
+            style={{ cursor: "pointer" }}
+            onClick={(event) => {
+              event?.stopPropagation();
+              handleOnClickStatus({ Id, Status });
+            }}
           >
             {text}
           </Tag>
@@ -67,7 +71,9 @@ function ImageListTableData(props) {
           <Button
             type='primary'
             icon={<EditFilled />}
-            onClick={() => {
+            onClick={(event) => {
+              event?.stopPropagation();
+
               if (record?.Status) {
                 openNotification(
                   'Hủy duyệt trước khi sửa',
@@ -85,7 +91,9 @@ function ImageListTableData(props) {
             type='ghost'
             danger
             icon={<DeleteFilled />}
-            onClick={() => {
+            onClick={(event) => {
+              event?.stopPropagation();
+
               if (record?.Status) {
                 openNotification(
                   'Hủy duyệt trước khi xóa',
@@ -190,7 +198,10 @@ function ImageListTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size='small'
+        size="small"
+        onRow={(item) => ({
+          onClick: () => onClickRow && onClickRow(item),
+        })}
       />
     </div>
   );

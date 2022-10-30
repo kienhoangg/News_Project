@@ -82,7 +82,7 @@ function PublishedStaticPage(props) {
             <ScrollToTop />
             <Skeleton loading={loading} active>
                 {isStyleListPage ? (
-                    <PublishedStaticPageList dataList={convertHtmlSourceToListPageData(dataPage.Content)} />
+                    <PublishedStaticPageList dataList={convertHtmlSourceToListPageData(dataPage?.Content)} />
                 ) : (
                     <>
                         <div className={cx('menu-items')}>

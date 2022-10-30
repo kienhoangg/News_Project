@@ -57,7 +57,7 @@ namespace News.API.Services
             return documentTypeDto;
         }
 
-        public async Task<ApiSuccessResult<DocumentTypeDto>> GetDocumentTypeByPaging(DocumentTypeRequest documentFieldRequest, params Expression<Func<DocumentType, object>>[] includeProperties)
+        public async Task<ApiSuccessResult<DocumentTypeDto>> GetDocumentTypeByPaging(DocumentTypeRequest documentTypeRequest, params Expression<Func<DocumentType, object>>[] includeProperties)
         {
             var query = FindAll();
             if (includeProperties.ToList().Count > 0)
@@ -65,21 +65,21 @@ namespace News.API.Services
                 query = FindAll(includeProperties: includeProperties);
             }
 
-            if (!string.IsNullOrEmpty(documentFieldRequest.Keyword))
+            if (!string.IsNullOrEmpty(documentTypeRequest.Keyword))
             {
-                query = query.Where((x => x.Title.Contains(documentFieldRequest.Keyword)));
+                query = query.Where((x => x.Title.Contains(documentTypeRequest.Keyword)));
             }
-            if (documentFieldRequest.Status.HasValue)
+            if (documentTypeRequest.Status.HasValue)
             {
-                query = query.Where(x => x.Status == documentFieldRequest.Status.Value);
+                query = query.Where(x => x.Status == documentTypeRequest.Status.Value);
             }
-            if (documentFieldRequest.ParentId.HasValue)
+            if (documentTypeRequest.ParentId.HasValue)
             {
-                query = query.Where(x => x.ParentId == documentFieldRequest.ParentId.Value);
+                query = query.Where(x => x.ParentId == documentTypeRequest.ParentId.Value);
             }
 
-            PagedResult<DocumentType>? sourcePaging = await query.PaginatedListAsync(documentFieldRequest.CurrentPage
-                                                                                             ?? 1, documentFieldRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentFieldRequest.OrderBy, documentFieldRequest.Direction);
+            PagedResult<DocumentType>? sourcePaging = await query.PaginatedListAsync(documentTypeRequest.CurrentPage
+                                                                                             ?? 1, documentTypeRequest.PageSize ?? CommonConstants.PAGE_SIZE, documentTypeRequest.OrderBy, documentTypeRequest.Direction);
             var lstDto = _mapper.Map<List<DocumentTypeDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<DocumentTypeDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<DocumentTypeDto>? result = new(paginationSet);
