@@ -40,26 +40,31 @@ namespace News.API.Services
         {
             return await GetByIdAsync(id);
         }
-
-        public async Task<ApiSuccessResult<SourceNewsDto>> GetSourceNewsByPaging(SourceNewsRequest sourceNewsRequest)
+        public async Task<ApiSuccessResult<SourceNewsDto>> GetSourceNewsByPaging(SourceNewsRequest sourceNewsRequest, params Expression<Func<SourceNews, object>>[] includeProperties)
         {
             var query = FindAll();
 
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
+
             if (!string.IsNullOrEmpty(sourceNewsRequest.Keyword))
             {
-                query = FindByCondition((x => x.Title.Contains(sourceNewsRequest.Keyword)));
+                query = query.Where(x => x.Title.Contains(sourceNewsRequest.Keyword));
             }
             if (sourceNewsRequest.Status.HasValue)
             {
                 query = query.Where(x => x.Status == sourceNewsRequest.Status.Value);
             }
-            IQueryable<SourceNewsDto>? mappingQuery = query.ProjectTo<SourceNewsDto>(_mapper.ConfigurationProvider);
-            PagedResult<SourceNewsDto>? paginationSet = await mappingQuery.PaginatedListAsync(sourceNewsRequest.CurrentPage
+            PagedResult<SourceNews>? sourcePaging = await query.PaginatedListAsync(sourceNewsRequest.CurrentPage
                                                                                              ?? 1, sourceNewsRequest.PageSize ?? CommonConstants.PAGE_SIZE, sourceNewsRequest.OrderBy, sourceNewsRequest.Direction);
-
+            var lstDto = _mapper.Map<List<SourceNewsDto>>(sourcePaging.Results);
+            var paginationSet = new PagedResult<SourceNewsDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<SourceNewsDto>? result = new(paginationSet);
             return result;
         }
+
 
         public async Task UpdateSourceNews(SourceNews product)
         {
