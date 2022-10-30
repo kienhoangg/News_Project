@@ -182,6 +182,7 @@ function OperatingDocumentsPage(props) {
         documentFieldId: getId(fieldOfDocument),
         documentSignPersonId: getId(signer),
         documentTypeId: getId(documentType),
+        status: 1,
       };
 
       const res = await axiosClient.post("/home/documents/filter", body);
