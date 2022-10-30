@@ -143,6 +143,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<StaticInfoDto>(staticInfoUploadDto.JsonString);
                 staticInfoDto.Id = staticInfo.Id;
+                staticInfoDto.CreatedDate = staticInfo.CreatedDate;
             }
             string avartarPath = "";
             string fileAttachmentPath = "";

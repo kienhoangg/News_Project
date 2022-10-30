@@ -142,6 +142,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<Video>(videoUploadDto.JsonString);
                 videoUpdated.Id = video.Id;
+                videoUpdated.CreatedDate = video.CreatedDate;
             }
             string avartarPath = !String.IsNullOrEmpty(videoUpdated.Avatar) ? videoUpdated.Avatar : "";
             string fileAttachmentPath = !String.IsNullOrEmpty(videoUpdated.FileAttachment) ? videoUpdated.FileAttachment : "";
@@ -194,7 +195,7 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-        
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteVideoDto([Required] int id)

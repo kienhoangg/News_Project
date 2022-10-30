@@ -35,6 +35,11 @@ namespace News.API.Services
             return await FindByCondition(expression, includeProperties: x => x.NewsPosts).FirstOrDefaultAsync();
         }
 
+        public async Task<CategoryNews> GetCategoryNewsFirstOrder()
+        {
+            return await FindAll().OrderBy(x => x.Order).FirstOrDefaultAsync();
+        }
+
         public async Task DeleteCategoryNews(int id)
         {
             var categoryNews = await GetByIdAsync(id);

@@ -104,7 +104,7 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
-      
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
@@ -138,6 +138,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<Document>(documentUploadDto.JsonString);
                 documentUpdated.Id = document.Id;
+                documentUpdated.CreatedDate = document.CreatedDate;
             }
             string fileAttachmentPath = !String.IsNullOrEmpty(documentUpdated.FilePath) ? documentUpdated.FilePath : "";
             // Upload file attachment if exist

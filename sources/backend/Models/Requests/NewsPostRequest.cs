@@ -8,6 +8,7 @@ namespace Models.Requests
         public bool? IsHotNews { get; set; }
         public bool? IsDocumentNews { get; set; }
         public int? CategoryNewsId { get; set; }
+        public int? SourceNewsId { get; set; }
 
         public int? CollaboratorId { get; set; }
 

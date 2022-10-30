@@ -96,8 +96,8 @@ namespace News.API.Services
             }
             if (documentRequest.FromDate.HasValue && documentRequest.ToDate.HasValue)
             {
-                query = query.Where(x => x.PublishedDate <= documentRequest.FromDate.Value &&
-                 x.PublishedDate >= documentRequest.ToDate.Value);
+                query = query.Where(x => x.PublishedDate >= documentRequest.FromDate.Value &&
+                 x.PublishedDate <= documentRequest.ToDate.Value);
             }
             if (documentRequest.Status.HasValue)
             {

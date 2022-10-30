@@ -41,9 +41,14 @@ namespace News.API.Services
             return await GetByIdAsync(id);
         }
 
-        public async Task<ApiSuccessResult<CollaboratorDto>> GetCollaboratorByPaging(CollaboratorRequest collaboratorRequest)
+        public async Task<ApiSuccessResult<CollaboratorDto>> GetCollaboratorByPaging(CollaboratorRequest collaboratorRequest, params Expression<Func<Collaborator, object>>[] includeProperties)
         {
             var query = FindAll();
+
+            if (includeProperties.ToList().Count > 0)
+            {
+                query = FindAll(includeProperties: includeProperties);
+            }
 
             if (!string.IsNullOrEmpty(collaboratorRequest.Keyword))
             {
@@ -53,13 +58,14 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.Status == collaboratorRequest.Status.Value);
             }
-            IQueryable<CollaboratorDto>? mappingQuery = query.ProjectTo<CollaboratorDto>(_mapper.ConfigurationProvider);
-            PagedResult<CollaboratorDto>? paginationSet = await mappingQuery.PaginatedListAsync(collaboratorRequest.CurrentPage
+            PagedResult<Collaborator>? sourcePaging = await query.PaginatedListAsync(collaboratorRequest.CurrentPage
                                                                                              ?? 1, collaboratorRequest.PageSize ?? CommonConstants.PAGE_SIZE, collaboratorRequest.OrderBy2ndColumn, collaboratorRequest.Direction2ndColumn, collaboratorRequest.OrderBy, collaboratorRequest.Direction);
-
+            var lstDto = _mapper.Map<List<CollaboratorDto>>(sourcePaging.Results);
+            var paginationSet = new PagedResult<CollaboratorDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<CollaboratorDto>? result = new(paginationSet);
             return result;
         }
+
 
         public async Task UpdateCollaborator(Collaborator product)
         {

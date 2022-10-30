@@ -128,6 +128,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<Question>(questionUploadDto.JsonString);
                 questionUpdated.Id = question.Id;
+                questionUpdated.CreatedDate = question.CreatedDate;
             }
             string fileAttachmentPath = !String.IsNullOrEmpty(questionUpdated.FilePath) ? questionUpdated.FilePath : "";
             // Upload file attachment if exist

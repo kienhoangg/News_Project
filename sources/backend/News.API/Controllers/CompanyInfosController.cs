@@ -127,6 +127,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<CompanyInfo>(companyInfoUploadDto.JsonString);
                 companyInfoUpdated.Id = companyInfo.Id;
+                companyInfoUpdated.CreatedDate = companyInfo.CreatedDate;
             }
             string fileAttachmentPath = !String.IsNullOrEmpty(companyInfoUpdated.Avatar) ? companyInfoUpdated.Avatar : "";
             // Upload file attachment if exist

@@ -28,5 +28,6 @@ namespace News.API.Interfaces
         IQueryable<Comment> GetCommentByCategoryNews(CommentRequest commentRequest);
         Task<CategoryNewsDto> GetCategoryNewsWithParentName(int id, params Expression<Func<CategoryNews, object>>[] includeProperties);
         Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression);
+        Task<CategoryNews> GetCategoryNewsFirstOrder();
     }
 }

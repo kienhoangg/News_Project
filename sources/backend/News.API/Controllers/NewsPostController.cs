@@ -203,6 +203,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<NewsPost>(newsPostUploadDto.JsonString);
                 newsPostUpdated.Id = newsPost.Id;
+                newsPostUpdated.CreatedDate = newsPost.CreatedDate;
             }
             string avartarPath = !String.IsNullOrEmpty(newsPostUpdated.Avatar) ? newsPostUpdated.Avatar : "";
             string fileAttachmentPath = !String.IsNullOrEmpty(newsPostUpdated.FilePath) ? newsPostUpdated.FilePath : "";

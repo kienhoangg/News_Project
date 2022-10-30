@@ -128,6 +128,7 @@ namespace News.API.Controllers
                     _serializeService
                         .Deserialize<LinkInfo>(linkInfoUploadDto.JsonString);
                 linkInfoUpdated.Id = linkInfo.Id;
+                linkInfoUpdated.CreatedDate = linkInfo.CreatedDate;
             }
             string fileAttachmentPath = !String.IsNullOrEmpty(linkInfoUpdated.Avatar) ? linkInfoUpdated.Avatar : "";
             // Upload file attachment if exist

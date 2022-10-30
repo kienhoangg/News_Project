@@ -130,6 +130,7 @@ namespace News.API.Controllers
                 photoUpdated = _serializeService
                                     .Deserialize<Photo>(photoUploadDto.JsonString);
                 photoUpdated.Id = photo.Id;
+                photoUpdated.CreatedDate = photo.CreatedDate;
             }
 
             string fileAttachmentPath = !String.IsNullOrEmpty(photoUpdated.ImagePath) ? photoUpdated.ImagePath : "";

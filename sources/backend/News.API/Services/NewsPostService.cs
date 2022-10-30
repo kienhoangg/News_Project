@@ -211,6 +211,10 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
             }
+            if (newsPostRequest.SourceNewsId.HasValue)
+            {
+                query = query.Where(x => x.SourceNewsId == newsPostRequest.SourceNewsId);
+            }
 
             if (newsPostRequest.CategoryNewsId.HasValue)
             {
@@ -239,26 +243,31 @@ namespace News.API.Services
             }
             if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
             {
-                var fromDate = newsPostRequest.FromDate.Value;
-                var yesterday = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day);
-                yesterday = yesterday.AddTicks(-1);
-
-                var todate = newsPostRequest.TodayDate.Value;
-                var tomorrow = new DateTime(todate.Year, todate.Month, todate.Day);
-                tomorrow = tomorrow.AddDays(1);
-                tomorrow = tomorrow.AddTicks(-1);
-
-
-                query = query.Where(x => x.PublishedDate < tomorrow && x.PublishedDate > yesterday);
+                query = query.Where(x => x.CreatedDate < newsPostRequest.ToDate.Value && x.CreatedDate > newsPostRequest.FromDate.Value);
             }
-            if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
-            {
-                var today = newsPostRequest.FromDate.Value;
-                var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
-                yesterday1 = yesterday1.AddTicks(-1);
 
-                query = query.Where(x => x.PublishedDate > yesterday1);
-            }
+            // if (newsPostRequest.FromDate.HasValue && newsPostRequest.ToDate.HasValue)
+            // {
+            //     var fromDate = newsPostRequest.FromDate.Value;
+            //     var yesterday = new DateTime(fromDate.Year, fromDate.Month, fromDate.Day);
+            //     yesterday = yesterday.AddTicks(-1);
+
+            //     var todate = newsPostRequest.TodayDate.Value;
+            //     var tomorrow = new DateTime(todate.Year, todate.Month, todate.Day);
+            //     tomorrow = tomorrow.AddDays(1);
+            //     tomorrow = tomorrow.AddTicks(-1);
+
+
+            //     query = query.Where(x => x.PublishedDate < tomorrow && x.PublishedDate > yesterday);
+            // }
+            // if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
+            // {
+            //     var today = newsPostRequest.FromDate.Value;
+            //     var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
+            //     yesterday1 = yesterday1.AddTicks(-1);
+
+            //     query = query.Where(x => x.PublishedDate > yesterday1);
+            // }
             if (newsPostRequest.TodayDate.HasValue && !newsPostRequest.FromDate.HasValue)
             {
                 var today = newsPostRequest.TodayDate.Value;

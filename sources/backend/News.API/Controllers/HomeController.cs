@@ -320,7 +320,8 @@ namespace News.API.Controllers
            await _newsPostService.GetNewsPostByPaging(documentNewsRequest);
             var companyInfos = await _companyInfoService.GetCompanyInfoByPaging(new CompanyInfoRequest() { PageSize = 4, CurrentPage = 1, OrderBy = "Order" });
             var linkInfos = await _linkInfoService.GetLinkInfoByPaging(new LinkInfoRequest() { PageSize = 4, CurrentPage = 1, OrderBy = "Order" });
-            var categoryNewsId = 5;
+            var categoryNews = await _categoryNewsService.GetCategoryNewsFirstOrder();
+            var categoryNewsId = categoryNews != null ? categoryNews.Id : 0;
             var normalNews =
                 new NewsPostRequest()
                 {
