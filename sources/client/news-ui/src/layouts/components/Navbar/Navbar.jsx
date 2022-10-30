@@ -11,89 +11,102 @@ import { useNavigate } from 'react-router-dom';
 import { envDomainClient } from 'common/enviroments';
 
 Navbar.propTypes = {
-    menuDatas: PropTypes.array,
-    isLoading: PropTypes.bool,
+  menuDatas: PropTypes.array,
+  isLoading: PropTypes.bool,
 };
 
 Navbar.defaultProps = {
-    menuDatas: undefined,
-    isLoading: true,
+  menuDatas: undefined,
+  isLoading: true,
 };
 
 function Navbar(props) {
-    const navigate = useNavigate();
-    const { isLoading, menuDatas } = props;
+  const navigate = useNavigate();
+  const { isLoading, menuDatas } = props;
 
-    let items = [
-        {
-            label: 'Trang chủ',
-            key: 'mail',
-            icon: <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />,
-        },
-    ];
+  let items = [
+    {
+      label: 'Trang chủ',
+      key: 'mail',
+      icon: <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />,
+    },
+  ];
 
-    if (menuDatas) {
-        items = menuDatas.map((dataLevel1) => {
-            var itemDateLevel2 = dataLevel1?.Items?.map((item) => {
-                return {
-                    label: item.Title,
-                    key: item.Id,
-                };
-            });
+  if (menuDatas) {
+    items = menuDatas.map((dataLevel1) => {
+      var itemDateLevel2 = dataLevel1?.Items?.map((item) => {
+        return {
+          label: item.Title,
+          key: item.Id,
+        };
+      });
 
-            let result = {
-                label: dataLevel1.Title,
-                key: dataLevel1.Id,
-                icon: dataLevel1?.isHome ? <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} /> : '',
-            };
+      let result = {
+        label: dataLevel1.Title,
+        key: dataLevel1.Id,
+        icon: dataLevel1?.isHome ? (
+          <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />
+        ) : (
+          ''
+        ),
+      };
 
-            if (Array.isArray(dataLevel1?.Items) && dataLevel1?.Items.length > 0) {
-                result.children = itemDateLevel2;
-            }
-            if (dataLevel1?.Title.toLowerCase() == 'trang chủ') {
-                // if (dataLevel1?.IsHome) {
-                result.icon = <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />;
-            }
-            return result;
-        });
+      if (Array.isArray(dataLevel1?.Items) && dataLevel1?.Items.length > 0) {
+        result.children = itemDateLevel2;
+      }
+      if (dataLevel1?.Title.toLowerCase() == 'trang chủ') {
+        // if (dataLevel1?.IsHome) {
+        result.icon = <img src={Images.EMBELEM_VIETNAM} width={10} alt={''} />;
+      }
+      return result;
+    });
+  }
+
+  function handleOnClickMenuItem(params) {
+    let select = getMenuItemByKey(params.key);
+
+    if (select) {
+      if (select?.IsHome) navigate('/');
+      if (select?.Url) {
+        select.Url = select.Url.trim();
+        navigate(select.Url.replace(envDomainClient, ''));
+      }
     }
+  }
 
-    function handleOnClickMenuItem(params) {
-        let select = getMenuItemByKey(params.key);
+  function getMenuItemByKey(key) {
+    for (let index = 0; index < menuDatas.length; index++) {
+      const menuItem = menuDatas[index];
+      if (menuItem?.Id == key) return menuDatas[index];
 
-        if (select) {
-            if (select?.IsHome) navigate('/');
-            if (select?.Url) {
-                console.log('envDomainClient', envDomainClient);
-                navigate(select.Url.replace(envDomainClient, ''));
-            }
-        }
+      for (let subIndex = 0; subIndex < menuItem?.Items.length; subIndex++) {
+        const element = menuItem.Items[subIndex];
+        if (element?.Id == key) return element;
+      }
     }
+    return undefined;
+  }
 
-    function getMenuItemByKey(key) {
-        for (let index = 0; index < menuDatas.length; index++) {
-            const menuItem = menuDatas[index];
-            if (menuItem?.Id == key) return menuDatas[index];
-
-            for (let subIndex = 0; subIndex < menuItem?.Items.length; subIndex++) {
-                const element = menuItem.Items[subIndex];
-                if (element?.Id == key) return element;
-            }
-        }
-        return undefined;
-    }
-
-    return (
-        <div className='news-navbar'>
-            {isLoading ? (
-                <>
-                    <Skeleton.Input active block />
-                </>
-            ) : (
-                <>{Array.isArray(menuDatas) && <Menu mode='horizontal' items={items} selectable={false} onClick={handleOnClickMenuItem} />}</>
-            )}
-        </div>
-    );
+  return (
+    <div className='news-navbar'>
+      {isLoading ? (
+        <>
+          <Skeleton.Input active block />
+        </>
+      ) : (
+        <>
+          {Array.isArray(menuDatas) && (
+            <Menu
+              mode='horizontal'
+              items={items}
+              selectable={false}
+              onClick={handleOnClickMenuItem}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
 }
 
 export default Navbar;
