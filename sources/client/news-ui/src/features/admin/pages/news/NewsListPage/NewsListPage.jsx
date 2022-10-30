@@ -12,7 +12,7 @@ import NewsListTableData from './NewsListTableData/NewsListTableData';
 import convertHelper from 'helpers/convertHelper';
 import { useNavigate } from 'react-router-dom';
 import routes from 'config/configRoutes';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import PopupUpdateNews from '../PopupUpdateNews/PopupUpdateNews';
 
 const cx = classNames.bind(styles);
@@ -25,7 +25,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: 'CreatedDate',
+  orderBy: DEFAULT_COLUMN_ORDER_BY,
 };
 
 function NewsListPage(props) {
@@ -34,7 +34,7 @@ function NewsListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const isFirstCall = useRef(true);

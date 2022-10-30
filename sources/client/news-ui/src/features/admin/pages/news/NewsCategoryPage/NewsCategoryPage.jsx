@@ -1,16 +1,16 @@
-import { Divider, Form, Button, Input, Modal, Select } from "antd";
-import newsApi from "apis/newsApi";
-import { useEffect, useRef, useState } from "react";
-import NewsCategoryPageSearch from "./NewsCategoryPageSearch/NewsCategoryPageSearch";
-import NewsCategoryTableData from "./NewsCategoryTableData/NewsCategoryTableData";
-import styles from "./NewsCategoryPage.module.scss";
-import classNames from "classnames/bind";
-import AdminCollectionDetail from "features/admin/components/AdminCollectionDetail/AdminCollectionDetail";
-import { Direction, NotificationType } from "common/enum";
-import { openNotification } from "helpers/notification";
-import { Option } from "antd/lib/mentions";
-import { FileAddFilled } from "@ant-design/icons";
-import { TypeUpdate } from "common/constant";
+import { Divider, Form, Button, Input, Modal, Select } from 'antd';
+import newsApi from 'apis/newsApi';
+import { useEffect, useRef, useState } from 'react';
+import NewsCategoryPageSearch from './NewsCategoryPageSearch/NewsCategoryPageSearch';
+import NewsCategoryTableData from './NewsCategoryTableData/NewsCategoryTableData';
+import styles from './NewsCategoryPage.module.scss';
+import classNames from 'classnames/bind';
+import AdminCollectionDetail from 'features/admin/components/AdminCollectionDetail/AdminCollectionDetail';
+import { Direction, NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
+import { Option } from 'antd/lib/mentions';
+import { FileAddFilled } from '@ant-design/icons';
+import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -38,8 +38,8 @@ function NewsCategoryPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+    keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -85,7 +85,7 @@ function NewsCategoryPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: "CreatedDate",
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
     };
     const responseFieldNews = newsApi.getNewsFieldAll(filterAll);
     Promise.all([responseFieldNews]).then((values) => {
@@ -144,8 +144,8 @@ function NewsCategoryPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: "CreatedDate",
-      keyword: "",
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
+      keyword: '',
       parentId: 0,
     };
     const response = await newsApi.getNewsCategoryAll(filterRoot);

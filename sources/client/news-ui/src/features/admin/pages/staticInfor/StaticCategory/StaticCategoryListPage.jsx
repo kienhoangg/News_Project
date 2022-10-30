@@ -9,23 +9,23 @@ import {
   Row,
   Col,
   Upload,
-} from "antd";
-import { TreeNode } from "antd/lib/tree-select";
-import inforStaticAPI from "apis/inforStaticApi";
-import classNames from "classnames/bind";
-import commonFunc from "common/commonFunc";
-import { Direction, NotificationType } from "common/enum";
-import convertHelper from "helpers/convertHelper";
-import { openNotification } from "helpers/notification";
-import { useEffect, useRef, useState } from "react";
-import styles from "./StaticCategoryListPage.module.scss";
-import StaticCategoryPageSearch from "./StaticCategoryPageSearch/StaticCategoryPageSearch";
-import StaticCategoryTableData from "./StaticCategoryTableData/StaticCategoryTableData";
-import { Select } from "antd";
-import { Option } from "antd/lib/mentions";
-import { TypeUpdate } from "common/constant";
-import imageHelper from "helpers/imageHelper";
-import { envDomainBackend } from "common/enviroments";
+} from 'antd';
+import { TreeNode } from 'antd/lib/tree-select';
+import inforStaticAPI from 'apis/inforStaticApi';
+import classNames from 'classnames/bind';
+import commonFunc from 'common/commonFunc';
+import { Direction, NotificationType } from 'common/enum';
+import convertHelper from 'helpers/convertHelper';
+import { openNotification } from 'helpers/notification';
+import { useEffect, useRef, useState } from 'react';
+import styles from './StaticCategoryListPage.module.scss';
+import StaticCategoryPageSearch from './StaticCategoryPageSearch/StaticCategoryPageSearch';
+import StaticCategoryTableData from './StaticCategoryTableData/StaticCategoryTableData';
+import { Select } from 'antd';
+import { Option } from 'antd/lib/mentions';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import imageHelper from 'helpers/imageHelper';
+import { envDomainBackend } from 'common/enviroments';
 
 const cx = classNames.bind(styles);
 
@@ -51,8 +51,8 @@ function StaticCategoryListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+    keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fileListAttachment, setFileListAttachment] = useState([]);
@@ -169,8 +169,8 @@ function StaticCategoryListPage(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: "CreatedDate",
-      keyword: "",
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
+      keyword: '',
       parentId: 0,
     };
     const response = await inforStaticAPI.getStaticCategoryAll(filterRoot);

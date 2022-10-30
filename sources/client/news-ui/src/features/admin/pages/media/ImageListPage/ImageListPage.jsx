@@ -3,34 +3,29 @@ import { useEffect, useState } from "react";
 import ImageListPageSearch from "./ImageListPageSearch/ImageListPageSearch";
 import ImageListTableData from "./ImageListTableData/ImageListTableData";
 
-import mediaApi from "apis/mediaApi";
-import classNames from "classnames/bind";
-import styles from "./ImageListPage.module.scss";
-import { Direction } from "common/enum";
-import { useRef } from "react";
-import { openNotification } from "helpers/notification";
-import { NotificationType } from "common/enum";
-import { Button } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import { Option } from "antd/lib/mentions";
-import { FileAddFilled, UploadOutlined } from "@ant-design/icons";
-import commonFunc from "common/commonFunc";
-import convertHelper from "helpers/convertHelper";
-import { TypeUpdate } from "common/constant";
-import { envDomainBackend } from "common/enviroments";
-import imageHelper from "helpers/imageHelper";
+import mediaApi from 'apis/mediaApi';
+import classNames from 'classnames/bind';
+import styles from './ImageListPage.module.scss';
+import { Direction } from 'common/enum';
+import { useRef } from 'react';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
+import { Button } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { Option } from 'antd/lib/mentions';
+import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
+import commonFunc from 'common/commonFunc';
+import convertHelper from 'helpers/convertHelper';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import { envDomainBackend } from 'common/enviroments';
+import imageHelper from 'helpers/imageHelper';
 
 const cx = classNames.bind(styles);
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
-const filterAll = {
-  currentPage: 1,
-  pageSize: 9_999_999,
-  direction: Direction.DESC,
-  orderBy: "CreatedDate",
-};
+
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
 ImageListPage.propTypes = {};
@@ -38,6 +33,12 @@ ImageListPage.propTypes = {};
 ImageListPage.defaultProps = {};
 
 function ImageListPage(props) {
+  const filterAll = {
+    currentPage: 1,
+    pageSize: 9_999_999,
+    direction: Direction.DESC,
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+  };
   const [newsData, setNewsData] = useState({
     data: [],
     total: 0,
@@ -50,8 +51,8 @@ function ImageListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+    keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState({
     imageDetail: null,

@@ -2,16 +2,16 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Modal, Space, Table, Tag } from "antd";
-import { commonRenderTable } from "common/commonRender";
-import datetimeHelper from "helpers/datetimeHelper";
-import classNames from "classnames/bind";
-import styles from "./NewsCollaboratorsTableData.module.scss";
-import { Role } from "common/constant";
-import commonFunc from "common/commonFunc";
-import { openNotification } from "helpers/notification";
-import { Direction, NotificationType } from "common/enum";
+} from '@ant-design/icons';
+import { Button, Modal, Space, Table, Tag } from 'antd';
+import { commonRenderTable } from 'common/commonRender';
+import datetimeHelper from 'helpers/datetimeHelper';
+import classNames from 'classnames/bind';
+import styles from './NewsCollaboratorsTableData.module.scss';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import commonFunc from 'common/commonFunc';
+import { openNotification } from 'helpers/notification';
+import { Direction, NotificationType } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
@@ -31,43 +31,43 @@ function NewsCollaboratorsTableData(props) {
 
   const columns = [
     {
-      key: "Name",
-      dataIndex: "Name",
-      title: "Họ và tên",
+      key: 'Name',
+      dataIndex: 'Name',
+      title: 'Họ và tên',
       render: (text) => <div>{text}</div>,
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "Username",
-      dataIndex: "Username",
-      title: "Tên đăng nhập",
+      key: 'Username',
+      dataIndex: 'Username',
+      title: 'Tên đăng nhập',
       render: (text) => <div>{text}</div>,
       sorter: (a, b) => a.UserName - b.UserName,
       width: 150,
     },
     {
-      key: "Email",
-      dataIndex: "Email",
-      title: "Email",
+      key: 'Email',
+      dataIndex: 'Email',
+      title: 'Email',
       render: (text) => <div>{text}</div>,
       sorter: (a, b) => a.Email - b.Email,
       width: 200,
     },
     {
-      key: "status",
-      dataIndex: "Status",
-      title: "Trạng thái",
-      align: "center",
+      key: 'status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={(event) => {
               handleOnClickStatus({ Id, Status });
               event?.stopPropagation();
@@ -79,17 +79,17 @@ function NewsCollaboratorsTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="primary"
+            type='primary'
             icon={<EditFilled />}
             onClick={(event) => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi sửa",
-                  "",
+                  'Hủy duyệt trước khi sửa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -101,40 +101,40 @@ function NewsCollaboratorsTableData(props) {
             Sửa
           </Button>
           <Button
-            type="ghost"
+            type='ghost'
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi xóa",
-                  "",
+                  'Hủy duyệt trước khi xóa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
               }
               event?.stopPropagation();
-              const role = commonFunc.getCookie("role");
+              const role = commonFunc.getCookie('role');
               if (role !== Role.ADMIN) {
                 openNotification(
                   <>
                     Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
                   </>,
-                  "",
+                  '',
                   NotificationType.ERROR
                 );
                 return;
               }
               Modal.confirm({
-                title: "Xóa video",
+                title: 'Xóa video',
                 icon: <ExclamationCircleOutlined />,
                 content: (
                   <>
                     Bạn có chắc chắn <b>Xóa</b> không?
                   </>
                 ),
-                okText: "Xóa",
-                cancelText: "Hủy",
+                okText: 'Xóa',
+                cancelText: 'Hủy',
                 onOk: () => {
                   if (!deleteCategoryNew) {
                     return;
@@ -153,12 +153,14 @@ function NewsCollaboratorsTableData(props) {
   ];
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   let dataItems = data?.data ?? [];
@@ -168,27 +170,27 @@ function NewsCollaboratorsTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -199,7 +201,7 @@ function NewsCollaboratorsTableData(props) {
   }
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -211,7 +213,7 @@ function NewsCollaboratorsTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
+        size='small'
         onRow={(item) => ({
           onClick: () => onClickRow && onClickRow(item),
         })}

@@ -9,7 +9,7 @@ import linkAndCompanyApi from 'apis/linkAndCompanyApi';
 import { useRef } from 'react';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
-import { TypeUpdate } from 'common/constant';
+import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
 import { Modal } from 'antd';
 import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
 import { Option } from 'antd/lib/mentions';
@@ -27,7 +27,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: 'CreatedDate',
+  orderBy: DEFAULT_COLUMN_ORDER_BY,
 };
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 const Mode = {
@@ -47,7 +47,7 @@ function ConnectionListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);

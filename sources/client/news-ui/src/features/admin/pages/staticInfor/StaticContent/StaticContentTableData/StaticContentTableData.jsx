@@ -11,7 +11,7 @@ import styles from './StaticContentTableData.module.scss';
 import classNames from 'classnames/bind';
 import { Direction } from 'common/enum';
 import commonFunc from 'common/commonFunc';
-import { Role } from 'common/constant';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import { openNotification } from 'helpers/notification';
 import { NotificationType } from 'common/enum';
 
@@ -66,7 +66,7 @@ function StaticContentTableData(props) {
       title: 'Trạng thái',
       align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
         let color = !Status ? 'geekblue' : 'volcano';
         let text = !Status ? 'Duyệt' : 'Hủy duyệt';
@@ -134,10 +134,10 @@ function StaticContentTableData(props) {
   }
 
   function handleDeleteCategoryNew(values) {
-     if (values.Status) {
-       openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
-       return;
-     }
+    if (values.Status) {
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
+      return;
+    }
     return Modal.confirm({
       title: 'Xóa danh mục tin',
       icon: <ExclamationCircleOutlined />,
@@ -187,12 +187,14 @@ function StaticContentTableData(props) {
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.Order === 'ascend' ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   const rowSelection = {

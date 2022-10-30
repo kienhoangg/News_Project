@@ -1,18 +1,18 @@
-import { Button, Col, Divider, Form, Input, Modal, Row, Select } from "antd";
-import documentApi from "apis/documentApi";
-import classNames from "classnames/bind";
-import { useEffect, useRef, useState } from "react";
-import styles from "./QuestionCategoryPage.module.scss";
-import QuestionCategoryPageSearch from "./QuestionCategoryPageSearch/QuestionCategoryPageSearch";
-import questionApi from "apis/questionApi";
-import QuestionCategoryTableData from "./QuestionCategoryTableData/QuestionCategoryTableData";
-import { Direction, NotificationType } from "common/enum";
-import stringHelper from "helpers/stringHelper";
-import TextArea from "antd/lib/input/TextArea";
-import { Option } from "antd/lib/mentions";
-import { openNotification } from "helpers/notification";
-import { TypeUpdate } from "common/constant";
-import datetimeHelper from "helpers/datetimeHelper";
+import { Button, Col, Divider, Form, Input, Modal, Row, Select } from 'antd';
+import documentApi from 'apis/documentApi';
+import classNames from 'classnames/bind';
+import { useEffect, useRef, useState } from 'react';
+import styles from './QuestionCategoryPage.module.scss';
+import QuestionCategoryPageSearch from './QuestionCategoryPageSearch/QuestionCategoryPageSearch';
+import questionApi from 'apis/questionApi';
+import QuestionCategoryTableData from './QuestionCategoryTableData/QuestionCategoryTableData';
+import { Direction, NotificationType } from 'common/enum';
+import stringHelper from 'helpers/stringHelper';
+import TextArea from 'antd/lib/input/TextArea';
+import { Option } from 'antd/lib/mentions';
+import { openNotification } from 'helpers/notification';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import datetimeHelper from 'helpers/datetimeHelper';
 
 const cx = classNames.bind(styles);
 
@@ -38,8 +38,8 @@ function QuestionCategoryPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "LastModifiedDate",
-    keyword: "",
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+    keyword: '',
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);

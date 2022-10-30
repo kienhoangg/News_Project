@@ -1,34 +1,15 @@
-import {
-  CheckOutlined,
-  CheckSquareOutlined,
-  CloseOutlined,
-  EditOutlined,
-  ExclamationCircleOutlined,
-  FileAddFilled,
-  InfoCircleOutlined,
-  LineOutlined,
-} from "@ant-design/icons";
-import {
-  Tree,
-  Button,
-  Modal,
-  Form,
-  Select,
-  Input,
-  Checkbox,
-  Row,
-  Col,
-} from "antd";
-import setupApi from "apis/setupApi";
-import classNames from "classnames/bind";
-import commonFunc from "common/commonFunc";
-import { NotificationType, Direction } from "common/enum";
-import { openNotification } from "helpers/notification";
-import { useEffect, useRef, useState } from "react";
-import styles from "./MenuPage.module.scss";
-import MenuSearch from "./MenuSearch/MenuSearch";
-import { Option } from "antd/lib/mentions";
-import { TypeUpdate, Role } from "common/constant";
+import { CheckOutlined, CheckSquareOutlined, CloseOutlined, EditOutlined, ExclamationCircleOutlined, FileAddFilled, InfoCircleOutlined, LineOutlined } from '@ant-design/icons';
+import { Tree, Button, Modal, Form, Select, Input, Checkbox, Row, Col } from 'antd';
+import setupApi from 'apis/setupApi';
+import classNames from 'classnames/bind';
+import commonFunc from 'common/commonFunc';
+import { NotificationType, Direction } from 'common/enum';
+import { openNotification } from 'helpers/notification';
+import { useEffect, useRef, useState } from 'react';
+import styles from './MenuPage.module.scss';
+import MenuSearch from './MenuSearch/MenuSearch';
+import { Option } from 'antd/lib/mentions';
+import { TypeUpdate, Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 const { DirectoryTree } = Tree;
 const layout = {
   labelCol: { span: 8 },
@@ -43,7 +24,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: "Title",
+  orderBy: DEFAULT_COLUMN_ORDER_BY,
 };
 
 const Mode = {

@@ -10,7 +10,7 @@ import classNames from 'classnames/bind';
 import styles from './CompanyListTableData.module.scss';
 import { Direction, NotificationType } from 'common/enum';
 import commonFunc from 'common/commonFunc';
-import { Role } from 'common/constant';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import { openNotification } from 'helpers/notification';
 
 const cx = classNames.bind(styles);
@@ -69,7 +69,7 @@ function CompanyListTableData(props) {
       title: 'Trạng thái',
       align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
         let color = !Status ? 'geekblue' : 'volcano';
         let text = !Status ? 'Duyệt' : 'Hủy duyệt';
@@ -187,12 +187,14 @@ function CompanyListTableData(props) {
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   return (

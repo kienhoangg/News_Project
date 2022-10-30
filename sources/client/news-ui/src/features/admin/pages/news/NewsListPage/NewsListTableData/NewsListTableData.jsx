@@ -13,7 +13,7 @@ import styles from './NewsListTableData.module.scss';
 import commonFunc from 'common/commonFunc';
 import { openNotification } from 'helpers/notification';
 import newsApi from 'apis/newsApi';
-import { Role, TypeUpdate } from 'common/constant';
+import { DEFAULT_COLUMN_ORDER_BY, Role, TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -95,7 +95,7 @@ function NewsListTableData(props) {
       dataIndex: 'description',
       key: 'Description',
       width: 200,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
     },
     {
       key: 'Status',
@@ -103,7 +103,7 @@ function NewsListTableData(props) {
       title: 'Trạng thái',
       align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
         let color = !Status ? 'geekblue' : 'volcano';
         let text = !Status ? 'Duyệt' : 'Hủy duyệt';
@@ -215,15 +215,14 @@ function NewsListTableData(props) {
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    if (!setPagination) {
-      return;
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
     }
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
-    );
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   return (

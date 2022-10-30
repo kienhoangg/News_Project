@@ -44,7 +44,7 @@ function AdvertisementCategoryTableData(props) {
       dataIndex: 'Status',
       title: 'Trạng thái',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
         let color = !Status ? 'geekblue' : 'volcano';
         let text = !Status ? 'Duyệt' : 'Hủy duyệt';

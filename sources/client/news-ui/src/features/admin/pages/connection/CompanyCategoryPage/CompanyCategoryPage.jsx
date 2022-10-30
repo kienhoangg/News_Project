@@ -8,7 +8,7 @@ import { FileAddFilled } from '@ant-design/icons';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import linkAndCompanyApi from 'apis/linkAndCompanyApi';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 
 const { TextArea } = Input;
 const layout = {
@@ -32,7 +32,7 @@ function CompanyCategoryPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);

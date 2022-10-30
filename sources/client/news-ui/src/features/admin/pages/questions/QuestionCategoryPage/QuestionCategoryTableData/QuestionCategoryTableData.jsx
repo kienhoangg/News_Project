@@ -2,17 +2,17 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Modal, Space, Table, Tag } from "antd";
-import { commonRenderTable } from "common/commonRender";
-import datetimeHelper from "helpers/datetimeHelper";
-import classNames from "classnames/bind";
-import styles from "./QuestionCategoryTableData.module.scss";
-import PropTypes from "prop-types";
-import { Direction, NotificationType } from "common/enum";
-import commonFunc from "common/commonFunc";
-import { Role } from "common/constant";
-import { openNotification } from "helpers/notification";
+} from '@ant-design/icons';
+import { Button, Modal, Space, Table, Tag } from 'antd';
+import { commonRenderTable } from 'common/commonRender';
+import datetimeHelper from 'helpers/datetimeHelper';
+import classNames from 'classnames/bind';
+import styles from './QuestionCategoryTableData.module.scss';
+import PropTypes from 'prop-types';
+import { Direction, NotificationType } from 'common/enum';
+import commonFunc from 'common/commonFunc';
+import { DEFAULT_COLUMN_ORDER_BY, Role } from 'common/constant';
+import { openNotification } from 'helpers/notification';
 
 const cx = classNames.bind(styles);
 
@@ -34,24 +34,24 @@ function QuestionCategoryTableData(props) {
     props;
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    if (setPagination) {
-      setPagination(
-        pagination.current,
-        pagination.pageSize,
-        sorter.columnKey,
-        sorter.order === "ascend" ? Direction.ASC : Direction.DESC
-      );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
     }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   const columns = [
     {
-      key: "Title",
-      dataIndex: "Title",
-      title: "Tiêu đề",
+      key: 'Title',
+      dataIndex: 'Title',
+      title: 'Tiêu đề',
       render: (_, { Id, Title }) => (
         <div
-          style={{ cursor: "pointer" }}
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             if (props.showDetail) {
               props.showDetail(Id);
@@ -64,28 +64,28 @@ function QuestionCategoryTableData(props) {
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "Order",
-      dataIndex: "Order",
-      title: "Số thứ tự",
+      key: 'Order',
+      dataIndex: 'Order',
+      title: 'Số thứ tự',
       render: (OrderNumber) => <>{OrderNumber}</>,
       sorter: (a, b) => a.OrderNumber - b.OrderNumber,
       width: 100,
-      align: "right",
+      align: 'right',
     },
     {
-      key: "status",
-      dataIndex: "Status",
-      title: "Trạng thái",
+      key: 'status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={() => handleOnClickStatus({ Id, Status })}
           >
             {text}
@@ -94,17 +94,17 @@ function QuestionCategoryTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="primary"
+            type='primary'
             icon={<EditFilled />}
             onClick={() => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi sửa",
-                  "",
+                  'Hủy duyệt trước khi sửa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -115,14 +115,14 @@ function QuestionCategoryTableData(props) {
             Sửa
           </Button>
           <Button
-            type="ghost"
+            type='ghost'
             danger
             icon={<DeleteFilled />}
             onClick={() => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi xóa",
-                  "",
+                  'Hủy duyệt trước khi xóa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -145,27 +145,27 @@ function QuestionCategoryTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (toggleStatus) toggleStatus(values);
       },
@@ -174,22 +174,22 @@ function QuestionCategoryTableData(props) {
 
   function onDeleteRecord(values) {
     if (values.Status) {
-      openNotification("Hủy duyệt trước khi xóa", "", NotificationType.ERROR);
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
       return;
     }
     return Modal.confirm({
-      title: "Xóa",
+      title: 'Xóa',
       icon: <ExclamationCircleOutlined />,
-      content: "Bạn có chắc chắn xóa không?",
-      okText: "Xóa",
-      cancelText: "Hủy",
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
       onOk: () => handleDelete(values),
     });
   }
 
   function onEdit(values) {
     if (values.Status) {
-      openNotification("Hủy duyệt trước khi sửa", "", NotificationType.ERROR);
+      openNotification('Hủy duyệt trước khi sửa', '', NotificationType.ERROR);
       return;
     }
     if (handleUpdate) {
@@ -198,7 +198,7 @@ function QuestionCategoryTableData(props) {
   }
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         onChange={handleOnchangeTable}
         columns={columns}
@@ -211,7 +211,7 @@ function QuestionCategoryTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.RowCount ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
+        size='small'
       />
     </div>
   );
