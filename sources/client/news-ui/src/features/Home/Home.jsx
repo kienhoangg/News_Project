@@ -65,9 +65,9 @@ function Home(props) {
                 <Divider style={{ margin: '16px 0', borderTopWidth: 2 }}></Divider>
                 <Row gutter={16} className={cx('section-callout-middle')}>
                     <Col md={12} sm={24}>
-                        <Link to='/' underline='none'>
+                        <a href='https://dichvucong.gov.vn/p/home/dvc-trang-chu.html' underline='none'>
                             <img src={Images.CONG_DICH_VU} alt='' width={'100%'} />
-                        </Link>
+                        </a>
                     </Col>
                     <Col md={12} sm={24}>
                         <div className={cx('btn-call-out')}>

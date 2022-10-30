@@ -54,9 +54,9 @@ function BlogSection(props) {
                         <div className={cx('list-news')}>
                             <BlogSectionListNews DocumentHots={documentHots} isLoading={isLoading} />
                         </div>
-                        <div className={cx('map')}>
+                        <a className={cx('map')} href={'https://yenbai.gov.vn/Pages/ban-do.aspx'}>
                             <img src='https://yenbai.gov.vn/noidung/lienket/PublishingImages/QuangCaoDoc/bandoyb.gif' alt='' height={'100%'} width='100%' />
-                        </div>
+                        </a>
                     </div>
                 </Col>
             </Row>
