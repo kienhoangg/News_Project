@@ -160,7 +160,10 @@ function ConnectionListPage(props) {
       Link,
     };
     if (LinkInfoCategoryId) {
-      bodyData.LinkInfoCategoryId = parseInt(LinkInfoCategoryId);
+      bodyData.LinkInfoCategoryId = parseInt(
+        dataFilter?.categoryAll.find((x) => x.Title === LinkInfoCategoryId)
+          ?.Id ?? undefined
+      );
     }
     let body = { JsonString: bodyData };
 
@@ -258,9 +261,10 @@ function ConnectionListPage(props) {
       placeholder='Chọn danh mục'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataFilter?.categoryAll.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -274,7 +278,9 @@ function ConnectionListPage(props) {
     form?.setFieldsValue({
       Title: res?.Title,
       Link: res?.Link,
-      LinkInfoCategoryId: res?.LinkInfoCategoryId,
+      LinkInfoCategoryId:
+        dataFilter?.categoryAll.find((x) => x.Id === res?.LinkInfoCategoryId)
+          ?.Title ?? undefined,
       Order: res?.Order,
     });
 

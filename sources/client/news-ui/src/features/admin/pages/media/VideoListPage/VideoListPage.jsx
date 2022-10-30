@@ -1,20 +1,20 @@
-import { Button, Divider, Form, Input, Modal, Select, Upload } from "antd";
-import { useEffect, useState } from "react";
-import VideoListPageSearch from "./VideoListPageSearch/VideoListPageSearch";
-import VideoListTableData from "./VideoListTableData/VideoListTableData";
+import { Button, Divider, Form, Input, Modal, Select, Upload } from 'antd';
+import { useEffect, useState } from 'react';
+import VideoListPageSearch from './VideoListPageSearch/VideoListPageSearch';
+import VideoListTableData from './VideoListTableData/VideoListTableData';
 
-import mediaApi from "apis/mediaApi";
-import classNames from "classnames/bind";
-import styles from "./VideoListPage.module.scss";
-import { openNotification } from "helpers/notification";
-import { Direction, NotificationType } from "common/enum";
-import convertHelper from "helpers/convertHelper";
-import { Option } from "antd/lib/mentions";
-import commonFunc from "common/commonFunc";
-import { UploadOutlined } from "@ant-design/icons";
-import imageHelper from "helpers/imageHelper";
-import TextArea from "antd/lib/input/TextArea";
-import { TypeUpdate } from "common/constant";
+import mediaApi from 'apis/mediaApi';
+import classNames from 'classnames/bind';
+import styles from './VideoListPage.module.scss';
+import { openNotification } from 'helpers/notification';
+import { Direction, NotificationType } from 'common/enum';
+import convertHelper from 'helpers/convertHelper';
+import { Option } from 'antd/lib/mentions';
+import commonFunc from 'common/commonFunc';
+import { UploadOutlined } from '@ant-design/icons';
+import imageHelper from 'helpers/imageHelper';
+import TextArea from 'antd/lib/input/TextArea';
+import { TypeUpdate } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -31,7 +31,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: "CreatedDate",
+  orderBy: 'CreatedDate',
 };
 
 function VideoListPage(props) {
@@ -39,8 +39,8 @@ function VideoListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
   const [newsData, setNewsData] = useState({
     data: [],
@@ -95,19 +95,19 @@ function VideoListPage(props) {
         field: TypeUpdate.STATUS,
       });
       fetchProductList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
   const handleDeleteCategoryNew = async (id) => {
     try {
       await mediaApi.deleteVideo(id);
-      openNotification("Xóa hình ảnh thành công");
+      openNotification('Xóa hình ảnh thành công');
       fetchProductList();
     } catch (error) {
-      openNotification("Xóa hình ảnh thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa hình ảnh thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -125,7 +125,9 @@ function VideoListPage(props) {
       });
       form.setFieldsValue({
         Title: res?.Title,
-        VideoCategoryId: res?.VideoCategoryId,
+        VideoCategoryId:
+          dataFilter?.categoryAll.find((x) => x.Id === res?.VideoCategoryId)
+            ?.Title ?? '',
         LinkVideo: res?.LinkVideo,
       });
 
@@ -133,9 +135,9 @@ function VideoListPage(props) {
         setFileListAttachment([
           {
             isFileFormServer: true,
-            uid: "1",
+            uid: '1',
             name: imageHelper.getNameFile(res?.FileAttachment),
-            status: "done",
+            status: 'done',
             url: imageHelper.getLinkImageUrl(res?.FileAttachment),
           },
         ]);
@@ -144,9 +146,9 @@ function VideoListPage(props) {
         setAvatar([
           {
             isFileFormServer: true,
-            uid: "1",
+            uid: '1',
             name: imageHelper.getNameFile(res?.Avatar),
-            status: "done",
+            status: 'done',
             url: imageHelper.getLinkImageUrl(res?.Avatar),
           },
         ]);
@@ -155,12 +157,13 @@ function VideoListPage(props) {
 
   const renderStaticCategoryId = (
     <Select
-      placeholder="Chọn danh mục"
-      style={{ width: "100%" }}
+      placeholder='Chọn danh mục'
+      style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataFilter?.categoryAll.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -170,22 +173,22 @@ function VideoListPage(props) {
   const onCreate = async (values) => {
     try {
       var formData = new FormData();
-      formData.append("JsonString", convertHelper.Serialize(values.JsonString));
+      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
-        formData.append("FileAttachment", values.FileAttachment);
+        formData.append('FileAttachment', values.FileAttachment);
       }
 
       if (values.Avatar) {
-        formData.append("Avatar", values.Avatar);
+        formData.append('Avatar', values.Avatar);
       }
 
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         await mediaApi.insertVideo(formData);
-        openNotification("Tạo mới video thành công");
+        openNotification('Tạo mới video thành công');
       } else {
         await mediaApi.updateVideo(isModalOpen?.imageDetail?.Id, formData);
-        openNotification("Cập nhật video thành công");
+        openNotification('Cập nhật video thành công');
       }
 
       fetchProductList();
@@ -201,9 +204,9 @@ function VideoListPage(props) {
       fetchProductList();
     } catch (error) {
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
-        openNotification("Tạo mới video thất bại", "", NotificationType.ERROR);
+        openNotification('Tạo mới video thất bại', '', NotificationType.ERROR);
       } else {
-        openNotification("Cập nhật video thất bại", "", NotificationType.ERROR);
+        openNotification('Cập nhật video thất bại', '', NotificationType.ERROR);
       }
     }
   };
@@ -219,7 +222,10 @@ function VideoListPage(props) {
       LinkVideo,
     };
     if (VideoCategoryId) {
-      bodyData.VideoCategoryId = parseInt(VideoCategoryId);
+      bodyData.VideoCategoryId = parseInt(
+        dataFilter?.categoryAll.find((x) => x.Title === VideoCategoryId)?.Id ??
+          undefined
+      );
     }
     let body = { JsonString: bodyData };
 
@@ -233,7 +239,7 @@ function VideoListPage(props) {
         if (file.size > LIMIT_UP_LOAD_FILE) {
           openNotification(
             `File thứ ${i + 1} đã lớn hơn 2MB`,
-            "",
+            '',
             NotificationType.ERROR
           );
           return;
@@ -260,7 +266,7 @@ function VideoListPage(props) {
         if (file.size > LIMIT_UP_LOAD_FILE) {
           openNotification(
             `File thứ ${i + 1} đã lớn hơn 2MB`,
-            "",
+            '',
             NotificationType.ERROR
           );
           return;
@@ -294,7 +300,7 @@ function VideoListPage(props) {
   }, [objFilter]);
 
   const getDataFilter = async () => {
-    const res = await mediaApi.getVideoCategoryAll(filterAll);
+    const res = await mediaApi.getVideoCategoryFilter(filterAll);
 
     setDataFilter({
       categoryAll: res?.PagedData?.Results ?? [],
@@ -329,12 +335,12 @@ function VideoListPage(props) {
         total: response?.PagedData?.RowCount,
       });
     } catch (error) {
-      console.log("Failed to fetch list: ", error);
+      console.log('Failed to fetch list: ', error);
     }
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       {(isModalOpen?.type === MODAL_TYPE.CREATE ||
         isModalOpen?.type === MODAL_TYPE.EDIT) &&
       isModalOpen?.show ? (
@@ -342,40 +348,40 @@ function VideoListPage(props) {
           open={true}
           title={
             isModalOpen?.type === MODAL_TYPE.CREATE
-              ? "Tạo mới video"
-              : "Chỉnh sửa video"
+              ? 'Tạo mới video'
+              : 'Chỉnh sửa video'
           }
-          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
-          cancelText="Thoát"
+          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
+          cancelText='Thoát'
           onCancel={onCancel}
           footer={null}
         >
           <Form
             form={form}
             {...layout}
-            name="control-hooks"
+            name='control-hooks'
             onFinish={onFinish}
           >
             <Form.Item
-              label="Tiêu đề"
-              name="Title"
+              label='Tiêu đề'
+              name='Title'
               rules={[
                 {
                   required: true,
-                  message: "Tiêu đề không được để trống",
+                  message: 'Tiêu đề không được để trống',
                 },
               ]}
             >
               <Input />
             </Form.Item>
 
-            <Form.Item label="Danh mục video" name="VideoCategoryId">
+            <Form.Item label='Danh mục video' name='VideoCategoryId'>
               {renderStaticCategoryId}
             </Form.Item>
 
-            <Form.Item name="lb-attachment" label="Ảnh đại diện">
+            <Form.Item name='lb-attachment' label='Ảnh đại diện'>
               <Upload
-                listType="picture"
+                listType='picture'
                 fileList={avatar}
                 onChange={handleChangeAvatar}
                 customRequest={commonFunc.dummyRequest}
@@ -390,9 +396,9 @@ function VideoListPage(props) {
               </Upload>
             </Form.Item>
 
-            <Form.Item name="LinkVideo" label="Link video">
+            <Form.Item name='LinkVideo' label='Link video'>
               <TextArea
-                type="text"
+                type='text'
                 min={0}
                 style={{
                   height: 200,
@@ -400,9 +406,9 @@ function VideoListPage(props) {
               />
             </Form.Item>
 
-            <Form.Item name="lb-attachment" label="File đính kèm">
+            <Form.Item name='lb-attachment' label='File đính kèm'>
               <Upload
-                listType="picture"
+                listType='picture'
                 fileList={fileListAttachment}
                 onChange={handleChangeAttachment}
                 customRequest={commonFunc.dummyRequest}
@@ -418,15 +424,15 @@ function VideoListPage(props) {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="Tạo mới">
-                {isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
+              <Button type='primary' htmlType='Tạo mới'>
+                {isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
               </Button>
             </Form.Item>
           </Form>
         </Modal>
       ) : null}
 
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <VideoListPageSearch
           setTextSearch={handleChangeTextSearch}
           onCreate={() =>
@@ -438,8 +444,8 @@ function VideoListPage(props) {
           }
         />
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <VideoListTableData
           setPagination={handleChangePagination}
           data={newsData}

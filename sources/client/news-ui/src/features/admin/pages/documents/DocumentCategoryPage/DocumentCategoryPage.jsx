@@ -110,7 +110,9 @@ function DocumentCategoryPage(props) {
   const onFinish = (values) => {
     let parentID = null;
     if (values.parentId) {
-      parentID = parseInt(values.parentId);
+      parentID = parseInt(
+        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? '0'
+      );
     }
     values = {
       Title: values?.title,
@@ -192,10 +194,11 @@ function DocumentCategoryPage(props) {
     <Select
       placeholder='Chọn cấp cha'
       style={{ width: '100%' }}
-      allowClear={true}
+      allowClear
+      showSearch
     >
       {dataRoot.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -250,7 +253,7 @@ function DocumentCategoryPage(props) {
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>
                 {
-                  newsData?.data?.find(
+                  dataRoot?.find(
                     (item) => item?.Id === document?.content?.ParentId
                   )?.Title
                 }
@@ -307,6 +310,7 @@ function DocumentCategoryPage(props) {
           deleteSourceNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
           onEdit={(res) => {
+            // const record = await fetchItem(res?.Id);
             showModal();
             setDocument({
               content: res,
@@ -314,7 +318,8 @@ function DocumentCategoryPage(props) {
             });
             form.setFieldsValue({
               title: res?.Title,
-              parentId: res?.ParentId,
+              parentId: dataRoot?.find((item) => item?.Id === res?.ParentId)
+                ?.Title,
               order: res?.Order,
               description: res?.Description,
             });

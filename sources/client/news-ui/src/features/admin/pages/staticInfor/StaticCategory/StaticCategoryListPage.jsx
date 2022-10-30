@@ -45,6 +45,7 @@ function StaticCategoryListPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
@@ -156,9 +157,24 @@ function StaticCategoryListPage(props) {
     setFileListAttachment(newFileList);
   };
 
-  const showModal = () => {
+  const showModal = async () => {
     mode.current = Mode.Create;
+    form?.setFieldsValue({});
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await inforStaticAPI.getStaticCategoryAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const renderStaticCategoryId = (
@@ -166,9 +182,10 @@ function StaticCategoryListPage(props) {
       placeholder='Chọn cấp cha'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
-      {newsData?.data.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+      {dataRoot.map((x) => (
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -186,7 +203,9 @@ function StaticCategoryListPage(props) {
       Order,
     };
     if (ParentId) {
-      bodyData.ParentId = parseInt(ParentId);
+      bodyData.ParentId = parseInt(
+        dataRoot?.find((x) => x.Title === ParentId)?.Id ?? undefined
+      );
     }
     let body = { JsonString: bodyData };
 
@@ -265,7 +284,7 @@ function StaticCategoryListPage(props) {
     mode.current = Mode.Edit;
     form?.setFieldsValue({
       Title: res?.Title,
-      ParentId: res?.ParentId,
+      ParentId: dataRoot?.find((x) => x.Id === res?.ParentId)?.Title ?? '',
       Order: res?.Order,
     });
     if (res?.FilePath) {

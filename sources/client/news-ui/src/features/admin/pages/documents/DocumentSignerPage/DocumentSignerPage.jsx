@@ -101,7 +101,9 @@ function DocumentSignerPage(props) {
   const onFinish = (values) => {
     let parentID = null;
     if (values.parentId) {
-      parentID = parseInt(values.parentId);
+      parentID = parseInt(
+        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? '0'
+      );
     }
     values = {
       Title: values?.title,
@@ -195,9 +197,10 @@ function DocumentSignerPage(props) {
       placeholder='Chọn cấp cha'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataRoot.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -303,7 +306,8 @@ function DocumentSignerPage(props) {
             });
             form.setFieldsValue({
               title: res?.Title,
-              parentId: res?.ParentId,
+              parentId: dataRoot?.find((item) => item?.Id === res?.ParentId)
+                ?.Title,
               order: res?.Order,
               description: res?.Description,
             });

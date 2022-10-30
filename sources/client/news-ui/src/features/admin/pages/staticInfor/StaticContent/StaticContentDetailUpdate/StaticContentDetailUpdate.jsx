@@ -37,7 +37,7 @@ function StaticContentDetailUpdate(props) {
     getDataFilter();
   }, []);
 
-  const callApiGetDetail = async (id) => {
+  const callApiGetDetail = async (id, categoryAll = []) => {
     try {
       if (!id) return;
 
@@ -63,11 +63,13 @@ function StaticContentDetailUpdate(props) {
             url: imageHelper.getLinkImageUrl(res?.Avatar),
           },
         ]);
+
       form?.setFieldsValue({
         Title: res?.Title,
         Descritpion: res?.Descritpion,
         Content: res?.Content,
-        StaticCategoryId: res?.StaticCategoryId,
+        StaticCategoryId:
+          categoryAll.find((x) => x.Id === res?.StaticCategoryId)?.Title ?? '',
       });
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
@@ -89,7 +91,7 @@ function StaticContentDetailUpdate(props) {
         categoryAll: values[0]?.PagedData?.Results ?? [],
       });
 
-      callApiGetDetail(props?.Id);
+      callApiGetDetail(props?.Id, values[0]?.PagedData?.Results);
     });
   };
 
@@ -130,7 +132,7 @@ function StaticContentDetailUpdate(props) {
   );
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.Title} key={x.Id}>
+      <TreeNode value={x.Title} title={x.Title} key={x.Id}>
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));
@@ -179,7 +181,11 @@ function StaticContentDetailUpdate(props) {
                   content,
                 };
                 if (StaticCategoryId) {
-                  bodyData.StaticCategoryId = parseInt(StaticCategoryId);
+                  bodyData.StaticCategoryId = parseInt(
+                    dataFilter?.categoryAll.find(
+                      (x) => x.Title === StaticCategoryId
+                    )?.Id ?? undefined
+                  );
                 }
 
                 const role = commonFunc.getCookie('role');

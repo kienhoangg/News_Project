@@ -2,17 +2,17 @@ import {
   DeleteFilled,
   EditFilled,
   ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Button, Space, Table, Tag, Modal } from "antd";
-import { commonRenderTable } from "common/commonRender";
-import datetimeHelper from "helpers/datetimeHelper";
-import classNames from "classnames/bind";
-import styles from "./DocumentCategoryTableData.module.scss";
-import { Direction } from "common/enum";
-import commonFunc from "common/commonFunc";
-import { Role } from "common/constant";
-import { openNotification } from "helpers/notification";
-import { NotificationType } from "common/enum";
+} from '@ant-design/icons';
+import { Button, Space, Table, Tag, Modal } from 'antd';
+import { commonRenderTable } from 'common/commonRender';
+import datetimeHelper from 'helpers/datetimeHelper';
+import classNames from 'classnames/bind';
+import styles from './DocumentCategoryTableData.module.scss';
+import { Direction } from 'common/enum';
+import commonFunc from 'common/commonFunc';
+import { Role } from 'common/constant';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
@@ -32,36 +32,45 @@ function DocumentCategoryTableData(props) {
 
   const columns = [
     {
-      key: "title",
-      dataIndex: "Title",
-      title: "Tiêu đề",
-      render: (text) => <a>{text}</a>,
+      key: 'title',
+      dataIndex: 'Title',
+      title: 'Tiêu đề',
+      render: (_, record) => (
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            onClickRow && onClickRow(record);
+          }}
+        >
+          {record.Title}
+        </div>
+      ),
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "OrderNumber",
-      dataIndex: "OrderNumber",
-      title: "Số thứ tự",
+      key: 'OrderNumber',
+      dataIndex: 'OrderNumber',
+      title: 'Số thứ tự',
       render: (OrderNumber) => <>{OrderNumber}</>,
       sorter: (a, b) => a.OrderNumber - b.OrderNumber,
       width: 100,
-      align: "right",
+      align: 'right',
     },
     {
-      key: "status",
-      dataIndex: "Status",
-      title: "Trạng thái",
-      align: "center",
+      key: 'status',
+      dataIndex: 'Status',
+      title: 'Trạng thái',
+      align: 'center',
       width: 100,
       sorter: (a, b) => true,
       render: (_, { Id, Status }) => {
-        let color = !Status ? "geekblue" : "volcano";
-        let text = !Status ? "Duyệt" : "Hủy duyệt";
+        let color = !Status ? 'geekblue' : 'volcano';
+        let text = !Status ? 'Duyệt' : 'Hủy duyệt';
         return (
           <Tag
             color={color}
             key={Id}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={(event) => {
               handleOnClickStatus({ Id, Status });
               event?.stopPropagation();
@@ -73,17 +82,17 @@ function DocumentCategoryTableData(props) {
       },
     },
     {
-      key: "action",
+      key: 'action',
       render: (_, record) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
-            type="primary"
+            type='primary'
             icon={<EditFilled />}
             onClick={(event) => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi sửa",
-                  "",
+                  'Hủy duyệt trước khi sửa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -95,14 +104,14 @@ function DocumentCategoryTableData(props) {
             Sửa
           </Button>
           <Button
-            type="ghost"
+            type='ghost'
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
               if (record?.Status) {
                 openNotification(
-                  "Hủy duyệt trước khi xóa",
-                  "",
+                  'Hủy duyệt trước khi xóa',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -126,27 +135,27 @@ function DocumentCategoryTableData(props) {
   });
 
   function handleOnClickStatus(values) {
-    const role = commonFunc.getCookie("role");
+    const role = commonFunc.getCookie('role');
     if (role !== Role.ADMIN) {
       openNotification(
         <>
           Chỉ có <b>ADMIN</b> mới thực hiện được hành động này
         </>,
-        "",
+        '',
         NotificationType.ERROR
       );
       return;
     }
     Modal.confirm({
-      title: "Cập nhật trạng thái",
+      title: 'Cập nhật trạng thái',
       icon: <ExclamationCircleOutlined />,
       content: (
         <>
           Bạn có chắc chắn <b>DUYỆT/HỦY DUYỆT</b> không?
         </>
       ),
-      okText: "Cập nhật",
-      cancelText: "Hủy",
+      okText: 'Cập nhật',
+      cancelText: 'Hủy',
       onOk: () => {
         if (!updateStatusNew) {
           return;
@@ -158,15 +167,15 @@ function DocumentCategoryTableData(props) {
 
   function handleDeleteSourceNew(values) {
     if (values.Status) {
-      openNotification("Hủy duyệt trước khi xóa", "", NotificationType.ERROR);
+      openNotification('Hủy duyệt trước khi xóa', '', NotificationType.ERROR);
       return;
     }
     return Modal.confirm({
-      title: "Xóa nguồn tin",
+      title: 'Xóa nguồn tin',
       icon: <ExclamationCircleOutlined />,
-      content: "Bạn có chắc chắn xóa không?",
-      okText: "Xóa",
-      cancelText: "Hủy",
+      content: 'Bạn có chắc chắn xóa không?',
+      okText: 'Xóa',
+      cancelText: 'Hủy',
       onOk: () => deleteSourceNewCustom(values),
     });
   }
@@ -183,11 +192,11 @@ function DocumentCategoryTableData(props) {
       pagination.current,
       pagination.pageSize,
       sorter.columnKey,
-      sorter.order === "ascend" ? Direction.ASC : Direction.DESC
+      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
     );
   };
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       <Table
         columns={columns}
         onChange={handleOnchangeTable}
@@ -200,10 +209,7 @@ function DocumentCategoryTableData(props) {
             commonRenderTable.showTableTotalPagination(data?.total ?? 0),
         }}
         dataSource={dataItems}
-        size="small"
-        onRow={(item) => ({
-          onClick: () => onClickRow && onClickRow(item),
-        })}
+        size='small'
       />
     </div>
   );
