@@ -9,7 +9,7 @@ import inforStaticAPI from 'apis/inforStaticApi';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import commonFunc from 'common/commonFunc';
-import { Role } from 'common/constant';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import convertHelper from 'helpers/convertHelper';
 import TextArea from 'antd/lib/input/TextArea';
 import { CKEditor } from 'ckeditor4-react';
@@ -82,7 +82,7 @@ function StaticContentDetailUpdate(props) {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
     };
     const responseCategoryAll = inforStaticAPI.getStaticCategoryAll(filterAll);
 

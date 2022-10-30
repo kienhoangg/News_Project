@@ -24,7 +24,7 @@ import { Direction, NotificationType } from 'common/enum';
 import convertHelper from 'helpers/convertHelper';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { openNotification } from 'helpers/notification';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import axiosClient from 'apis/axiosClient';
 import moment from 'moment';
 import { envDomainBackend } from 'common/enviroments';
@@ -84,7 +84,7 @@ const PopupUpdateDocuments = (props) => {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
     };
 
     // loại văn bản

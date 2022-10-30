@@ -18,7 +18,7 @@ import questionApi from 'apis/questionApi';
 import { CKEditor } from 'ckeditor4-react';
 import classNames from 'classnames/bind';
 import commonFunc from 'common/commonFunc';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import { Direction, NotificationType } from 'common/enum';
 import convertHelper from 'helpers/convertHelper';
 import datetimeHelper from 'helpers/datetimeHelper';
@@ -95,7 +95,7 @@ function QuestionListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
 
@@ -240,7 +240,7 @@ function QuestionListPage(props) {
         pageSize: 9999,
         currentPage: 1,
         direction: -1,
-        orderBy: 'CreatedDate',
+        orderBy: DEFAULT_COLUMN_ORDER_BY,
       });
 
       setDataCategoryQuestion(res?.PagedData?.Results);

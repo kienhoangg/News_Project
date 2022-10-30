@@ -27,7 +27,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { CKEditor } from 'ckeditor4-react';
 import commonFunc from 'common/commonFunc';
 import { TreeNode } from 'antd/lib/tree-select';
-import { TypeUpdate, Role } from 'common/constant';
+import { TypeUpdate, Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import StaticContentDetail from './StaticContentDetail/StaticContentDetail';
 import StaticContentDetailUpdate from './StaticContentDetailUpdate/StaticContentDetailUpdate';
 
@@ -39,7 +39,7 @@ const filterAll = {
   currentPage: 1,
   pageSize: 9_999_999,
   direction: Direction.DESC,
-  orderBy: 'CreatedDate',
+  orderBy: DEFAULT_COLUMN_ORDER_BY,
 };
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
@@ -53,7 +53,7 @@ function StaticContentListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);

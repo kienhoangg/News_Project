@@ -10,7 +10,7 @@ import classNames from 'classnames/bind';
 import styles from './ConnectionCategoryTableData.module.scss';
 import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
-import { Role } from 'common/constant';
+import { Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import commonFunc from 'common/commonFunc';
 
 const cx = classNames.bind(styles);
@@ -63,7 +63,7 @@ function ConnectionCategoryTableData(props) {
       dataIndex: 'Status',
       title: 'Trạng thái',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
         let color = !Status ? 'geekblue' : 'volcano';
         let text = !Status ? 'Duyệt' : 'Hủy duyệt';
@@ -174,12 +174,14 @@ function ConnectionCategoryTableData(props) {
   }
 
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
 
   return (

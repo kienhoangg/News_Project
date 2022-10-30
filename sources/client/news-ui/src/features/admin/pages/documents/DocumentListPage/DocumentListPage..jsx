@@ -27,7 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './DocumentListPage.module.scss';
 import DocumentListPageSearch from './DocumentListPageSearch/DocumentListPageSearch';
 import DocumentListTableData from './DocumentListTableData/DocumentListTableData';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import PopupUpdateDocuments from './PopupUpdateDocuments/PopupUpdateDocuments';
 import PopupDocumentDetail from './PopupDocumentDetail/PopupDocumentDetail';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
@@ -37,14 +37,14 @@ DocumentListPage.propTypes = {};
 
 DocumentListPage.defaultProps = {};
 
-const filterAll = {
-  currentPage: 1,
-  pageSize: 9_999_999,
-  direction: Direction.DESC,
-  orderBy: 'CreatedDate',
-};
-
 function DocumentListPage(props) {
+  const filterAll = {
+    currentPage: 1,
+    pageSize: 9_999_999,
+    direction: Direction.DESC,
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+  };
+
   const [popupUpdate, setPopupUpdate] = useState({
     id: null,
     show: false,
@@ -58,7 +58,7 @@ function DocumentListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const isFirstCall = useRef(true);

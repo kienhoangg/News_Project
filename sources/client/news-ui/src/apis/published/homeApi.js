@@ -43,7 +43,7 @@ class HomeApi {
     };
 
     getStaticPageData = (id) => {
-        const url = '/staticinfos/' + id;
+        const url = '/home/staticinfos/' + id;
         return axiosClient.get(url);
 
         // var response = datafakeMenuPageData;  //​/api​/staticinfos​/{id}

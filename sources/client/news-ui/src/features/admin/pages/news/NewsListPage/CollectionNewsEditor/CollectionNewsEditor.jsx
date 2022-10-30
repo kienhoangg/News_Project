@@ -159,6 +159,7 @@ function CollectionNewsEditor({
             const {
               category,
               title,
+              IsDocumentNews,
               IsNewsHot,
               IsNewsVideo,
               IsDisplayTitle,
@@ -172,6 +173,7 @@ function CollectionNewsEditor({
             } = values;
             const bodyData = {
               Title: title,
+              IsDocumentNews: IsDocumentNews,
               IsHotNews: IsNewsHot,
               IsVideoNews: IsNewsVideo,
               IsShowTitle: IsDisplayTitle,
@@ -242,6 +244,7 @@ function CollectionNewsEditor({
         // wrapperCol={{ span: 21 }}
         initialValues={{
           modifier: 'public',
+          IsDocumentNews: false,
           IsNewsHot: false,
           IsNewsVideo: false,
           IsDisplayTitle: false,
@@ -282,13 +285,23 @@ function CollectionNewsEditor({
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item label='Tin nổi bật'>
+        <Form.Item label='Tin hành chính'>
           <Row gutter={8}>
             <Col span={4}>
               <Form.Item
                 style={{ marginBottom: 0 }}
+                name='IsDocumentNews'
+                valuePropName='checked'
+              >
+                <Checkbox></Checkbox>
+              </Form.Item>
+            </Col>
+            {/* <Col span={4}>
+              <Form.Item
+                style={{ marginBottom: 0 }}
                 name='IsNewsHot'
                 valuePropName='checked'
+                label={'Tin nổi bật'}
               >
                 <Checkbox></Checkbox>
               </Form.Item>
@@ -332,7 +345,7 @@ function CollectionNewsEditor({
               >
                 <Checkbox></Checkbox>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Row>
         </Form.Item>
 

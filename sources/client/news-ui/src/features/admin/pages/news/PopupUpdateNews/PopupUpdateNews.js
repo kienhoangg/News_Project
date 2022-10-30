@@ -36,6 +36,7 @@ import moment from 'moment';
 import { envDomainBackend } from 'common/enviroments';
 import convertHelper from 'helpers/convertHelper';
 import documentApi from 'apis/documentApi';
+import { DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 
 /**
  * Popup chỉnh sửa bài viết
@@ -136,6 +137,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
         category: res?.CategoryNews?.CategoryNewsName,
         title: res?.Title,
         publishedDate: moment(res?.CreatedDate),
+        IsDocumentNews: res?.IsDocumentNews,
         IsNewsHot: res?.IsHotNews,
         IsNewsVideo: res?.IsVideoNews,
         IsDisplayTitle: res?.IsShowTitle,
@@ -154,7 +156,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
       currentPage: 1,
       pageSize: 9_999_999,
       direction: Direction.DESC,
-      orderBy: 'CreatedDate',
+      orderBy: DEFAULT_COLUMN_ORDER_BY,
     };
 
     const responseCategoryNews = newsApi.getNewsCategoryAll(filterAll);
@@ -261,6 +263,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 const {
                   category,
                   title,
+                  IsDocumentNews,
                   IsNewsHot,
                   IsNewsVideo,
                   IsDisplayTitle,
@@ -273,6 +276,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 } = values;
                 let bodyData = {
                   Title: title,
+                  IsDocumentNews: IsDocumentNews,
                   IsHotNews: IsNewsHot,
                   IsVideoNews: IsNewsVideo,
                   IsShowTitle: IsDisplayTitle,
@@ -371,6 +375,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             // wrapperCol={{ span: 21 }}
             initialValues={{
               modifier: 'public',
+              IsDocumentNews: false,
               IsNewsHot: false,
               IsNewsVideo: false,
               IsDisplayTitle: false,
@@ -414,57 +419,67 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                 </Col>
               </Row>
             </Form.Item>
-            <Form.Item label='Tin nổi bật'>
+            <Form.Item label='Tin hành chính'>
               <Row gutter={8}>
                 <Col span={4}>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name='IsNewsHot'
+                    name='IsDocumentNews'
                     valuePropName='checked'
                   >
                     <Checkbox></Checkbox>
                   </Form.Item>
                 </Col>
-                <Col span={4}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name='IsNewsVideo'
-                    valuePropName='checked'
-                    label={'Tin video'}
-                  >
-                    <Checkbox></Checkbox>
-                  </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name='IsDisplayTitle'
-                    valuePropName='checked'
-                    label='Hiển thị tiêu đề'
-                  >
-                    <Checkbox></Checkbox>
-                  </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name='IsDisplayAvatar'
-                    valuePropName='checked'
-                    label='Hình ảnh đại diện'
-                  >
-                    <Checkbox></Checkbox>
-                  </Form.Item>
-                </Col>
-                <Col span={4}>
-                  <Form.Item
-                    style={{ marginBottom: 0 }}
-                    name='IsComment'
-                    valuePropName='checked'
-                    label='Bình luận'
-                  >
-                    <Checkbox></Checkbox>
-                  </Form.Item>
-                </Col>
+                {/* <Col span={4}>
+              <Form.Item
+                style={{ marginBottom: 0 }}
+                name='IsNewsHot'
+                valuePropName='checked'
+                label={'Tin nổi bật'}
+              >
+                <Checkbox></Checkbox>
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item
+                style={{ marginBottom: 0 }}
+                name='IsNewsVideo'
+                valuePropName='checked'
+                label={'Tin video'}
+              >
+                <Checkbox></Checkbox>
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item
+                style={{ marginBottom: 0 }}
+                name='IsDisplayTitle'
+                valuePropName='checked'
+                label='Hiển thị tiêu đề'
+              >
+                <Checkbox></Checkbox>
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item
+                style={{ marginBottom: 0 }}
+                name='IsDisplayAvatar'
+                valuePropName='checked'
+                label='Hình ảnh đại diện'
+              >
+                <Checkbox></Checkbox>
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item
+                style={{ marginBottom: 0 }}
+                name='IsComment'
+                valuePropName='checked'
+                label='Bình luận'
+              >
+                <Checkbox></Checkbox>
+              </Form.Item>
+            </Col> */}
               </Row>
             </Form.Item>
 

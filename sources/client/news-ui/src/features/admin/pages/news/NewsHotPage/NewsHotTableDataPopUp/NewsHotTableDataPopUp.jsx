@@ -5,6 +5,7 @@ import datetimeHelper from 'helpers/datetimeHelper';
 import classNames from 'classnames/bind';
 import styles from './NewsHotTableDataPopUp.module.scss';
 import { Direction } from 'common/enum';
+import { DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 
 const cx = classNames.bind(styles);
 
@@ -29,7 +30,7 @@ function NewsHotTableDataPopUp(props) {
       title: 'Ngày đăng',
       align: 'center',
       width: 100,
-      sorter: (a, b) => true,
+      sorter: (a, b) => a.Status - b.Status,
       render: (CreatedDate) => <>{CreatedDate}</>,
     },
   ];
@@ -60,12 +61,14 @@ function NewsHotTableDataPopUp(props) {
     // console.log(values);
   }
   const handleOnchangeTable = (pagination, filters, sorter, extra) => {
-    setPagination(
-      pagination.current,
-      pagination.pageSize,
-      sorter.columnKey,
-      sorter.order === 'ascend' ? Direction.ASC : Direction.DESC
-    );
+    let columnKey = sorter.columnKey;
+    let order = sorter.order === 'ascend' ? Direction.ASC : Direction.DESC;
+    if (sorter.order === undefined) {
+      columnKey = DEFAULT_COLUMN_ORDER_BY;
+      order = Direction.DESC;
+    }
+
+    setPagination(pagination.current, pagination.pageSize, columnKey, order);
   };
   return (
     <div className={cx('wrapper')}>

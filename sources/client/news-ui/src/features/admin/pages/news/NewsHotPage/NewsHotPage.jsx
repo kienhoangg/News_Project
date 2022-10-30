@@ -11,7 +11,7 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import NewsHotTableDataPopUp from './NewsHotTableDataPopUp/NewsHotTableDataPopUp';
 import NewsHotPageSearchPopup from './NewsHotPageSearchPopUp/NewsHotPageSearchPopUp';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import CollectionNewsEditor from '../NewsListPage/CollectionNewsEditor/CollectionNewsEditor';
 import PopupUpdateNews from '../PopupUpdateNews/PopupUpdateNews';
 
@@ -30,7 +30,7 @@ function NewsHotPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
     IsHotNews: true,
   });
@@ -38,7 +38,7 @@ function NewsHotPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
     IsHotNews: false,
   });
@@ -154,11 +154,11 @@ function NewsHotPage(props) {
         Value: true,
         Field: TypeUpdate.IS_HOT_NEWS,
       });
-      openNotification("Thêm thành công");
+      openNotification('Thêm thành công');
       fetchProductListPopUp();
     } catch (error) {
-      openNotification("Thêm thành thất bại");
-      console.log("Failed to fetch list: ", error);
+      openNotification('Thêm thành thất bại');
+      console.log('Failed to fetch list: ', error);
     }
   };
 

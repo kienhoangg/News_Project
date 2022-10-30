@@ -1,7 +1,7 @@
-import { Divider, Form, Input, Select, Modal, Upload } from 'antd';
-import { useEffect, useState } from 'react';
-import ImageListPageSearch from './ImageListPageSearch/ImageListPageSearch';
-import ImageListTableData from './ImageListTableData/ImageListTableData';
+import { Divider, Form, Input, Select, Modal, Upload } from "antd";
+import { useEffect, useState } from "react";
+import ImageListPageSearch from "./ImageListPageSearch/ImageListPageSearch";
+import ImageListTableData from "./ImageListTableData/ImageListTableData";
 
 import mediaApi from 'apis/mediaApi';
 import classNames from 'classnames/bind';
@@ -16,7 +16,7 @@ import { Option } from 'antd/lib/mentions';
 import { FileAddFilled, UploadOutlined } from '@ant-design/icons';
 import commonFunc from 'common/commonFunc';
 import convertHelper from 'helpers/convertHelper';
-import { TypeUpdate } from 'common/constant';
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import { envDomainBackend } from 'common/enviroments';
 import imageHelper from 'helpers/imageHelper';
 
@@ -25,12 +25,7 @@ const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
 };
-const filterAll = {
-  currentPage: 1,
-  pageSize: 9_999_999,
-  direction: Direction.DESC,
-  orderBy: 'CreatedDate',
-};
+
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
 ImageListPage.propTypes = {};
@@ -38,6 +33,12 @@ ImageListPage.propTypes = {};
 ImageListPage.defaultProps = {};
 
 function ImageListPage(props) {
+  const filterAll = {
+    currentPage: 1,
+    pageSize: 9_999_999,
+    direction: Direction.DESC,
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
+  };
   const [newsData, setNewsData] = useState({
     data: [],
     total: 0,
@@ -50,7 +51,7 @@ function ImageListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState({
@@ -65,7 +66,7 @@ function ImageListPage(props) {
     setFileListAttachment(newFileList);
   };
 
-  const urlLinkResponve = useRef('');
+  const urlLinkResponve = useRef("");
 
   useEffect(() => {
     if (isFirstCall.current) {
@@ -92,20 +93,20 @@ function ImageListPage(props) {
         Title: res?.Title,
         PhotoCategoryId:
           dataFilter?.categoryAll.find((x) => x.Id === res?.PhotoCategoryId)
-            ?.Title ?? '',
+            ?.Title ?? "",
         Order: res?.Order,
       });
 
       if (res?.ImagePath) {
         urlLinkResponve.current = res?.ImagePath;
-        let links = res?.ImagePath.split(';;');
+        let links = res?.ImagePath.split(";;");
         let linksObject = [];
         for (let i = 0; i < links.length; i++) {
           linksObject.push({
             isFileFormServer: true,
             uid: i,
             name: imageHelper.getNameFile(links[i]),
-            status: 'done',
+            status: "done",
             url: imageHelper.getLinkImageUrl(links[i]),
           });
         }
@@ -126,8 +127,8 @@ function ImageListPage(props) {
       });
     } catch (error) {
       openNotification(
-        'Lấy danh sách hình ảnh thất bại',
-        '',
+        "Lấy danh sách hình ảnh thất bại",
+        "",
         NotificationType.ERROR
       );
     }
@@ -158,10 +159,10 @@ function ImageListPage(props) {
   const handleDeleteCategoryNew = async (id) => {
     try {
       await mediaApi.deleteImage(id);
-      openNotification('Xóa hình ảnh thành công');
+      openNotification("Xóa hình ảnh thành công");
       fetchCategoryList();
     } catch (error) {
-      openNotification('Xóa hình ảnh thất bại', '', NotificationType.ERROR);
+      openNotification("Xóa hình ảnh thất bại", "", NotificationType.ERROR);
     }
   };
   const handleUpdateStatusNew = async (values) => {
@@ -172,9 +173,9 @@ function ImageListPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     }
   };
 
@@ -199,19 +200,19 @@ function ImageListPage(props) {
   const onCreate = async (values) => {
     try {
       var formData = new FormData();
-      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+      formData.append("JsonString", convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
         for (let file of values.FileAttachment) {
-          formData.append('FileAttachment', file);
+          formData.append("FileAttachment", file);
         }
       }
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         await mediaApi.insertImage(formData);
-        openNotification('Tạo mới hình ảnh thành công');
+        openNotification("Tạo mới hình ảnh thành công");
       } else {
         await mediaApi.updateImage(isModalOpen?.imageDetail?.Id, formData);
-        openNotification('Cập nhật hình ảnh thành công');
+        openNotification("Cập nhật hình ảnh thành công");
       }
 
       setIsModalOpen({
@@ -226,14 +227,14 @@ function ImageListPage(props) {
     } catch (error) {
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         openNotification(
-          'Tạo mới hình ảnh thất bại',
-          '',
+          "Tạo mới hình ảnh thất bại",
+          "",
           NotificationType.ERROR
         );
       } else {
         openNotification(
-          'Cập nhật hình ảnh thất bại',
-          '',
+          "Cập nhật hình ảnh thất bại",
+          "",
           NotificationType.ERROR
         );
       }
@@ -243,12 +244,13 @@ function ImageListPage(props) {
   const MODAL_TYPE = {
     EDIT: 0,
     CREATE: 1,
+    DETAIL: 2,
   };
 
   const renderStaticCategoryId = (
     <Select
-      placeholder='Chọn cấp cha'
-      style={{ width: '100%' }}
+      placeholder="Chọn cấp cha"
+      style={{ width: "100%" }}
       allowClear={true}
       showSearch
     >
@@ -280,10 +282,10 @@ function ImageListPage(props) {
 
     const _fileListAttachment = [...fileListAttachment];
     let fileUploadCurrent = [];
-    let urlPath = '';
+    let urlPath = "";
     for (let file of _fileListAttachment) {
       if (file?.isFileFormServer) {
-        urlPath += `${file.url.replaceAll(envDomainBackend, '')};;`;
+        urlPath += `${file.url.replaceAll(envDomainBackend, "")};;`;
         continue;
       }
       fileUploadCurrent.push(file);
@@ -294,7 +296,7 @@ function ImageListPage(props) {
       if (file.size > LIMIT_UP_LOAD_FILE) {
         openNotification(
           `File thứ ${i + 1} đã lớn hơn 2MB`,
-          '',
+          "",
           NotificationType.ERROR
         );
         return;
@@ -315,85 +317,155 @@ function ImageListPage(props) {
     onCreate(body);
   };
 
+  console.log(isModalOpen);
+
   /**
    * Cập nhật hình ảnh
    */
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       {(isModalOpen?.type === MODAL_TYPE.CREATE ||
-        isModalOpen?.type === MODAL_TYPE.EDIT) &&
+        isModalOpen?.type === MODAL_TYPE.EDIT ||
+        isModalOpen?.type === MODAL_TYPE.DETAIL) &&
       isModalOpen?.show ? (
         <Modal
           open={true}
           title={
             isModalOpen?.type === MODAL_TYPE.CREATE
-              ? 'Tạo mới hình ảnh'
-              : 'Chỉnh sửa hình ảnh'
+              ? "Tạo mới hình ảnh"
+              : isModalOpen?.type === MODAL_TYPE.DETAIL
+              ? "Chi tiết"
+              : "Chỉnh sửa hình ảnh"
           }
-          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
-          cancelText='Thoát'
+          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
+          cancelText="Thoát"
           onCancel={onCancel}
           footer={null}
         >
           <Form
             form={form}
             {...layout}
-            name='control-hooks'
+            name="control-hooks"
             onFinish={onFinish}
           >
             <Form.Item
-              label='Tiêu đề'
-              name='Title'
+              label="Tiêu đề"
+              name="Title"
               rules={[
                 {
                   required: true,
-                  message: 'Tiêu đề không được để trống',
+                  message: "Tiêu đề không được để trống",
                 },
               ]}
+              style={{
+                width: "300px",
+              }}
             >
-              <Input />
+              {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                <div>{isModalOpen?.imageDetail?.Title}</div>
+              ) : (
+                <Input />
+              )}
             </Form.Item>
 
-            <Form.Item label='Danh mục hình ảnh' name='PhotoCategoryId'>
-              {renderStaticCategoryId}
+            <Form.Item label="Danh mục hình ảnh" name="PhotoCategoryId">
+              {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                <div>
+                  {
+                    dataFilter?.categoryAll?.find(
+                      (item) =>
+                        item?.Id === isModalOpen?.imageDetail?.PhotoCategoryId
+                    )?.Title
+                  }
+                </div>
+              ) : (
+                renderStaticCategoryId
+              )}
             </Form.Item>
 
-            <Form.Item name='Order' label='Số thứ tự'>
-              <Input type='number' min={0} />
+            <Form.Item name="Order" label="Số thứ tự">
+              {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                <div>{isModalOpen?.imageDetail?.Order}</div>
+              ) : (
+                <Input type="number" min={0} />
+              )}
             </Form.Item>
 
-            <Form.Item name='lb-attachment' label='Tệp đính kèm'>
-              <Upload
-                listType='picture'
-                defaultFileList={fileListAttachment}
-                onChange={handleChangeAttachment}
-                customRequest={commonFunc.dummyRequest}
-                multiple={true}
-                maxCount={100}
-              >
-                <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+            <Form.Item name="lb-attachment" label="Tệp đính kèm">
+              {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
+                <div>
+                  {isModalOpen?.imageDetail?.ImagePath?.split(";;").map(
+                    (item) => {
+                      return (
+                        <div
+                          href=""
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            marginBottom: 10,
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 100,
+                              height: 50,
+                            }}
+                          >
+                            <img
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                              src={imageHelper.getLinkImageUrl(item)}
+                            />
+                          </div>
+                          <a
+                            href={imageHelper.getLinkImageUrl(item)}
+                            style={{ marginLeft: 4 }}
+                            target="_blank"
+                          >
+                            {imageHelper.getNameFile(item)}
+                          </a>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+              ) : (
+                <Upload
+                  listType="picture"
+                  defaultFileList={fileListAttachment}
+                  onChange={handleChangeAttachment}
+                  customRequest={commonFunc.dummyRequest}
+                  multiple={true}
+                  maxCount={100}
+                >
+                  <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
 
-                {/* {fileListAttachment.length < 1 ? (
+                  {/* {fileListAttachment.length < 1 ? (
                 <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
               ) : null} */}
-              </Upload>
+                </Upload>
+              )}
             </Form.Item>
-
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type='primary' htmlType='Tạo mới'>
-                {isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
-              </Button>
-            </Form.Item>
+            {isModalOpen?.type === MODAL_TYPE.DETAIL ? null : (
+              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Button type="primary" htmlType="Tạo mới">
+                  {isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
+                </Button>
+              </Form.Item>
+            )}
           </Form>
         </Modal>
       ) : null}
 
-      <div className={cx('top')}>
+      <div className={cx("top")}>
         <ImageListPageSearch setTextSearch={handleChangeTextSearch} />
         <div>
           <Button
-            type='primary'
+            type="primary"
             icon={<FileAddFilled />}
             onClick={() => {
               setIsModalOpen({
@@ -407,14 +479,21 @@ function ImageListPage(props) {
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: '0' }} />
-      <div className={cx('table-data')}>
+      <Divider style={{ margin: "0" }} />
+      <div className={cx("table-data")}>
         <ImageListTableData
           data={newsData}
           setPagination={handleChangePagination}
           deleteCategoryNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
           editImage={(res) => callApiGetDetailImage(res?.Id)}
+          onClickRow={(res) => {
+            setIsModalOpen({
+              imageDetail: res,
+              type: MODAL_TYPE.DETAIL,
+              show: true,
+            });
+          }}
         />
       </div>
     </div>

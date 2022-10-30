@@ -8,7 +8,7 @@ import styles from './NewsSourcePage.module.scss';
 import NewsSourcePageSearch from './NewsSourcePageSearch/NewsSourcePageSearch';
 import NewsSourceTableData from './NewsSourceTableData/NewsSourceTableData';
 import { FileAddFilled } from '@ant-design/icons';
-import { TypeUpdate } from 'common/constant';
+import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -32,7 +32,7 @@ function NewsSourcePage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: 'CreatedDate',
+    orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
