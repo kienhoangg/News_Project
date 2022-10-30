@@ -134,6 +134,7 @@ function NewsCategoryPage(props) {
 
   const showModal = async () => {
     mode.current = Mode.Create;
+    form?.setFieldsValue({});
     await getParentRoot();
     setIsModalOpen(true);
   };

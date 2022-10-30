@@ -64,11 +64,16 @@ function ConnectionTableData(props) {
       sorter: (a, b) => a.Link - b.Link,
     },
     {
-      key: 'CategoryText',
-      dataIndex: 'CategoryText',
+      key: 'LinkInfoCategoryId',
+      dataIndex: 'LinkInfoCategoryId',
       title: 'Danh mục',
       width: 150,
-      render: (text) => <div>{text}</div>,
+      render: (LinkInfoCategoryId) => (
+        <div>
+          {props?.categoryAll.find((x) => x.Id === LinkInfoCategoryId)?.Title ??
+            undefined}
+        </div>
+      ),
       sorter: (a, b) => a.CategoryText - b.CategoryText,
     },
     {
