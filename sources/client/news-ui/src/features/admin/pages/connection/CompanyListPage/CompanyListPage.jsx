@@ -384,10 +384,10 @@ function CompanyListPage(props) {
                             </Col>
                         </Row>
                         <Row gutter={16} className={cx('row-item')}>
-                            <Col span={10}>
+                            <Col span={8}>
                                 <div className={cx('row-item-label')}>Ảnh đại diện</div>
                             </Col>
-                            <Col span={14}>
+                            <Col span={16}>
                                 <div>
                                     <img alt='' style={{ width: '10vw' }} src={imageHelper.getLinkImageUrl(detail.current?.Avatar)} />
                                 </div>
