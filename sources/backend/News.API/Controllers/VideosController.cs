@@ -194,6 +194,8 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteVideoDto([Required] int id)
         {

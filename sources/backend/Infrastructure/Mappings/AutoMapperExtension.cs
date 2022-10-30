@@ -27,7 +27,7 @@ namespace Infrastructure.Mappings
                 }
                 if (property.Name == "CreatedDate")
                 {
-  expression.ForMember(property.Name, opt => opt.Ignore());
+                    expression.ForMember(property.Name, opt => opt.Ignore());
                 }
 
 
@@ -41,7 +41,7 @@ namespace Infrastructure.Mappings
             this IQueryable<TDestination> queryable,
             int pageIndex,
             int pageSize,
-            string orderBy = "CreatedDate",
+            string orderBy = "LastModifiedDate",
             int? direction = -1
         )
             where TDestination : class
@@ -50,7 +50,7 @@ namespace Infrastructure.Mappings
                 .ToPagedList(queryable,
                 pageIndex,
                 pageSize,
-                string.IsNullOrEmpty(orderBy) ? "CreatedDate" : orderBy,
+                string.IsNullOrEmpty(orderBy) ? "LastModifiedDate" : orderBy,
                 direction);
         }
     }
