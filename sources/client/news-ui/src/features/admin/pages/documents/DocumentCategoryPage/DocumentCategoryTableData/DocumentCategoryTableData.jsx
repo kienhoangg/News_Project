@@ -80,6 +80,14 @@ function DocumentCategoryTableData(props) {
             type="primary"
             icon={<EditFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi sửa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               onEdit && onEdit(record);
               event?.stopPropagation();
             }}
@@ -91,6 +99,14 @@ function DocumentCategoryTableData(props) {
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi xóa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               handleDeleteSourceNew(record);
               event?.stopPropagation();
             }}

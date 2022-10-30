@@ -110,6 +110,14 @@ function QuestionListTableData(props) {
             type="primary"
             icon={<EditFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi sửa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               onEdit(record?.Id);
               event.stopPropagation();
             }}
@@ -121,6 +129,15 @@ function QuestionListTableData(props) {
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi xóa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
+
               event?.stopPropagation();
               const role = commonFunc.getCookie("role");
               if (role !== Role.ADMIN) {

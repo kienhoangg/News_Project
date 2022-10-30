@@ -86,6 +86,14 @@ function NewsCollaboratorsTableData(props) {
             type="primary"
             icon={<EditFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi sửa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               onEdit && onEdit(record);
               event?.stopPropagation();
             }}
@@ -97,6 +105,14 @@ function NewsCollaboratorsTableData(props) {
             danger
             icon={<DeleteFilled />}
             onClick={(event) => {
+              if (record?.Status) {
+                openNotification(
+                  "Hủy duyệt trước khi xóa",
+                  "",
+                  NotificationType.ERROR
+                );
+                return;
+              }
               event?.stopPropagation();
               const role = commonFunc.getCookie("role");
               if (role !== Role.ADMIN) {

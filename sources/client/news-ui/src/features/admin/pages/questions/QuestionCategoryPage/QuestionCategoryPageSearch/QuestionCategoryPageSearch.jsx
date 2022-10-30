@@ -2,7 +2,8 @@ import { FileAddFilled, SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Input, Row } from 'antd';
 import classNames from 'classnames/bind';
 import styles from './QuestionCategoryPageSearch.module.scss';
-import { PropTypes } from 'prop-types';
+import PropTypes from 'prop-types';
+import { useRef } from 'react';
 
 const cx = classNames.bind(styles);
 
@@ -19,11 +20,10 @@ QuestionCategoryPageSearch.defaultProps = {
 function QuestionCategoryPageSearch(props) {
     const { setTextSearch, handleOnClickCreate } = props;
 
+    const valueSearch = useRef('');
+
     function handleChange(event) {
-        console.log(event?.target?.value);
-        if (setTextSearch) {
-            setTextSearch(event?.target?.value ?? '');
-        }
+        valueSearch.current = event?.target?.value ?? '';
     }
 
     return (
@@ -34,7 +34,13 @@ function QuestionCategoryPageSearch(props) {
                 </Col>
                 <Col span={2}>
                     <Row justify='start'>
-                        <Button type='default' icon={<SearchOutlined />}>
+                        <Button
+                            type='default'
+                            icon={<SearchOutlined />}
+                            onClick={() => {
+                                if (setTextSearch) setTextSearch(valueSearch.current);
+                            }}
+                        >
                             Tìm kiếm
                         </Button>
                     </Row>
