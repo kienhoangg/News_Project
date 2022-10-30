@@ -1,4 +1,4 @@
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
@@ -11,24 +11,24 @@ import {
   Row,
   Select,
   Upload,
-} from "antd";
-import { Option } from "antd/lib/mentions";
-import axiosClient from "apis/axiosClient";
-import questionApi from "apis/questionApi";
-import { CKEditor } from "ckeditor4-react";
-import classNames from "classnames/bind";
-import commonFunc from "common/commonFunc";
-import { TypeUpdate } from "common/constant";
-import { Direction, NotificationType } from "common/enum";
-import convertHelper from "helpers/convertHelper";
-import datetimeHelper from "helpers/datetimeHelper";
-import imageHelper from "helpers/imageHelper";
-import { openNotification } from "helpers/notification";
-import moment from "moment";
-import { useEffect, useState } from "react";
-import styles from "./QuestionListPage.module.scss";
-import QuestionListPageSearch from "./QuestionListPageSearch/QuestionListPageSearch";
-import QuestionListTableData from "./QuestionListTableData/QuestionListTableData";
+} from 'antd';
+import { Option } from 'antd/lib/mentions';
+import axiosClient from 'apis/axiosClient';
+import questionApi from 'apis/questionApi';
+import { CKEditor } from 'ckeditor4-react';
+import classNames from 'classnames/bind';
+import commonFunc from 'common/commonFunc';
+import { TypeUpdate } from 'common/constant';
+import { Direction, NotificationType } from 'common/enum';
+import convertHelper from 'helpers/convertHelper';
+import datetimeHelper from 'helpers/datetimeHelper';
+import imageHelper from 'helpers/imageHelper';
+import { openNotification } from 'helpers/notification';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import styles from './QuestionListPage.module.scss';
+import QuestionListPageSearch from './QuestionListPageSearch/QuestionListPageSearch';
+import QuestionListTableData from './QuestionListTableData/QuestionListTableData';
 
 const cx = classNames.bind(styles);
 
@@ -47,19 +47,19 @@ function QuestionListPage(props) {
   const QuestionStatus = [
     {
       id: 0,
-      label: "Câu hỏi mới",
+      label: 'Câu hỏi mới',
     },
     {
       id: 1,
-      label: "Chờ câu trả lời",
+      label: 'Chờ câu trả lời',
     },
     {
       id: 2,
-      label: "Chờ được phê duyệt",
+      label: 'Chờ được phê duyệt',
     },
     {
       id: 3,
-      label: "Câu hỏi được phê duyệt",
+      label: 'Câu hỏi được phê duyệt',
     },
   ];
   // const QuestionStatus = {
@@ -95,8 +95,8 @@ function QuestionListPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
 
   const handleChangeAttachment = ({ fileList: newFileList }) => {
@@ -105,10 +105,14 @@ function QuestionListPage(props) {
 
   const callApiGetDetail = async (id) => {
     try {
-      const res = await axiosClient.get("/questions/" + id);
+      const res = await axiosClient.get('/questions/' + id);
       setQuestionDetail(res);
+      const label =
+        QuestionStatus.find((x) => x.id === res?.QuestionStatus)?.label ?? '';
       form.setFieldsValue({
-        QuestionCategoryId: res?.QuestionCategoryId,
+        QuestionCategoryId:
+          dataCategoryQuestion.find((x) => x.Id === res?.QuestionCategoryId)
+            ?.Title ?? '',
         Title: res?.Title,
         AskedPersonName: res?.AskedPersonName,
         Department: res?.Department,
@@ -118,7 +122,7 @@ function QuestionListPage(props) {
         QuestionDate: moment(res?.QuestionDate),
         IsNoticed: res?.IsNoticed,
         QuestionContent: res?.QuestionContent,
-        QuestionStatus: res?.QuestionStatus,
+        questionStatus: label,
         AnswerPersonName: res?.AnswerPersonName,
         AnswerContent: res?.AnswerContent,
         AnswerDate: moment(res?.AnswerDate),
@@ -128,9 +132,9 @@ function QuestionListPage(props) {
         setFileListAttachment([
           {
             isFileFormServer: true,
-            uid: "1",
+            uid: '1',
             name: imageHelper.getNameFile(res?.FilePath),
-            status: "done",
+            status: 'done',
             url: imageHelper.getLinkImageUrl(res?.FilePath),
           },
         ]);
@@ -149,7 +153,7 @@ function QuestionListPage(props) {
         total: response?.PagedData?.RowCount,
       });
     } catch (error) {
-      console.log("Failed to fetch list: ", error);
+      console.log('Failed to fetch list: ', error);
     }
   };
 
@@ -194,19 +198,19 @@ function QuestionListPage(props) {
         field: TypeUpdate.STATUS,
       });
       fetchProductList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
   const handleDeleteCategoryNew = async (id) => {
     try {
       await questionApi.deleteQuestion(id);
-      openNotification("Xóa hình ảnh thành công");
+      openNotification('Xóa hình ảnh thành công');
       fetchProductList();
     } catch (error) {
-      openNotification("Xóa hình ảnh thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa hình ảnh thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -232,11 +236,11 @@ function QuestionListPage(props) {
    */
   const getCategoryQuestion = async () => {
     try {
-      const res = await axiosClient.post("/questioncategories/filter", {
+      const res = await axiosClient.post('/questioncategories/filter', {
         pageSize: 9999,
         currentPage: 1,
         direction: -1,
-        orderBy: "CreatedDate",
+        orderBy: 'CreatedDate',
       });
 
       setDataCategoryQuestion(res?.PagedData?.Results);
@@ -247,33 +251,33 @@ function QuestionListPage(props) {
     try {
       var formData = new FormData();
       formData.append(
-        "JsonString",
+        'JsonString',
         convertHelper.Serialize(values?.JsonString)
       );
 
       if (values?.FileAttachment) {
-        formData.append("FileAttachment", values?.FileAttachment);
+        formData.append('FileAttachment', values?.FileAttachment);
       }
 
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
-        await axiosClient.post("/questions", formData);
-        openNotification("Tạo mới thành công");
+        await axiosClient.post('/questions', formData);
+        openNotification('Tạo mới thành công');
       } else {
-        await axiosClient.put("/questions/" + questionDetail?.Id, formData);
-        openNotification("Cập nhật thành công");
+        await axiosClient.put('/questions/' + questionDetail?.Id, formData);
+        openNotification('Cập nhật thành công');
       }
 
       onCancel();
 
       fetchProductList();
     } catch (error) {
-      openNotification("Cập nhật tin tức thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật tin tức thất bại', '', NotificationType.ERROR);
     }
   };
   console.log(isModalOpen);
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       {(
         isModalOpen?.type === MODAL_TYPE.CREATE ||
         isModalOpen?.type === MODAL_TYPE.DETAIL
@@ -284,13 +288,13 @@ function QuestionListPage(props) {
           open={true}
           title={
             isModalOpen?.type === MODAL_TYPE.CREATE
-              ? "Tạo mới câu hỏi"
-              : "Chỉnh sửa câu hỏi"
+              ? 'Tạo mới câu hỏi'
+              : 'Chỉnh sửa câu hỏi'
           }
-          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
-          cancelText="Thoát"
+          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
+          cancelText='Thoát'
           onCancel={onCancel}
-          width={"100vw"}
+          width={'100vw'}
           style={{
             top: 20,
           }}
@@ -315,13 +319,17 @@ function QuestionListPage(props) {
                   QuestionDate,
                   IsNoticed,
                   QuestionContent,
-                  QuestionStatus,
+                  questionStatus,
                   AnswerPersonName,
                   AnswerContent,
                   AnswerDate,
                 } = values;
                 let bodyData = {
-                  QuestionCategoryId: parseInt(QuestionCategoryId),
+                  QuestionCategoryId: parseInt(
+                    dataCategoryQuestion.find(
+                      (x) => x.Title === QuestionCategoryId
+                    )?.Id ?? '0'
+                  ),
                   Title: Title,
                   AskedPersonName: AskedPersonName,
                   Department: Department,
@@ -333,7 +341,10 @@ function QuestionListPage(props) {
                     : null,
                   IsNoticed: IsNoticed,
                   QuestionContent: QuestionContent,
-                  QuestionStatus: QuestionStatus,
+                  QuestionStatus: parseInt(
+                    QuestionStatus.find((x) => x.label === questionStatus)
+                      ?.id ?? '0'
+                  ),
                   AnswerPersonName: AnswerPersonName,
                   AnswerContent: AnswerContent,
                   AnswerDate: AnswerDate?._d
@@ -350,8 +361,8 @@ function QuestionListPage(props) {
                   const file = fileListAttachment[0].originFileObj;
                   if (file.size > LIMIT_UP_LOAD_FILE) {
                     openNotification(
-                      "File đính kèm đã lớn hơn 2MB",
-                      "",
+                      'File đính kèm đã lớn hơn 2MB',
+                      '',
                       NotificationType.ERROR
                     );
                     return;
@@ -373,14 +384,14 @@ function QuestionListPage(props) {
                 onCreate(body);
               })
               .catch((info) => {
-                console.log("Validate Failed:", info);
+                console.log('Validate Failed:', info);
               });
           }}
         >
           <Form
             form={form}
             {...layout}
-            name="form_in_modal"
+            name='form_in_modal'
             // onFinish={onFinish}
           >
             <Row>
@@ -392,7 +403,7 @@ function QuestionListPage(props) {
                 >
                   <b>Thông tin gửi câu hỏi</b>
                 </div>
-                <Form.Item label="Danh mục chủ đề" name="QuestionCategoryId">
+                <Form.Item label='Danh mục chủ đề' name='QuestionCategoryId'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>
                       {
@@ -405,11 +416,13 @@ function QuestionListPage(props) {
                     </div>
                   ) : (
                     <Select
-                      placeholder="Danh mục chủ đề"
-                      style={{ width: "100%" }}
+                      placeholder='Danh mục chủ đề'
+                      style={{ width: '100%' }}
+                      allowClear
+                      showSearch
                     >
                       {dataCategoryQuestion?.map((x) => (
-                        <Option value={x.Id} key={x.Id}>
+                        <Option value={x.Title} key={x.Id}>
                           {x.Title}
                         </Option>
                       ))}
@@ -417,12 +430,12 @@ function QuestionListPage(props) {
                   )}
                 </Form.Item>
                 <Form.Item
-                  label="Tiêu đề"
-                  name="Title"
+                  label='Tiêu đề'
+                  name='Title'
                   rules={[
                     {
                       required: true,
-                      message: "Tiêu đề không được để trống",
+                      message: 'Tiêu đề không được để trống',
                     },
                   ]}
                 >
@@ -432,60 +445,60 @@ function QuestionListPage(props) {
                     <Input />
                   )}
                 </Form.Item>
-                <Form.Item label="Người hỏi" name="AskedPersonName">
+                <Form.Item label='Người hỏi' name='AskedPersonName'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>{isModalOpen?.content?.AskedPersonName}</div>
                   ) : (
                     <Input />
                   )}
                 </Form.Item>
-                <Form.Item label="Cơ quan" name="Department">
+                <Form.Item label='Cơ quan' name='Department'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>{isModalOpen?.content?.Department}</div>
                   ) : (
                     <Input />
                   )}
                 </Form.Item>
-                <Form.Item label="Địa chỉ" name="Address">
+                <Form.Item label='Địa chỉ' name='Address'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>{isModalOpen?.content?.Address}</div>
                   ) : (
                     <Input />
                   )}
                 </Form.Item>
-                <Form.Item label="Điện thoại" name="Phone">
+                <Form.Item label='Điện thoại' name='Phone'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>{isModalOpen?.content?.Phone}</div>
                   ) : (
                     <Input />
                   )}
                 </Form.Item>
-                <Form.Item label="Email" name="Email">
+                <Form.Item label='Email' name='Email'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>{isModalOpen?.content?.Email}</div>
                   ) : (
                     <Input />
                   )}
                 </Form.Item>
-                <Form.Item label="Ngày gửi câu hỏi" name="QuestionDate">
+                <Form.Item label='Ngày gửi câu hỏi' name='QuestionDate'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>
                       {moment(isModalOpen?.content?.QuestionDate).format(
-                        "DD/MM/YYYY"
+                        'DD/MM/YYYY'
                       )}
                     </div>
                   ) : (
                     <DatePicker
-                      placeholder="Ngày gửi câu hỏi"
-                      style={{ width: "100%" }}
+                      placeholder='Ngày gửi câu hỏi'
+                      style={{ width: '100%' }}
                     />
                   )}
                 </Form.Item>
                 <Form.Item
                   style={{ marginBottom: 0 }}
-                  name="IsNoticed"
-                  valuePropName="checked"
-                  label={"Câu hỏi chú ý"}
+                  name='IsNoticed'
+                  valuePropName='checked'
+                  label={'Câu hỏi chú ý'}
                 >
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <Checkbox
@@ -495,7 +508,7 @@ function QuestionListPage(props) {
                     <Checkbox></Checkbox>
                   )}
                 </Form.Item>
-                <Form.Item label="Nội dung văn bản" name="QuestionContent">
+                <Form.Item label='Nội dung văn bản' name='QuestionContent'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div
                       dangerouslySetInnerHTML={{
@@ -507,51 +520,51 @@ function QuestionListPage(props) {
                       initData={questionDetail?.QuestionContent}
                       // onChange={onEditorChange}
                       config={{
-                        language: "vi",
+                        language: 'vi',
                         toolbarGroups: [
                           {
-                            name: "document",
-                            groups: ["mode", "document", "doctools"],
+                            name: 'document',
+                            groups: ['mode', 'document', 'doctools'],
                           },
-                          { name: "clipboard", groups: ["clipboard", "undo"] },
+                          { name: 'clipboard', groups: ['clipboard', 'undo'] },
                           {
-                            name: "editing",
+                            name: 'editing',
                             groups: [
-                              "find",
-                              "selection",
-                              "spellchecker",
-                              "editing",
+                              'find',
+                              'selection',
+                              'spellchecker',
+                              'editing',
                             ],
                           },
-                          { name: "forms", groups: ["forms"] },
-                          "/",
-                          "/",
+                          { name: 'forms', groups: ['forms'] },
+                          '/',
+                          '/',
                           {
-                            name: "basicstyles",
-                            groups: ["basicstyles", "cleanup"],
+                            name: 'basicstyles',
+                            groups: ['basicstyles', 'cleanup'],
                           },
                           {
-                            name: "paragraph",
+                            name: 'paragraph',
                             groups: [
-                              "list",
-                              "indent",
-                              "blocks",
-                              "align",
-                              "bidi",
-                              "paragraph",
+                              'list',
+                              'indent',
+                              'blocks',
+                              'align',
+                              'bidi',
+                              'paragraph',
                             ],
                           },
-                          { name: "links", groups: ["links"] },
-                          { name: "insert", groups: ["insert"] },
-                          "/",
-                          { name: "styles", groups: ["styles"] },
-                          { name: "colors", groups: ["colors"] },
-                          { name: "tools", groups: ["tools"] },
-                          { name: "others", groups: ["others"] },
-                          { name: "about", groups: ["about"] },
+                          { name: 'links', groups: ['links'] },
+                          { name: 'insert', groups: ['insert'] },
+                          '/',
+                          { name: 'styles', groups: ['styles'] },
+                          { name: 'colors', groups: ['colors'] },
+                          { name: 'tools', groups: ['tools'] },
+                          { name: 'others', groups: ['others'] },
+                          { name: 'about', groups: ['about'] },
                         ],
-                        extraPlugins: "justify,font,colorbutton,forms",
-                        removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                        extraPlugins: 'justify,font,colorbutton,forms',
+                        removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
                       }}
                     />
                   )}
@@ -566,7 +579,7 @@ function QuestionListPage(props) {
                 >
                   <b>Thông tin trả lời</b>
                 </div>
-                <Form.Item label="Trạng thái" name="QuestionStatus">
+                <Form.Item label='Trạng thái' name='questionStatus'>
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>
                       {
@@ -577,9 +590,14 @@ function QuestionListPage(props) {
                       }
                     </div>
                   ) : (
-                    <Select placeholder="Trạng thái" style={{ width: "100%" }}>
+                    <Select
+                      placeholder='Trạng thái'
+                      style={{ width: '100%' }}
+                      allowClear
+                      showSearch
+                    >
                       {QuestionStatus?.map((x) => (
-                        <Option value={x.id} key={x.id}>
+                        <Option value={x.label} key={x.id}>
                           {x.label}
                         </Option>
                       ))}
@@ -587,8 +605,8 @@ function QuestionListPage(props) {
                   )}
                 </Form.Item>
                 <Form.Item
-                  label="Người trả lời"
-                  name="AnswerPersonName"
+                  label='Người trả lời'
+                  name='AnswerPersonName'
                   style={
                     isModalOpen?.type === MODAL_TYPE.DETAIL
                       ? { width: 300 }
@@ -604,8 +622,8 @@ function QuestionListPage(props) {
                   )}
                 </Form.Item>
                 <Form.Item
-                  label="Nội dung trả lời"
-                  name="AnswerContent"
+                  label='Nội dung trả lời'
+                  name='AnswerContent'
                   style={
                     isModalOpen?.type === MODAL_TYPE.DETAIL
                       ? { width: 300 }
@@ -623,58 +641,58 @@ function QuestionListPage(props) {
                       initData={questionDetail?.AnswerContent}
                       // onChange={onEditorChange}
                       config={{
-                        language: "vi",
+                        language: 'vi',
                         toolbarGroups: [
                           {
-                            name: "document",
-                            groups: ["mode", "document", "doctools"],
+                            name: 'document',
+                            groups: ['mode', 'document', 'doctools'],
                           },
-                          { name: "clipboard", groups: ["clipboard", "undo"] },
+                          { name: 'clipboard', groups: ['clipboard', 'undo'] },
                           {
-                            name: "editing",
+                            name: 'editing',
                             groups: [
-                              "find",
-                              "selection",
-                              "spellchecker",
-                              "editing",
+                              'find',
+                              'selection',
+                              'spellchecker',
+                              'editing',
                             ],
                           },
-                          { name: "forms", groups: ["forms"] },
-                          "/",
-                          "/",
+                          { name: 'forms', groups: ['forms'] },
+                          '/',
+                          '/',
                           {
-                            name: "basicstyles",
-                            groups: ["basicstyles", "cleanup"],
+                            name: 'basicstyles',
+                            groups: ['basicstyles', 'cleanup'],
                           },
                           {
-                            name: "paragraph",
+                            name: 'paragraph',
                             groups: [
-                              "list",
-                              "indent",
-                              "blocks",
-                              "align",
-                              "bidi",
-                              "paragraph",
+                              'list',
+                              'indent',
+                              'blocks',
+                              'align',
+                              'bidi',
+                              'paragraph',
                             ],
                           },
-                          { name: "links", groups: ["links"] },
-                          { name: "insert", groups: ["insert"] },
-                          "/",
-                          { name: "styles", groups: ["styles"] },
-                          { name: "colors", groups: ["colors"] },
-                          { name: "tools", groups: ["tools"] },
-                          { name: "others", groups: ["others"] },
-                          { name: "about", groups: ["about"] },
+                          { name: 'links', groups: ['links'] },
+                          { name: 'insert', groups: ['insert'] },
+                          '/',
+                          { name: 'styles', groups: ['styles'] },
+                          { name: 'colors', groups: ['colors'] },
+                          { name: 'tools', groups: ['tools'] },
+                          { name: 'others', groups: ['others'] },
+                          { name: 'about', groups: ['about'] },
                         ],
-                        extraPlugins: "justify,font,colorbutton,forms",
-                        removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                        extraPlugins: 'justify,font,colorbutton,forms',
+                        removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
                       }}
                     />
                   )}
                 </Form.Item>
                 <Form.Item
-                  label="Ngàytrả lời"
-                  name="AnswerDate"
+                  label='Ngàytrả lời'
+                  name='AnswerDate'
                   style={
                     isModalOpen?.type === MODAL_TYPE.DETAIL
                       ? { width: 300 }
@@ -684,19 +702,19 @@ function QuestionListPage(props) {
                   {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
                     <div>
                       {moment(isModalOpen?.content?.AnswerDate).format(
-                        "DD/MM/YYYY"
+                        'DD/MM/YYYY'
                       )}
                     </div>
                   ) : (
                     <DatePicker
-                      placeholder="NNgày trả lời"
-                      style={{ width: "100%" }}
+                      placeholder='NNgày trả lời'
+                      style={{ width: '100%' }}
                     />
                   )}
                 </Form.Item>
                 <Form.Item
-                  name="lb-attachment"
-                  label="Tệp đính kèm"
+                  name='lb-attachment'
+                  label='Tệp đính kèm'
                   style={
                     isModalOpen?.type === MODAL_TYPE.DETAIL
                       ? { width: 300 }
@@ -713,7 +731,7 @@ function QuestionListPage(props) {
                     </a>
                   ) : (
                     <Upload
-                      listType="picture"
+                      listType='picture'
                       maxCount={1}
                       fileList={fileListAttachment}
                       onChange={handleChangeAttachment}
@@ -738,7 +756,7 @@ function QuestionListPage(props) {
           </Form>
         </Modal>
       ) : null}
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <QuestionListPageSearch
           setTextSearch={handleChangeTextSearch}
           onCreate={() => {
@@ -751,8 +769,8 @@ function QuestionListPage(props) {
           dataCategoryQuestion={dataCategoryQuestion}
         />
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <QuestionListTableData
           data={newsData}
           setPagination={handleChangePagination}
@@ -767,7 +785,6 @@ function QuestionListPage(props) {
             callApiGetDetail(Id);
           }}
           onClickRow={(res) => {
-            console.log(res);
             setIsModalOpen({
               id: res?.Id,
               show: true,

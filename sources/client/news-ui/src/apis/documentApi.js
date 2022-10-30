@@ -1,30 +1,28 @@
-import commonFunc from "common/commonFunc";
-import datafakeDocument from "./datafake/datafakeDocument";
-import axiosClient from "./axiosClient";
+import commonFunc from 'common/commonFunc';
+import datafakeDocument from './datafake/datafakeDocument';
+import axiosClient from './axiosClient';
 
 class DocumentApi {
-  updateNewPost = (id, body) => {
-    const url = "/newspost/" + id;
-    return axiosClient.put(url, body);
-  };
-
   getDocumentAll = (body) => {
-    const url = "/Documents/filter";
+    const url = '/Documents/filter';
     return axiosClient.post(url, body);
   };
-
+  getDocumentByID = (id) => {
+    const url = `/Documents/${id}`;
+    return axiosClient.get(url);
+  };
   insertDocument = (body) => {
-    const url = "/Documents";
+    const url = '/Documents';
     return axiosClient.post(url, body);
   };
 
   updateDocument = (id, body) => {
-    const url = "/documents/" + id;
+    const url = '/documents/' + id;
     return axiosClient.put(url, body);
   };
 
   updatStatusDocument = (body) => {
-    const url = "/Documents";
+    const url = '/Documents';
     return axiosClient.put(url, body);
   };
 
@@ -35,19 +33,23 @@ class DocumentApi {
 
   // Loại văn bản
   getDocumentCategoryAll = (body) => {
-    const url = "/DocumentTypes/filter";
+    const url = '/DocumentTypes/filter';
     return axiosClient.post(url, body);
   };
+  getCategoryDocumentByID = (id) => {
+    const url = `/DocumentTypes/${id}`;
+    return axiosClient.get(url);
+  };
   insertCategoryDocument = (body) => {
-    const url = "/DocumentTypes";
+    const url = '/DocumentTypes';
     return axiosClient.post(url, body);
   };
   updateCategoryDocument = (id, body) => {
-    const url = "/DocumentTypes/" + id;
+    const url = '/DocumentTypes/' + id;
     return axiosClient.put(url, body);
   };
   updatStatusCategoryDocument = (body) => {
-    const url = "/DocumentTypes";
+    const url = '/DocumentTypes';
     return axiosClient.put(url, body);
   };
   deleteCategoryDocument = (id) => {
@@ -57,21 +59,26 @@ class DocumentApi {
 
   // Cơ quan ban hành
   getDocumentSourceAll = (body) => {
-    const url = "/DocumentDepartments/filter";
+    const url = '/DocumentDepartments/filter';
     return axiosClient.post(url, body);
   };
+
+  getDocumentSourceByID = (id) => {
+    const url = `/DocumentDepartments/${id}`;
+    return axiosClient.get(url);
+  };
   insertSourceDocument = (body) => {
-    const url = "/DocumentDepartments";
+    const url = '/DocumentDepartments';
     return axiosClient.post(url, body);
   };
 
   updateSourceDocument = (id, body) => {
-    const url = "/DocumentDepartments/" + id;
+    const url = '/DocumentDepartments/' + id;
     return axiosClient.put(url, body);
   };
 
   updatStatusSourceDocument = (body) => {
-    const url = "/DocumentDepartments";
+    const url = '/DocumentDepartments';
     return axiosClient.put(url, body);
   };
   deleteSourceDocument = (id) => {
@@ -81,19 +88,24 @@ class DocumentApi {
 
   // Lĩnh vực
   getDocumentFieldAll = (body) => {
-    const url = "/documentfields/filter";
+    const url = '/documentfields/filter';
     return axiosClient.post(url, body);
   };
+
+  getDocumentFieldByID = (id) => {
+    const url = `/documentfields/${id}`;
+    return axiosClient.get(url);
+  };
   insertFieldDocument = (body) => {
-    const url = "/documentfields";
+    const url = '/documentfields';
     return axiosClient.post(url, body);
   };
   updateFieldDocument = (id, body) => {
-    const url = "/documentfields/" + id;
+    const url = '/documentfields/' + id;
     return axiosClient.put(url, body);
   };
   updatStatusFieldDocument = (body) => {
-    const url = "/documentfields";
+    const url = '/documentfields';
     return axiosClient.put(url, body);
   };
   deleteFieldDocument = (id) => {
@@ -103,19 +115,23 @@ class DocumentApi {
 
   // Người ký
   getDocumentSingerAll = (body) => {
-    const url = "/documentsignpersons/filter";
+    const url = '/documentsignpersons/filter';
     return axiosClient.post(url, body);
   };
+  getDocumentSingerByID = (id) => {
+    const url = `/documentsignpersons/${id}`;
+    return axiosClient.get(url);
+  };
   updateSingerDocument = (id, body) => {
-    const url = "/documentsignpersons/" + id;
+    const url = '/documentsignpersons/' + id;
     return axiosClient.put(url, body);
   };
   insertSingerDocument = (body) => {
-    const url = "/documentsignpersons";
+    const url = '/documentsignpersons';
     return axiosClient.post(url, body);
   };
   updatStatusSingerDocument = (body) => {
-    const url = "/documentsignpersons";
+    const url = '/documentsignpersons';
     return axiosClient.put(url, body);
   };
   deleteSingerDocument = (id) => {

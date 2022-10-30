@@ -90,7 +90,9 @@ function ImageListPage(props) {
       });
       form.setFieldsValue({
         Title: res?.Title,
-        PhotoCategoryId: res?.PhotoCategoryId,
+        PhotoCategoryId:
+          dataFilter?.categoryAll.find((x) => x.Id === res?.PhotoCategoryId)
+            ?.Title ?? '',
         Order: res?.Order,
       });
 
@@ -248,9 +250,10 @@ function ImageListPage(props) {
       placeholder='Chọn cấp cha'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataFilter?.categoryAll.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -268,7 +271,10 @@ function ImageListPage(props) {
       Order,
     };
     if (PhotoCategoryId) {
-      bodyData.PhotoCategoryId = parseInt(PhotoCategoryId);
+      bodyData.PhotoCategoryId = parseInt(
+        dataFilter?.categoryAll.find((x) => x.Title === PhotoCategoryId)?.Id ??
+          undefined
+      );
     }
     let body = { JsonString: bodyData };
 

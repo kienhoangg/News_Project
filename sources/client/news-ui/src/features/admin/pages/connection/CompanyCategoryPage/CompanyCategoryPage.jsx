@@ -102,6 +102,7 @@ function CompanyCategoryPage(props) {
 
   const showModal = () => {
     mode.current = Mode.Create;
+    form?.setFieldsValue({});
     setIsModalOpen(true);
   };
 

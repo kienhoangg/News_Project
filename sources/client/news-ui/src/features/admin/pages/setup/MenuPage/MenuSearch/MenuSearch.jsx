@@ -33,12 +33,14 @@ function MenuSearch(props) {
     if (!changeParent) {
       return;
     }
-    changeParent(categoryNewsId);
+    const id =
+      dataMenu.find((x) => x.Title === categoryNewsId)?.Id ?? undefined;
+    changeParent(id);
   };
 
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.Title} key={x.Id}>
+      <TreeNode value={x.Title} title={x.Title} key={x.Id}>
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));

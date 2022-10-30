@@ -1,15 +1,15 @@
-import documentApi from "apis/documentApi";
-import classNames from "classnames/bind";
-import { useEffect, useState, useRef } from "react";
-import styles from "./DocumentFieldPage.module.scss";
-import DocumentFieldPageSearch from "./DocumentFieldPageSearch/DocumentFieldPageSearch";
-import DocumentFieldTableData from "./DocumentFieldTableData/DocumentFieldTableData";
-import { Divider, Form, Button, Input, Modal, Select } from "antd";
-import { Direction, NotificationType } from "common/enum";
-import { openNotification } from "helpers/notification";
-import { Option } from "antd/lib/mentions";
-import { FileAddFilled } from "@ant-design/icons";
-import { TypeUpdate } from "common/constant";
+import documentApi from 'apis/documentApi';
+import classNames from 'classnames/bind';
+import { useEffect, useState, useRef } from 'react';
+import styles from './DocumentFieldPage.module.scss';
+import DocumentFieldPageSearch from './DocumentFieldPageSearch/DocumentFieldPageSearch';
+import DocumentFieldTableData from './DocumentFieldTableData/DocumentFieldTableData';
+import { Divider, Form, Button, Input, Modal, Select } from 'antd';
+import { Direction, NotificationType } from 'common/enum';
+import { openNotification } from 'helpers/notification';
+import { Option } from 'antd/lib/mentions';
+import { FileAddFilled } from '@ant-design/icons';
+import { TypeUpdate } from 'common/constant';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -26,13 +26,14 @@ function DocumentFieldPage(props) {
     data: [],
     total: 0,
   });
+  const [dataRoot, setDataRoot] = useState([]);
   const isFirstCall = useRef(true);
   const [objFilter, setObjFilter] = useState({
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -69,12 +70,26 @@ function DocumentFieldPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification("Lấy lĩnh vực thất bại", "", NotificationType.ERROR);
+      openNotification('Lấy lĩnh vực thất bại', '', NotificationType.ERROR);
     }
   };
 
-  const showModal = () => {
+  const showModal = async () => {
+    await getParentRoot();
     setIsModalOpen(true);
+  };
+
+  const getParentRoot = async () => {
+    const filterRoot = {
+      currentPage: 1,
+      pageSize: 9_999_999,
+      direction: Direction.DESC,
+      orderBy: 'CreatedDate',
+      keyword: '',
+      parentId: 0,
+    };
+    const response = await documentApi.getDocumentFieldAll(filterRoot);
+    setDataRoot(response?.PagedData?.Results ?? []);
   };
 
   const handleCancel = () => {
@@ -93,7 +108,9 @@ function DocumentFieldPage(props) {
   const onFinish = (values) => {
     let parentID = null;
     if (values.parentId) {
-      parentID = parseInt(values.parentId);
+      parentID = parseInt(
+        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? '0'
+      );
     }
     values = {
       Title: values?.title,
@@ -116,9 +133,9 @@ function DocumentFieldPage(props) {
       await documentApi.updateFieldDocument(document?.content?.Id, values);
       handleCancel();
       fetchCategoryList();
-      openNotification("Sửa loại văn bản thành công");
+      openNotification('Sửa loại văn bản thành công');
     } catch (error) {
-      openNotification("Sửa loại văn bản thất bại", "", NotificationType.ERROR);
+      openNotification('Sửa loại văn bản thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -130,9 +147,9 @@ function DocumentFieldPage(props) {
       await documentApi.insertFieldDocument(values);
       handleCancel();
       fetchCategoryList();
-      openNotification("Tạo mới lĩnh vực thành công");
+      openNotification('Tạo mới lĩnh vực thành công');
     } catch (error) {
-      openNotification("Tạo mới lĩnh vực thất bại", "", NotificationType.ERROR);
+      openNotification('Tạo mới lĩnh vực thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -159,10 +176,10 @@ function DocumentFieldPage(props) {
   const handleDeleteCategoryNew = async (id) => {
     try {
       await documentApi.deleteFieldDocument(id);
-      openNotification("Xóa lĩnh vực thành công");
+      openNotification('Xóa lĩnh vực thành công');
       fetchCategoryList();
     } catch (error) {
-      openNotification("Xóa lĩnh vực thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa lĩnh vực thất bại', '', NotificationType.ERROR);
     }
   };
   const handleUpdateStatusNew = async (values) => {
@@ -173,20 +190,21 @@ function DocumentFieldPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
   const renderOption = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
-      {newsData?.data.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+      {dataRoot.map((x) => (
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -194,28 +212,28 @@ function DocumentFieldPage(props) {
   );
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
       {
         //#region popup thêm mới
       }
       <Modal
-        className={cx("modal-category-news")}
+        className={cx('modal-category-news')}
         title={
           document?.type === MODAL_TYPE.DETAIL
-            ? "Xem chi tiết"
+            ? 'Xem chi tiết'
             : document?.type === MODAL_TYPE.EDIT
-            ? "Chỉnh sửa"
-            : "Thêm mới"
+            ? 'Chỉnh sửa'
+            : 'Thêm mới'
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
           <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
+            name='title'
+            label='Tiêu đề'
+            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
           >
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Title}</div>
@@ -223,7 +241,7 @@ function DocumentFieldPage(props) {
               <Input />
             )}
           </Form.Item>
-          <Form.Item name="parentId" label="Danh mục cấp cha">
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>
                 {
@@ -236,14 +254,14 @@ function DocumentFieldPage(props) {
               renderOption
             )}
           </Form.Item>
-          <Form.Item name="order" label="Số thứ tự">
+          <Form.Item name='order' label='Số thứ tự'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Order}</div>
             ) : (
-              <Input type="number" min={0} defaultValue={0} />
+              <Input type='number' min={0} defaultValue={0} />
             )}
           </Form.Item>
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name='description' label='Mô tả'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Description}</div>
             ) : (
@@ -253,12 +271,12 @@ function DocumentFieldPage(props) {
           {document?.type === MODAL_TYPE.DETAIL ? null : (
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button
-                type="primary"
+                type='primary'
                 htmlType={
-                  document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"
+                  document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'
                 }
               >
-                {document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"}
+                {document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'}
               </Button>
             </Form.Item>
           )}
@@ -268,23 +286,22 @@ function DocumentFieldPage(props) {
         //#endregion
       }
 
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <DocumentFieldPageSearch setTextSearch={handleChangeTextSearch} />
-        <div className={cx("btn-add-field-document")}>
-          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
+        <div className={cx('btn-add-field-document')}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <DocumentFieldTableData
           data={newsData}
           setPagination={handleChangePagination}
           deleteSourceNew={handleDeleteCategoryNew}
           updateStatusNew={handleUpdateStatusNew}
           onEdit={(res) => {
-            console.log(res);
             showModal();
             setDocument({
               content: res,
@@ -292,7 +309,8 @@ function DocumentFieldPage(props) {
             });
             form.setFieldsValue({
               title: res?.Title,
-              parentId: res?.ParentId,
+              parentId: dataRoot?.find((item) => item?.Id === res?.ParentId)
+                ?.Title,
               order: res?.Order,
               description: res?.Description,
             });

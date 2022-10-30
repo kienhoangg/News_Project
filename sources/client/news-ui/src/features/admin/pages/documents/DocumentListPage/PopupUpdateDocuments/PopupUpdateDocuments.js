@@ -12,22 +12,22 @@ import {
   Select,
   TreeSelect,
   Upload,
-} from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import { Option } from "antd/lib/mentions";
-import { TreeNode } from "antd/lib/tree-select";
-import documentApi from "apis/documentApi";
-import { CKEditor } from "ckeditor4-react";
-import classNames from "classnames/bind";
-import commonFunc from "common/commonFunc";
-import { Direction, NotificationType } from "common/enum";
-import convertHelper from "helpers/convertHelper";
-import datetimeHelper from "helpers/datetimeHelper";
-import { openNotification } from "helpers/notification";
-import { TypeUpdate } from "common/constant";
-import axiosClient from "apis/axiosClient";
-import moment from "moment";
-import { envDomainBackend } from "common/enviroments";
+} from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { Option } from 'antd/lib/mentions';
+import { TreeNode } from 'antd/lib/tree-select';
+import documentApi from 'apis/documentApi';
+import { CKEditor } from 'ckeditor4-react';
+import classNames from 'classnames/bind';
+import commonFunc from 'common/commonFunc';
+import { Direction, NotificationType } from 'common/enum';
+import convertHelper from 'helpers/convertHelper';
+import datetimeHelper from 'helpers/datetimeHelper';
+import { openNotification } from 'helpers/notification';
+import { TypeUpdate } from 'common/constant';
+import axiosClient from 'apis/axiosClient';
+import moment from 'moment';
+import { envDomainBackend } from 'common/enviroments';
 import imageHelper from 'helpers/imageHelper';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
@@ -54,7 +54,7 @@ const PopupUpdateDocuments = (props) => {
     try {
       if (!id) return;
 
-      const res = await axiosClient.get('/documents/' + id);
+      const res = await documentApi.getDocumentByID(id);
       setDocumentDetail(res);
       res?.FilePath &&
         setFileListAttachment([
@@ -69,10 +69,10 @@ const PopupUpdateDocuments = (props) => {
       form?.setFieldsValue({
         Code: res?.Code,
         Name: res?.Name,
-        DocumentDepartmentId: res?.DocumentDepartmentId,
-        DocumentFieldId: res?.DocumentFieldId,
-        DocumentSignPersonId: res?.DocumentSignPersonId,
-        DocumentTypeId: res?.DocumentTypeId,
+        DocumentDepartmentId: res?.DocumentDepartment?.Title,
+        DocumentFieldId: res?.DocumentField?.Title,
+        DocumentSignPersonId: res?.DocumentSignPerson?.Title,
+        DocumentTypeId: res?.DocumentType?.Title,
         PublishedDate: moment(res?.PublishedDate),
         Content: res?.Content,
       });
@@ -113,9 +113,14 @@ const PopupUpdateDocuments = (props) => {
   };
 
   const renderFieldNews = (
-    <Select placeholder='Lĩnh vực' style={{ width: '100%' }} allowClear={true}>
+    <Select
+      placeholder='Lĩnh vực'
+      style={{ width: '100%' }}
+      allowClear={true}
+      showSearch
+    >
       {dataFilter?.fieldAll?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -127,9 +132,10 @@ const PopupUpdateDocuments = (props) => {
       placeholder='Cơ quan ban hành'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataFilter?.sourceAll?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -141,9 +147,10 @@ const PopupUpdateDocuments = (props) => {
       placeholder='Loại văn bản'
       style={{ width: '100%' }}
       allowClear={true}
+      showSearch
     >
       {dataFilter?.categoryAll?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -151,9 +158,14 @@ const PopupUpdateDocuments = (props) => {
   );
 
   const renderSingerNews = (
-    <Select placeholder='Người ký' style={{ width: '100%' }} allowClear={true}>
+    <Select
+      placeholder='Người ký'
+      style={{ width: '100%' }}
+      allowClear={true}
+      showSearch
+    >
       {dataFilter?.singerAll?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
         </Option>
       ))}
@@ -225,21 +237,32 @@ const PopupUpdateDocuments = (props) => {
                 };
 
                 if (DocumentDepartmentId) {
-                  bodyData.DocumentDepartmentId =
-                    parseInt(DocumentDepartmentId);
+                  bodyData.DocumentDepartmentId = parseInt(
+                    dataFilter?.sourceAll.find(
+                      (x) => x.Title === DocumentDepartmentId
+                    )?.Id ?? '0'
+                  );
                 }
-
                 if (DocumentFieldId) {
-                  bodyData.DocumentFieldId = parseInt(DocumentFieldId);
+                  bodyData.DocumentFieldId = parseInt(
+                    dataFilter?.fieldAll.find(
+                      (x) => x.Title === DocumentFieldId
+                    )?.Id ?? '0'
+                  );
                 }
-
                 if (DocumentSignPersonId) {
-                  bodyData.DocumentSignPersonId =
-                    parseInt(DocumentSignPersonId);
+                  bodyData.DocumentSignPersonId = parseInt(
+                    dataFilter?.singerAll.find(
+                      (x) => x.Title === DocumentSignPersonId
+                    )?.Id ?? '0'
+                  );
                 }
-
                 if (DocumentTypeId) {
-                  bodyData.DocumentTypeId = parseInt(DocumentTypeId);
+                  bodyData.DocumentTypeId = parseInt(
+                    dataFilter?.categoryAll.find(
+                      (x) => x.Title === DocumentTypeId
+                    )?.Id ?? '0'
+                  );
                 }
                 let body = { JsonString: bodyData };
 
