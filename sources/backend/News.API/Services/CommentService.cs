@@ -45,7 +45,7 @@ namespace News.API.Services
 
         public async Task<ApiSuccessResult<CommentDto>> GetCommentByPaging(CommentRequest commentRequest, params Expression<Func<Comment, object>>[] includeProperties)
         {
-            var query = FindAll();
+            var query = FindAll(includeProperties: x => x.NewsPost);
 
             if (commentRequest.CategoryNewsId.HasValue)
             {
@@ -55,7 +55,7 @@ namespace News.API.Services
             {
                 if (!string.IsNullOrEmpty(commentRequest.Keyword))
                 {
-                    query = query.Where((x => x.Content.Contains(commentRequest.Keyword)));
+                    query = query.Where((x => x.Username.Contains(commentRequest.Keyword)));
                 }
 
                 if (commentRequest.Status.HasValue)
