@@ -317,8 +317,6 @@ function ImageListPage(props) {
     onCreate(body);
   };
 
-  console.log(isModalOpen);
-
   /**
    * Cập nhật hình ảnh
    */

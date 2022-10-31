@@ -156,6 +156,7 @@ function OperatingDocumentsDetailPage(props) {
                           "operating-documents-detail-page__left__body__table__content__icon-pdf"
                         }
                         href={envDomainBackend + "/" + documentDetail?.FilePath}
+                        target="_blank"
                       >
                         <img
                           style={{
@@ -189,7 +190,9 @@ function OperatingDocumentsDetailPage(props) {
                     <img src={IconDot} />
                   </div>
                   <div className="operating-documents-detail-page__left__body__list-document__wrap-list__row__title">
-                    <a href={"/documents/" + item?.Id}>{item?.Name}</a>
+                    <a href={"/documents/" + item?.Id} target="_blank">
+                      {item?.Name}
+                    </a>
                   </div>
                 </div>
               ))}
@@ -238,6 +241,7 @@ function OperatingDocumentsDetailPage(props) {
                 >
                   <a
                     href={`/documents/${item?.Id}`}
+                    target="_blank"
                     className={
                       "operating-documents-detail-page__right__row__list-item-running__item__href"
                     }

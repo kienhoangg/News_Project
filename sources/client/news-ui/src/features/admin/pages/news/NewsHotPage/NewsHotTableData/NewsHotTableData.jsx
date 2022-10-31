@@ -25,17 +25,17 @@ function NewsHotTableData(props) {
 
   const columns = [
     {
-      key: 'Title',
-      dataIndex: 'Title',
-      title: 'Tiêu đề',
+      key: "Title",
+      dataIndex: "Title",
+      title: "Tiêu đề",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.Title - b.Title,
     },
     {
-      key: 'Status',
-      dataIndex: 'Status',
-      title: 'Trạng thái',
-      align: 'center',
+      key: "Status",
+      dataIndex: "Status",
+      title: "Trạng thái",
+      align: "center",
       width: 100,
       sorter: (a, b) => a.Status - b.Status,
       render: (_, { Id, Status }) => {
@@ -61,6 +61,8 @@ function NewsHotTableData(props) {
             color={"volcano"}
             style={{ cursor: "pointer" }}
             onClick={(event) => {
+              event?.stopPropagation();
+
               if (record?.Status) {
                 openNotification(
                   "Hủy duyệt trước khi xóa",
@@ -70,7 +72,6 @@ function NewsHotTableData(props) {
                 return;
               }
 
-              event?.stopPropagation();
               const role = commonFunc.getCookie("role");
               if (role !== Role.ADMIN) {
                 openNotification(
