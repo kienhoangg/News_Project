@@ -287,7 +287,7 @@ function NewsCollaboratorsPage(props) {
             form.setFieldsValue({
               Name: item?.Name,
               Username: item?.Username,
-              BirthDate: null,
+              BirthDate: moment(item?.BirthDate),
               Address: item?.Address,
               Phone: item?.Phone,
               Email: item?.Email,
@@ -302,7 +302,7 @@ function NewsCollaboratorsPage(props) {
             form.setFieldsValue({
               Name: item?.Name,
               Username: item?.Username,
-              BirthDate: null,
+              BirthDate: moment(item?.BirthDate),
               Address: item?.Address,
               Phone: item?.Phone,
               Email: item?.Email,
