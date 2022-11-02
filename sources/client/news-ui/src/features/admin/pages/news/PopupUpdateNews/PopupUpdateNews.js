@@ -106,12 +106,12 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             status: "done",
             url:
               res?.Avatar?.indexOf("https://") === 0 ||
-              res?.Avatar?.indexOf("http://") === 0
+                res?.Avatar?.indexOf("http://") === 0
                 ? res?.Avatar
                 : envDomainBackend +
-                  (res?.Avatar?.indexOf("/") === 0
-                    ? res?.Avatar
-                    : "/" + res?.Avatar),
+                (res?.Avatar?.indexOf("/") === 0
+                  ? res?.Avatar
+                  : "/" + res?.Avatar),
           },
         ]);
 
@@ -124,12 +124,12 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             status: "done",
             url:
               res?.FilePath?.indexOf("https://") === 0 ||
-              res?.FilePath?.indexOf("http://") === 0
+                res?.FilePath?.indexOf("http://") === 0
                 ? res?.FilePath
                 : envDomainBackend +
-                  (res?.FilePath?.indexOf("/") === 0
-                    ? res?.FilePath
-                    : "/" + res?.FilePath),
+                (res?.FilePath?.indexOf("/") === 0
+                  ? res?.FilePath
+                  : "/" + res?.FilePath),
           },
         ]);
 
@@ -148,7 +148,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
         source: res?.SourceNews?.Id,
         content: res?.Content,
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const calllApiGetDataMaster = () => {
@@ -565,7 +565,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                     { name: "others", groups: ["others"] },
                     { name: "about", groups: ["about"] },
                   ],
-                  extraPlugins: "justify,font,colorbutton,forms",
+                  extraPlugins: "justify,font,colorbutton,forms,image2",
                   removeButtons: "Scayt,HiddenField,CopyFormatting,About",
                 }}
               />
