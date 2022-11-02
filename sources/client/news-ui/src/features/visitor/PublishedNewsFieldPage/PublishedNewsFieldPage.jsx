@@ -38,9 +38,6 @@ function PublishedNewsFieldPage(props) {
 
                 const response = await publishedNewsApi.getFieldsDataPage(params);
                 setDataPageFullPage(response);
-                // setDataPage(response?.data);
-                // setDataTotal(response?.total);
-                console.log('PublishedNewsFieldPage', response);
                 dataPage.current = response?.CategoryNews;
                 dataTotal.current = response?.NewsPosts.RowCount;
             } catch (error) {
@@ -63,10 +60,10 @@ function PublishedNewsFieldPage(props) {
                 <>
                     {dataPage.current && (
                         <>
-                            <div key={dataPage.current.categoryId} className={cx('category-container')}>
+                            <div key={dataPage.current?.CategoryId} className={cx('category-container')}>
                                 <div className={cx('title-container')}>
-                                    <Link to={commonRender.renderLinkNewsCategory(dataPage.current.FieldNews.Id)} className={cx('title')}>
-                                        {dataPage.current?.CategoryNewsName} / {dataPage.current?.FieldNews.Title}
+                                    <Link to={commonRender.renderLinkNewsCategory(dataPage.current?.Id)} className={cx('title')}>
+                                        {dataPage.current?.CategoryNewsName} / {dataPage.current?.CategoryNewsName}
                                     </Link>
                                     <span className={cx('right')}></span>
                                 </div>
@@ -75,10 +72,10 @@ function PublishedNewsFieldPage(props) {
                                 {Array.isArray(dataPageFullPage?.NewsPosts?.Results) &&
                                     dataPageFullPage.NewsPosts.Results.map((dataItem, index) => {
                                         return (
-                                            <>
-                                                <PublishedNewsListCategoryPageItem key={index} data={dataItem} isFirst={true} />
+                                            <div key={index}>
+                                                <PublishedNewsListCategoryPageItem data={dataItem} isFirst={true} />
                                                 <div className={cx('divider')}></div>
-                                            </>
+                                            </div>
                                         );
                                     })}
                                 <Pagination
