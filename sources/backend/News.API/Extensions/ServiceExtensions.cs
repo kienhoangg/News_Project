@@ -166,7 +166,12 @@ namespace News.API.Extensions
                   .AddScoped(serviceType: typeof(ICacheService),
                 typeof(CacheService))
                  .AddScoped(serviceType: typeof(IDocumentFieldService),
-                typeof(DocumentFieldService)).AddScoped(serviceType: typeof(IDocumentTypeService),
+                typeof(DocumentFieldService)).AddScoped(serviceType: typeof(IFeedbackService),
+                typeof(FeedbackService)).AddScoped(serviceType: typeof(IRadioService),
+                typeof(RadioService)).AddScoped(serviceType: typeof(IRadioCategoryService),
+                typeof(RadioCategoryService)).AddScoped(serviceType: typeof(IPublicInformationService),
+                typeof(PublicInformationService)).AddScoped(serviceType: typeof(IPublicInformationCategoryService),
+                typeof(PublicInformationCategoryService)).AddScoped(serviceType: typeof(IDocumentTypeService),
                 typeof(DocumentTypeService)).AddScoped<HandleStatusByRoleAttribute>().AddScoped(serviceType: typeof(IDocumentDepartmentService),
                 typeof(DocumentDepartmentService)).AddScoped(serviceType: typeof(IDocumentSignPersonService),
                 typeof(DocumentSignPersonService)).AddScoped(serviceType: typeof(IQuestionService),
