@@ -183,6 +183,25 @@ namespace News.API.Controllers
             if (fields == null) return NotFound();
             return Ok(fields.PagedData.Results);
         }
+        [HttpPost("comments/filter")]
+        public async Task<IActionResult>
+       GetCommentByPaging([FromBody] CommentRequest commentRequest)
+        {
+            var lstInclude =
+              new Expression<Func<Comment, object>>[] {
+                    (x => x.NewsPost)
+              };
+            var result =
+                await _commentService.GetCommentByPaging(commentRequest, lstInclude);
+            return Ok(result);
+        }
+
+        [HttpPost("published/categorynews/{categoryNewsId:int}")]
+        public async Task<IActionResult> GetNewsPostCategoryEachCategoryNews([Required] int categoryNewsId, [FromBody] NewsPostRequest newsPostRequest)
+        {
+            var result = await _newsPostService.GetNewsPostEachCategoryNews(categoryNewsId, newsPostRequest);
+            return Ok(result);
+        }
 
         [HttpPost("published/fieldNews/{fieldNewsId:int}")]
         public async Task<IActionResult> GetNewsPostCategoryEachFields([Required] int fieldNewsId, [FromBody] NewsPostRequest newsPostRequest)

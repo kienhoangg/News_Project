@@ -54,6 +54,14 @@ namespace News.API.Services
             return newsPostCategoryEachFieldsDto;
         }
 
+        public async Task<ApiSuccessResult<NewsPostWithoutContentDto>> GetNewsPostEachCategoryNews(int categoryNewsId, NewsPostRequest newsPostRequest)
+        {
+            newsPostRequest.CategoryNewsId = categoryNewsId;
+            var pagedNewsPost = await GetNewsPostByPagingWithoutContent(newsPostRequest, x => x.CategoryNews);
+
+            return pagedNewsPost;
+        }
+
         public async Task<NewsPost> GetNewsPost(long id, params Expression<Func<NewsPost, object>>[] includeProperties)
         {
             return await GetByIdAsync(id, includeProperties);

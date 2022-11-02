@@ -57,6 +57,10 @@ namespace News.API.Services
                 {
                     query = query.Where((x => x.Username.Contains(commentRequest.Keyword)));
                 }
+                if (commentRequest.NewsPostId.HasValue)
+                {
+                    query = query.Where(x => x.NewsPostId == commentRequest.NewsPostId.Value);
+                }
 
                 if (commentRequest.Status.HasValue)
                 {

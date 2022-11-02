@@ -5,7 +5,6 @@ namespace Models.Requests
 {
     public class QuestionRequest : FilterBase
     {
-        public QuestionStatus? QuestionStatus { get; set; }
         public int? QuestionCategoryId { get; set; }
     }
 }

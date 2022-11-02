@@ -31,6 +31,7 @@ namespace News.API.Interfaces
 
         Task<int> DeleteNewsPost(long id);
         Task UpdateManyNewsPostDto(List<long> lstNewsPostId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<ApiSuccessResult<NewsPostWithoutContentDto>> GetNewsPostEachCategoryNews(int categoryNewsId, NewsPostRequest newsPostRequest);
 
     }
 }

@@ -55,10 +55,7 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(questionRequest.Keyword)));
             }
-            if (questionRequest.QuestionStatus.HasValue)
-            {
-                query = query.Where((x => x.QuestionStatus == questionRequest.QuestionStatus.Value));
-            }
+
             if (questionRequest.Status.HasValue)
             {
                 query = query.Where((x => x.Status == questionRequest.Status.Value));
@@ -87,7 +84,8 @@ namespace News.API.Services
             {
                 NewQuestions = (await GetQuestionByPaging(new QuestionRequest()
                 {
-                    QuestionStatus = QuestionStatus.NEW_QUESTION,
+                    OrderBy = "CreatedDate",
+                    Direction = -1,
                     PageSize = 5,
                     CurrentPage = 1,
                     Status = Status.Enabled
