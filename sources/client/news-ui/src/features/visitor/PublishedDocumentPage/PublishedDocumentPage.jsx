@@ -163,7 +163,9 @@ function PublishedDocumentPage(props) {
                             </div>
 
                             <div className={cx('content')}></div>
-                            <div style={{ fontSize: fontSizeContainer }} dangerouslySetInnerHTML={{ __html: data?.NewsPostDetail.Content }}></div>
+                            <div style={{ display: 'block' }}>
+                                <div style={{ fontSize: fontSizeContainer }} dangerouslySetInnerHTML={{ __html: data?.NewsPostDetail.Content }}></div>
+                            </div>
 
                             {/* TODO: Lượt xem chi tiết bài viết */}
                             {/* <Row className={cx('content-footer')} justify='space-between'>
@@ -175,45 +177,47 @@ function PublishedDocumentPage(props) {
                 </div>
             </Skeleton>
 
-            <div className={cx('comment')}>
-                <div className={cx('comment-title')}>Ý kiến bạn đọc</div>
-                <div className={cx('divider')}></div>
-                <FormVisitorComment onFinish={onFinishComment} resetFields={resetCommentFields} submitLoading={loadingSubmit} />
-            </div>
-
-            <Skeleton loading={loading} active>
-                <div className={cx('document-relative')}>
-                    <div className={cx('document-relative-label')}>Các bài khác</div>
-                    <div className={cx('document-relative-divider')}></div>
-
-                    {data?.NewsRelatives &&
-                        data?.NewsRelatives.map((item) => {
-                            return (
-                                <div key={item.Id} className={cx('document-relative-item')}>
-                                    <div className={cx('document-relative-icon')}></div>
-                                    <Link reloadDocument to={commonRender.renderLinkNewsDetail(item.Id)}>
-                                        {item.Title}
-                                    </Link>
-                                    <span className={cx('document-relative-date')}>{datetimeHelper.formatDateToDateVN(item.PublishedDate)}</span>
-                                </div>
-                            );
-                        })}
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <div className={cx('comment')}>
+                    <div className={cx('comment-title')}>Ý kiến bạn đọc</div>
+                    <div className={cx('divider')}></div>
+                    <FormVisitorComment onFinish={onFinishComment} resetFields={resetCommentFields} submitLoading={loadingSubmit} />
                 </div>
-                <div className={cx('divider')}></div>
-                <Row align='end'>
-                    <Col>
-                        <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>Xem thêm >></Link>
-                    </Col>
-                </Row>
-                <Row align='end' style={{ marginTop: 8 }}>
-                    <Col>
-                        {dateFilter && <DatePicker defaultValue={dateFilter} format={constant.DATE_FORMAT_VN} onChange={handleOnChangeDateFilter} />}
-                        <Button style={{ marginLeft: 8 }}>
-                            <Link to={commonRender.renderLinkNewsField(data?.CategoryParentNews?.Id, dateFilter)}>Xem</Link>
-                        </Button>
-                    </Col>
-                </Row>
-            </Skeleton>
+
+                <Skeleton loading={loading} active>
+                    <div className={cx('document-relative')}>
+                        <div className={cx('document-relative-label')}>Các bài khác</div>
+                        <div className={cx('document-relative-divider')}></div>
+
+                        {data?.NewsRelatives &&
+                            data?.NewsRelatives.map((item) => {
+                                return (
+                                    <div key={item.Id} className={cx('document-relative-item')}>
+                                        <div className={cx('document-relative-icon')}></div>
+                                        <Link reloadDocument to={commonRender.renderLinkNewsDetail(item.Id)}>
+                                            {item.Title}
+                                        </Link>
+                                        <span className={cx('document-relative-date')}>{datetimeHelper.formatDateToDateVN(item.PublishedDate)}</span>
+                                    </div>
+                                );
+                            })}
+                    </div>
+                    <div className={cx('divider')}></div>
+                    <Row align='end'>
+                        <Col>
+                            <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>Xem thêm >></Link>
+                        </Col>
+                    </Row>
+                    <Row align='end' style={{ marginTop: 8 }}>
+                        <Col>
+                            {dateFilter && <DatePicker defaultValue={dateFilter} format={constant.DATE_FORMAT_VN} onChange={handleOnChangeDateFilter} />}
+                            <Button style={{ marginLeft: 8 }}>
+                                <Link to={commonRender.renderLinkNewsField(data?.CategoryParentNews?.Id, dateFilter)}>Xem</Link>
+                            </Button>
+                        </Col>
+                    </Row>
+                </Skeleton>
+            </div>
         </div>
     );
 }

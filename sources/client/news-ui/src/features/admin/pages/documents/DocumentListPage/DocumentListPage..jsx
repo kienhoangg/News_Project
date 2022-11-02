@@ -265,309 +265,247 @@ function DocumentListPage(props) {
   };
 
   return (
-    <div className={cx("wrapper")}>
-      <Modal
-        open={isModalOpen}
-        title="Tạo mới văn bản"
-        okText="Thêm mới"
-        cancelText="Thoát"
-        onCancel={onCancel}
-        width={1300}
-        centered
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              values.content = values.Content?.editor?.getData();
-              const date =
-                values?.PublishedDate?._d ?? "0001-01-01 00:00:00.0000000";
-              const publishedDate =
-                datetimeHelper.formatDatetimeToDateSerer(date);
-              const {
-                Code,
-                Name,
-                DocumentDepartmentId,
-                DocumentFieldId,
-                DocumentSignPersonId,
-                DocumentTypeId,
-                content,
-              } = values;
-              const bodyData = {
-                Code,
-                Name,
-                content,
-                PublishedDate: publishedDate,
-              };
-              if (DocumentDepartmentId) {
-                bodyData.DocumentDepartmentId = parseInt(
-                  dataFilter?.sourceAll.find(
-                    (x) => x.Title === DocumentDepartmentId
-                  )?.Id ?? "0"
-                );
-              }
-              if (DocumentFieldId) {
-                bodyData.DocumentFieldId = parseInt(
-                  dataFilter?.fieldAll.find((x) => x.Title === DocumentFieldId)
-                    ?.Id ?? "0"
-                );
-              }
-              if (DocumentSignPersonId) {
-                bodyData.DocumentSignPersonId = parseInt(
-                  dataFilter?.singerAll.find(
-                    (x) => x.Title === DocumentSignPersonId
-                  )?.Id ?? "0"
-                );
-              }
-              if (DocumentTypeId) {
-                bodyData.DocumentTypeId = parseInt(
-                  dataFilter?.categoryAll.find(
-                    (x) => x.Title === DocumentTypeId
-                  )?.Id ?? "0"
-                );
-              }
-              let body = { JsonString: bodyData };
+      <div className={cx('wrapper')}>
+          <Modal
+              open={isModalOpen}
+              title='Tạo mới văn bản'
+              okText='Thêm mới'
+              cancelText='Thoát'
+              onCancel={onCancel}
+              width={1300}
+              centered
+              onOk={() => {
+                  form.validateFields()
+                      .then((values) => {
+                          values.content = values.Content?.editor?.getData();
+                          const date = values?.PublishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+                          const publishedDate = datetimeHelper.formatDatetimeToDateSerer(date);
+                          const { Code, Name, DocumentDepartmentId, DocumentFieldId, DocumentSignPersonId, DocumentTypeId, content } = values;
+                          const bodyData = {
+                              Code,
+                              Name,
+                              content,
+                              PublishedDate: publishedDate,
+                          };
+                          if (DocumentDepartmentId) {
+                              bodyData.DocumentDepartmentId = parseInt(dataFilter?.sourceAll.find((x) => x.Title === DocumentDepartmentId)?.Id ?? '0');
+                          }
+                          if (DocumentFieldId) {
+                              bodyData.DocumentFieldId = parseInt(dataFilter?.fieldAll.find((x) => x.Title === DocumentFieldId)?.Id ?? '0');
+                          }
+                          if (DocumentSignPersonId) {
+                              bodyData.DocumentSignPersonId = parseInt(dataFilter?.singerAll.find((x) => x.Title === DocumentSignPersonId)?.Id ?? '0');
+                          }
+                          if (DocumentTypeId) {
+                              bodyData.DocumentTypeId = parseInt(dataFilter?.categoryAll.find((x) => x.Title === DocumentTypeId)?.Id ?? '0');
+                          }
+                          let body = { JsonString: bodyData };
 
-              if (fileListAttachment.length > 0) {
-                const file = fileListAttachment[0].originFileObj;
-                if (file.size > LIMIT_UP_LOAD_FILE) {
-                  openNotification(
-                    "File đính kèm đã lớn hơn 2MB",
-                    "",
-                    NotificationType.ERROR
-                  );
-                  return;
-                }
-                body.FileAttachment = file;
-              }
-              form.resetFields();
-              setFileListAttachment([]);
-              onCreate(body);
-            })
-            .catch((info) => {
-              console.log("Validate Failed:", info);
-            });
-        }}
-      >
-        <Form
-          form={form}
-          // size={'small'}
-          // layout='vertical'
-          name="form_in_modal"
-          labelCol={{ span: 2 }}
-          // wrapperCol={{ span: 21 }}
-          initialValues={{
-            modifier: "public",
-          }}
-        >
-          <Form.Item
-            label={
-              <span>
-                <span style={{ color: "red" }}>* </span>Số ký hiệu
-              </span>
-            }
+                          if (fileListAttachment.length > 0) {
+                              const file = fileListAttachment[0].originFileObj;
+                              if (file.size > LIMIT_UP_LOAD_FILE) {
+                                  openNotification('File đính kèm đã lớn hơn 2MB', '', NotificationType.ERROR);
+                                  return;
+                              }
+                              body.FileAttachment = file;
+                          }
+                          form.resetFields();
+                          setFileListAttachment([]);
+                          onCreate(body);
+                      })
+                      .catch((info) => {
+                          console.log('Validate Failed:', info);
+                      });
+              }}
           >
-            <Row gutter={8} justify={"space-between"}>
-              <Col span={7}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  name="Code"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Số ký hiệu không được để trống",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  label="Cơ quan ban hành"
-                  name="DocumentDepartmentId"
-                >
-                  {renderCategoryNews}
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  label="Lĩnh vực"
-                  name="DocumentFieldId"
-                >
-                  {renderFieldNews}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
+              <Form
+                  form={form}
+                  // size={'small'}
+                  // layout='vertical'
+                  name='form_in_modal'
+                  labelCol={{ span: 2 }}
+                  // wrapperCol={{ span: 21 }}
+                  initialValues={{
+                      modifier: 'public',
+                  }}
+              >
+                  <Form.Item
+                      label={
+                          <span>
+                              <span style={{ color: 'red' }}>* </span>Số ký hiệu
+                          </span>
+                      }
+                  >
+                      <Row gutter={8} justify={'space-between'}>
+                          <Col span={7}>
+                              <Form.Item
+                                  style={{ marginBottom: 0 }}
+                                  name='Code'
+                                  rules={[
+                                      {
+                                          required: true,
+                                          message: 'Số ký hiệu không được để trống',
+                                      },
+                                  ]}
+                              >
+                                  <Input />
+                              </Form.Item>
+                          </Col>
+                          <Col span={7}>
+                              <Form.Item style={{ marginBottom: 0 }} label='Cơ quan ban hành' name='DocumentDepartmentId'>
+                                  {renderCategoryNews}
+                              </Form.Item>
+                          </Col>
+                          <Col span={7}>
+                              <Form.Item style={{ marginBottom: 0 }} label='Lĩnh vực' name='DocumentFieldId'>
+                                  {renderFieldNews}
+                              </Form.Item>
+                          </Col>
+                      </Row>
+                  </Form.Item>
 
-          <Form.Item label="Loại văn bản">
-            <Row gutter={8} justify={"space-between"}>
-              <Col span={7}>
-                <Form.Item style={{ marginBottom: 0 }} name="DocumentTypeId">
-                  {renderSourceNews}
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item
-                  name="PublishedDate"
-                  label="Ngày phát hành"
-                  style={{ marginBottom: 0 }}
-                >
-                  <DatePicker style={{ width: "100%" }} />
-                </Form.Item>
-              </Col>
-              <Col span={7}>
-                <Form.Item
-                  style={{ marginBottom: 0 }}
-                  label="Người ký"
-                  name="DocumentSignPersonId"
-                >
-                  {renderSingerNews}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form.Item>
+                  <Form.Item label='Loại văn bản'>
+                      <Row gutter={8} justify={'space-between'}>
+                          <Col span={7}>
+                              <Form.Item style={{ marginBottom: 0 }} name='DocumentTypeId'>
+                                  {renderSourceNews}
+                              </Form.Item>
+                          </Col>
+                          <Col span={7}>
+                              <Form.Item name='PublishedDate' label='Ngày phát hành' style={{ marginBottom: 0 }}>
+                                  <DatePicker style={{ width: '100%' }} />
+                              </Form.Item>
+                          </Col>
+                          <Col span={7}>
+                              <Form.Item style={{ marginBottom: 0 }} label='Người ký' name='DocumentSignPersonId'>
+                                  {renderSingerNews}
+                              </Form.Item>
+                          </Col>
+                      </Row>
+                  </Form.Item>
 
-          <Form.Item name="Name" label="Trích yếu" style={{ marginBottom: 0 }}>
-            <TextArea
-              showCount
-              style={{
-                height: 80,
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="Content" label="Nội dung">
-            <CKEditor
-              initData="<p>Nội dung</p>"
-              // onInstanceReady={() => {
-              //     alert('Editor is ready!');
-              // }}
-              onChange={onEditorChange}
-              config={{
-                language: "vi",
-                toolbarGroups: [
-                  {
-                    name: "document",
-                    groups: ["mode", "document", "doctools"],
-                  },
-                  { name: "clipboard", groups: ["clipboard", "undo"] },
-                  {
-                    name: "editing",
-                    groups: ["find", "selection", "spellchecker", "editing"],
-                  },
-                  { name: "forms", groups: ["forms"] },
-                  "/",
-                  "/",
-                  { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
-                  {
-                    name: "paragraph",
-                    groups: [
-                      "list",
-                      "indent",
-                      "blocks",
-                      "align",
-                      "bidi",
-                      "paragraph",
-                    ],
-                  },
-                  { name: "links", groups: ["links"] },
-                  { name: "insert", groups: ["insert"] },
-                  "/",
-                  { name: "styles", groups: ["styles"] },
-                  { name: "colors", groups: ["colors"] },
-                  { name: "tools", groups: ["tools"] },
-                  { name: "others", groups: ["others"] },
-                  { name: "about", groups: ["about"] },
-                ],
-                extraPlugins: "justify,font,colorbutton,forms",
-                removeButtons: "Scayt,HiddenField,CopyFormatting,About",
-                allowedContent: true,
-              }}
-            />
-          </Form.Item>
-          <Form.Item name="lb-attachment" label="Tệp đính kèm">
-            <Row gutter={8}>
-              <Col span={7}>
-                <Upload
-                  listType="picture"
-                  maxCount={1}
-                  fileList={fileListAttachment}
-                  onChange={handleChangeAttachment}
-                  customRequest={commonFunc.dummyRequest}
-                >
-                  {fileListAttachment.length < 1 ? (
-                    <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-                  ) : null}
-                </Upload>
-              </Col>
-            </Row>
-          </Form.Item>
-        </Form>
-      </Modal>
+                  <Form.Item name='Name' label='Trích yếu' style={{ marginBottom: 0 }}>
+                      <TextArea
+                          showCount
+                          style={{
+                              height: 80,
+                          }}
+                      />
+                  </Form.Item>
+                  <Form.Item name='Content' label='Nội dung'>
+                      <CKEditor
+                          initData='<p>Nội dung</p>'
+                          // onInstanceReady={() => {
+                          //     alert('Editor is ready!');
+                          // }}
+                          onChange={onEditorChange}
+                          config={{
+                              language: 'vi',
+                              toolbarGroups: [
+                                  {
+                                      name: 'document',
+                                      groups: ['mode', 'document', 'doctools'],
+                                  },
+                                  { name: 'clipboard', groups: ['clipboard', 'undo'] },
+                                  {
+                                      name: 'editing',
+                                      groups: ['find', 'selection', 'spellchecker', 'editing'],
+                                  },
+                                  { name: 'forms', groups: ['forms'] },
+                                  '/',
+                                  '/',
+                                  { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                                  {
+                                      name: 'paragraph',
+                                      groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'],
+                                  },
+                                  { name: 'links', groups: ['links'] },
+                                  { name: 'insert', groups: ['insert'] },
+                                  '/',
+                                  { name: 'styles', groups: ['styles'] },
+                                  { name: 'colors', groups: ['colors'] },
+                                  { name: 'tools', groups: ['tools'] },
+                                  { name: 'others', groups: ['others'] },
+                                  { name: 'about', groups: ['about'] },
+                              ],
+                              extraPlugins: 'justify,font,colorbutton,forms,image2',
+                              removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+                              allowedContent: true,
+                          }}
+                      />
+                  </Form.Item>
+                  <Form.Item name='lb-attachment' label='Tệp đính kèm'>
+                      <Row gutter={8}>
+                          <Col span={7}>
+                              <Upload listType='picture' maxCount={1} fileList={fileListAttachment} onChange={handleChangeAttachment} customRequest={commonFunc.dummyRequest}>
+                                  {fileListAttachment.length < 1 ? <Button icon={<UploadOutlined />}>Tải lên Tệp</Button> : null}
+                              </Upload>
+                          </Col>
+                      </Row>
+                  </Form.Item>
+              </Form>
+          </Modal>
 
-      <div className={cx("top")}>
-        <DocumentListPageSearch setTextSearch={handleChangeTextSearch} />
-        <div>
-          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
-            Tạo mới
-          </Button>
-        </div>
+          <div className={cx('top')}>
+              <DocumentListPageSearch setTextSearch={handleChangeTextSearch} />
+              <div>
+                  <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
+                      Tạo mới
+                  </Button>
+              </div>
+          </div>
+          <Divider style={{ margin: '0' }} />
+          <div className={cx('table-data')}>
+              <DocumentListTableData
+                  data={newsData}
+                  setPagination={handleChangePagination}
+                  deleteSourceNew={handleDeleteSourceNew}
+                  updateStatusNew={handleUpdateStatusNew}
+                  onClickEdit={(id) => {
+                      setPopupUpdate({
+                          id: id,
+                          show: true,
+                      });
+                  }}
+                  onClickRow={(item) => {
+                      setDocumentSelected({
+                          id: item?.Id,
+                          show: true,
+                      });
+                  }}
+              />
+          </div>
+          {(popupUpdate?.id || popupUpdate?.id === 0) && popupUpdate?.show ? (
+              <PopupUpdateDocuments
+                  onSuccess={() => {
+                      setPopupUpdate({
+                          id: null,
+                          show: false,
+                      });
+                      fetchList();
+                  }}
+                  Id={popupUpdate?.id}
+                  onCancel={() => {
+                      setPopupUpdate({
+                          id: null,
+                          show: false,
+                      });
+                  }}
+              />
+          ) : null}
+
+          {(documentSelected?.id || documentSelected?.id === 0) && documentSelected?.show ? (
+              <PopupDocumentDetail
+                  Id={documentSelected?.id}
+                  onCancel={() =>
+                      setDocumentSelected({
+                          id: null,
+                          show: false,
+                      })
+                  }
+              />
+          ) : null}
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
-        <DocumentListTableData
-          data={newsData}
-          setPagination={handleChangePagination}
-          deleteSourceNew={handleDeleteSourceNew}
-          updateStatusNew={handleUpdateStatusNew}
-          onClickEdit={(id) => {
-            setPopupUpdate({
-              id: id,
-              show: true,
-            });
-          }}
-          onClickRow={(item) => {
-            setDocumentSelected({
-              id: item?.Id,
-              show: true,
-            });
-          }}
-        />
-      </div>
-      {(popupUpdate?.id || popupUpdate?.id === 0) && popupUpdate?.show ? (
-        <PopupUpdateDocuments
-          onSuccess={() => {
-            setPopupUpdate({
-              id: null,
-              show: false,
-            });
-            fetchList();
-          }}
-          Id={popupUpdate?.id}
-          onCancel={() => {
-            setPopupUpdate({
-              id: null,
-              show: false,
-            });
-          }}
-        />
-      ) : null}
-
-      {(documentSelected?.id || documentSelected?.id === 0) &&
-      documentSelected?.show ? (
-        <PopupDocumentDetail
-          Id={documentSelected?.id}
-          onCancel={() =>
-            setDocumentSelected({
-              id: null,
-              show: false,
-            })
-          }
-        />
-      ) : null}
-    </div>
   );
 }
 
