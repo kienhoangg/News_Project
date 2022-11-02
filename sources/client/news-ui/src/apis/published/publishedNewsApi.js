@@ -1,67 +1,76 @@
 // import axiosClient from './axiosClient';
 
-import axiosClient from "apis/axiosClient";
-import datafakePublisedNews from "apis/datafake/datafakePublisedNews";
-import datafakePublishedCategoryList from "apis/datafake/datafakePublishedCategoryList";
-import datafakePublishedDocument from "apis/datafake/datafakePublishedDocument";
-import moment from "moment";
+import axiosClient from 'apis/axiosClient';
+import datafakePublisedNews from 'apis/datafake/datafakePublisedNews';
+import datafakePublishedCategoryList from 'apis/datafake/datafakePublishedCategoryList';
+import datafakePublishedDocument from 'apis/datafake/datafakePublishedDocument';
+import moment from 'moment';
 
 class PublishedNewsApi {
-    getData = (params) => {
-        // const url = '/home';
-        const { id } = params;
-        let url = `/home/published/${id}`;
-        return axiosClient.get(url, {});
+  getData = (params) => {
+    // const url = '/home';
+    const { id } = params;
+    let url = `/home/published/${id}`;
+    return axiosClient.get(url, {});
 
-        // var response = datafakePublisedNews.objectExample;
-        // return response;
+    // var response = datafakePublisedNews.objectExample;
+    // return response;
+  };
+
+  getComments() {
+    var response = datafakePublishedCategoryList;
+    return response;
+  }
+
+  getFieldsDataListPage() {
+    let url = `/home/published/fields`;
+    return axiosClient.get(url, {});
+
+    // var response = datafakePublishedCategoryList;
+    // return response;
+  }
+
+  getFieldsDataPage(params) {
+    const { id, currentPage, todayDate } = params;
+    const url = `/home/published/fieldNews/${id}`;
+    const body = {
+      CurrentPage: currentPage,
+      PageSize: 6,
     };
 
-    getComments() {
-        var response = datafakePublishedCategoryList;
-        return response;
+    if (todayDate) {
+      const formatDateApi = 'YYYY-MM-DD';
+      body.TodayDate = moment(todayDate, 'DD/MM/YYYY').format(formatDateApi);
     }
 
-    getFieldsDataListPage() {
-        let url = `/home/published/fields`;
-        return axiosClient.get(url, {});
+    return axiosClient.post(url, body);
 
-        // var response = datafakePublishedCategoryList;
-        // return response;
-    }
+    // var response = {
+    //     data: {
+    //         field: datafakePublishedDocument.field,
+    //         category: datafakePublishedDocument.category
+    //     },
+    //     total: 20
+    // }
+    // return response;
+  }
 
-    getFieldsDataPage(params) {
-        const { id, currentPage, todayDate } = params;
-        const url = `/home/published/fieldNews/${id}`;
-        const body = {
-            "CurrentPage": currentPage,
-            "PageSize": 6,
-        }
+  getInternationalTreatiesPage(params) {
+    const { id, currentPage } = params;
+    const url = `/home/published/fieldNews/${id}`;
+    const body = {
+      CurrentPage: currentPage,
+      PageSize: 6,
+    };
+    return axiosClient.post(url, body);
+  }
 
-        if (todayDate) {
-            const formatDateApi = "YYYY-MM-DD";
-            body.TodayDate = moment(todayDate, "DD/MM/YYYY").format(formatDateApi);
-        }
+  postVisitorComment(params) {
+    const url = `/home/comment`;
+    const body = params;
 
-        return axiosClient.post(url, body);
-
-        // var response = {
-        //     data: {
-        //         field: datafakePublishedDocument.field,
-        //         category: datafakePublishedDocument.category
-        //     },
-        //     total: 20
-        // }
-        // return response;
-    }
-
-    postVisitorComment(params) {
-        const url = `/home/comment`;
-        const body = params
-
-        return axiosClient.post(url, body);
-
-    }
+    return axiosClient.post(url, body);
+  }
 }
 const publishedNewsApi = new PublishedNewsApi();
 export default publishedNewsApi;

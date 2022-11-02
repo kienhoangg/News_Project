@@ -9,6 +9,7 @@ const routes = {
 
   publishedNewsPostListCategory: '/news-posts/fields',
   publishedNewsPostCategory: '/news-posts/fields/:id',
+  publishedInternationalTreaties: '/news-posts/international-treaties',
 
   publishedDocumentDetail: '/documents/:id',
   publishedDocumentList: '/documents',

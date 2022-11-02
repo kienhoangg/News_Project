@@ -1,5 +1,5 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Button,
   Checkbox,
@@ -13,24 +13,24 @@ import {
   Select,
   TreeSelect,
   Upload,
-} from "antd";
-import styles from "./CollectionNewsEditor.module.scss";
-import classNames from "classnames/bind";
-import { TreeNode } from "antd/lib/tree-select";
+} from 'antd';
+import styles from './CollectionNewsEditor.module.scss';
+import classNames from 'classnames/bind';
+import { TreeNode } from 'antd/lib/tree-select';
 import {
   FileImageFilled,
   PlusOutlined,
   UploadOutlined,
-} from "@ant-design/icons";
-import TextArea from "antd/lib/input/TextArea";
-import { Option } from "antd/lib/mentions";
-import { CKEditor } from "ckeditor4-react";
-import { useState } from "react";
-import { openNotification } from "helpers/notification";
-import { NotificationType } from "common/enum";
-import datetimeHelper from "helpers/datetimeHelper";
-import { useEffect } from "react";
-import commonFunc from "common/commonFunc";
+} from '@ant-design/icons';
+import TextArea from 'antd/lib/input/TextArea';
+import { Option } from 'antd/lib/mentions';
+import { CKEditor } from 'ckeditor4-react';
+import { useState } from 'react';
+import { openNotification } from 'helpers/notification';
+import { NotificationType } from 'common/enum';
+import datetimeHelper from 'helpers/datetimeHelper';
+import { useEffect } from 'react';
+import commonFunc from 'common/commonFunc';
 
 const cx = classNames.bind(styles);
 
@@ -55,8 +55,8 @@ function CollectionNewsEditor({
   }
 
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
   const [fileListAttachment, setFileListAttachment] = useState([]);
 
@@ -70,7 +70,7 @@ function CollectionNewsEditor({
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
     setPreviewTitle(
-      file.name || file.url?.substring(file.url?.lastIndexOf("/") + 1)
+      file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1)
     );
   };
 
@@ -87,7 +87,12 @@ function CollectionNewsEditor({
   );
 
   const renderFieldNews = (
-    <Select placeholder="Lĩnh vực" style={{ width: "100%" }} showSearch>
+    <Select
+      placeholder='Lĩnh vực'
+      style={{ width: '100%' }}
+      showSearch
+      allowClear
+    >
       {dataFilter?.fieldNews?.map((x) => (
         <Option value={x.Title} key={x.Id}>
           {x.Title}
@@ -97,10 +102,30 @@ function CollectionNewsEditor({
   );
 
   const renderSourceNews = (
-    <Select placeholder="Nguồn tin" style={{ width: "100%" }} showSearch>
+    <Select
+      placeholder='Nguồn tin'
+      style={{ width: '100%' }}
+      showSearch
+      allowClear
+    >
       {dataFilter?.sourceNews?.map((x) => (
-        <Option value={x.Id} key={x.Id}>
+        <Option value={x.Title} key={x.Id}>
           {x.Title}
+        </Option>
+      ))}
+    </Select>
+  );
+
+  const renderCollaborators = (
+    <Select
+      placeholder='Cộng tác viên'
+      style={{ width: '100%' }}
+      showSearch
+      allowClear
+    >
+      {dataFilter?.collaborators?.map((x) => (
+        <Option value={x.Name} key={x.Id}>
+          {x.Name}
         </Option>
       ))}
     </Select>
@@ -108,7 +133,11 @@ function CollectionNewsEditor({
 
   const generateTree = (arrNode) => {
     return arrNode.map((x) => (
-      <TreeNode value={x.Id} title={x.CategoryNewsName} key={x.Id}>
+      <TreeNode
+        value={x.CategoryNewsName}
+        title={x.CategoryNewsName}
+        key={x.Id}
+      >
         {x.children.length > 0 && generateTree(x.children)}
       </TreeNode>
     ));
@@ -118,14 +147,14 @@ function CollectionNewsEditor({
     <TreeSelect
       showSearch
       style={{
-        width: "100%",
+        width: '100%',
       }}
       // value={valueNewsType}
       dropdownStyle={{
         maxHeight: 400,
-        overflow: "auto",
+        overflow: 'auto',
       }}
-      placeholder="Chọn loại tin tức"
+      placeholder='Chọn loại tin tức'
       allowClear
       treeDefaultExpandAll
       // onChange={onChangeNewsType}
@@ -137,9 +166,9 @@ function CollectionNewsEditor({
   return (
     <Modal
       open={open}
-      title="Tạo mới tin tức"
-      okText="Tạo mới"
-      cancelText="Thoát"
+      title='Tạo mới tin tức'
+      okText='Tạo mới'
+      cancelText='Thoát'
       onCancel={onCancel}
       width={1300}
       centered
@@ -149,10 +178,11 @@ function CollectionNewsEditor({
           .then((values) => {
             values.content = values.content?.editor?.getData();
             const date =
-              values?.publishedDate?._d ?? "0001-01-01 00:00:00.0000000";
+              values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
             const publishedDate =
               datetimeHelper.formatDatetimeToDateSerer(date);
             const {
+              collaboratorId,
               category,
               title,
               IsDocumentNews,
@@ -187,21 +217,28 @@ function CollectionNewsEditor({
             }
             if (source) {
               bodyData.SourceNewsId =
-                dataFilter?.sourceNews.find((x) => x?.Id === source)?.Id ??
+                dataFilter?.sourceNews.find((x) => x?.Title === source)?.Id ??
                 undefined;
             }
             if (category) {
               bodyData.CategoryNewsId =
-                dataFilter?.categoryNews.find((x) => x?.Id === category)?.Id ??
-                undefined;
+                dataFilter?.categoryNews.find(
+                  (x) => x?.CategoryNewsName === category
+                )?.Id ?? undefined;
+            }
+            if (collaboratorId) {
+              bodyData.CollaboratorId =
+                dataFilter?.collaborators.find(
+                  (x) => x?.Name === collaboratorId
+                )?.Id ?? undefined;
             }
             let body = { JsonString: bodyData };
             if (fileList.length > 0) {
               const file = fileList[0].originFileObj;
               if (file.size > LIMIT_UP_LOAD_FILE) {
                 openNotification(
-                  "File ảnh đã lớn hơn 2MB",
-                  "",
+                  'File ảnh đã lớn hơn 2MB',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -212,8 +249,8 @@ function CollectionNewsEditor({
               const file = fileListAttachment[0].originFileObj;
               if (file.size > LIMIT_UP_LOAD_FILE) {
                 openNotification(
-                  "File đính kèm đã lớn hơn 2MB",
-                  "",
+                  'File đính kèm đã lớn hơn 2MB',
+                  '',
                   NotificationType.ERROR
                 );
                 return;
@@ -226,7 +263,7 @@ function CollectionNewsEditor({
             onCreate(body);
           })
           .catch((info) => {
-            console.log("Validate Failed:", info);
+            console.log('Validate Failed:', info);
           });
       }}
     >
@@ -234,11 +271,11 @@ function CollectionNewsEditor({
         form={form}
         // size={'small'}
         // layout='vertical'
-        name="form_in_modal"
+        name='form_in_modal'
         labelCol={{ span: 2 }}
         // wrapperCol={{ span: 21 }}
         initialValues={{
-          modifier: "public",
+          modifier: 'public',
           IsDocumentNews: false,
           IsNewsHot: false,
           IsNewsVideo: false,
@@ -247,22 +284,22 @@ function CollectionNewsEditor({
           IsComment: false,
         }}
       >
-        <Form.Item label="Danh mục">
+        <Form.Item label='Danh mục'>
           <Row gutter={8}>
             <Col span={5}>
-              <Form.Item style={{ marginBottom: 0 }} name="category">
+              <Form.Item style={{ marginBottom: 0 }} name='category'>
                 {renderCategoryNews}
               </Form.Item>
             </Col>
             <Col span={13}>
               <Form.Item
                 style={{ marginBottom: 0 }}
-                name="title"
-                label="Tiêu đề"
+                name='title'
+                label='Tiêu đề'
                 rules={[
                   {
                     required: true,
-                    message: "Nhập tiêu đề",
+                    message: 'Nhập tiêu đề',
                   },
                 ]}
               >
@@ -280,13 +317,13 @@ function CollectionNewsEditor({
             </Col> */}
           </Row>
         </Form.Item>
-        <Form.Item label="Tin hành chính">
+        <Form.Item label='Tin hành chính'>
           <Row gutter={8}>
             <Col span={4}>
               <Form.Item
                 style={{ marginBottom: 0 }}
-                name="IsDocumentNews"
-                valuePropName="checked"
+                name='IsDocumentNews'
+                valuePropName='checked'
               >
                 <Checkbox></Checkbox>
               </Form.Item>
@@ -344,16 +381,16 @@ function CollectionNewsEditor({
           </Row>
         </Form.Item>
 
-        <Form.Item name="lb-avatar" label="Ảnh đại diện">
+        <Form.Item name='lb-avatar' label='Ảnh đại diện'>
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                listType="picture"
+                listType='picture'
                 maxCount={1}
                 fileList={fileList}
                 // onPreview={handlePreview}
                 onChange={handleChange}
-                accept=".jpg,.png,.jpeg"
+                accept='.jpg,.png,.jpeg'
                 customRequest={commonFunc.dummyRequest}
               >
                 {fileList.length < 1 ? uploadButton : null}
@@ -374,12 +411,12 @@ function CollectionNewsEditor({
             <Col span={16}>
               <Form.Item
                 style={{ marginBottom: 0 }}
-                name="avatarTitle"
-                label="Tiêu đề ảnh"
+                name='avatarTitle'
+                label='Tiêu đề ảnh'
                 rules={[
                   {
                     required: true,
-                    message: "Nhập tiêu đề ảnh",
+                    message: 'Nhập tiêu đề ảnh',
                   },
                 ]}
               >
@@ -389,7 +426,7 @@ function CollectionNewsEditor({
           </Row>
         </Form.Item>
 
-        <Form.Item name="description" label="Mô tả" style={{ marginBottom: 0 }}>
+        <Form.Item name='description' label='Mô tả' style={{ marginBottom: 0 }}>
           <TextArea
             showCount
             maxLength={256}
@@ -398,73 +435,78 @@ function CollectionNewsEditor({
             }}
           />
         </Form.Item>
-        <Form.Item name="content" label="Nội dung">
+        <Form.Item name='content' label='Nội dung'>
           <CKEditor
-            initData="<p>Nội dung</p>"
+            initData='<p>Nội dung</p>'
             // onInstanceReady={() => {
             //     alert('Editor is ready!');
             // }}
             onChange={onEditorChange}
             config={{
-              language: "vi",
+              language: 'vi',
               toolbarGroups: [
-                { name: "document", groups: ["mode", "document", "doctools"] },
-                { name: "clipboard", groups: ["clipboard", "undo"] },
+                { name: 'document', groups: ['mode', 'document', 'doctools'] },
+                { name: 'clipboard', groups: ['clipboard', 'undo'] },
                 {
-                  name: "editing",
-                  groups: ["find", "selection", "spellchecker", "editing"],
+                  name: 'editing',
+                  groups: ['find', 'selection', 'spellchecker', 'editing'],
                 },
-                { name: "forms", groups: ["forms"] },
-                "/",
-                "/",
-                { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
+                { name: 'forms', groups: ['forms'] },
+                '/',
+                '/',
+                { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
                 {
-                  name: "paragraph",
+                  name: 'paragraph',
                   groups: [
-                    "list",
-                    "indent",
-                    "blocks",
-                    "align",
-                    "bidi",
-                    "paragraph",
+                    'list',
+                    'indent',
+                    'blocks',
+                    'align',
+                    'bidi',
+                    'paragraph',
                   ],
                 },
-                { name: "links", groups: ["links"] },
-                { name: "insert", groups: ["insert"] },
-                "/",
-                { name: "styles", groups: ["styles"] },
-                { name: "colors", groups: ["colors"] },
-                { name: "tools", groups: ["tools"] },
-                { name: "others", groups: ["others"] },
-                { name: "about", groups: ["about"] },
+                { name: 'links', groups: ['links'] },
+                { name: 'insert', groups: ['insert'] },
+                '/',
+                { name: 'styles', groups: ['styles'] },
+                { name: 'colors', groups: ['colors'] },
+                { name: 'tools', groups: ['tools'] },
+                { name: 'others', groups: ['others'] },
+                { name: 'about', groups: ['about'] },
               ],
-              extraPlugins: "justify,font,colorbutton,forms",
-              removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+              extraPlugins: 'justify,font,colorbutton,forms',
+              removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
               allowedContent: true,
             }}
           />
         </Form.Item>
         <Form.Item
-          name="lb-avatar"
-          label="Lĩnh vực"
+          name='lb-avatar'
+          label='Lĩnh vực'
           style={{ marginBottom: 0 }}
         >
           <Row gutter={16}>
             <Col span={6}>
-              <Form.Item name="field">{renderFieldNews}</Form.Item>
+              <Form.Item name='field'>{renderFieldNews}</Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="source" label="Nguồn tin">
+              <Form.Item name='source' label='Nguồn tin'>
                 {renderSourceNews}
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name='collaboratorId' label='Cộng tác viên'>
+                {renderCollaborators}
               </Form.Item>
             </Col>
           </Row>
         </Form.Item>
-        <Form.Item name="lb-attachment" label="Tệp đính kèm">
+        <Form.Item name='lb-attachment' label='Tệp đính kèm'>
           <Row gutter={8}>
             <Col span={8}>
               <Upload
-                listType="picture"
+                listType='picture'
                 maxCount={1}
                 fileList={fileListAttachment}
                 onChange={handleChangeAttachment}

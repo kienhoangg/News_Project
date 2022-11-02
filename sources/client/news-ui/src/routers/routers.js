@@ -43,6 +43,7 @@ import CompanyListPage from './../features/admin/pages/connection/CompanyListPag
 import CompanyCategoryPage from './../features/admin/pages/connection/CompanyCategoryPage/CompanyCategoryPage';
 import ConnectionListPage from 'features/admin/pages/connection/ConnectionListPage/ConnectionListPage';
 import ConnectionCategoryPage from '../features/admin/pages/connection/ConnectionCategoryPage/ConnectionCategoryPage';
+import PublishedInternationalTreaties from './../features/visitor/PublishedInternationalTreaties/PublishedInternationalTreaties';
 
 // Public routes
 const publicRoutes = [
@@ -62,6 +63,10 @@ const publicRoutes = [
   {
     path: config.routes.publishedNewsPostCategory,
     component: PublishedNewsFieldPage,
+  },
+  {
+    path: config.routes.publishedInternationalTreaties,
+    component: PublishedInternationalTreaties,
   },
 
   { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
