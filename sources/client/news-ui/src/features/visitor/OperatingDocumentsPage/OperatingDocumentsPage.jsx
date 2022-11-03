@@ -569,21 +569,6 @@ function OperatingDocumentsPage(props) {
       <div className={cx("operating-documents-page__right")}>
         <div className={cx("operating-documents-page__right__row")}>
           <a href="/">
-            <span>{"Văn bản sao y bản chính"}</span>
-          </a>
-        </div>
-        <div className={cx("operating-documents-page__right__row")}>
-          <a href="/">
-            <span>{"Văn bản pháp luật"}</span>
-          </a>
-        </div>
-        <div className={cx("operating-documents-page__right__row")}>
-          <a href="/">
-            <span>{"Văn bản quản lý hành chính"}</span>
-          </a>
-        </div>
-        <div className={cx("operating-documents-page__right__row")}>
-          <a href="/">
             <span>{"Văn bản chỉ đạo điều hành"}</span>
           </a>
           <div

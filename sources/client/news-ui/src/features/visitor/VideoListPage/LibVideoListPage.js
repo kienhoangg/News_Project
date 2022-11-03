@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import './libVideoListPage.scss';
-import { Pagination, Select } from 'antd';
-import axiosClient from 'apis/axiosClient';
-import $ from 'jquery';
-import imageHelper from 'helpers/imageHelper';
+import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import "./libVideoListPage.scss";
+import { Pagination, Select } from "antd";
+import axiosClient from "apis/axiosClient";
+import $ from "jquery";
+import imageHelper from "helpers/imageHelper";
 
 LibVideoListPage.propTypes = {};
 
@@ -27,7 +27,7 @@ function LibVideoListPage(props) {
   const [videoDetail, setVideoDetail] = useState({}); // Chi tiết video
   const [loading, setLoading] = useState(true);
 
-  const contentVideo = useRef('');
+  const contentVideo = useRef("");
 
   useEffect(() => {
     callApiGetListLibVideo();
@@ -47,10 +47,10 @@ function LibVideoListPage(props) {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await axiosClient.get('/home/videos/' + id);
+      const res = await axiosClient.get("/home/videos/" + id);
       setVideoDetail(res);
 
-      let contentVideoRes = '';
+      let contentVideoRes = "";
 
       if (res?.FileAttachment) {
         contentVideoRes = `<video width="100%" height="100%" controls autoplay>
@@ -85,13 +85,13 @@ function LibVideoListPage(props) {
         pageSize: 99999,
         currentPage: 1,
         direction: -1,
-        orderBy: 'LastModifiedDate',
+        orderBy: "LastModifiedDate",
         direction2ndColumn: -1,
-        orderBy2ndColumn: 'Order',
-        Status: 1,
+        orderBy2ndColumn: "Order",
+        status: 1,
       };
 
-      const res = await axiosClient.post('/home/videocategories/filter', body);
+      const res = await axiosClient.post("/home/videocategories/filter", body);
 
       setListLibVideo(
         res?.PagedData?.Results?.map((item) => ({
@@ -114,12 +114,12 @@ function LibVideoListPage(props) {
         pageSize: 8,
         currentPage: dataPaging,
         direction: -1,
-        orderBy: 'CreatedDate',
+        orderBy: "CreatedDate",
         videoCategoryId: id,
-        Status: 1,
+        status: 1,
       };
 
-      const res = await axiosClient.post('/home/videos/filter', body);
+      const res = await axiosClient.post("/home/videos/filter", body);
       setListVideo({
         data: res?.PagedData?.Results,
         totalInDB: res?.PagedData?.RowCount,
@@ -127,7 +127,7 @@ function LibVideoListPage(props) {
 
       if (isFirstRender.current) {
         const videoID =
-          new URLSearchParams(window.location.search).get('videoid') ||
+          new URLSearchParams(window.location.search).get("videoid") ||
           res?.PagedData?.Results?.[0]?.Id;
 
         callApiGetVideoDetail(videoID);
@@ -147,11 +147,11 @@ function LibVideoListPage(props) {
 
     const resetScripVideo = () => {
       if (
-        $('.lib-video-list-page__bottom__wrap-video-main').length > 0 &&
+        $(".lib-video-list-page__bottom__wrap-video-main").length > 0 &&
         scriptVideo
       ) {
-        $('.lib-video-list-page__bottom__wrap-video-main').empty();
-        $('.lib-video-list-page__bottom__wrap-video-main')?.append(scriptVideo);
+        $(".lib-video-list-page__bottom__wrap-video-main").empty();
+        $(".lib-video-list-page__bottom__wrap-video-main")?.append(scriptVideo);
       }
       // console.log("Video render DOM", $(".lib-video-list-page__bottom__wrap-video-main"), scriptVideo)
     };
@@ -163,15 +163,15 @@ function LibVideoListPage(props) {
   };
 
   return (
-    <div className='lib-video-list-page'>
-      <div className='lib-video-list-page__top'>
-        <div className='lib-video-list-page__top__title'>
+    <div className="lib-video-list-page">
+      <div className="lib-video-list-page__top">
+        <div className="lib-video-list-page__top__title">
           <span>Thư viện video</span>
         </div>
       </div>
-      <div className='lib-video-list-page__bottom'>
+      <div className="lib-video-list-page__bottom">
         <div
-          className='lib-video-list-page__bottom__wrap-video-main'
+          className="lib-video-list-page__bottom__wrap-video-main"
           ref={elVideoMainRef}
         >
           {/* {videoIdBefore.current === videoDetail?.Id ? (
@@ -197,35 +197,35 @@ function LibVideoListPage(props) {
             })()
           )} */}
         </div>
-        <div className='lib-video-list-page__bottom__select-lib'>
+        <div className="lib-video-list-page__bottom__select-lib">
           <Select
             options={listLibVideo}
-            placeholder='--- Chọn danh mục video ---'
+            placeholder="--- Chọn danh mục video ---"
             onChange={(val) => {
               setLibVideoSelected(val);
             }}
           />
         </div>
-        <div className='lib-video-list-page__bottom__list-video'>
+        <div className="lib-video-list-page__bottom__list-video">
           {[...listVideo?.data]?.map((item) => (
             <div
-              className='lib-video-list-page__bottom__list-video__item'
+              className="lib-video-list-page__bottom__list-video__item"
               onClick={() => callApiGetVideoDetail(item?.Id)}
             >
-              <div className='lib-video-list-page__bottom__list-video__item__avatar'>
-                {' '}
+              <div className="lib-video-list-page__bottom__list-video__item__avatar">
+                {" "}
                 <img
-                  alt=''
+                  alt=""
                   src={imageHelper.getLinkImageUrl(item?.Avatar)}
-                />{' '}
+                />{" "}
               </div>
-              <div className='lib-video-list-page__bottom__list-video__item__title'>
+              <div className="lib-video-list-page__bottom__list-video__item__title">
                 <span>{item?.Title}</span>
               </div>
             </div>
           ))}
         </div>
-        <div className={'lib-video-list-page__bottom__pagination'}>
+        <div className={"lib-video-list-page__bottom__pagination"}>
           <Pagination
             total={listVideo?.totalInDB}
             showSizeChanger={false}
