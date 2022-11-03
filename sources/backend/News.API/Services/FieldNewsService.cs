@@ -39,6 +39,7 @@ namespace News.API.Services
         {
             return await GetByIdAsync(id);
         }
+       
 
         public async Task<ApiSuccessResult<FieldNewsDto>> GetFieldNewsByPaging(FieldNewsRequest fieldNewsRequest, params Expression<Func<FieldNews, object>>[] includeProperties)
         {
