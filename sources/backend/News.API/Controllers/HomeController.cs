@@ -194,13 +194,10 @@ namespace News.API.Controllers
         [HttpGet("published/categorynews")]
         public async Task<IActionResult> GetNewsPostEachCategoryNews()
         {
-            Expression<Func<CategoryNews, object>>[]? lstInclude =
-                new Expression<Func<CategoryNews, object>>[] {
-                    (x => x.NewsPosts)
-                };
             var categoryNews =
                 await _categoryNewsService
-                    .GetNewsPostEachCategoryNews();
+                    .GetNewsPostEachCategoryNews(new CategoryNewsRequest()
+                    { PageSize = 2, Status = Status.Enabled });
             if (categoryNews == null) return NotFound();
             return Ok(categoryNews);
         }

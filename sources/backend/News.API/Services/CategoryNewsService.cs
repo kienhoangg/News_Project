@@ -73,17 +73,22 @@ namespace News.API.Services
             }
             return categoryNewsDto;
         }
-        public async Task<List<CategoryNews>> GetNewsPostEachCategoryNews()
+        public async Task<List<CategoryNews>> GetNewsPostEachCategoryNews(CategoryNewsRequest categoryNewsRequest)
         {
             IQueryable<CategoryNews> query = FindAll(includeProperties: x => x.NewsPosts);
+            var currentPage = categoryNewsRequest.CurrentPage.HasValue ? categoryNewsRequest.CurrentPage.Value : 1;
+            var pageSize = categoryNewsRequest.PageSize.HasValue ? categoryNewsRequest.PageSize.Value : 5;
             var result = query
-                        .Select(a => new { a, NewsPosts = a.NewsPosts.Take(5).ToList() })
+            .Skip((currentPage - 1) * pageSize)
+                                   .Take(pageSize).OrderBy(x => x.Order)
+                        .Select(a => new { a, NewsPosts = a.NewsPosts.Skip(0).Take(5).ToList() })
                         .AsEnumerable()
                         .Select(x =>
                         {
                             x.a.NewsPosts = x.NewsPosts;
                             return x.a;
                         }).ToList();
+
             return result;
         }
 

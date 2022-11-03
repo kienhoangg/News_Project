@@ -29,6 +29,6 @@ namespace News.API.Interfaces
         Task<CategoryNewsDto> GetCategoryNewsWithParentName(int id, params Expression<Func<CategoryNews, object>>[] includeProperties);
         Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression);
         Task<CategoryNews> GetCategoryNewsFirstOrder();
-        Task<List<CategoryNews>> GetNewsPostEachCategoryNews();
+        Task<List<CategoryNews>> GetNewsPostEachCategoryNews(CategoryNewsRequest categoryNewsRequest);
     }
 }
