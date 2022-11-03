@@ -1,6 +1,8 @@
 import constant from 'common/constant';
 import moment from 'moment';
 
+const UTC_VN = 7;
+
 const datetimeHelper = {
   formatDateToDateVN(input) {
     try {
