@@ -1,8 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Common.Enums;
+using Common.Extensions;
+using Common.Interfaces;
 using Common.Shared.Constants;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -17,16 +21,18 @@ namespace News.API.Controllers
     public class RadiosController : ControllerBase
     {
         private readonly IRadioService _radioService;
-
+        private readonly ISerializeService _serializeService;
         private readonly IMapper _mapper;
 
         public RadiosController(
             IRadioService radioService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _radioService = radioService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -35,20 +41,6 @@ namespace News.API.Controllers
         {
             var result =
                 await _radioService.GetRadioByPaging(radioRequest);
-            return Ok(result);
-        }
-        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
-        [HttpPost]
-        public async Task<IActionResult>
-                CreateRadioDto([FromBody] RadioDto radioDto)
-        {
-            if (HttpContext.Items["HandledStatus"] != null)
-            {
-                radioDto.Status = Status.Enabled;
-            }
-            var radio = _mapper.Map<Radio>(radioDto);
-            await _radioService.CreateRadio(radio);
-            var result = _mapper.Map<RadioDto>(radio);
             return Ok(result);
         }
 
@@ -61,20 +53,108 @@ namespace News.API.Controllers
             var result = _mapper.Map<RadioDto>(radio);
             return Ok(result);
         }
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
+        [HttpPost]
+        public async Task<IActionResult>
+              CreateRadioDto([FromForm] RadioUploadDto radioUploadDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Radio
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            var radio = _serializeService
+                  .Deserialize<Radio>(radioUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                radio.Status = Status.Enabled;
+            }
+            // Upload file attachment if exist
+            if (radioUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await radioUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+            radio.FileAttachment = fileAttachmentPath;
+            await _radioService.CreateRadio(radio);
+
+            var result = _mapper.Map<RadioDto>(radio);
+            return Ok(result);
+        }
+
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateRadioDto(
-            [Required] int id,
-            [FromBody] RadioDto radioDto
-        )
+      UpdateRadioDto(
+          [Required] int id,
+          [FromForm] RadioUploadDto radioUploadDto
+      )
         {
-            radioDto.Id = id;
-            Radio? Radio = await _radioService.GetRadio(id);
-            if (Radio == null) return NotFound();
-            var updatedRadio = _mapper.Map(radioDto, Radio);
-            await _radioService.UpdateRadio(updatedRadio);
-            var result = _mapper.Map<RadioDto>(updatedRadio);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Radio
+                    >(lstErrorString));
+                }
+            }
+            Radio? radio = await _radioService.GetRadio(id);
+            if (radio == null) return NotFound();
+            var tempFileAttachmentPath = radio.FileAttachment;
+            var radioUpdated = new Radio();
+            if (!string.IsNullOrEmpty(radioUploadDto.JsonString))
+            {
+                radioUpdated =
+                    _serializeService
+                        .Deserialize<Radio>(radioUploadDto.JsonString);
+                radioUpdated.Id = radio.Id;
+                radioUpdated.CreatedDate = radio.CreatedDate;
+            }
+            string fileAttachmentPath = !String.IsNullOrEmpty(radioUpdated.FileAttachment) ? radioUpdated.FileAttachment : "";
+            // Upload file attachment if exist
+            if (radioUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await radioUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+            radioUpdated.FileAttachment = fileAttachmentPath;
+            await _radioService.UpdateRadio(radioUpdated);
+
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            var result = _mapper.Map<RadioDto>(source: radioUpdated);
             return Ok(result);
         }
 
@@ -85,8 +165,17 @@ namespace News.API.Controllers
             if (radio == null) return NotFound();
 
             await _radioService.DeleteRadio(id);
+            FileInfo fileFileAttachment =
+                                    new FileInfo(Directory.GetCurrentDirectory() +
+                                        radio.FileAttachment);
+            if (fileFileAttachment.Exists)
+            {
+                fileFileAttachment.Delete();
+            }
             return NoContent();
         }
+
+
 
         [HttpPut("")]
         public async Task<IActionResult>

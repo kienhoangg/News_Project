@@ -203,6 +203,13 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("published/categorynews")]
+        public async Task<IActionResult> GetNewsPostCategoryEachCategoryNewsName([FromBody] NewsPostRequest newsPostRequest)
+        {
+            var result = await _newsPostService.GetNewsPostEachCategoryNewsName(newsPostRequest);
+            return Ok(result);
+        }
+
         [HttpPost("published/fieldNews/{fieldNewsId:int}")]
         public async Task<IActionResult> GetNewsPostCategoryEachFields([Required] int fieldNewsId, [FromBody] NewsPostRequest newsPostRequest)
         {

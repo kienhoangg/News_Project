@@ -1,8 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Common.Enums;
+using Common.Extensions;
+using Common.Interfaces;
 using Common.Shared.Constants;
+using Infrastructure.Shared.SeedWork;
 using Microsoft.AspNetCore.Mvc;
+using Models.Constants;
 using Models.Dtos;
 using Models.Entities;
 using Models.Requests;
@@ -17,16 +21,18 @@ namespace News.API.Controllers
     public class FeedbacksController : ControllerBase
     {
         private readonly IFeedbackService _feedbackService;
-
+        private readonly ISerializeService _serializeService;
         private readonly IMapper _mapper;
 
         public FeedbacksController(
             IFeedbackService feedbackService,
             IMapper mapper
-        )
+,
+            ISerializeService serializeService)
         {
             _feedbackService = feedbackService;
             _mapper = mapper;
+            _serializeService = serializeService;
         }
 
         [HttpPost("filter")]
@@ -35,20 +41,6 @@ namespace News.API.Controllers
         {
             var result =
                 await _feedbackService.GetFeedbackByPaging(feedbackRequest);
-            return Ok(result);
-        }
-        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
-        [HttpPost]
-        public async Task<IActionResult>
-                CreateFeedbackDto([FromBody] FeedbackDto feedbackDto)
-        {
-            if (HttpContext.Items["HandledStatus"] != null)
-            {
-                feedbackDto.Status = Status.Enabled;
-            }
-            var feedback = _mapper.Map<Feedback>(feedbackDto);
-            await _feedbackService.CreateFeedback(feedback);
-            var result = _mapper.Map<FeedbackDto>(feedback);
             return Ok(result);
         }
 
@@ -61,20 +53,108 @@ namespace News.API.Controllers
             var result = _mapper.Map<FeedbackDto>(feedback);
             return Ok(result);
         }
+        [ServiceFilter(typeof(HandleStatusByRoleAttribute))]
+        [HttpPost]
+        public async Task<IActionResult>
+              CreateFeedbackDto([FromForm] FeedbackUploadDto feedbackUploadDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Feedback
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            var feedback = _serializeService
+                  .Deserialize<Feedback>(feedbackUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                feedback.Status = Status.Enabled;
+            }
+            // Upload file attachment if exist
+            if (feedbackUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await feedbackUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+            feedback.FileAttachment = fileAttachmentPath;
+            await _feedbackService.CreateFeedback(feedback);
+
+            var result = _mapper.Map<FeedbackDto>(feedback);
+            return Ok(result);
+        }
+
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult>
-        UpdateFeedbackDto(
-            [Required] int id,
-            [FromBody] FeedbackDto feedbackDto
-        )
+      UpdateFeedbackDto(
+          [Required] int id,
+          [FromForm] FeedbackUploadDto feedbackUploadDto
+      )
         {
-            feedbackDto.Id = id;
-            Feedback? Feedback = await _feedbackService.GetFeedback(id);
-            if (Feedback == null) return NotFound();
-            var updatedFeedback = _mapper.Map(feedbackDto, Feedback);
-            await _feedbackService.UpdateFeedback(updatedFeedback);
-            var result = _mapper.Map<FeedbackDto>(updatedFeedback);
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Feedback
+                    >(lstErrorString));
+                }
+            }
+            Feedback? feedback = await _feedbackService.GetFeedback(id);
+            if (feedback == null) return NotFound();
+            var tempFileAttachmentPath = feedback.FileAttachment;
+            var feedbackUpdated = new Feedback();
+            if (!string.IsNullOrEmpty(feedbackUploadDto.JsonString))
+            {
+                feedbackUpdated =
+                    _serializeService
+                        .Deserialize<Feedback>(feedbackUploadDto.JsonString);
+                feedbackUpdated.Id = feedback.Id;
+                feedbackUpdated.CreatedDate = feedback.CreatedDate;
+            }
+            string fileAttachmentPath = !String.IsNullOrEmpty(feedbackUpdated.FileAttachment) ? feedbackUpdated.FileAttachment : "";
+            // Upload file attachment if exist
+            if (feedbackUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await feedbackUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+
+            feedbackUpdated.FileAttachment = fileAttachmentPath;
+            await _feedbackService.UpdateFeedback(feedbackUpdated);
+
+            if (fileAttachmentPath != tempFileAttachmentPath)
+            {
+                FileInfo fileFileAttachment =
+                                     new FileInfo(Directory.GetCurrentDirectory() +
+                                         "/wwwroot" + tempFileAttachmentPath);
+                if (fileFileAttachment.Exists)
+                {
+                    fileFileAttachment.Delete();
+                }
+            }
+            var result = _mapper.Map<FeedbackDto>(source: feedbackUpdated);
             return Ok(result);
         }
 
@@ -85,6 +165,13 @@ namespace News.API.Controllers
             if (feedback == null) return NotFound();
 
             await _feedbackService.DeleteFeedback(id);
+            FileInfo fileFileAttachment =
+                                    new FileInfo(Directory.GetCurrentDirectory() +
+                                        feedback.FileAttachment);
+            if (fileFileAttachment.Exists)
+            {
+                fileFileAttachment.Delete();
+            }
             return NoContent();
         }
 
