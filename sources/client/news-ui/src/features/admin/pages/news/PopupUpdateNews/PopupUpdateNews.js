@@ -106,13 +106,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             name: res?.Avatar,
             status: 'done',
             url:
-              res?.Avatar?.indexOf('https://') === 0 ||
-              res?.Avatar?.indexOf('http://') === 0
+              res?.Avatar?.indexOf("https://") === 0 ||
+                res?.Avatar?.indexOf("http://") === 0
                 ? res?.Avatar
                 : envDomainBackend +
-                  (res?.Avatar?.indexOf('/') === 0
-                    ? res?.Avatar
-                    : '/' + res?.Avatar),
+                (res?.Avatar?.indexOf("/") === 0
+                  ? res?.Avatar
+                  : "/" + res?.Avatar),
           },
         ]);
 
@@ -124,13 +124,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             name: res?.FilePath,
             status: 'done',
             url:
-              res?.FilePath?.indexOf('https://') === 0 ||
-              res?.FilePath?.indexOf('http://') === 0
+              res?.FilePath?.indexOf("https://") === 0 ||
+                res?.FilePath?.indexOf("http://") === 0
                 ? res?.FilePath
                 : envDomainBackend +
-                  (res?.FilePath?.indexOf('/') === 0
-                    ? res?.FilePath
-                    : '/' + res?.FilePath),
+                (res?.FilePath?.indexOf("/") === 0
+                  ? res?.FilePath
+                  : "/" + res?.FilePath),
           },
         ]);
 
@@ -150,7 +150,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
         collaboratorId: res?.CollaboratorNews?.Name,
         content: res?.Content,
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const calllApiGetDataMaster = () => {
@@ -607,8 +607,8 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                     { name: 'others', groups: ['others'] },
                     { name: 'about', groups: ['about'] },
                   ],
-                  extraPlugins: 'justify,font,colorbutton,forms',
-                  removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+                  extraPlugins: "justify,font,colorbutton,forms,image2",
+                  removeButtons: "Scayt,HiddenField,CopyFormatting,About",
                 }}
               />
             </Form.Item>

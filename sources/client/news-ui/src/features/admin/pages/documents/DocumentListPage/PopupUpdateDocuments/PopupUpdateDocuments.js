@@ -76,7 +76,7 @@ const PopupUpdateDocuments = (props) => {
         PublishedDate: moment(res?.PublishedDate),
         Content: res?.Content,
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const getDataFilter = async () => {
@@ -435,7 +435,7 @@ const PopupUpdateDocuments = (props) => {
                     { name: "others", groups: ["others"] },
                     { name: "about", groups: ["about"] },
                   ],
-                  extraPlugins: "justify,font,colorbutton,forms",
+                  extraPlugins: "justify,font,colorbutton,forms,image2",
                   removeButtons: "Scayt,HiddenField,CopyFormatting,About",
                   allowedContent: true,
                 }}

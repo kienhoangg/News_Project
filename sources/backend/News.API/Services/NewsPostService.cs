@@ -62,6 +62,13 @@ namespace News.API.Services
             return pagedNewsPost;
         }
 
+        public async Task<ApiSuccessResult<NewsPostWithoutContentDto>> GetNewsPostEachCategoryNewsName(NewsPostRequest newsPostRequest)
+        {
+            var pagedNewsPost = await GetNewsPostByPagingWithoutContent(newsPostRequest, x => x.CategoryNews);
+
+            return pagedNewsPost;
+        }
+
         public async Task<NewsPost> GetNewsPost(long id, params Expression<Func<NewsPost, object>>[] includeProperties)
         {
             return await GetByIdAsync(id, includeProperties);
@@ -78,11 +85,6 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(newsPostRequest.Keyword)));
             }
-            if (newsPostRequest.CategoryNewsId.HasValue)
-            {
-                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
-            }
-
             if (newsPostRequest.CategoryNewsId.HasValue)
             {
                 query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
@@ -147,10 +149,14 @@ namespace News.API.Services
 
         public async Task<ApiSuccessResult<NewsPostWithoutContentDto>> GetNewsPostByPagingWithoutContent(NewsPostRequest newsPostRequest, params Expression<Func<NewsPost, object>>[] includeProperties)
         {
-            var query = FindAll();
+            IQueryable<NewsPost> query = null;
             if (includeProperties.ToList().Count > 0)
             {
                 query = FindAll(includeProperties: includeProperties);
+            }
+            else
+            {
+                query = FindAll();
             }
             if (!string.IsNullOrEmpty(newsPostRequest.Keyword))
             {
@@ -160,10 +166,11 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
             }
-            if (newsPostRequest.CategoryNewsId.HasValue)
+            if (!String.IsNullOrEmpty(newsPostRequest.CategoryNewsName))
             {
-                query = query.Where(x => x.CategoryNewsId == newsPostRequest.CategoryNewsId);
+                query = query.Where(x => x.CategoryNews.CategoryNewsName == newsPostRequest.CategoryNewsName);
             }
+
             if (newsPostRequest.Status.HasValue)
             {
                 query = query.Where(x => x.Status == newsPostRequest.Status.Value);
@@ -268,14 +275,14 @@ namespace News.API.Services
 
             //     query = query.Where(x => x.PublishedDate < tomorrow && x.PublishedDate > yesterday);
             // }
-            // if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
-            // {
-            //     var today = newsPostRequest.FromDate.Value;
-            //     var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
-            //     yesterday1 = yesterday1.AddTicks(-1);
+            if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
+            {
+                var today = newsPostRequest.FromDate.Value;
+                var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
+                yesterday1 = yesterday1.AddTicks(-1);
 
-            //     query = query.Where(x => x.PublishedDate > yesterday1);
-            // }
+                query = query.Where(x => x.PublishedDate > yesterday1);
+            }
             if (newsPostRequest.TodayDate.HasValue && !newsPostRequest.FromDate.HasValue)
             {
                 var today = newsPostRequest.TodayDate.Value;

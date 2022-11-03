@@ -45,6 +45,11 @@ namespace News.API.Persistence
         public DbSet<CompanyInfo> CompanyInfos { get; set; }
         public DbSet<LinkInfoCategory> LinkInfoCategories { get; set; }
         public DbSet<CompanyInfoCategory> CompanyInfoCategories { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Radio> Radios { get; set; }
+        public DbSet<RadioCategory> RadioCategories { get; set; }
+        public DbSet<PublicInformation> PublicInformations { get; set; }
+        public DbSet<PublicInformationCategory> PublicInformationCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

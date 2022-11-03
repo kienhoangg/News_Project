@@ -481,8 +481,8 @@ function DocumentListPage(props) {
                   { name: 'others', groups: ['others'] },
                   { name: 'about', groups: ['about'] },
                 ],
-                extraPlugins: 'justify,font,colorbutton,forms',
-                removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+                extraPlugins: "justify,font,colorbutton,forms,image2",
+                removeButtons: "Scayt,HiddenField,CopyFormatting,About",
                 allowedContent: true,
               }}
             />

@@ -283,39 +283,26 @@ function QuestionListPage(props) {
   console.log(isModalOpen);
 
   return (
-    <div className={cx('wrapper')}>
-      {(
-        isModalOpen?.type === MODAL_TYPE.CREATE ||
-        isModalOpen?.type === MODAL_TYPE.DETAIL
-          ? isModalOpen?.show
-          : questionDetail?.Id && isModalOpen?.show
-      ) ? (
-        <Modal
-          open={true}
-          title={
-            isModalOpen?.type === MODAL_TYPE.CREATE
-              ? 'Tạo mới câu hỏi'
-              : isModalOpen?.type === MODAL_TYPE.DETAIL
-              ? 'Chi tiết câu hỏi'
-              : 'Chỉnh sửa câu hỏi'
-          }
-          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
-          cancelText='Thoát'
-          onCancel={onCancel}
-          width={'90vw'}
-          style={{
-            top: 20,
-          }}
-          {...(isModalOpen?.type === MODAL_TYPE.DETAIL ? { footer: null } : {})}
-          centered
-          onOk={() => {
-            form
-              .validateFields()
-              .then((values) => {
-                values.QuestionContent =
-                  values.QuestionContent?.editor?.getData();
+      <div className={cx('wrapper')}>
+          {(isModalOpen?.type === MODAL_TYPE.CREATE || isModalOpen?.type === MODAL_TYPE.DETAIL ? isModalOpen?.show : questionDetail?.Id && isModalOpen?.show) ? (
+              <Modal
+                  open={true}
+                  title={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới câu hỏi' : isModalOpen?.type === MODAL_TYPE.DETAIL ? 'Chi tiết câu hỏi' : 'Chỉnh sửa câu hỏi'}
+                  okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
+                  cancelText='Thoát'
+                  onCancel={onCancel}
+                  width={'90vw'}
+                  style={{
+                      top: 20,
+                  }}
+                  {...(isModalOpen?.type === MODAL_TYPE.DETAIL ? { footer: null } : {})}
+                  centered
+                  onOk={() => {
+                      form.validateFields()
+                          .then((values) => {
+                              values.QuestionContent = values.QuestionContent?.editor?.getData();
 
-                values.AnswerContent = values.AnswerContent?.editor?.getData();
+                              values.AnswerContent = values.AnswerContent?.editor?.getData();
 
                 const {
                   QuestionCategoryId,
@@ -361,7 +348,7 @@ function QuestionListPage(props) {
                     : null,
                 };
 
-                let body = { JsonString: bodyData };
+                              let body = { JsonString: bodyData };
 
                 if (
                   fileListAttachment.length > 0 &&
@@ -388,7 +375,7 @@ function QuestionListPage(props) {
                   };
                 }
 
-                body = { ...body, JsonString: bodyData };
+                              body = { ...body, JsonString: bodyData };
 
                 onCreate(body);
               })
@@ -572,7 +559,7 @@ function QuestionListPage(props) {
                           { name: 'others', groups: ['others'] },
                           { name: 'about', groups: ['about'] },
                         ],
-                        extraPlugins: 'justify,font,colorbutton,forms',
+                          extraPlugins: 'justify,font,colorbutton,forms, image2',
                         removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
                       }}
                     />
