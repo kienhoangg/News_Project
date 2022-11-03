@@ -158,6 +158,7 @@ function QuestionAndAnswerPage() {
         orderBy: "LastModifiedDate",
         direction2ndColumn: -1,
         orderBy2ndColumn: "Order",
+        status: 1,
       });
 
       setDataQuestionTable(res?.PagedData?.Results);

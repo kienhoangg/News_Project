@@ -26,8 +26,12 @@ function PublishedNewsListCategoryPageItem(props) {
     const { Avatar, AvatarTitle, Title, PublishedDate, Description, Id } = data;
 
     const componentFirst = (
-        <Row gutter={8}>
-            <Col flex='160px'>{stringHelper.isNullOrEmpty(Avatar) && <img src={imageHelper.getLinkImageUrl(Avatar)} alt={AvatarTitle} width='100%' style={{ padding: '8px' }} />}</Col>
+        <Row gutter={0}>
+            {stringHelper.isNullOrEmpty(Avatar) && (
+                <Col flex='160px'>
+                    <img src={imageHelper.getLinkImageUrl(Avatar)} alt={AvatarTitle} width='100%' style={{ padding: '8px 0 8px 8px' }} />
+                </Col>
+            )}
             <Col flex='1'>
                 <div className={cx('content-right')}>
                     <Link to={commonRender.renderLinkNewsDetail(Id)} className={cx('title')}>

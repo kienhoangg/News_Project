@@ -71,13 +71,15 @@ function NewsCommentPage(props) {
    * @param {*} textSearch Từ cần tìm
    */
   const handleChangeTextSearch = (textSearch, categoryNews) => {
-    setObjFilter({
+    const _newsFilter = {
       ...objFilter,
       keyword: textSearch,
-      ...(categoryNews || categoryNews === 0
-        ? { categoryNewsId: categoryNews }
-        : {}),
-    });
+      categoryNewsId: categoryNews,
+    };
+
+    if (!categoryNews) delete _newsFilter?.categoryNewsId;
+
+    setObjFilter(_newsFilter);
   };
 
   /**
