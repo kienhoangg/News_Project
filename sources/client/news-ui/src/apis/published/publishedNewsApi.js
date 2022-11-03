@@ -55,13 +55,8 @@ class PublishedNewsApi {
     // return response;
   }
 
-  getInternationalTreatiesPage(params) {
-    const { id, currentPage } = params;
-    const url = `/home/published/fieldNews/${id}`;
-    const body = {
-      CurrentPage: currentPage,
-      PageSize: 6,
-    };
+  getInternationalTreatiesPage(body) {
+    const url = `/home/published/categorynews`;
     return axiosClient.post(url, body);
   }
 

@@ -33,12 +33,12 @@ const LIST_BUTON = [
     Image: Images.LIST_BUTTON_ITEM,
   },
   {
-    Href: '/',
+    Href: routes.publishedLawDissemination,
     Label: 'PHỔ BIẾN PHÁP LUẬT',
     Image: Images.LIST_BUTTON_ITEM,
   },
   {
-    Href: '/',
+    Href: routes.publishedSuggestionBox,
     Label: 'HÒM THƯ GÓP Ý',
     Image: Images.LIST_BUTTON_ITEM,
   },

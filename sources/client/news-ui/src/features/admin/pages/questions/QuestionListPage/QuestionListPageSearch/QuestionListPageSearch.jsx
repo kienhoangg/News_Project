@@ -94,7 +94,7 @@ function QuestionListPageSearch(props) {
               </Option>
             ))}
           </Select>
-          <Select
+          {/* <Select
             style={{
               width: 200,
               marginLeft: 20,
@@ -115,7 +115,7 @@ function QuestionListPageSearch(props) {
                 {x.label}
               </Option>
             ))}
-          </Select>
+          </Select> */}
         </Col>
         <Col span={2}>
           <Row justify='start'>

@@ -1,10 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Checkbox, Col, DatePicker, Form, Input, Modal, Radio, Row, Select, TreeSelect, Upload } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Radio,
+  Row,
+  Select,
+  TreeSelect,
+  Upload,
+} from 'antd';
 import styles from './CollectionNewsEditor.module.scss';
 import classNames from 'classnames/bind';
 import { TreeNode } from 'antd/lib/tree-select';
-import { FileImageFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+  FileImageFilled,
+  PlusOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { CKEditor } from 'ckeditor4-react';
@@ -23,40 +40,51 @@ CollectionNewsEditor.defaultProps = {};
 
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
-function CollectionNewsEditor({ open, onCreate, onCancel, action, data, dataFilter }) {
-    const [form] = Form.useForm();
+function CollectionNewsEditor({
+  open,
+  onCreate,
+  onCancel,
+  action,
+  data,
+  dataFilter,
+}) {
+  const [form] = Form.useForm();
 
-    function onEditorChange(event) {
-        // console.log('data: ', event.editor.getData());
+  function onEditorChange(event) {
+    // console.log('data: ', event.editor.getData());
+  }
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+  const [fileList, setFileList] = useState([]);
+  const [fileListAttachment, setFileListAttachment] = useState([]);
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await commonFunc.getBase64(file.originFileObj);
     }
 
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
-    const [fileList, setFileList] = useState([]);
-    const [fileListAttachment, setFileListAttachment] = useState([]);
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1)
+    );
+  };
 
-    const handleCancel = () => setPreviewOpen(false);
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
-    const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-            file.preview = await commonFunc.getBase64(file.originFileObj);
-        }
+  const handleChangeAttachment = ({ fileList: newFileList }) => {
+    setFileListAttachment(newFileList);
+  };
 
-        setPreviewImage(file.url || file.preview);
-        setPreviewOpen(true);
-        setPreviewTitle(file.name || file.url?.substring(file.url?.lastIndexOf('/') + 1));
-    };
-
-    const handleChange = ({ fileList: newFileList }) => {
-        setFileList(newFileList);
-    };
-
-    const handleChangeAttachment = ({ fileList: newFileList }) => {
-        setFileListAttachment(newFileList);
-    };
-
-    const uploadButton = <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>;
+  const uploadButton = (
+    <Button icon={<UploadOutlined />}>Tải lên ảnh đại diện</Button>
+  );
 
   const renderFieldNews = (
     <Select
@@ -149,8 +177,7 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data, dataFilt
           .validateFields()
           .then((values) => {
             values.content = values.content?.editor?.getData();
-            const date =
-              values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+            const date = values?.publishedDate?._d ?? new Date();
             const publishedDate =
               datetimeHelper.formatDatetimeToDateSerer(date);
             const {
@@ -350,8 +377,8 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data, dataFilt
                 <Checkbox></Checkbox>
               </Form.Item>
             </Col> */}
-                    </Row>
-                </Form.Item>
+          </Row>
+        </Form.Item>
 
         <Form.Item name='lb-avatar' label='Ảnh đại diện'>
           <Row gutter={8}>
@@ -398,78 +425,97 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data, dataFilt
           </Row>
         </Form.Item>
 
-                <Form.Item name='description' label='Mô tả' style={{ marginBottom: 0 }}>
-                    <TextArea
-                        showCount
-                        maxLength={256}
-                        style={{
-                            height: 80,
-                        }}
-                    />
-                </Form.Item>
-                <Form.Item name='content' label='Nội dung'>
-                    <CKEditor
-                        initData='<p>Nội dung</p>'
-                        // onInstanceReady={() => {
-                        //     alert('Editor is ready!');
-                        // }}
-                        onChange={onEditorChange}
-                        config={{
-                            language: 'vi',
-                            toolbarGroups: [
-                                { name: 'document', groups: ['mode', 'document', 'doctools'] },
-                                { name: 'clipboard', groups: ['clipboard', 'undo'] },
-                                {
-                                    name: 'editing',
-                                    groups: ['find', 'selection', 'spellchecker', 'editing'],
-                                },
-                                { name: 'forms', groups: ['forms'] },
-                                '/',
-                                '/',
-                                { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
-                                {
-                                    name: 'paragraph',
-                                    groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph'],
-                                },
-                                { name: 'links', groups: ['links'] },
-                                { name: 'insert', groups: ['insert'] },
-                                '/',
-                                { name: 'styles', groups: ['styles'] },
-                                { name: 'colors', groups: ['colors'] },
-                                { name: 'tools', groups: ['tools'] },
-                                { name: 'others', groups: ['others'] },
-                                { name: 'about', groups: ['about'] },
-                            ],
-                            extraPlugins: 'justify,font,colorbutton,forms,image2',
-                            removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
-                            allowedContent: true,
-                        }}
-                    />
-                </Form.Item>
-                <Form.Item name='lb-avatar' label='Lĩnh vực' style={{ marginBottom: 0 }}>
-                    <Row gutter={16}>
-                        <Col span={6}>
-                            <Form.Item name='field'>{renderFieldNews}</Form.Item>
-                        </Col>
-                        <Col span={8}>
-                            <Form.Item name='source' label='Nguồn tin'>
-                                {renderSourceNews}
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                </Form.Item>
-                <Form.Item name='lb-attachment' label='Tệp đính kèm'>
-                    <Row gutter={8}>
-                        <Col span={8}>
-                            <Upload listType='picture' maxCount={1} fileList={fileListAttachment} onChange={handleChangeAttachment} customRequest={commonFunc.dummyRequest}>
-                                {fileListAttachment.length < 1 ? <Button icon={<UploadOutlined />}>Tải lên Tệp</Button> : null}
-                            </Upload>
-                        </Col>
-                    </Row>
-                </Form.Item>
-            </Form>
-        </Modal>
-    );
+        <Form.Item name='description' label='Mô tả' style={{ marginBottom: 0 }}>
+          <TextArea
+            showCount
+            maxLength={256}
+            style={{
+              height: 80,
+            }}
+          />
+        </Form.Item>
+        <Form.Item name='content' label='Nội dung'>
+          <CKEditor
+            initData='<p>Nội dung</p>'
+            // onInstanceReady={() => {
+            //     alert('Editor is ready!');
+            // }}
+            onChange={onEditorChange}
+            config={{
+              language: 'vi',
+              toolbarGroups: [
+                { name: 'document', groups: ['mode', 'document', 'doctools'] },
+                { name: 'clipboard', groups: ['clipboard', 'undo'] },
+                {
+                  name: 'editing',
+                  groups: ['find', 'selection', 'spellchecker', 'editing'],
+                },
+                { name: 'forms', groups: ['forms'] },
+                '/',
+                '/',
+                { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+                {
+                  name: 'paragraph',
+                  groups: [
+                    'list',
+                    'indent',
+                    'blocks',
+                    'align',
+                    'bidi',
+                    'paragraph',
+                  ],
+                },
+                { name: 'links', groups: ['links'] },
+                { name: 'insert', groups: ['insert'] },
+                '/',
+                { name: 'styles', groups: ['styles'] },
+                { name: 'colors', groups: ['colors'] },
+                { name: 'tools', groups: ['tools'] },
+                { name: 'others', groups: ['others'] },
+                { name: 'about', groups: ['about'] },
+              ],
+              extraPlugins: 'justify,font,colorbutton,forms,image2',
+              removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
+              allowedContent: true,
+            }}
+          />
+        </Form.Item>
+        <Form.Item
+          name='lb-avatar'
+          label='Lĩnh vực'
+          style={{ marginBottom: 0 }}
+        >
+          <Row gutter={16}>
+            <Col span={6}>
+              <Form.Item name='field'>{renderFieldNews}</Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name='source' label='Nguồn tin'>
+                {renderSourceNews}
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form.Item>
+        <Form.Item name='lb-attachment' label='Tệp đính kèm'>
+          <Row gutter={8}>
+            <Col span={8}>
+              <Upload
+                listType='picture'
+                maxCount={1}
+                fileList={fileListAttachment}
+                onChange={handleChangeAttachment}
+                customRequest={commonFunc.dummyRequest}
+              >
+                {fileListAttachment.length < 1 ? (
+                  <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
+                ) : null}
+              </Upload>
+            </Col>
+          </Row>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 }
 
 export default CollectionNewsEditor;

@@ -21,5 +21,6 @@ export const Role = {
 };
 
 export const DEFAULT_COLUMN_ORDER_BY = 'LastModifiedDate';
+export const DEFAULT_COLUMN_FILTER = 'Phổ biến giáo dục và pháp luật';
 
 export default constant;

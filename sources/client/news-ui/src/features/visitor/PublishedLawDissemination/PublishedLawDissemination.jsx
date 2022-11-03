@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './PublishedInternationalTreaties.module.scss';
+import styles from './PublishedLawDissemination.module.scss';
 import classNames from 'classnames/bind';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
 import commonRender, { commonRenderTable } from 'common/commonRender';
@@ -16,9 +16,9 @@ import { Direction } from 'common/enum';
 
 const cx = classNames.bind(styles);
 
-PublishedInternationalTreaties.propTypes = {};
+PublishedLawDissemination.propTypes = {};
 
-function PublishedInternationalTreaties(props) {
+function PublishedLawDissemination(props) {
   const [loading, setLoading] = useState(true);
 
   const [dataPageFullPage, setDataPageFullPage] = useState();
@@ -70,10 +70,10 @@ function PublishedInternationalTreaties(props) {
               >
                 <div className={cx('title-container')}>
                   <Link
-                    to={config.routes.publishedInternationalTreaties}
+                    to={config.routes.publishedLawDissemination}
                     className={cx('title')}
                   >
-                    Điều ước quốc tế
+                    Phổ biến pháp luật
                   </Link>
                   <span className={cx('right')}></span>
                 </div>
@@ -113,4 +113,4 @@ function PublishedInternationalTreaties(props) {
   );
 }
 
-export default PublishedInternationalTreaties;
+export default PublishedLawDissemination;
