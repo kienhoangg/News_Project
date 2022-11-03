@@ -14,6 +14,7 @@ import { NotificationType } from 'common/enum';
 import datetimeHelper from 'helpers/datetimeHelper';
 import { useEffect } from 'react';
 import commonFunc from 'common/commonFunc';
+import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
@@ -210,15 +211,11 @@ function CollectionNewsEditor({ open, onCreate, onCancel, action, data, dataFilt
                                 <Input />
                             </Form.Item>
                         </Col>
-                        {/* <Col span={6}>
-              <Form.Item
-                name="publishedDate"
-                label="Ngày tạo"
-                style={{ marginBottom: 0 }}
-              >
-                <DatePicker placeholder="Ngày tạo" style={{ width: "100%" }} />
-              </Form.Item>
-            </Col> */}
+                        <Col span={6}>
+                            <Form.Item name='publishedDate' label='Ngày tạo' style={{ marginBottom: 0 }}>
+                                <DatePicker placeholder='Ngày tạo' style={{ width: '100%' }} defaultValue={moment()} disabled />
+                            </Form.Item>
+                        </Col>
                     </Row>
                 </Form.Item>
                 <Form.Item label='Tin hành chính'>
