@@ -17,6 +17,8 @@ function NewsCommentPageSearch(props) {
   const [keyword, setKeyword] = useState("");
   const [categoryNews, setCategoryNews] = useState();
 
+  console.log(categoryNews);
+
   /**
    * Sử lý sự kiện bấp search
    */
@@ -24,7 +26,7 @@ function NewsCommentPageSearch(props) {
     if (!setTextSearch) {
       return;
     }
-    setTextSearch(keyword, categoryNews);
+    setTextSearch(keyword, parseInt(categoryNews) || null);
   };
 
   /**
@@ -44,6 +46,7 @@ function NewsCommentPageSearch(props) {
             style={{ width: "100%" }}
             placeholder="Từ khóa tìm kiếm"
             onChange={handleChange}
+            allowClear
           />
         </Col>
         <Col span={4}>
@@ -51,6 +54,7 @@ function NewsCommentPageSearch(props) {
             placeholder="Danh mục tin"
             style={{ width: "100%" }}
             onChange={(id) => setCategoryNews(id)}
+            allowClear
           >
             <Option value="1">Lĩnh vực 1</Option>
             {listCategoryNews?.map((x) => (

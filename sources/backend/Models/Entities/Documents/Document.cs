@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.Domains;
 
@@ -31,5 +32,8 @@ namespace Models.Entities
         public int? DocumentFieldId { get; set; }
         public int? DocumentSignPersonId { get; set; }
         public int? DocumentTypeId { get; set; }
+
+        [DefaultValue(false)]
+        public bool IsDocumentSection { get; set; }
     }
 }

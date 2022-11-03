@@ -268,14 +268,14 @@ namespace News.API.Services
 
             //     query = query.Where(x => x.PublishedDate < tomorrow && x.PublishedDate > yesterday);
             // }
-            // if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
-            // {
-            //     var today = newsPostRequest.FromDate.Value;
-            //     var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
-            //     yesterday1 = yesterday1.AddTicks(-1);
+            if (newsPostRequest.FromDate.HasValue && !newsPostRequest.TodayDate.HasValue)
+            {
+                var today = newsPostRequest.FromDate.Value;
+                var yesterday1 = new DateTime(today.Year, today.Month, today.Day);
+                yesterday1 = yesterday1.AddTicks(-1);
 
-            //     query = query.Where(x => x.PublishedDate > yesterday1);
-            // }
+                query = query.Where(x => x.PublishedDate > yesterday1);
+            }
             if (newsPostRequest.TodayDate.HasValue && !newsPostRequest.FromDate.HasValue)
             {
                 var today = newsPostRequest.TodayDate.Value;

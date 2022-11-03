@@ -37,5 +37,6 @@ namespace Models.Dtos
         public SourceNewsDto SourceNews { get; set; }
 
         public CategoryNewsDto CategoryNews { get; set; }
+        public CollaboratorDto Collaborator { get; set; }
     }
 }
