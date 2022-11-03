@@ -50,6 +50,7 @@ function NewsListPage(props) {
     categoryNews: [],
     fieldNews: [],
     sourceNews: [],
+    collaborators: [],
   });
 
   const dataDetail = useRef({});
@@ -159,15 +160,19 @@ function NewsListPage(props) {
     const responseCategoryNews = newsApi.getNewsCategoryAll(filterAll);
     const responseFieldNews = newsApi.getNewsFieldAll(filterAll);
     const responseSourceNews = newsApi.getNewsSourceAll(filterAll);
+    const responseCollaborators = newsApi.getNewsCollaboratorsAll(filterAll);
+
     Promise.all([
       responseCategoryNews,
       responseFieldNews,
       responseSourceNews,
+      responseCollaborators,
     ]).then((values) => {
       dataFilter.current = {
         categoryNews: values[0]?.PagedData?.Results ?? [],
         fieldNews: values[1]?.PagedData?.Results ?? [],
         sourceNews: values[2]?.PagedData?.Results ?? [],
+        collaborators: values[3]?.PagedData?.Results ?? [],
       };
     });
   };

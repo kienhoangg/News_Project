@@ -43,6 +43,9 @@ import CompanyListPage from './../features/admin/pages/connection/CompanyListPag
 import CompanyCategoryPage from './../features/admin/pages/connection/CompanyCategoryPage/CompanyCategoryPage';
 import ConnectionListPage from 'features/admin/pages/connection/ConnectionListPage/ConnectionListPage';
 import ConnectionCategoryPage from '../features/admin/pages/connection/ConnectionCategoryPage/ConnectionCategoryPage';
+import PublishedInternationalTreaties from './../features/visitor/PublishedInternationalTreaties/PublishedInternationalTreaties';
+import PublishedLawDissemination from './../features/visitor/PublishedLawDissemination/PublishedLawDissemination';
+import PublishedSuggestionBox from './../features/visitor/PublishedSuggestionBox/PublishedSuggestionBox';
 
 // Public routes
 const publicRoutes = [
@@ -62,6 +65,18 @@ const publicRoutes = [
   {
     path: config.routes.publishedNewsPostCategory,
     component: PublishedNewsFieldPage,
+  },
+  {
+    path: config.routes.publishedInternationalTreaties,
+    component: PublishedInternationalTreaties,
+  },
+  {
+    path: config.routes.publishedLawDissemination,
+    component: PublishedLawDissemination,
+  },
+  {
+    path: config.routes.publishedSuggestionBox,
+    component: PublishedSuggestionBox,
   },
 
   { path: config.routes.publishedIntroduce, component: PublishedIntroducePage },
