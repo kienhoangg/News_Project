@@ -200,11 +200,9 @@ namespace News.API.Controllers
                 };
             var categoryNews =
                 await _categoryNewsService
-                    .GetCategoryNewsByPaging(new CategoryNewsRequest()
-                    { PageSize = 5, Status = Status.Enabled },
-                    lstInclude);
+                    .GetNewsPostEachCategoryNews();
             if (categoryNews == null) return NotFound();
-            return Ok(categoryNews.PagedData.Results);
+            return Ok(categoryNews);
         }
         [HttpPost("comments/filter")]
         public async Task<IActionResult>
