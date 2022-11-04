@@ -11,5 +11,6 @@ namespace Models.Dtos
         public string? Keyword { get; set; }
         public int? FieldNews_SK_FK { get; set; }
         public FieldNewsDto? FieldNews { get; set; }
+        public List<NewsPostDto>? NewsPosts { get; set; }
     }
 }

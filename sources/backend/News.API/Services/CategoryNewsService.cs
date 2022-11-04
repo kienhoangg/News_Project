@@ -55,7 +55,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.Username.Contains(commentRequest.Keyword));
             }
-            return query;
+            return query.Include(x => x.NewsPost);
         }
 
 
@@ -73,14 +73,37 @@ namespace News.API.Services
             }
             return categoryNewsDto;
         }
+        public async Task<List<CategoryNews>> GetNewsPostEachCategoryNews(CategoryNewsRequest categoryNewsRequest)
+        {
+            IQueryable<CategoryNews> query = FindAll(includeProperties: x => x.NewsPosts);
+            var currentPage = categoryNewsRequest.CurrentPage.HasValue ? categoryNewsRequest.CurrentPage.Value : 1;
+            var pageSize = categoryNewsRequest.PageSize.HasValue ? categoryNewsRequest.PageSize.Value : 5;
+            var result = query
+            .Skip((currentPage - 1) * pageSize)
+                                   .Take(pageSize).OrderBy(x => x.Order)
+                        .Select(a => new { a, NewsPosts = a.NewsPosts.Skip(0).Take(5).ToList() })
+                        .AsEnumerable()
+                        .Select(x =>
+                        {
+                            x.a.NewsPosts = x.NewsPosts;
+                            return x.a;
+                        }).ToList();
+
+            return result;
+        }
+
 
         public async Task<ApiSuccessResult<CategoryNewsDto>> GetCategoryNewsByPaging(CategoryNewsRequest categoryNewsRequest, params Expression<Func<CategoryNews, object>>[] includeProperties)
         {
-            var query = FindAll();
+            IQueryable<CategoryNews> query = null;
 
             if (includeProperties.ToList().Count > 0)
             {
                 query = FindAll(includeProperties: includeProperties);
+            }
+            else
+            {
+                query = FindAll();
             }
 
             if (!string.IsNullOrEmpty(categoryNewsRequest.Keyword))

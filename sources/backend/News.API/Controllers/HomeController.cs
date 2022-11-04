@@ -45,6 +45,9 @@ namespace News.API.Controllers
         private readonly IVideoService _videoService;
         private readonly IStaticInfoService _staticInfoService;
 
+        private readonly IFeedbackService _feedbackService;
+        private readonly IRadioService _radioService;
+
 
 
         private readonly IMapper _mapper;
@@ -70,7 +73,9 @@ namespace News.API.Controllers
             IVideoService videoService,
             IQuestionCategoryService questionCategoryService,
             IVideoCategoryService videoCategoryService,
-            IStaticInfoService staticInfoService)
+            IStaticInfoService staticInfoService,
+            IFeedbackService feedbackService,
+            IRadioService radioService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -92,6 +97,8 @@ namespace News.API.Controllers
             _questionCategoryService = questionCategoryService;
             _videoCategoryService = videoCategoryService;
             _staticInfoService = staticInfoService;
+            _feedbackService = feedbackService;
+            _radioService = radioService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -183,6 +190,17 @@ namespace News.API.Controllers
             if (fields == null) return NotFound();
             return Ok(fields.PagedData.Results);
         }
+
+        [HttpGet("published/categorynews")]
+        public async Task<IActionResult> GetNewsPostEachCategoryNews()
+        {
+            var categoryNews =
+                await _categoryNewsService
+                    .GetNewsPostEachCategoryNews(new CategoryNewsRequest()
+                    { PageSize = 2, Status = Status.Enabled });
+            if (categoryNews == null) return NotFound();
+            return Ok(categoryNews);
+        }
         [HttpPost("comments/filter")]
         public async Task<IActionResult>
        GetCommentByPaging([FromBody] CommentRequest commentRequest)
@@ -207,6 +225,47 @@ namespace News.API.Controllers
         public async Task<IActionResult> GetNewsPostCategoryEachCategoryNewsName([FromBody] NewsPostRequest newsPostRequest)
         {
             var result = await _newsPostService.GetNewsPostEachCategoryNewsName(newsPostRequest);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>
+            CreateFeedbackDto([FromForm] FeedbackUploadDto feedbackUploadDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Cover case avatar extension not equal
+                var lstError = ModelState.SelectMany(x => x.Value.Errors);
+                if (lstError.Count() > 0)
+                {
+                    var lstErrorString = new List<string>();
+                    foreach (var err in lstError)
+                    {
+                        lstErrorString.Add(err.ErrorMessage);
+                    }
+                    return BadRequest(new ApiErrorResult<Feedback
+                    >(lstErrorString));
+                }
+            }
+            string fileAttachmentPath = "";
+            var feedback = _serializeService
+                  .Deserialize<Feedback>(feedbackUploadDto.JsonString);
+            if (HttpContext.Items["HandledStatus"] != null)
+            {
+                feedback.Status = Status.Enabled;
+            }
+            // Upload file attachment if exist
+            if (feedbackUploadDto.FileAttachment != null)
+            {
+                fileAttachmentPath =
+                    await feedbackUploadDto
+                        .FileAttachment
+                        .UploadFile(CommonConstants.FILE_ATTACHMENT_PATH);
+            }
+            feedback.FileAttachment = fileAttachmentPath;
+            await _feedbackService.CreateFeedback(feedback);
+
+            var result = _mapper.Map<FeedbackDto>(feedback);
             return Ok(result);
         }
 
@@ -327,6 +386,25 @@ namespace News.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("radios/filter")]
+        public async Task<IActionResult>
+      GetRadioByPaging([FromBody] RadioRequest radioRequest)
+        {
+            var result =
+                await _radioService.GetRadioByPaging(radioRequest);
+            return Ok(result);
+        }
+
+        [HttpGet("radios/{id:int}")]
+        public async Task<IActionResult> GetRadioById([Required] int id)
+        {
+            Radio? radio = await _radioService.GetRadio(id);
+            if (radio == null) return NotFound();
+
+            var result = _mapper.Map<RadioDto>(radio);
+            return Ok(result);
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -363,7 +441,7 @@ namespace News.API.Controllers
             var lstDocuments =
                            (await _documentService.GetDocumentByPaging(new DocumentRequest()
                            {
-                               PageSize = 15,
+                               PageSize = 10,
                                CurrentPage = 1,
                                OrderBy = "Order",
                                Direction = 1,

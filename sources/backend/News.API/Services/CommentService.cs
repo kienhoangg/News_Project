@@ -13,6 +13,7 @@ using Models.Entities;
 using Models.Requests;
 using News.API.Interfaces;
 using News.API.Persistence;
+using Newtonsoft.Json;
 
 namespace News.API.Services
 {
@@ -45,7 +46,7 @@ namespace News.API.Services
 
         public async Task<ApiSuccessResult<CommentDto>> GetCommentByPaging(CommentRequest commentRequest, params Expression<Func<Comment, object>>[] includeProperties)
         {
-            var query = FindAll(includeProperties: x => x.NewsPost);
+            IQueryable<Comment> query = null;
 
             if (commentRequest.CategoryNewsId.HasValue)
             {
@@ -53,6 +54,7 @@ namespace News.API.Services
             }
             else
             {
+                query = FindAll(includeProperties: x => x.NewsPost);
                 if (!string.IsNullOrEmpty(commentRequest.Keyword))
                 {
                     query = query.Where((x => x.Username.Contains(commentRequest.Keyword)));

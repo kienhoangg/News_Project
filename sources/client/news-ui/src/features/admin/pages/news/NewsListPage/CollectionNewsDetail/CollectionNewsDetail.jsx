@@ -117,6 +117,14 @@ function CollectionNewsDetail(props) {
                     </Row>
                     <Row gutter={16} className={cx('row-item')}>
                         <Col span={4}>
+                            <div className={cx('row-item-label')}>Cộng tác viên</div>
+                        </Col>
+                        <Col span={20}>
+                            <div>{dataDetail?.CollaboratorNews?.Name}</div>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} className={cx('row-item')}>
+                        <Col span={4}>
                             <div className={cx('row-item-label')}>Tin hành chính</div>
                         </Col>
                         <Col span={20}>
