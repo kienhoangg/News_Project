@@ -182,7 +182,8 @@ function ImageCategoryPage(props) {
     <Select
       placeholder='Chọn cấp cha'
       style={{ width: '100%' }}
-      allowClear={true}
+      showSearch
+      allowClear
     >
       {dataRoot.map((x) => (
         <Option value={x.Id} key={x.Id}>
