@@ -55,7 +55,7 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.Username.Contains(commentRequest.Keyword));
             }
-            return query;
+            return query.Include(x => x.NewsPost);
         }
 
 
