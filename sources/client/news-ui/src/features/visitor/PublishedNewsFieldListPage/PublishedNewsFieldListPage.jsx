@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './PublishedNewsListCategoryPage.module.scss';
+import styles from './PublishedNewsFieldListPage.module.scss';
 import classNames from 'classnames/bind';
 import { Breadcrumb, Skeleton } from 'antd';
 import publishedNewsApi from 'apis/published/publishedNewsApi';

@@ -41,7 +41,7 @@ export const commonRender = {
     * @returns Đường dẫn chi tiết tin tức
     */
     renderLinkNewsCategory: (id) => {
-        var link = routes.publishedNewsPostCategory.replace(":id", id);
+        var link = routes.publishedNewsPostFieldDetail.replace(":id", id);
         return link;
     },
 
@@ -51,7 +51,7 @@ export const commonRender = {
     * @returns Đường dẫn chi tiết tin tức
     */
     renderLinkNewsField: (id, date = undefined) => {
-        var link = routes.publishedNewsPostCategory.replace(":id", id);
+        var link = routes.publishedNewsPostFieldDetail.replace(":id", id);
         if (date) {
             link = link + `?date=${datetimeHelper.formatDateToDateVN(date)}`;
         }

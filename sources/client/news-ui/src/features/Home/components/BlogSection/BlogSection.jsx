@@ -43,7 +43,7 @@ function BlogSection(props) {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Link className={cx('btn-view')} to={routes.publishedNewsPostListCategory}>
+                            <Link className={cx('btn-view')} to={routes.publishedNewsPostFieldList}>
                                 <span>Xem thêm</span>
                             </Link>
                         </Col>
