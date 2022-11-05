@@ -9,6 +9,7 @@ const routes = {
 
   publishedNewsPostFieldList: '/news-posts/fields',
   publishedNewsPostFieldDetail: '/news-posts/fields/:id',
+  publishedNewsPostCategoryDetail: '/news-posts/categories/:id',
   publishedInternationalTreaties: '/news-posts/international-treaties',
   publishedLawDissemination: '/news-posts/law-dissemination',
   publishedSuggestionBox: '/news-posts/suggestion-box',

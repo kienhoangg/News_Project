@@ -44,15 +44,17 @@ class PublishedNewsApi {
     }
 
     return axiosClient.post(url, body);
+  }
 
-    // var response = {
-    //     data: {
-    //         field: datafakePublishedDocument.field,
-    //         category: datafakePublishedDocument.category
-    //     },
-    //     total: 20
-    // }
-    // return response;
+  getCategoryDetailDataPage(params) {
+    const { id, currentPage } = params;
+    const url = `/home/published/categorynews/${id}`;
+    const body = {
+      CurrentPage: currentPage,
+      PageSize: 6,
+    };
+
+    return axiosClient.post(url, body);
   }
 
   getInternationalTreatiesPage(body) {

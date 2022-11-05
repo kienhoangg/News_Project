@@ -46,6 +46,7 @@ import ConnectionCategoryPage from '../features/admin/pages/connection/Connectio
 import PublishedInternationalTreaties from './../features/visitor/PublishedInternationalTreaties/PublishedInternationalTreaties';
 import PublishedLawDissemination from './../features/visitor/PublishedLawDissemination/PublishedLawDissemination';
 import PublishedSuggestionBox from './../features/visitor/PublishedSuggestionBox/PublishedSuggestionBox';
+import PublishedNewsCategoryDetailPage from 'features/visitor/PublishedNewsCategoryDetailPage/PublishedNewsCategoryDetailPage';
 
 // Public routes
 const publicRoutes = [
@@ -65,6 +66,10 @@ const publicRoutes = [
   {
     path: config.routes.publishedNewsPostFieldDetail,
     component: PublishedNewsFieldPage,
+  },
+  {
+    path: config.routes.publishedNewsPostCategoryDetail,
+    component: PublishedNewsCategoryDetailPage,
   },
   {
     path: config.routes.publishedInternationalTreaties,
