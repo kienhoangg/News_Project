@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import styles from './PublishedDocumentPrintPage.module.scss';
-import classNames from 'classnames/bind';
+import { Skeleton } from 'antd';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
-import { Col, Row, Skeleton } from 'antd';
-import datetimeHelper from 'helpers/datetimeHelper';
-import { useParams } from 'react-router-dom';
+import classNames from 'classnames/bind';
 import imageHelper from 'helpers/imageHelper';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styles from './PublishedNewsPostPrintPage.module.scss';
 
 const cx = classNames.bind(styles);
 

@@ -22,8 +22,8 @@ import QuestionListPage from 'features/admin/pages/questions/QuestionListPage/Qu
 import MenuPage from 'features/admin/pages/setup/MenuPage/MenuPage';
 import Home from 'features/Home/Home';
 import AlbumImageDetailPage from 'features/visitor/ImageListPage/AlbumImageDetailPage';
-import PublishedDocumentPage from 'features/visitor/PublishedDocumentPage/PublishedDocumentPage';
-import PublishedDocumentPrintPage from 'features/visitor/PublishedDocumentPrintPage/PublishedDocumentPrintPage';
+import PublishedDocumentPage from 'features/visitor/PublishedNewsPostPage/PublishedNewsPostPage';
+import PublishedDocumentPrintPage from 'features/visitor/PublishedNewsPostPrintPage/PublishedNewsPostPrintPage';
 import PublishedEvaluatePage from 'features/visitor/PublishedEvaluatePage/PublishedEvaluatePage';
 import PublishedIntroducePage from 'features/visitor/PublishedIntroducePage/PublishedIntroducePage';
 import PublishedMenuPage from 'features/visitor/PublishedMenuPage/PublishedMenuPage';

@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import styles from './PublishedDocumentPage.module.scss';
-import classNames from 'classnames/bind';
-import FormVisitorComment from 'features/visitor/components/FormVisitorComment/FormVisitorComment';
+import { MinusOutlined, PlusOutlined, PrinterOutlined, SoundOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, Col, DatePicker, Row, Skeleton } from 'antd';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
-import { Link, useLocation, useParams } from 'react-router-dom';
-import datetimeHelper from 'helpers/datetimeHelper';
+import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
-import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
-import { Breadcrumb, Button, Col, DatePicker, notification, Row, Skeleton } from 'antd';
-import { FacebookShareButton, TwitterShareButton } from 'react-share';
-import { FacebookIcon, TwitterIcon } from 'react-share';
-import { MinusOutlined, PlusCircleOutlined, PlusOutlined, PrinterOutlined, SoundOutlined } from '@ant-design/icons';
-import moment from 'moment';
 import constant from 'common/constant';
+import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
+import FormVisitorComment from 'features/visitor/components/FormVisitorComment/FormVisitorComment';
+import datetimeHelper from 'helpers/datetimeHelper';
 import imageHelper from 'helpers/imageHelper';
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { FacebookIcon, FacebookShareButton } from 'react-share';
+import styles from './PublishedNewsPostPage.module.scss';
 
 const cx = classNames.bind(styles);
 
