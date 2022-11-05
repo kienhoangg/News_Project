@@ -35,6 +35,25 @@ namespace News.API.Services
             await DeleteAsync(publicInformationCategory);
         }
 
+        public async Task<List<PublicInformationCategory>> GetPublicInformationByCategory(PublicInformationCategoryRequest publicInformationCategoryRequest)
+        {
+            IQueryable<PublicInformationCategory> query = FindAll(includeProperties: x => x.PublicInformations);
+            var currentPage = publicInformationCategoryRequest.CurrentPage.HasValue ? publicInformationCategoryRequest.CurrentPage.Value : 1;
+            var pageSize = publicInformationCategoryRequest.PageSize.HasValue ? publicInformationCategoryRequest.PageSize.Value : 5;
+            var result = query
+            .Skip((currentPage - 1) * pageSize)
+                                   .Take(pageSize).OrderBy(x => x.Order)
+                        .Select(a => new { a, PublicInformations = a.PublicInformations.Skip(0).Take(5).ToList() })
+                        .AsEnumerable()
+                        .Select(x =>
+                        {
+                            x.a.PublicInformations = x.PublicInformations;
+                            return x.a;
+                        }).ToList();
+
+            return result;
+        }
+
         public async Task<PublicInformationCategory> GetPublicInformationCategory(int id)
         {
             return await GetByIdAsync(id);

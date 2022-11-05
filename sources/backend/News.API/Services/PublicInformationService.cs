@@ -37,8 +37,10 @@ namespace News.API.Services
 
         public async Task<PublicInformation> GetPublicInformation(int id)
         {
-            return await GetByIdAsync(id);
+            return await GetByIdAsync(id, includeProperties: x => x.PublicInformationCategory);
         }
+
+       
 
         public async Task<ApiSuccessResult<PublicInformationDto>> GetPublicInformationByPaging(PublicInformationRequest publicInformationRequest, params Expression<Func<PublicInformation, object>>[] includeProperties)
         {

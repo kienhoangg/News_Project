@@ -79,7 +79,7 @@ namespace News.API.Services
         }
         public async Task<List<CategoryNews>> GetNewsPostEachCategoryNews(CategoryNewsRequest categoryNewsRequest)
         {
-            IQueryable<CategoryNews> query = FindAll(includeProperties: x => x.NewsPosts);
+            IQueryable<CategoryNews> query = FindByCondition(x => x.ParentId == 7, includeProperties: x => x.NewsPosts);
             var currentPage = categoryNewsRequest.CurrentPage.HasValue ? categoryNewsRequest.CurrentPage.Value : 1;
             var pageSize = categoryNewsRequest.PageSize.HasValue ? categoryNewsRequest.PageSize.Value : 5;
             var result = query

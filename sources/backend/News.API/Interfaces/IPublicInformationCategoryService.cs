@@ -25,5 +25,7 @@ namespace News.API.Interfaces
 
         Task DeletePublicInformationCategory(int id);
         Task UpdateManyPublicInformationCategoryDto(List<int> lstFieldsNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+
+        Task<List<PublicInformationCategory>> GetPublicInformationByCategory(PublicInformationCategoryRequest publicInformationCategoryRequest);
     }
 }

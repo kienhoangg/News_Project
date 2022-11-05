@@ -47,6 +47,8 @@ namespace News.API.Controllers
 
         private readonly IFeedbackService _feedbackService;
         private readonly IRadioService _radioService;
+        private readonly IPublicInformationService _publicInformationService;
+        private readonly IPublicInformationCategoryService _publicInformationCategoryService;
 
 
 
@@ -75,7 +77,9 @@ namespace News.API.Controllers
             IVideoCategoryService videoCategoryService,
             IStaticInfoService staticInfoService,
             IFeedbackService feedbackService,
-            IRadioService radioService)
+            IRadioService radioService,
+            IPublicInformationService publicInformationService,
+            IPublicInformationCategoryService publicInformationCategoryService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -99,6 +103,8 @@ namespace News.API.Controllers
             _staticInfoService = staticInfoService;
             _feedbackService = feedbackService;
             _radioService = radioService;
+            _publicInformationService = publicInformationService;
+            _publicInformationCategoryService = publicInformationCategoryService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -178,12 +184,12 @@ namespace News.API.Controllers
         [HttpGet("published/fields")]
         public async Task<IActionResult> GetNewsPostEachFields()
         {
-            var categoryNews =
-               await _categoryNewsService
-                   .GetNewsPostEachCategoryNews(new CategoryNewsRequest()
+            var fieldNews =
+               await _fieldNewsService
+                   .GetNewsPostEachFieldNews(new FieldNewsRequest()
                    { PageSize = 5, Status = Status.Enabled });
-            if (categoryNews == null) return NotFound();
-            return Ok(categoryNews);
+            if (fieldNews == null) return NotFound();
+            return Ok(fieldNews);
         }
 
         [HttpGet("published/categorynews")]
@@ -196,6 +202,37 @@ namespace News.API.Controllers
             if (categoryNews == null) return NotFound();
             return Ok(categoryNews);
         }
+
+        [HttpPost("publicinformations/filter")]
+        public async Task<IActionResult>
+      GetPublicInformationByPaging([FromBody] PublicInformationRequest publicInformationRequest)
+        {
+            var result =
+                await _publicInformationService.GetPublicInformationByPaging(publicInformationRequest);
+            return Ok(result);
+        }
+
+        [HttpGet("publicinformations/{id:int}")]
+        public async Task<IActionResult> GetPublicInformationById([Required] int id)
+        {
+            PublicInformation? publicInformation = await _publicInformationService.GetPublicInformation(id);
+            if (publicInformation == null) return NotFound();
+
+            var result = _mapper.Map<PublicInformationDto>(publicInformation);
+            return Ok(result);
+        }
+
+        [HttpGet("published/publicinformationcategories")]
+        public async Task<IActionResult> GetPublicInformationByCategory()
+        {
+            var publicInformationCategory =
+                await _publicInformationCategoryService
+                    .GetPublicInformationByCategory(new PublicInformationCategoryRequest()
+                    { PageSize = 5, Status = Status.Enabled });
+            if (publicInformationCategory == null) return NotFound();
+            return Ok(publicInformationCategory);
+        }
+
         [HttpPost("comments/filter")]
         public async Task<IActionResult>
        GetCommentByPaging([FromBody] CommentRequest commentRequest)
