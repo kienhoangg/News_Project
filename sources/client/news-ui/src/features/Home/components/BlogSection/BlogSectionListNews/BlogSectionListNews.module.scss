@@ -18,4 +18,13 @@
 .items {
     height: calc(100% - var(--title-height));
     overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 767px) {
+    .items {
+        height: 300px;
+    }
 }

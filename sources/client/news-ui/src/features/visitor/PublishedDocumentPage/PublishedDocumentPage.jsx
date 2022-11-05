@@ -84,7 +84,6 @@ function PublishedDocumentPage(props) {
 
     return (
         <div className={cx('wrapper')}>
-            Xin chào
             <ScrollToTop />
             <Skeleton loading={loading} active>
                 <div className={cx('menu-items')}>

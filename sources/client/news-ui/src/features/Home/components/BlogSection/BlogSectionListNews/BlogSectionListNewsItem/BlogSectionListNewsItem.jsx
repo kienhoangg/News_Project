@@ -18,9 +18,8 @@ function BlogSectionListNewsItem(props) {
 
     return (
         <Link className={cx('wrapper')} underline='none' to={commonRender.renderLinkDocumentDetail(Id)} color='inherit'>
-            {/* <FiberManualRecordIcon fontSize='small' /> */}
             <div className={cx('content')}>
-                <div className={cx('icon')}></div> {Name} <span className={cx('badge-new')}>new</span>
+                <div className={cx('icon')}></div> <span>{Name}</span> <span className={cx('badge-new')}>new</span>
             </div>
         </Link>
     );

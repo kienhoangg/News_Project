@@ -8,7 +8,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import { Pagination, Skeleton } from 'antd';
 import stringHelper from 'helpers/stringHelper';
-import PublishedNewsListCategoryPageItem from './../PublishedNewsListCategoryPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
+import PublishedNewsListCategoryPageItem from '../PublishedNewsFieldListPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
 import config from 'config/config';
 import { DEFAULT_COLUMN_FILTER } from 'common/constant';
 import { DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
@@ -38,9 +38,8 @@ function PublishedLawDissemination(props) {
           currentPage: pagingIndex,
           categoryNewsName: DEFAULT_COLUMN_FILTER,
         };
-        const response = await publishedNewsApi.getInternationalTreatiesPage(
-          params
-        );
+        const response =
+          await publishedNewsApi.getInternationalLawDissemination(params);
         setDataPageFullPage(response);
         dataPage.current = response?.PagedData?.Results?.[0]?.CategoryNews;
         dataTotal.current = response?.NewsPosts.RowCount;

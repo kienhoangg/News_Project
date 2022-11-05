@@ -4,7 +4,7 @@ import styles from './PublishedNewsFieldPage.module.scss';
 import classNames from 'classnames/bind';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
 import commonRender, { commonRenderTable } from 'common/commonRender';
-import PublishedNewsListCategoryPageItem from '../PublishedNewsListCategoryPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
+import PublishedNewsListCategoryPageItem from '../PublishedNewsFieldListPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import { Pagination, Skeleton } from 'antd';

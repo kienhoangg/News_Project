@@ -8,7 +8,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import { Pagination, Skeleton } from 'antd';
 import stringHelper from 'helpers/stringHelper';
-import PublishedNewsListCategoryPageItem from './../PublishedNewsListCategoryPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
+import PublishedNewsListCategoryPageItem from '../PublishedNewsFieldListPage/PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
 import config from 'config/config';
 import { DEFAULT_COLUMN_FILTER } from 'common/constant';
 import { DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
@@ -21,7 +21,7 @@ PublishedInternationalTreaties.propTypes = {};
 function PublishedInternationalTreaties(props) {
   const [loading, setLoading] = useState(true);
 
-  const [dataPageFullPage, setDataPageFullPage] = useState();
+  const [dataPageFullPage, setDataPageFullPage] = useState([]);
   const dataPage = useRef(null);
   const dataTotal = useRef(1);
 
@@ -42,8 +42,8 @@ function PublishedInternationalTreaties(props) {
           params
         );
         setDataPageFullPage(response);
-        dataPage.current = response?.PagedData?.Results?.[0]?.CategoryNews;
-        dataTotal.current = response?.NewsPosts.RowCount;
+        dataPage.current = response?.[0];
+        dataTotal.current = response?.[0]?.NewsPosts?.length;
       } catch (error) {
         console.log('Failed to fetch list: ', error);
       } finally {
@@ -62,51 +62,37 @@ function PublishedInternationalTreaties(props) {
       <ScrollToTop />
       <Skeleton loading={loading} active>
         <>
-          {dataPage.current && (
-            <>
-              <div
-                key={dataPage.current?.CategoryId}
-                className={cx('category-container')}
-              >
+          {dataPageFullPage.map((dataItem, index) => {
+            return (
+              <div key={index} className={cx('category-container')}>
                 <div className={cx('title-container')}>
                   <Link
                     to={config.routes.publishedInternationalTreaties}
                     className={cx('title')}
                   >
-                    Điều ước quốc tế
+                    {dataItem?.CategoryNewsName}
                   </Link>
                   <span className={cx('right')}></span>
                 </div>
                 <div
                   style={{ border: '1px solid #0066b3', marginLeft: 8 }}
                 ></div>
-
-                {Array.isArray(dataPageFullPage?.PagedData?.Results) &&
-                  dataPageFullPage.PagedData.Results.map((dataItem, index) => {
+                {Array.isArray(dataItem?.NewsPosts) &&
+                  dataItem?.NewsPosts.map((item, idx) => {
                     return (
-                      <div key={index}>
+                      <div key={idx}>
                         <PublishedNewsListCategoryPageItem
-                          data={dataItem}
+                          data={item}
                           isFirst={true}
+                          showImg={idx === 0}
                         />
                         <div className={cx('divider')}></div>
                       </div>
                     );
                   })}
-                <Pagination
-                  className={cx('paging')}
-                  defaultCurrent={pagingIndex}
-                  total={dataTotal.current}
-                  showTotal={() =>
-                    commonRenderTable.showTableTotalPagination(
-                      dataTotal.current ?? 0
-                    )
-                  }
-                  onChange={handleOnChangeIndexPaging}
-                />
               </div>
-            </>
-          )}
+            );
+          })}
         </>
       </Skeleton>
     </div>
