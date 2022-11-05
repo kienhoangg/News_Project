@@ -46,6 +46,16 @@ export const commonRender = {
     },
 
     /**
+    * Lấy link đường dần chi tiết tin tức theo loại tin tức
+    * @param {string} id ID của loại tin tức
+    * @returns Đường dẫn chi tiết tin tức
+    */
+    renderLinkNewsCategoryDetail: (id) => {
+        var link = routes.publishedNewsPostCategoryDetail.replace(":id", id);
+        return link;
+    },
+
+    /**
     * Lấy link đường dần danh sách tin tức theo loại tin tức
     * @param {string} id ID của loại tin tức
     * @returns Đường dẫn chi tiết tin tức

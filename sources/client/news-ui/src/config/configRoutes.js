@@ -7,11 +7,12 @@ const routes = {
   publishedNewsPost: "/news-posts/detail/:id",
   publishedNewsPostPrint: "/news-posts/detail/print/:id",
 
-  publishedNewsPostFieldList: "/news-posts/fields",
-  publishedNewsPostFieldDetail: "/news-posts/fields/:id",
-  publishedInternationalTreaties: "/news-posts/international-treaties",
-  publishedLawDissemination: "/news-posts/law-dissemination",
-  publishedSuggestionBox: "/news-posts/suggestion-box",
+  publishedNewsPostFieldList: '/news-posts/fields',
+  publishedNewsPostFieldDetail: '/news-posts/fields/:id',
+  publishedNewsPostCategoryDetail: '/news-posts/categories/:id',
+  publishedInternationalTreaties: '/news-posts/international-treaties',
+  publishedLawDissemination: '/news-posts/law-dissemination',
+  publishedSuggestionBox: '/news-posts/suggestion-box',
 
   publishedDocumentDetail: "/documents/:id",
   publishedDocumentList: "/documents",
