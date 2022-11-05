@@ -1,4 +1,5 @@
-import routes from 'config/configRoutes';
+import routes from "config/configRoutes";
+import Radio from "../assets/icons/radio.png";
 
 const {
   FileTextFilled,
@@ -22,7 +23,8 @@ const {
   UnorderedListOutlined,
   InboxOutlined,
   BuildOutlined,
-} = require('@ant-design/icons');
+  RadiusUpleftOutlined,
+} = require("@ant-design/icons");
 
 const adminMenu = [
   // {
@@ -31,105 +33,105 @@ const adminMenu = [
   //     icon: <PieChartOutlined />
   // },
   {
-    key: 'news',
-    label: 'Tin tức - bài viết',
+    key: "news",
+    label: "Tin tức - bài viết",
     icon: <FileTextFilled />,
     children: [
       {
-        key: 'news-list',
-        label: 'Tin tức',
+        key: "news-list",
+        label: "Tin tức",
         icon: <FileTextFilled />,
         to: routes.adminNewsList,
       },
       {
-        key: 'news-hot',
-        label: 'Tin nổi bật',
+        key: "news-hot",
+        label: "Tin nổi bật",
         icon: <ThunderboltFilled />,
         to: routes.adminNewsHot,
       },
       {
-        key: 'news-comment',
-        label: 'Quản trị bình luận',
+        key: "news-comment",
+        label: "Quản trị bình luận",
         icon: <CommentOutlined />,
         to: routes.adminNewsComment,
       },
       {
-        key: 'news-source',
-        label: 'Nguồn tin',
+        key: "news-source",
+        label: "Nguồn tin",
         icon: <CloudFilled />,
         to: routes.adminNewsSource,
       },
       {
-        key: 'news-field',
-        label: 'Lĩnh vực',
+        key: "news-field",
+        label: "Lĩnh vực",
         icon: <AppstoreFilled />,
         to: routes.adminNewsField,
       },
       {
-        key: 'news-category',
-        label: 'Danh mục tin tức',
+        key: "news-category",
+        label: "Danh mục tin tức",
         icon: <ClusterOutlined />,
         to: routes.adminNewsCategory,
       },
       {
-        key: 'news-collaborators',
-        label: 'Cộng tác viên',
+        key: "news-collaborators",
+        label: "Cộng tác viên",
         icon: <UserOutlined />,
         to: routes.adminNewsCollaborators,
       },
     ],
   },
   {
-    key: 'document',
-    label: 'Văn bản điều hành',
+    key: "document",
+    label: "Văn bản điều hành",
     icon: <BookFilled />,
     children: [
       {
-        key: 'document-list',
-        label: 'Văn bản',
+        key: "document-list",
+        label: "Văn bản",
         icon: <BookFilled />,
         to: routes.adminDocumentList,
       },
       {
-        key: 'document-type',
-        label: 'Loại văn bản',
+        key: "document-type",
+        label: "Loại văn bản",
         icon: <CopyFilled />,
         to: routes.adminDocumentCategory,
       },
       {
-        key: 'document-source',
-        label: 'Cơ quan ban hành',
+        key: "document-source",
+        label: "Cơ quan ban hành",
         icon: <CloudFilled />,
         to: routes.adminDocumentSource,
       },
       {
-        key: 'document-field',
-        label: 'Lĩnh vực',
+        key: "document-field",
+        label: "Lĩnh vực",
         icon: <AppstoreFilled />,
         to: routes.adminDocumentField,
       },
       {
-        key: 'document-singer',
-        label: 'Người ký',
+        key: "document-singer",
+        label: "Người ký",
         icon: <AppstoreFilled />,
         to: routes.adminDocumentSinger,
       },
     ],
   },
   {
-    key: 'question',
-    label: 'Hỏi & đáp',
+    key: "question",
+    label: "Hỏi & đáp",
     icon: <QuestionCircleFilled />,
     children: [
       {
-        key: 'question-category',
-        label: 'Danh mục chủ đề',
+        key: "question-category",
+        label: "Danh mục chủ đề",
         icon: <QuestionCircleFilled />,
         to: routes.adminQuestionCategory,
       },
       {
-        key: 'question-list',
-        label: 'Danh sách câu hỏi',
+        key: "question-list",
+        label: "Danh sách câu hỏi",
         icon: <QuestionCircleFilled />,
         to: routes.adminQuestionList,
       },
@@ -142,39 +144,67 @@ const adminMenu = [
     ],
   },
   {
-    key: 'media',
-    label: 'Hình ảnh & video',
+    key: "media",
+    label: "Đa phương tiện",
     icon: <FileImageFilled />,
     children: [
       {
-        key: 'media-image',
-        label: 'Hình ảnh',
+        key: "media-image",
+        label: "Hình ảnh",
         icon: <FileImageFilled />,
         to: routes.adminMediaImageList,
       },
       {
-        key: 'media-image-category',
-        label: 'Danh mục hình ảnh',
+        key: "media-image-category",
+        label: "Danh mục hình ảnh",
         icon: <FileImageFilled />,
         to: routes.adminMediaImageCategory,
       },
       {
-        key: 'media-video',
-        label: 'Video',
+        key: "media-video",
+        label: "Video",
         icon: <VideoCameraFilled />,
         to: routes.adminMediaVideoList,
       },
       {
-        key: 'media-video-category',
-        label: 'Danh mục Video',
+        key: "media-video-category",
+        label: "Danh mục Video",
         icon: <VideoCameraFilled />,
         to: routes.adminMediaVideoCategory,
+      },
+      {
+        key: "media-radio",
+        label: "Radio",
+        icon: (
+          <img
+            style={{
+              width: 15,
+              height: 15,
+            }}
+            src={Radio}
+          />
+        ),
+        to: routes.adminMediaRadioList,
+      },
+      {
+        key: "media-radio-category",
+        label: "Danh mục radio",
+        icon: (
+          <img
+            style={{
+              width: 15,
+              height: 15,
+            }}
+            src={Radio}
+          />
+        ),
+        to: routes.adminMediaRadioCategory,
       },
     ],
   },
   {
-    key: 'advertisement',
-    label: 'Liên kết & doanh nghiệp',
+    key: "advertisement",
+    label: "Liên kết & doanh nghiệp",
     icon: <PlayCircleFilled />,
     children: [
       // {
@@ -190,58 +220,58 @@ const adminMenu = [
       //   to: routes.adminAdvertisementList,
       // },
       {
-        key: 'company-category',
-        label: 'Danh mục doanh nghiệp',
+        key: "company-category",
+        label: "Danh mục doanh nghiệp",
         icon: <PlayCircleFilled />,
         to: routes.adminCompanyCategory,
       },
       {
-        key: 'company-list',
-        label: 'Doanh nghiệp',
+        key: "company-list",
+        label: "Doanh nghiệp",
         icon: <PlayCircleFilled />,
         to: routes.adminCompanyList,
       },
       {
-        key: 'connection-category',
-        label: 'Danh mục liên kết',
+        key: "connection-category",
+        label: "Danh mục liên kết",
         icon: <ThunderboltFilled />,
         to: routes.adminConnectionCategory,
       },
       {
-        key: 'connection-list',
-        label: 'Liên kết',
+        key: "connection-list",
+        label: "Liên kết",
         icon: <ThunderboltFilled />,
         to: routes.adminConnectionList,
       },
     ],
   },
   {
-    key: 'setup',
-    label: 'Thiết lập cổng',
+    key: "setup",
+    label: "Thiết lập cổng",
     icon: <SettingOutlined />,
     children: [
       {
-        key: 'setup-menu',
-        label: 'Menu hệ thống',
+        key: "setup-menu",
+        label: "Menu hệ thống",
         icon: <MenuOutlined />,
         to: routes.adminSetupMenu,
       },
     ],
   },
   {
-    key: 'static',
-    label: 'Thông tin tĩnh',
+    key: "static",
+    label: "Thông tin tĩnh",
     icon: <HighlightOutlined />,
     children: [
       {
-        key: 'static-category',
-        label: 'Danh mục tĩnh',
+        key: "static-category",
+        label: "Danh mục tĩnh",
         icon: <UnorderedListOutlined />,
         to: routes.staticCategory,
       },
       {
-        key: 'static-content',
-        label: 'Nội dung tĩnh',
+        key: "static-content",
+        label: "Nội dung tĩnh",
         icon: <AuditOutlined />,
         to: routes.staticContent,
       },

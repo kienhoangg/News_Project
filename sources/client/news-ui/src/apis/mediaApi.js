@@ -7,20 +7,40 @@ class MediaApi {
     const url = "/Videos";
     return axiosClient.post(url, body);
   };
+  insertRadio = (body) => {
+    const url = "/Radios";
+    return axiosClient.post(url, body);
+  };
   deleteVideo = (id) => {
     const url = `/Videos/${id}`;
+    return axiosClient.delete(url);
+  };
+  deleteRadio = (id) => {
+    const url = `/Radios/${id}`;
     return axiosClient.delete(url);
   };
   updateStatusVideo = (body) => {
     const url = "/Videos";
     return axiosClient.put(url, body);
   };
+  updateStatusRadio = (body) => {
+    const url = "/Radios";
+    return axiosClient.put(url, body);
+  };
   updateVideo = (id, body) => {
     const url = `/Videos/${id}`;
     return axiosClient.put(url, body);
   };
+  updateRadio = (id, body) => {
+    const url = `/Radios/${id}`;
+    return axiosClient.put(url, body);
+  };
   getDetailVideo = (id) => {
     const url = `/Videos/${id}`;
+    return axiosClient.get(url);
+  };
+  getDetailRadio = (id) => {
+    const url = `/Radios/${id}`;
     return axiosClient.get(url);
   };
 
@@ -77,10 +97,20 @@ class MediaApi {
     return axiosClient.post(url, params);
   };
 
+  getRadioAll = (params = {}) => {
+    const url = "/radios/filter";
+    return axiosClient.post(url, params);
+  };
 
   //Video category
   getVideoCategoryFilter = (body) => {
-    const url = '/videocategories/filter';
+    const url = "/videocategories/filter";
+    return axiosClient.post(url, body);
+  };
+
+  //Video category
+  getRadioCategoryFilter = (body) => {
+    const url = "/radiocategories/filter";
     return axiosClient.post(url, body);
   };
 
@@ -89,18 +119,38 @@ class MediaApi {
     return axiosClient.get(url);
   };
 
+  getRadioCategoryByID = (id) => {
+    const url = `/radiocategories/${id}`;
+    return axiosClient.get(url);
+  };
+
   insertVideoCategory = (body) => {
-    const url = '/videocategories';
+    const url = "/videocategories";
+    return axiosClient.post(url, body);
+  };
+
+  insertRadioCategory = (body) => {
+    const url = "/radiocategories";
     return axiosClient.post(url, body);
   };
 
   updateVideoCategory = (id, body) => {
-    const url = '/videocategories/' + id;
+    const url = "/videocategories/" + id;
+    return axiosClient.put(url, body);
+  };
+
+  updateRadioCategory = (id, body) => {
+    const url = "/radiocategories/" + id;
     return axiosClient.put(url, body);
   };
 
   updateStatusVideoCategory = (body) => {
-    const url = '/videocategories';
+    const url = "/videocategories";
+    return axiosClient.put(url, body);
+  };
+
+  updateStatusRadioCategory = (body) => {
+    const url = "/radiocategories";
     return axiosClient.put(url, body);
   };
 
@@ -109,6 +159,10 @@ class MediaApi {
     return axiosClient.delete(url);
   };
 
+  deleteStatusRadioCategory = (id) => {
+    const url = `/radiocategories/${id}`;
+    return axiosClient.delete(url);
+  };
 }
 const mediaApi = new MediaApi();
 export default mediaApi;
