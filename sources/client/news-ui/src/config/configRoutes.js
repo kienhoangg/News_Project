@@ -7,8 +7,8 @@ const routes = {
   publishedNewsPost: "/news-posts/detail/:id",
   publishedNewsPostPrint: "/news-posts/detail/print/:id",
 
-  publishedNewsPostListCategory: "/news-posts/fields",
-  publishedNewsPostCategory: "/news-posts/fields/:id",
+  publishedNewsPostFieldList: "/news-posts/fields",
+  publishedNewsPostFieldDetail: "/news-posts/fields/:id",
   publishedInternationalTreaties: "/news-posts/international-treaties",
   publishedLawDissemination: "/news-posts/law-dissemination",
   publishedSuggestionBox: "/news-posts/suggestion-box",

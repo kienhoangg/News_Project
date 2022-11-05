@@ -17,6 +17,12 @@
         margin-right: 4px;
         margin-top: 4px;
     }
+
+    .content {
+        display: inline-block;
+        width: 100%;
+        white-space: break-spaces;
+    }
 }
 
 .badge-new {

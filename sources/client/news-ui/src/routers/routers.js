@@ -27,8 +27,8 @@ import PublishedDocumentPrintPage from "features/visitor/PublishedDocumentPrintP
 import PublishedEvaluatePage from "features/visitor/PublishedEvaluatePage/PublishedEvaluatePage";
 import PublishedIntroducePage from "features/visitor/PublishedIntroducePage/PublishedIntroducePage";
 import PublishedMenuPage from "features/visitor/PublishedMenuPage/PublishedMenuPage";
-import PublishedNewsFieldPage from "features/visitor/PublishedNewsFieldPage/PublishedNewsFieldPage";
-import PublishedNewsListCategoryPage from "features/visitor/PublishedNewsListCategoryPage/PublishedNewsListCategoryPage";
+import PublishedNewsFieldPage from "features/visitor/PublishedNewsFieldDetailPage/PublishedNewsFieldPage";
+import PublishedNewsListCategoryPage from "features/visitor/PublishedNewsFieldListPage/PublishedNewsFieldListPage";
 import PublishedNewsListDocumentPage from "features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage";
 import SearchPage from "features/visitor/SearchPage/SearchPage";
 import OperatingDocumentsPage from "features/visitor/OperatingDocumentsPage/OperatingDocumentsPage";
@@ -46,9 +46,9 @@ import ConnectionCategoryPage from "../features/admin/pages/connection/Connectio
 import PublishedInternationalTreaties from "./../features/visitor/PublishedInternationalTreaties/PublishedInternationalTreaties";
 import PublishedLawDissemination from "./../features/visitor/PublishedLawDissemination/PublishedLawDissemination";
 import PublishedSuggestionBox from "./../features/visitor/PublishedSuggestionBox/PublishedSuggestionBox";
-import PublishedAudioPage from "features/visitor/PublishedAudioPage/PublishedAudioPage";
 import RadioListPage from "features/admin/pages/media/RadioListPage/RadioListPage";
 import RadioCategoryPage from "features/admin/pages/media/RadioCategoryPage/RadioCategoryPage";
+import PublishedAudioPage from "features/visitor/PublishedAudioPage/PublishedAudioPage";
 
 // Public routes
 const publicRoutes = [
@@ -62,11 +62,11 @@ const publicRoutes = [
     layout: null,
   },
   {
-    path: config.routes.publishedNewsPostListCategory,
+    path: config.routes.publishedNewsPostFieldList,
     component: PublishedNewsListCategoryPage,
   },
   {
-    path: config.routes.publishedNewsPostCategory,
+    path: config.routes.publishedNewsPostFieldDetail,
     component: PublishedNewsFieldPage,
   },
   {
