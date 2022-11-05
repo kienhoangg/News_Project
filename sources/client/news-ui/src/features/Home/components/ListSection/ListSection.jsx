@@ -48,7 +48,7 @@ const LIST_BUTON = [
         Image: Images.LIST_BUTTON_ITEM,
     },
     {
-        Href: '/',
+        Href: routes.publishedPublicInformation,
         Label: 'THÔNG TIN CÔNG KHAI',
         Image: Images.LIST_BUTTON_ITEM,
     },

@@ -24,6 +24,8 @@ const {
   InboxOutlined,
   BuildOutlined,
   RadiusUpleftOutlined,
+  ExperimentOutlined,
+  AreaChartOutlined,
 } = require("@ant-design/icons");
 
 const adminMenu = [
@@ -45,7 +47,7 @@ const adminMenu = [
       },
       {
         key: "news-hot",
-        label: "Tin nổi bật",
+        label: "Tin hoạt động",
         icon: <ThunderboltFilled />,
         to: routes.adminNewsHot,
       },
@@ -78,6 +80,12 @@ const adminMenu = [
         label: "Cộng tác viên",
         icon: <UserOutlined />,
         to: routes.adminNewsCollaborators,
+      },
+      {
+        key: "news-statistics",
+        label: "Thống kê tin bài",
+        icon: <AreaChartOutlined />,
+        to: routes.adminNewsStatistics,
       },
     ],
   },
@@ -136,8 +144,8 @@ const adminMenu = [
         to: routes.adminQuestionList,
       },
       {
-        key: 'suggetion-box',
-        label: 'Hòm thư góp ý',
+        key: "suggetion-box",
+        label: "Hòm thư góp ý",
         icon: <InboxOutlined />,
         to: routes.adminSuggetionBox,
       },
@@ -278,19 +286,19 @@ const adminMenu = [
     ],
   },
   {
-    key: 'budget',
-    label: 'Công khai ngân sách',
+    key: "budget",
+    label: "Công khai ngân sách",
     icon: <BuildOutlined />,
     children: [
       {
-        key: 'budget-category',
-        label: 'Danh mục công khai',
+        key: "budget-category",
+        label: "Danh mục công khai",
         icon: <UnorderedListOutlined />,
         to: routes.budgetCategory,
       },
       {
-        key: 'budget-content',
-        label: 'Nội dung',
+        key: "budget-content",
+        label: "Nội dung",
         icon: <AuditOutlined />,
         to: routes.budgetContent,
       },

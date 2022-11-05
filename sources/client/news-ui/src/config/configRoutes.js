@@ -17,6 +17,7 @@ const routes = {
   publishedDocumentDetail: "/documents/:id",
   publishedDocumentList: "/documents",
 
+  publishedPublicInformation: "/public-information",
   publishedIntroduce: "/introduce",
   publishedStaticPage: "/page/:id", //Giành cho menu
 
@@ -42,6 +43,7 @@ const routes = {
   adminNewsCategory: "/admin/news/category",
   adminNewsComment: "/admin/news/comment",
   adminNewsCollaborators: "/admin/news/collaborators",
+  adminNewsStatistics: "/admin/news/statistics",
 
   adminDocumentList: "/admin/document/list",
   adminDocumentCategory: "/admin/document/category",

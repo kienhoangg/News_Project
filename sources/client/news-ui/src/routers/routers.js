@@ -28,7 +28,7 @@ import PublishedEvaluatePage from 'features/visitor/PublishedEvaluatePage/Publis
 import PublishedIntroducePage from 'features/visitor/PublishedIntroducePage/PublishedIntroducePage';
 import PublishedMenuPage from 'features/visitor/PublishedMenuPage/PublishedMenuPage';
 import PublishedNewsFieldPage from 'features/visitor/PublishedNewsFieldDetailPage/PublishedNewsFieldPage';
-import PublishedNewsListCategoryPage from 'features/visitor/PublishedNewsFieldListPage/PublishedNewsFieldListPage';
+import PublishedNewsFieldListPage from 'features/visitor/PublishedNewsFieldListPage/PublishedNewsFieldListPage';
 import PublishedNewsListDocumentPage from 'features/visitor/PublishedNewsListDocumentPage/PublishedNewsListDocumentPage';
 import SearchPage from 'features/visitor/SearchPage/SearchPage';
 import OperatingDocumentsPage from 'features/visitor/OperatingDocumentsPage/OperatingDocumentsPage';
@@ -53,6 +53,8 @@ import SuggetionBoxListPage from 'features/admin/pages/questions/SuggetionBox/Su
 import BudgetContentListPage from 'features/admin/pages/publicBudget/BudgetContent/BudgetContentListPage';
 import BudgetCategoryListPage from 'features/admin/pages/publicBudget/BudgetCategory/BudgetCategoryListPage';
 import PublishedAudioPage from 'features/visitor/PublishedAudioPage/PublishedAudioPage';
+import PublishedPublicInformation from 'features/visitor/PublishedPublicInformationPage/PublishedPublicInformation';
+import NewsStatisticsPage from 'features/admin/pages/news/NewsStatisticsPage/NewsStatisticsPage';
 
 // Public routes
 const publicRoutes = [
@@ -67,7 +69,7 @@ const publicRoutes = [
   },
   {
     path: config.routes.publishedNewsPostFieldList,
-    component: PublishedNewsListCategoryPage,
+    component: PublishedNewsFieldListPage,
   },
   {
     path: config.routes.publishedNewsPostFieldDetail,
@@ -137,6 +139,11 @@ const publicRoutes = [
   {
     path: config.routes.adminNewsCollaborators,
     component: NewsCollaboratorsPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminNewsStatistics,
+    component: NewsStatisticsPage,
     layout: AdminLayout,
   },
 
@@ -301,6 +308,10 @@ const publicRoutes = [
   {
     path: config.routes.publishedRadio,
     component: PublishedAudioPage,
+  },
+  {
+    path: config.routes.publishedPublicInformation,
+    component: PublishedPublicInformation,
   },
 
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },
