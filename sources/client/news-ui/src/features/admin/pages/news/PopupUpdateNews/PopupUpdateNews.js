@@ -106,13 +106,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             name: res?.Avatar,
             status: 'done',
             url:
-              res?.Avatar?.indexOf("https://") === 0 ||
-                res?.Avatar?.indexOf("http://") === 0
+              res?.Avatar?.indexOf('https://') === 0 ||
+              res?.Avatar?.indexOf('http://') === 0
                 ? res?.Avatar
                 : envDomainBackend +
-                (res?.Avatar?.indexOf("/") === 0
-                  ? res?.Avatar
-                  : "/" + res?.Avatar),
+                  (res?.Avatar?.indexOf('/') === 0
+                    ? res?.Avatar
+                    : '/' + res?.Avatar),
           },
         ]);
 
@@ -124,13 +124,13 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
             name: res?.FilePath,
             status: 'done',
             url:
-              res?.FilePath?.indexOf("https://") === 0 ||
-                res?.FilePath?.indexOf("http://") === 0
+              res?.FilePath?.indexOf('https://') === 0 ||
+              res?.FilePath?.indexOf('http://') === 0
                 ? res?.FilePath
                 : envDomainBackend +
-                (res?.FilePath?.indexOf("/") === 0
-                  ? res?.FilePath
-                  : "/" + res?.FilePath),
+                  (res?.FilePath?.indexOf('/') === 0
+                    ? res?.FilePath
+                    : '/' + res?.FilePath),
           },
         ]);
 
@@ -150,7 +150,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
         collaboratorId: res?.CollaboratorNews?.Name,
         content: res?.Content,
       });
-    } catch (err) { }
+    } catch (err) {}
   };
 
   const calllApiGetDataMaster = () => {
@@ -263,7 +263,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
       placeholder='Chọn loại tin tức'
       allowClear
       treeDefaultExpandAll
-      onChange={(res) => console.log(res)}
+      // onChange={(res) => console.log(res)}
     >
       {generateTree(commonFunc.list_to_tree(dataFilter?.categoryNews ?? []))}
     </TreeSelect>
@@ -287,8 +287,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
               .validateFields()
               .then((values) => {
                 values.content = values.content?.editor?.getData();
-                const date =
-                  values?.publishedDate?._d ?? '0001-01-01 00:00:00.0000000';
+                const date = values?.publishedDate?._d ?? new Date();
                 const publishedDate =
                   datetimeHelper.formatDatetimeToDateSerer(date);
                 const {
@@ -607,8 +606,8 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                     { name: 'others', groups: ['others'] },
                     { name: 'about', groups: ['about'] },
                   ],
-                  extraPlugins: "justify,font,colorbutton,forms,image2",
-                  removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                  extraPlugins: 'justify,font,colorbutton,forms,image2',
+                  removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
                 }}
               />
             </Form.Item>

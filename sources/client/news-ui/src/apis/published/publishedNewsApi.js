@@ -57,6 +57,11 @@ class PublishedNewsApi {
 
   getInternationalTreatiesPage(body) {
     const url = `/home/published/categorynews`;
+    return axiosClient.get(url);
+  }
+
+  getInternationalLawDissemination(body) {
+    const url = `/home/published/categorynews`;
     return axiosClient.post(url, body);
   }
 

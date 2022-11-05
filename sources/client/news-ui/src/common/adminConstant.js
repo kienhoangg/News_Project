@@ -20,6 +20,8 @@ const {
   ProfileOutlined,
   AuditOutlined,
   UnorderedListOutlined,
+  InboxOutlined,
+  BuildOutlined,
 } = require('@ant-design/icons');
 
 const adminMenu = [
@@ -131,6 +133,12 @@ const adminMenu = [
         icon: <QuestionCircleFilled />,
         to: routes.adminQuestionList,
       },
+      {
+        key: 'suggetion-box',
+        label: 'Hòm thư góp ý',
+        icon: <InboxOutlined />,
+        to: routes.adminSuggetionBox,
+      },
     ],
   },
   {
@@ -236,6 +244,25 @@ const adminMenu = [
         label: 'Nội dung tĩnh',
         icon: <AuditOutlined />,
         to: routes.staticContent,
+      },
+    ],
+  },
+  {
+    key: 'budget',
+    label: 'Công khai ngân sách',
+    icon: <BuildOutlined />,
+    children: [
+      {
+        key: 'budget-category',
+        label: 'Danh mục công khai',
+        icon: <UnorderedListOutlined />,
+        to: routes.budgetCategory,
+      },
+      {
+        key: 'budget-content',
+        label: 'Nội dung',
+        icon: <AuditOutlined />,
+        to: routes.budgetContent,
       },
     ],
   },

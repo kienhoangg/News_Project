@@ -46,6 +46,9 @@ import ConnectionCategoryPage from '../features/admin/pages/connection/Connectio
 import PublishedInternationalTreaties from './../features/visitor/PublishedInternationalTreaties/PublishedInternationalTreaties';
 import PublishedLawDissemination from './../features/visitor/PublishedLawDissemination/PublishedLawDissemination';
 import PublishedSuggestionBox from './../features/visitor/PublishedSuggestionBox/PublishedSuggestionBox';
+import SuggetionBoxListPage from 'features/admin/pages/questions/SuggetionBox/SuggetionBoxListPage';
+import BudgetContentListPage from 'features/admin/pages/publicBudget/BudgetContent/BudgetContentListPage';
+import BudgetCategoryListPage from 'features/admin/pages/publicBudget/BudgetCategory/BudgetCategoryListPage';
 
 // Public routes
 const publicRoutes = [
@@ -156,6 +159,12 @@ const publicRoutes = [
   },
 
   {
+    path: config.routes.adminSuggetionBox,
+    component: SuggetionBoxListPage,
+    layout: AdminLayout,
+  },
+
+  {
     path: config.routes.adminQuestionList,
     component: QuestionListPage,
     layout: AdminLayout,
@@ -247,6 +256,17 @@ const publicRoutes = [
   {
     path: config.routes.staticCategory,
     component: StaticCategoryListPage,
+    layout: AdminLayout,
+  },
+
+  {
+    path: config.routes.budgetContent,
+    component: BudgetContentListPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.budgetCategory,
+    component: BudgetCategoryListPage,
     layout: AdminLayout,
   },
 

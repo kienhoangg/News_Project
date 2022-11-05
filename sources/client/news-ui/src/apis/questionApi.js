@@ -1,11 +1,11 @@
-import commonFunc from "common/commonFunc";
-import axiosClient from "./axiosClient";
-import datafakeQuestion from "./datafake/datafakeQuestion";
+import commonFunc from 'common/commonFunc';
+import axiosClient from './axiosClient';
+import datafakeQuestion from './datafake/datafakeQuestion';
 // import axiosClient from "./axiosClient";
 
 class QuestionApi {
   getAll = (body) => {
-    const url = "/questions/filter";
+    const url = '/questions/filter';
     return axiosClient.post(url, body);
   };
 
@@ -51,8 +51,13 @@ class QuestionApi {
   };
 
   updateStatusQuestion = (body) => {
-    const url = "/Questions";
+    const url = '/Questions';
     return axiosClient.put(url, body);
+  };
+
+  getSuggetBoxFillter = (body) => {
+    const url = '/Feedbacks/filter';
+    return axiosClient.post(url, body);
   };
 }
 

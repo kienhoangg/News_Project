@@ -19,81 +19,84 @@ const cx = classNames.bind(styles);
 PublishedInternationalTreaties.propTypes = {};
 
 function PublishedInternationalTreaties(props) {
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-    const [dataPageFullPage, setDataPageFullPage] = useState();
-    const dataPage = useRef(null);
-    const dataTotal = useRef(1);
+  const [dataPageFullPage, setDataPageFullPage] = useState([]);
+  const dataPage = useRef(null);
+  const dataTotal = useRef(1);
 
-    const [pagingIndex, setPagingIndex] = useState(1);
+  const [pagingIndex, setPagingIndex] = useState(1);
 
-    useEffect(() => {
-        const fetchHome = async () => {
-            try {
-                const params = {
-                    direction: Direction.DESC,
-                    orderBy: DEFAULT_COLUMN_ORDER_BY,
-                    status: 1,
-                    pageSize: 6,
-                    currentPage: pagingIndex,
-                    categoryNewsName: DEFAULT_COLUMN_FILTER,
-                };
-                const response = await publishedNewsApi.getInternationalTreatiesPage(params);
-                setDataPageFullPage(response);
-                dataPage.current = response?.PagedData?.Results?.[0]?.CategoryNews;
-                dataTotal.current = response?.NewsPosts.RowCount;
-            } catch (error) {
-                console.log('Failed to fetch list: ', error);
-            } finally {
-                setLoading(false);
-            }
+  useEffect(() => {
+    const fetchHome = async () => {
+      try {
+        const params = {
+          direction: Direction.DESC,
+          orderBy: DEFAULT_COLUMN_ORDER_BY,
+          status: 1,
+          pageSize: 6,
+          currentPage: pagingIndex,
+          categoryNewsName: DEFAULT_COLUMN_FILTER,
         };
-        fetchHome();
-    }, [pagingIndex]);
+        const response = await publishedNewsApi.getInternationalTreatiesPage(
+          params
+        );
+        setDataPageFullPage(response);
+        dataPage.current = response?.[0];
+        dataTotal.current = response?.[0]?.NewsPosts?.length;
+      } catch (error) {
+        console.log('Failed to fetch list: ', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHome();
+  }, [pagingIndex]);
 
-    function handleOnChangeIndexPaging(params) {
-        setPagingIndex(params);
-    }
+  function handleOnChangeIndexPaging(params) {
+    setPagingIndex(params);
+  }
 
-    return (
-        <div className={cx('wrapper')}>
-            <ScrollToTop />
-            <Skeleton loading={loading} active>
-                <>
-                    {dataPage.current && (
-                        <>
-                            <div key={dataPage.current?.CategoryId} className={cx('category-container')}>
-                                <div className={cx('title-container')}>
-                                    <Link to={config.routes.publishedInternationalTreaties} className={cx('title')}>
-                                        Điều ước quốc tế
-                                    </Link>
-                                    <span className={cx('right')}></span>
-                                </div>
-                                <div style={{ border: '1px solid #0066b3', marginLeft: 8 }}></div>
-
-                                {Array.isArray(dataPageFullPage?.PagedData?.Results) &&
-                                    dataPageFullPage.PagedData.Results.map((dataItem, index) => {
-                                        return (
-                                            <div key={index}>
-                                                <PublishedNewsListCategoryPageItem data={dataItem} isFirst={true} />
-                                                <div className={cx('divider')}></div>
-                                            </div>
-                                        );
-                                    })}
-                                <Pagination
-                                    className={cx('paging')}
-                                    defaultCurrent={pagingIndex}
-                                    total={dataTotal.current}
-                                    showTotal={() => commonRenderTable.showTableTotalPagination(dataTotal.current ?? 0)}
-                                    onChange={handleOnChangeIndexPaging}
-                                />
-                            </div>
-                        </>
-                    )}
-                </>
-            </Skeleton>
-        </div>
-    );
+  return (
+    <div className={cx('wrapper')}>
+      <ScrollToTop />
+      <Skeleton loading={loading} active>
+        <>
+          {dataPageFullPage.map((dataItem, index) => {
+            return (
+              <div key={index} className={cx('category-container')}>
+                <div className={cx('title-container')}>
+                  <Link
+                    to={config.routes.publishedInternationalTreaties}
+                    className={cx('title')}
+                  >
+                    {dataItem?.CategoryNewsName}
+                  </Link>
+                  <span className={cx('right')}></span>
+                </div>
+                <div
+                  style={{ border: '1px solid #0066b3', marginLeft: 8 }}
+                ></div>
+                {Array.isArray(dataItem?.NewsPosts) &&
+                  dataItem?.NewsPosts.map((item, idx) => {
+                    return (
+                      <div key={idx}>
+                        <PublishedNewsListCategoryPageItem
+                          data={item}
+                          isFirst={true}
+                          showImg={idx === 0}
+                        />
+                        <div className={cx('divider')}></div>
+                      </div>
+                    );
+                  })}
+              </div>
+            );
+          })}
+        </>
+      </Skeleton>
+    </div>
+  );
 }
 
 export default PublishedInternationalTreaties;
