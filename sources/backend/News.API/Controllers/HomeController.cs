@@ -178,17 +178,12 @@ namespace News.API.Controllers
         [HttpGet("published/fields")]
         public async Task<IActionResult> GetNewsPostEachFields()
         {
-            Expression<Func<FieldNews, object>>[]? lstInclude =
-                new Expression<Func<FieldNews, object>>[] {
-                    (x => x.NewsPosts)
-                };
-            var fields =
-                await _fieldNewsService
-                    .GetFieldNewsByPaging(new FieldNewsRequest()
-                    { PageSize = 5, Status = Status.Enabled },
-                    lstInclude);
-            if (fields == null) return NotFound();
-            return Ok(fields.PagedData.Results);
+            var categoryNews =
+               await _categoryNewsService
+                   .GetNewsPostEachCategoryNews(new CategoryNewsRequest()
+                   { PageSize = 5, Status = Status.Enabled });
+            if (categoryNews == null) return NotFound();
+            return Ok(categoryNews);
         }
 
         [HttpGet("published/categorynews")]
@@ -197,7 +192,7 @@ namespace News.API.Controllers
             var categoryNews =
                 await _categoryNewsService
                     .GetNewsPostEachCategoryNews(new CategoryNewsRequest()
-                    { PageSize = 2, Status = Status.Enabled });
+                    { PageSize = 5, Status = Status.Enabled });
             if (categoryNews == null) return NotFound();
             return Ok(categoryNews);
         }
