@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FacebookIcon, FacebookShareButton } from 'react-share';
 import styles from './PublishedNewsPostPage.module.scss';
+import PublishedNewsPostPageCommentList from './PublishedNewsPostPageCommentList/PublishedNewsPostPageCommentList';
 
 const cx = classNames.bind(styles);
 
@@ -181,7 +182,10 @@ function PublishedDocumentPage(props) {
             </Skeleton>
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                 <div className={cx('comment')}>
-                    <div className={cx('comment-title')}>Ý kiến bạn đọc</div>
+                    <div className={cx('comment-title')}>Ý kiến bạn đọc (10)</div>
+                    <div className={cx('comment-list')}>
+                        <PublishedNewsPostPageCommentList />
+                    </div>
                     <div className={cx('divider')}></div>
                     <FormVisitorComment onFinish={onFinishComment} resetFields={resetCommentFields} submitLoading={loadingSubmit} />
                 </div>
