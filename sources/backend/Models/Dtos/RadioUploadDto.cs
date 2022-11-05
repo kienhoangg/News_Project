@@ -7,7 +7,7 @@ namespace Models.Dtos
 {
     public class RadioUploadDto : UploadDtoBase
     {
-        public long? Id { get; set; }
+        public int? Id { get; set; }
 
         [AllowedSize("err file size", 2 * 1024 * 1024)]
         public IFormFile? FileAttachment { get; set; }

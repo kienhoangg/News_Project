@@ -1,0 +1,23 @@
+.wrapper {
+    box-sizing: content-box;
+    // height: 100%;
+    // overflow: auto;
+
+    .top {
+        padding-bottom: 8px;
+    }
+
+    .table-data {
+        padding-top: 8px;
+        flex: 1;
+    }
+}
+
+.row-item {
+    margin-bottom: 16px;
+
+    .row-item-label {
+        text-align: right;
+        font-weight: 600;
+    }
+}
