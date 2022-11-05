@@ -287,7 +287,7 @@ function OperatingDocumentsPage(props) {
                   "operating-documents-page__left__search-document__body__row__label"
                 )}
               >
-                <span>{"Tiêu đề"}</span>
+                <span>{"Trích yếu"}</span>
               </div>
 
               <div
