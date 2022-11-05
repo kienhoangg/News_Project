@@ -17,6 +17,7 @@ const routes = {
   publishedDocumentDetail: "/documents/:id",
   publishedDocumentList: "/documents",
 
+  publishedPublicInformation: "/public-information",
   publishedIntroduce: "/introduce",
   publishedStaticPage: "/page/:id", //Giành cho menu
 

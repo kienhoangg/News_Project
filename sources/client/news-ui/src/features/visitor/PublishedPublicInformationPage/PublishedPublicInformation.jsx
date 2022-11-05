@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import styles from './PublishedNewsFieldListPage.module.scss';
-import classNames from 'classnames/bind';
-import { Breadcrumb, Skeleton } from 'antd';
+import { Skeleton } from 'antd';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
-import { Link } from 'react-router-dom';
+import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
-import PublishedNewsListCategoryPageItem from './PublishedNewsListCategoryPageItem/PublishedNewsListCategoryPageItem';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './PublishedPublicInformation.module.scss';
+import PublishedPublicInformationPageItem from './PublishedPublicInformationPageItem/PublishedPublicInformationPageItem';
 
 const cx = classNames.bind(styles);
 
-PublishedNewsFieldListPage.propTypes = {
+PublishedPublicInformation.propTypes = {
     data: PropTypes.object,
 };
 
-PublishedNewsFieldListPage.defaultProps = {};
+PublishedPublicInformation.defaultProps = {};
 
-function PublishedNewsFieldListPage(props) {
+function PublishedPublicInformation(props) {
     const [dataPage, setDataPage] = useState();
     const [loading, setLoading] = useState(true);
 
@@ -55,13 +55,18 @@ function PublishedNewsFieldListPage(props) {
 
                                     {Array.isArray(item?.NewsPosts) &&
                                         item.NewsPosts.map((dataItem, index) => {
+                                            dataItem.Description = '';
+                                            dataItem.Description = '';
+
                                             return (
                                                 <>
-                                                    <PublishedNewsListCategoryPageItem key={dataItem.Id} data={dataItem} isFirst={index === 0} />
+                                                    <PublishedPublicInformationPageItem key={dataItem.Id} data={dataItem} isFirst={index === 0} />
                                                     <div className={cx('divider')}></div>
                                                 </>
                                             );
                                         })}
+
+                                    <Link className={cx('see-more')}>Xem thêm >></Link>
                                 </div>
                             );
                         })}
@@ -71,4 +76,4 @@ function PublishedNewsFieldListPage(props) {
     );
 }
 
-export default PublishedNewsFieldListPage;
+export default PublishedPublicInformation;
