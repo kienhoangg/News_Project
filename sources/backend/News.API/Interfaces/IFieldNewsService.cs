@@ -25,5 +25,6 @@ namespace News.API.Interfaces
 
         Task DeleteFieldNews(int id);
         Task UpdateManyFieldNewsDto(List<int> lstFieldsNewsId, bool value, MultipleTypeUpdate multipleTypeUpdate);
+        Task<List<FieldNews>> GetNewsPostEachFieldNews(FieldNewsRequest fieldNewsRequest);
     }
 }

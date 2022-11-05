@@ -32,7 +32,11 @@ namespace News.API.Services
 
         public async Task<CategoryNews> GetCategoryNewsByCondition(Expression<Func<CategoryNews, bool>> expression)
         {
-            return await FindByCondition(expression, includeProperties: x => x.NewsPosts).FirstOrDefaultAsync();
+            var lstInclude =
+            new Expression<Func<CategoryNews, object>>[] {
+                   x => x.NewsPosts, x=>x.FieldNews
+            };
+            return await FindByCondition(expression, includeProperties: lstInclude).FirstOrDefaultAsync();
         }
 
         public async Task<CategoryNews> GetCategoryNewsFirstOrder()

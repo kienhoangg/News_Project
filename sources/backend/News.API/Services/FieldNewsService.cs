@@ -39,7 +39,26 @@ namespace News.API.Services
         {
             return await GetByIdAsync(id);
         }
-       
+
+        public async Task<List<FieldNews>> GetNewsPostEachFieldNews(FieldNewsRequest fieldNewsRequest)
+        {
+            IQueryable<FieldNews> query = FindAll(includeProperties: x => x.NewsPosts);
+            var currentPage = fieldNewsRequest.CurrentPage.HasValue ? fieldNewsRequest.CurrentPage.Value : 1;
+            var pageSize = fieldNewsRequest.PageSize.HasValue ? fieldNewsRequest.PageSize.Value : 5;
+            var result = query
+            .Skip((currentPage - 1) * pageSize)
+                                   .Take(pageSize).OrderBy(x => x.Order)
+                        .Select(a => new { a, NewsPosts = a.NewsPosts.Skip(0).Take(5).ToList() })
+                        .AsEnumerable()
+                        .Select(x =>
+                        {
+                            x.a.NewsPosts = x.NewsPosts;
+                            return x.a;
+                        }).ToList();
+
+            return result;
+        }
+
 
         public async Task<ApiSuccessResult<FieldNewsDto>> GetFieldNewsByPaging(FieldNewsRequest fieldNewsRequest, params Expression<Func<FieldNews, object>>[] includeProperties)
         {
