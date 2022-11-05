@@ -43,6 +43,7 @@ const routes = {
   adminNewsCategory: "/admin/news/category",
   adminNewsComment: "/admin/news/comment",
   adminNewsCollaborators: "/admin/news/collaborators",
+  adminNewsStatistics: "/admin/news/statistics",
 
   adminDocumentList: "/admin/document/list",
   adminDocumentCategory: "/admin/document/category",

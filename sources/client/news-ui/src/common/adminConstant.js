@@ -24,6 +24,8 @@ const {
   InboxOutlined,
   BuildOutlined,
   RadiusUpleftOutlined,
+  ExperimentOutlined,
+  AreaChartOutlined,
 } = require("@ant-design/icons");
 
 const adminMenu = [
@@ -78,6 +80,12 @@ const adminMenu = [
         label: "Cộng tác viên",
         icon: <UserOutlined />,
         to: routes.adminNewsCollaborators,
+      },
+      {
+        key: "news-statistics",
+        label: "Thống kê tin bài",
+        icon: <AreaChartOutlined />,
+        to: routes.adminNewsStatistics,
       },
     ],
   },
