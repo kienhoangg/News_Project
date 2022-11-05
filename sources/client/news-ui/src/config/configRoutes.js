@@ -48,8 +48,9 @@ const routes = {
   adminDocumentSinger: "/admin/document/singer",
   adminDocumentSource: "/admin/document/source",
 
-  adminQuestionCategory: "/admin/question/category",
-  adminQuestionList: "/admin/question/list",
+  adminQuestionCategory: '/admin/question/category',
+  adminQuestionList: '/admin/question/list',
+  adminSuggetionBox: '/admin/suggetion-box',
 
   adminMediaImageCategory: "/admin/media/image/category",
   adminMediaImageList: "/admin/media/image/list",
@@ -67,8 +68,11 @@ const routes = {
 
   adminSetupMenu: "/admin/setup/menu",
 
-  staticContent: "/admin/static/content",
-  staticCategory: "/admin/static/category",
+  staticCategory: '/admin/static/category',
+  staticContent: '/admin/static/content',
+
+  budgetCategory: '/admin/budget/category',
+  budgetContent: '/admin/budget/content',
 
   //Test
   test: "/test",
