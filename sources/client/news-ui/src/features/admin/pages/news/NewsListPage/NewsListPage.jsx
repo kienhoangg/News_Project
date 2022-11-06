@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import routes from 'config/configRoutes';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import PopupUpdateNews from '../PopupUpdateNews/PopupUpdateNews';
+import Loading from 'components/Loading/Loading';
 
 const cx = classNames.bind(styles);
 
@@ -45,7 +46,7 @@ function NewsListPage(props) {
   const [openCollectionEditor, setOpenCollectionEditor] = useState(false);
   const [openCollectionNewsDetail, setOpenCollectionNewsDetail] =
     useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(true);
   const dataFilter = useRef({
     categoryNews: [],
     fieldNews: [],
@@ -59,6 +60,7 @@ function NewsListPage(props) {
 
   const onCreate = async (values) => {
     try {
+      setConfirmLoading(true);
       var formData = new FormData();
       formData.append('JsonString', convertHelper.Serialize(values.JsonString));
       if (values.Avatar) {
@@ -77,6 +79,7 @@ function NewsListPage(props) {
   };
 
   const handleOnClickShowRowDetail = async (values) => {
+    setConfirmLoading(true);
     const detailRow = await fetchItem(values);
     if (!detailRow) {
       return;
@@ -87,6 +90,7 @@ function NewsListPage(props) {
   };
 
   const handleOnClickEditOneRow = async (values) => {
+    setConfirmLoading(true);
     const detailRow = await fetchItem(values);
     if (!detailRow) {
       return;
@@ -109,11 +113,13 @@ function NewsListPage(props) {
 
   const fetchList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await newsApi.getNewsAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
         total: response?.PagedData?.RowCount ?? 0,
       });
+      setConfirmLoading(false);
     } catch (error) {
       openNotification('Lấy danh sách thất bại', '', NotificationType.ERROR);
     }
@@ -183,6 +189,7 @@ function NewsListPage(props) {
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.updatNews({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -197,6 +204,7 @@ function NewsListPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await newsApi.deleteHotNew(id);
       openNotification('Xóa tin nổi bật thành công');
       fetchList();
@@ -207,6 +215,7 @@ function NewsListPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       <div className={cx('top')}>
         <NewsListMenuSearch
           dataFilter={dataFilter.current}

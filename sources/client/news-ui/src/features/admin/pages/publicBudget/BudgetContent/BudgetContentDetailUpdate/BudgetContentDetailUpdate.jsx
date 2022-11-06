@@ -86,21 +86,15 @@ function BudgetContentDetailUpdate(props) {
     try {
       var formData = new FormData();
       formData.append('JsonString', convertHelper.Serialize(values.JsonString));
-      if (values.Avatar) {
-        formData.append('Avatar', values.Avatar);
-      }
+
       if (values.FileAttachment) {
         formData.append('FileAttachment', values.FileAttachment);
       }
       await budgetPublicAPI.updateContent(documentDetail?.Id, formData);
-      openNotification('Cập nhật tài liệu thành công');
+      openNotification('Cập nhật thành công');
       props?.onSuccess();
     } catch (error) {
-      openNotification(
-        'Cập nhật tài liệu thất bại',
-        '',
-        NotificationType.ERROR
-      );
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
     }
   };
 
@@ -141,8 +135,8 @@ function BudgetContentDetailUpdate(props) {
       {documentDetail.Id && (
         <Modal
           open={true}
-          title='Tạo mới nội dung tĩnh'
-          okText='Thêm mới'
+          title='Sửa nội dung công khai'
+          okText='Cập nhật'
           cancelText='Thoát'
           onCancel={() => {
             props?.onCancel();
@@ -170,26 +164,6 @@ function BudgetContentDetailUpdate(props) {
                 const role = commonFunc.getCookie('role');
                 bodyData.Status = role !== Role.ADMIN ? 0 : 1;
                 let body = { JsonString: bodyData };
-                if (fileList.length > 0 && !fileList?.[0]?.isFileFormServer) {
-                  const file = fileList[0].originFileObj;
-                  if (file.size > LIMIT_UP_LOAD_FILE) {
-                    openNotification(
-                      'File ảnh đã lớn hơn 2MB',
-                      '',
-                      NotificationType.ERROR
-                    );
-                    return;
-                  }
-                  body.Avatar = file;
-                } else if (
-                  fileList?.[0]?.isFileFormServer &&
-                  fileList.length > 0
-                ) {
-                  bodyData = {
-                    ...bodyData,
-                    Avatar: documentDetail?.Avatar,
-                  };
-                }
 
                 if (
                   fileListAttachment.length > 0 &&
@@ -240,7 +214,7 @@ function BudgetContentDetailUpdate(props) {
               rules={[
                 {
                   required: true,
-                  message: 'Số ký hiệu không được để trống',
+                  message: 'Tiêu đề không được để trống',
                 },
               ]}
             >
