@@ -114,6 +114,13 @@ const commonFunc = {
       document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
   },
+
+  getNameFileByPath(pathFile) {
+    if (!pathFile) return "";
+
+    var name = pathFile.replace(/^.*[\\\/]/, '')
+    return name;
+  }
 };
 
 export default commonFunc;

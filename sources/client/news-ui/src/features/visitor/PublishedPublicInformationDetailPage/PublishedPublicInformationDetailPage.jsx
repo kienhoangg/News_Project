@@ -1,7 +1,8 @@
-import { MinusOutlined, PlusOutlined, PrinterOutlined, SoundOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, Col, Row, Skeleton } from 'antd';
+import { CloudDownloadOutlined, MinusOutlined, PlusOutlined, PrinterOutlined, SoundOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, Col, Divider, Row, Skeleton } from 'antd';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
 import classNames from 'classnames/bind';
+import commonFunc from 'common/commonFunc';
 import commonRender from 'common/commonRender';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import datetimeHelper from 'helpers/datetimeHelper';
@@ -76,6 +77,19 @@ function PublishedPublicInformationDetailPage(props) {
                                 </>
                             )}
                         </div>
+                        <Divider></Divider>
+                        {data?.FileAttachment && (
+                            <>
+                                <div className={cx('file')}>
+                                    <div className={cx('file-item')}>
+                                        <a href={imageHelper.getLinkImageUrl(data?.FileAttachment)} target={'_blank'} rel='noreferrer' download={true}>
+                                            <CloudDownloadOutlined style={{ marginRight: 4 }} />
+                                            <span>{commonFunc.getNameFileByPath(data?.FileAttachment)}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </>
                 ) : (
                     <>
