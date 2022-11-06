@@ -81,6 +81,7 @@ function PublishedPublicInformationListPage(props) {
                             showTotal={() => commonRenderTable.showTableTotalPagination(dataPage?.RowCount ?? 0)}
                             onChange={handleOnChangeIndexPaging}
                             pageSizeOptions={[]}
+                            showSizeChanger={false}
                         />
                     </div>
                 </>
