@@ -53,6 +53,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Title.Contains(radioRequest.Keyword)));
             }
+            if (radioRequest.RadioCategoryId.HasValue)
+            {
+                query = query.Where(x => x.RadioCategoryId == radioRequest.RadioCategoryId.Value);
+            }
             if (radioRequest.Status.HasValue)
             {
                 query = query.Where(x => x.Status == radioRequest.Status.Value);

@@ -58,7 +58,7 @@ namespace News.API.Services
                 query = query.Where(x => x.Status == radioCategoryRequest.Status.Value);
             }
             PagedResult<RadioCategory>? sourcePaging = await query.PaginatedListAsync(radioCategoryRequest.CurrentPage
-                                                                                             ?? 1, radioCategoryRequest.PageSize ?? CommonConstants.PAGE_SIZE, radioCategoryRequest.OrderBy2ndColumn, radioCategoryRequest.Direction2ndColumn, radioCategoryRequest.OrderBy, radioCategoryRequest.Direction);
+                                                                                             ?? 0, radioCategoryRequest.PageSize ?? 0, radioCategoryRequest.OrderBy2ndColumn, radioCategoryRequest.Direction2ndColumn, radioCategoryRequest.OrderBy, radioCategoryRequest.Direction);
             var lstDto = _mapper.Map<List<RadioCategoryDto>>(sourcePaging.Results);
             var paginationSet = new PagedResult<RadioCategoryDto>(lstDto, sourcePaging.RowCount, sourcePaging.CurrentPage, sourcePaging.PageSize);
             ApiSuccessResult<RadioCategoryDto>? result = new(paginationSet);

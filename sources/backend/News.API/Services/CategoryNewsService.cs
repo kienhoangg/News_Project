@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Linq;
+using System.Linq.Expressions;
 using AutoMapper;
 using Common.Enums;
 using Common.Interfaces;
@@ -82,10 +83,10 @@ namespace News.API.Services
             IQueryable<CategoryNews> query = FindByCondition(x => x.ParentId == 8, includeProperties: x => x.NewsPosts);
             var currentPage = categoryNewsRequest.CurrentPage.HasValue ? categoryNewsRequest.CurrentPage.Value : 1;
             var pageSize = categoryNewsRequest.PageSize.HasValue ? categoryNewsRequest.PageSize.Value : 5;
-            var result = query
+            var result = query.Where(x => x.Status == Status.Enabled)
             .Skip((currentPage - 1) * pageSize)
                                    .Take(pageSize).OrderBy(x => x.Order)
-                        .Select(a => new { a, NewsPosts = a.NewsPosts.Skip(0).Take(5).ToList() })
+                        .Select(a => new { a, NewsPosts = a.NewsPosts.Where(x => x.Status == Status.Enabled).Skip(0).Take(5).ToList() })
                         .AsEnumerable()
                         .Select(x =>
                         {
