@@ -1,21 +1,21 @@
-import { Button, Divider, Form, Input, Modal, Select, Upload } from 'antd';
-import { useEffect, useState } from 'react';
-import RadioListPageSearch from './RadioListPageSearch/RadioListPageSearch';
-import RadioListTableData from './RadioListTableData/RadioListTableData';
+import { Button, Divider, Form, Input, Modal, Select, Upload } from "antd";
+import { useEffect, useState } from "react";
+import RadioListPageSearch from "./RadioListPageSearch/RadioListPageSearch";
+import RadioListTableData from "./RadioListTableData/RadioListTableData";
 
-import mediaApi from 'apis/mediaApi';
-import classNames from 'classnames/bind';
-import styles from './RadioListPage.module.scss';
-import { openNotification } from 'helpers/notification';
-import { Direction, NotificationType } from 'common/enum';
-import convertHelper from 'helpers/convertHelper';
-import { Option } from 'antd/lib/mentions';
-import commonFunc from 'common/commonFunc';
-import { UploadOutlined } from '@ant-design/icons';
-import imageHelper from 'helpers/imageHelper';
-import TextArea from 'antd/lib/input/TextArea';
-import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
-import Loading from 'components/Loading/Loading';
+import mediaApi from "apis/mediaApi";
+import classNames from "classnames/bind";
+import styles from "./RadioListPage.module.scss";
+import { openNotification } from "helpers/notification";
+import { Direction, NotificationType } from "common/enum";
+import convertHelper from "helpers/convertHelper";
+import { Option } from "antd/lib/mentions";
+import commonFunc from "common/commonFunc";
+import { UploadOutlined } from "@ant-design/icons";
+import imageHelper from "helpers/imageHelper";
+import TextArea from "antd/lib/input/TextArea";
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from "common/constant";
+import Loading from "components/Loading/Loading";
 
 const cx = classNames.bind(styles);
 
@@ -41,7 +41,7 @@ function RadioListPage(props) {
     pageSize: 10,
     direction: Direction.DESC,
     orderBy: DEFAULT_COLUMN_ORDER_BY,
-    keyword: '',
+    keyword: "",
   });
   const [newsData, setNewsData] = useState({
     data: [],
@@ -83,7 +83,7 @@ function RadioListPage(props) {
     setFileListAttachment(newFileList);
   };
 
-  const LIMIT_UP_LOAD_FILE = 2_097_152 * 5; //2mb
+  const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 
   const handleUpdateStatusNew = async (values) => {
     try {
@@ -94,9 +94,9 @@ function RadioListPage(props) {
         field: TypeUpdate.STATUS,
       });
       fetchProductList();
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     } finally {
       setConfirmLoading(false);
     }
@@ -106,10 +106,10 @@ function RadioListPage(props) {
     try {
       setConfirmLoading(true);
       await mediaApi.deleteRadio(id);
-      openNotification('Xóa radio thành công');
+      openNotification("Xóa radio thành công");
       fetchProductList();
     } catch (error) {
-      openNotification('Xóa radio thất bại', '', NotificationType.ERROR);
+      openNotification("Xóa radio thất bại", "", NotificationType.ERROR);
     } finally {
       setConfirmLoading(false);
     }
@@ -132,7 +132,7 @@ function RadioListPage(props) {
         Title: res?.Title,
         RadioCategoryId:
           dataFilter?.categoryAll.find((x) => x.Id === res?.RadioCategoryId)
-            ?.Title ?? '',
+            ?.Title ?? "",
         LinkRadio: res?.LinkRadio,
       });
 
@@ -140,9 +140,9 @@ function RadioListPage(props) {
         setFileListAttachment([
           {
             isFileFormServer: true,
-            uid: '1',
+            uid: "1",
             name: imageHelper.getNameFile(res?.FileAttachment),
-            status: 'done',
+            status: "done",
             url: imageHelper.getLinkImageUrl(res?.FileAttachment),
           },
         ]);
@@ -151,9 +151,9 @@ function RadioListPage(props) {
         setAvatar([
           {
             isFileFormServer: true,
-            uid: '1',
+            uid: "1",
             name: imageHelper.getNameFile(res?.Avatar),
-            status: 'done',
+            status: "done",
             url: imageHelper.getLinkImageUrl(res?.Avatar),
           },
         ]);
@@ -165,8 +165,8 @@ function RadioListPage(props) {
 
   const renderStaticCategoryId = (
     <Select
-      placeholder='Chọn danh mục'
-      style={{ width: '100%' }}
+      placeholder="Chọn danh mục"
+      style={{ width: "100%" }}
       allowClear={true}
       showSearch
     >
@@ -181,22 +181,22 @@ function RadioListPage(props) {
   const onCreate = async (values) => {
     try {
       var formData = new FormData();
-      formData.append('JsonString', convertHelper.Serialize(values.JsonString));
+      formData.append("JsonString", convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
-        formData.append('FileAttachment', values.FileAttachment);
+        formData.append("FileAttachment", values.FileAttachment);
       }
 
       if (values.Avatar) {
-        formData.append('Avatar', values.Avatar);
+        formData.append("Avatar", values.Avatar);
       }
       setConfirmLoading(true);
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         await mediaApi.insertRadio(formData);
-        openNotification('Tạo mới radio thành công');
+        openNotification("Tạo mới radio thành công");
       } else {
         await mediaApi.updateRadio(isModalOpen?.imageDetail?.Id, formData);
-        openNotification('Cập nhật radio thành công');
+        openNotification("Cập nhật radio thành công");
       }
 
       fetchProductList();
@@ -212,9 +212,9 @@ function RadioListPage(props) {
       fetchProductList();
     } catch (error) {
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
-        openNotification('Tạo mới radio thất bại', '', NotificationType.ERROR);
+        openNotification("Tạo mới radio thất bại", "", NotificationType.ERROR);
       } else {
-        openNotification('Cập nhật radio thất bại', '', NotificationType.ERROR);
+        openNotification("Cập nhật radio thất bại", "", NotificationType.ERROR);
       }
     } finally {
       setConfirmLoading(false);
@@ -249,7 +249,7 @@ function RadioListPage(props) {
         if (file.size > LIMIT_UP_LOAD_FILE) {
           openNotification(
             `File thứ ${i + 1} đã lớn hơn 2MB`,
-            '',
+            "",
             NotificationType.ERROR
           );
           return;
@@ -276,7 +276,7 @@ function RadioListPage(props) {
         if (file.size > LIMIT_UP_LOAD_FILE) {
           openNotification(
             `File thứ ${i + 1} đã lớn hơn 2MB`,
-            '',
+            "",
             NotificationType.ERROR
           );
           return;
@@ -348,14 +348,14 @@ function RadioListPage(props) {
         total: response?.PagedData?.RowCount,
       });
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      console.log("Failed to fetch list: ", error);
     } finally {
       setConfirmLoading(false);
     }
   };
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Loading show={confirmLoading} />
       {(isModalOpen?.type === MODAL_TYPE.CREATE ||
         isModalOpen?.type === MODAL_TYPE.EDIT) &&
@@ -364,46 +364,46 @@ function RadioListPage(props) {
           open={true}
           title={
             isModalOpen?.type === MODAL_TYPE.CREATE
-              ? 'Tạo mới radio'
-              : 'Chỉnh sửa radio'
+              ? "Tạo mới radio"
+              : "Chỉnh sửa radio"
           }
-          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
-          cancelText='Thoát'
+          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
+          cancelText="Thoát"
           onCancel={onCancel}
           footer={null}
         >
           <Form
             form={form}
             {...layout}
-            name='control-hooks'
+            name="control-hooks"
             onFinish={onFinish}
           >
             <Form.Item
-              label='Tiêu đề'
-              name='Title'
+              label="Tiêu đề"
+              name="Title"
               rules={[
                 {
                   required: true,
-                  message: 'Tiêu đề không được để trống',
+                  message: "Tiêu đề không được để trống",
                 },
               ]}
             >
               <Input />
             </Form.Item>
 
-            <Form.Item label='Danh mục radio' name='RadioCategoryId'>
+            <Form.Item label="Danh mục radio" name="RadioCategoryId">
               {renderStaticCategoryId}
             </Form.Item>
 
-            <Form.Item name='lb-attachment' label='File đính kèm'>
+            <Form.Item name="lb-attachment" label="File đính kèm">
               <Upload
-                listType='picture'
+                listType="picture"
                 fileList={fileListAttachment}
                 onChange={handleChangeAttachment}
                 customRequest={commonFunc.dummyRequest}
                 multiple={false}
                 maxCount={1}
-                accept='.mp3'
+                accept=".mp3"
               >
                 <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
 
@@ -414,15 +414,15 @@ function RadioListPage(props) {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type='primary' htmlType='Tạo mới'>
-                {isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
+              <Button type="primary" htmlType="Tạo mới">
+                {isModalOpen?.type === MODAL_TYPE.CREATE ? "Tạo mới" : "Lưu"}
               </Button>
             </Form.Item>
           </Form>
         </Modal>
       ) : null}
 
-      <div className={cx('top')}>
+      <div className={cx("top")}>
         <RadioListPageSearch
           setTextSearch={handleChangeTextSearch}
           onCreate={() =>
@@ -434,8 +434,8 @@ function RadioListPage(props) {
           }
         />
       </div>
-      <Divider style={{ margin: '0' }} />
-      <div className={cx('table-data')}>
+      <Divider style={{ margin: "0" }} />
+      <div className={cx("table-data")}>
         <RadioListTableData
           setPagination={handleChangePagination}
           data={newsData}

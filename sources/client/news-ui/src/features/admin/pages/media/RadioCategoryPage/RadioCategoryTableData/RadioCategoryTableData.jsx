@@ -51,8 +51,8 @@ function RadioCategoryTableData(props) {
       sorter: (a, b) => a.title - b.title,
     },
     {
-      key: "OrderNumber",
-      dataIndex: "OrderNumber",
+      key: "Order",
+      dataIndex: "Order",
       title: "Số thứ tự",
       render: (OrderNumber) => <>{OrderNumber}</>,
       sorter: (a, b) => a.OrderNumber - b.OrderNumber,

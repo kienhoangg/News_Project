@@ -1,18 +1,18 @@
-import { Button, Col, Divider, Form, Input, Modal, Row } from 'antd';
-import newsApi from 'apis/newsApi';
-import { useEffect, useRef, useState } from 'react';
-import RadioCategoryPageSearch from './RadioCategoryPageSearch/RadioCategoryPageSearch';
-import RadioCategoryTableData from './RadioCategoryTableData/RadioCategoryTableData';
+import { Button, Col, Divider, Form, Input, Modal, Row } from "antd";
+import newsApi from "apis/newsApi";
+import { useEffect, useRef, useState } from "react";
+import RadioCategoryPageSearch from "./RadioCategoryPageSearch/RadioCategoryPageSearch";
+import RadioCategoryTableData from "./RadioCategoryTableData/RadioCategoryTableData";
 
-import classNames from 'classnames/bind';
-import styles from './RadioCategoryPage.module.scss';
-import mediaApi from 'apis/mediaApi';
-import { Direction, NotificationType } from 'common/enum';
-import { openNotification } from 'helpers/notification';
-import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
-import datetimeHelper from 'helpers/datetimeHelper';
-import TextArea from 'antd/lib/input/TextArea';
-import Loading from 'components/Loading/Loading';
+import classNames from "classnames/bind";
+import styles from "./RadioCategoryPage.module.scss";
+import mediaApi from "apis/mediaApi";
+import { Direction, NotificationType } from "common/enum";
+import { openNotification } from "helpers/notification";
+import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from "common/constant";
+import datetimeHelper from "helpers/datetimeHelper";
+import TextArea from "antd/lib/input/TextArea";
+import Loading from "components/Loading/Loading";
 
 const cx = classNames.bind(styles);
 
@@ -39,7 +39,7 @@ function RadioCategoryPage(props) {
     pageSize: 10,
     direction: Direction.DESC,
     orderBy: DEFAULT_COLUMN_ORDER_BY,
-    keyword: '',
+    keyword: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +58,7 @@ function RadioCategoryPage(props) {
       const response = await mediaApi.getRadioCategoryFilter(objFilter);
       setNewsData(response?.PagedData);
     } catch (error) {
-      console.log('Failed to fetch list: ', error);
+      console.log("Failed to fetch list: ", error);
     } finally {
       setConfirmLoading(false);
     }
@@ -70,7 +70,7 @@ function RadioCategoryPage(props) {
 
   function handleChangeSearch(text) {
     let newFilter = { ...objFilter, keyword: text };
-    console.log('newFilter', newFilter);
+    console.log("newFilter", newFilter);
     setObjFilter(newFilter);
   }
 
@@ -103,9 +103,9 @@ function RadioCategoryPage(props) {
     try {
       setConfirmLoading(true);
       await mediaApi.insertRadioCategory(values);
-      openNotification('Tạo mới thành công');
+      openNotification("Tạo mới thành công");
     } catch (error) {
-      openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
+      openNotification("Tạo mới thất bại", "", NotificationType.ERROR);
     } finally {
       setConfirmLoading(false);
     }
@@ -115,9 +115,9 @@ function RadioCategoryPage(props) {
     try {
       setConfirmLoading(true);
       await mediaApi.updateRadioCategory(idEdit.current, values);
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     } finally {
       setConfirmLoading(false);
     }
@@ -133,9 +133,9 @@ function RadioCategoryPage(props) {
         Field: TypeUpdate.STATUS,
       });
       fetchList();
-      openNotification('Cập nhật thành công');
+      openNotification("Cập nhật thành công");
     } catch (error) {
-      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
     } finally {
       setConfirmLoading(false);
     }
@@ -145,10 +145,10 @@ function RadioCategoryPage(props) {
     try {
       setConfirmLoading(true);
       await mediaApi.deleteStatusRadioCategory(values?.Id);
-      openNotification('Xóa thành công');
+      openNotification("Xóa thành công");
       fetchList();
     } catch (error) {
-      openNotification('Xóa thất bại', '', NotificationType.ERROR);
+      openNotification("Xóa thất bại", "", NotificationType.ERROR);
     } finally {
       setConfirmLoading(false);
     }
@@ -178,8 +178,8 @@ function RadioCategoryPage(props) {
       return res;
     } catch (err) {
       openNotification(
-        'Lấy chi tiết dữ liệu thất bại',
-        '',
+        "Lấy chi tiết dữ liệu thất bại",
+        "",
         NotificationType.ERROR
       );
       return null;
@@ -195,10 +195,10 @@ function RadioCategoryPage(props) {
   }
 
   return (
-    <div className={cx('wrapper')}>
+    <div className={cx("wrapper")}>
       <Loading show={confirmLoading} />
 
-      <div className={cx('top')}>
+      <div className={cx("top")}>
         <RadioCategoryPageSearch
           setTextSearch={handleChangeSearch}
           handleOnClickCreate={async () => {
@@ -207,8 +207,8 @@ function RadioCategoryPage(props) {
           }}
         />
       </div>
-      <Divider style={{ margin: '0' }} />
-      <div className={cx('table-data')}>
+      <Divider style={{ margin: "0" }} />
+      <div className={cx("table-data")}>
         <RadioCategoryTableData
           data={newsData}
           setPagination={handleChangePagination}
@@ -221,35 +221,35 @@ function RadioCategoryPage(props) {
 
       {/* Tạo mới / Edit */}
       <Modal
-        className={cx('modal-insert-source-news')}
-        title='Thêm mới danh mục'
+        className={cx("modal-insert-source-news")}
+        title="Thêm mới danh mục"
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
+        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
           <Form.Item
-            name='title'
-            label='Tiêu đề'
-            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
+            name="title"
+            label="Tiêu đề"
+            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item name='order' label='Số thứ tự'>
-            <Input type='number' min={0} />
+          <Form.Item name="order" label="Số thứ tự">
+            <Input type="number" min={0} />
           </Form.Item>
 
-          <Form.Item name='description' label='Mô tả'>
+          <Form.Item name="description" label="Mô tả">
             <TextArea />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button
-              type='primary'
-              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+              type="primary"
+              htmlType={mode.current === Mode.Edit ? "Cập nhật" : "Tạo mới"}
             >
-              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
+              {mode.current === Mode.Edit ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Form.Item>
         </Form>
@@ -258,38 +258,38 @@ function RadioCategoryPage(props) {
       {/* Chi tiết */}
       <Modal
         open={isShowDetail}
-        title='Hiển thị thông tin'
+        title="Hiển thị thông tin"
         okButtonProps={{
           style: {
-            display: 'none',
+            display: "none",
           },
         }}
-        cancelText='Thoát'
+        cancelText="Thoát"
         onCancel={() => {
           setIsShowDetail(false);
         }}
       >
         <Row gutter={8}>
           <Col span={16}>
-            <Row gutter={16} className={cx('row-item')}>
+            <Row gutter={16} className={cx("row-item")}>
               <Col span={8}>
-                <div className={cx('row-item-label')}>Tiêu đề</div>
+                <div className={cx("row-item-label")}>Tiêu đề</div>
               </Col>
               <Col span={16}>
                 <div>{detail.current?.Title}</div>
               </Col>
             </Row>
-            <Row gutter={16} className={cx('row-item')}>
+            <Row gutter={16} className={cx("row-item")}>
               <Col span={8}>
-                <div className={cx('row-item-label')}>Số thứ tự</div>
+                <div className={cx("row-item-label")}>Số thứ tự</div>
               </Col>
               <Col span={16}>
                 <div>{detail.current?.Order}</div>
               </Col>
             </Row>
-            <Row gutter={16} className={cx('row-item')}>
+            <Row gutter={16} className={cx("row-item")}>
               <Col span={8}>
-                <div className={cx('row-item-label')}>Mô tả</div>
+                <div className={cx("row-item-label")}>Mô tả</div>
               </Col>
               <Col span={16}>
                 <div>{detail.current?.Description}</div>
@@ -307,9 +307,9 @@ function RadioCategoryPage(props) {
                 </div>
               </Col>
             </Row> */}
-            <Row gutter={16} className={cx('row-item')}>
+            <Row gutter={16} className={cx("row-item")}>
               <Col span={8}>
-                <div className={cx('row-item-label')}>Ngày sửa cuối</div>
+                <div className={cx("row-item-label")}>Ngày sửa cuối</div>
               </Col>
               <Col span={16}>
                 <div>
