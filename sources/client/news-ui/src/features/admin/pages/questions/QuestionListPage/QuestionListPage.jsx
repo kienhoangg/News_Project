@@ -20,6 +20,7 @@ import classNames from 'classnames/bind';
 import commonFunc from 'common/commonFunc';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import { Direction, NotificationType } from 'common/enum';
+import Loading from 'components/Loading/Loading';
 import convertHelper from 'helpers/convertHelper';
 import datetimeHelper from 'helpers/datetimeHelper';
 import imageHelper from 'helpers/imageHelper';
@@ -44,30 +45,6 @@ const layout = {
 function QuestionListPage(props) {
   const [form] = Form.useForm();
 
-  const QuestionStatus = [
-    {
-      id: 0,
-      label: 'Câu hỏi mới',
-    },
-    {
-      id: 1,
-      label: 'Chờ câu trả lời',
-    },
-    {
-      id: 2,
-      label: 'Chờ được phê duyệt',
-    },
-    {
-      id: 3,
-      label: 'Câu hỏi được phê duyệt',
-    },
-  ];
-  // const QuestionStatus = {
-  //   NEW_QUESTION: 0,
-  //   WAITING_ANSWER_QUESTION: 1,
-  //   WAITING_APPROVED_QUESTION: 2,
-  //   APPROVED_QUESTION: 3,
-  // };
   const POPUP_TYPE = {
     CREATE: 0,
     UPDATE: 1,
@@ -98,6 +75,7 @@ function QuestionListPage(props) {
     orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   const handleChangeAttachment = ({ fileList: newFileList }) => {
     setFileListAttachment(newFileList);
@@ -105,6 +83,7 @@ function QuestionListPage(props) {
 
   const callApiGetDetail = async (id) => {
     try {
+      setConfirmLoading(true);
       const res = await axiosClient.get('/questions/' + id);
       setQuestionDetail(res);
       // const label =
@@ -138,7 +117,10 @@ function QuestionListPage(props) {
             url: imageHelper.getLinkImageUrl(res?.FilePath),
           },
         ]);
-    } catch (err) {}
+    } catch (err) {
+    } finally {
+      setConfirmLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -147,6 +129,7 @@ function QuestionListPage(props) {
 
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await questionApi.getAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results,
@@ -154,6 +137,8 @@ function QuestionListPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -198,6 +183,7 @@ function QuestionListPage(props) {
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await questionApi.updateStatusQuestion({
         ids: [values.Id],
         value: values.Status === 0,
@@ -207,16 +193,21 @@ function QuestionListPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleDeleteCategoryNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await questionApi.deleteQuestion(id);
       openNotification('Xóa hình ảnh thành công');
       fetchProductList();
     } catch (error) {
       openNotification('Xóa hình ảnh thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -242,6 +233,7 @@ function QuestionListPage(props) {
    */
   const getCategoryQuestion = async () => {
     try {
+      setConfirmLoading(true);
       const res = await axiosClient.post('/questioncategories/filter', {
         pageSize: 9999,
         currentPage: 1,
@@ -250,7 +242,10 @@ function QuestionListPage(props) {
       });
 
       setDataCategoryQuestion(res?.PagedData?.Results);
-    } catch (err) {}
+    } catch (err) {
+    } finally {
+      setConfirmLoading(false);
+    }
   };
   const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
   const onCreate = async (values = {}) => {
@@ -264,7 +259,7 @@ function QuestionListPage(props) {
       if (values?.FileAttachment) {
         formData.append('FileAttachment', values?.FileAttachment);
       }
-
+      setConfirmLoading(true);
       if (isModalOpen?.type === MODAL_TYPE.CREATE) {
         await axiosClient.post('/questions', formData);
         openNotification('Tạo mới thành công');
@@ -278,31 +273,46 @@ function QuestionListPage(props) {
       fetchProductList();
     } catch (error) {
       openNotification('Cập nhật tin tức thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
-  console.log(isModalOpen);
 
   return (
-      <div className={cx('wrapper')}>
-          {(isModalOpen?.type === MODAL_TYPE.CREATE || isModalOpen?.type === MODAL_TYPE.DETAIL ? isModalOpen?.show : questionDetail?.Id && isModalOpen?.show) ? (
-              <Modal
-                  open={true}
-                  title={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới câu hỏi' : isModalOpen?.type === MODAL_TYPE.DETAIL ? 'Chi tiết câu hỏi' : 'Chỉnh sửa câu hỏi'}
-                  okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
-                  cancelText='Thoát'
-                  onCancel={onCancel}
-                  width={'90vw'}
-                  style={{
-                      top: 20,
-                  }}
-                  {...(isModalOpen?.type === MODAL_TYPE.DETAIL ? { footer: null } : {})}
-                  centered
-                  onOk={() => {
-                      form.validateFields()
-                          .then((values) => {
-                              values.QuestionContent = values.QuestionContent?.editor?.getData();
+    <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+      {(
+        isModalOpen?.type === MODAL_TYPE.CREATE ||
+        isModalOpen?.type === MODAL_TYPE.DETAIL
+          ? isModalOpen?.show
+          : questionDetail?.Id && isModalOpen?.show
+      ) ? (
+        <Modal
+          open={true}
+          title={
+            isModalOpen?.type === MODAL_TYPE.CREATE
+              ? 'Tạo mới câu hỏi'
+              : isModalOpen?.type === MODAL_TYPE.DETAIL
+              ? 'Chi tiết câu hỏi'
+              : 'Chỉnh sửa câu hỏi'
+          }
+          okText={isModalOpen?.type === MODAL_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}
+          cancelText='Thoát'
+          onCancel={onCancel}
+          width={'90vw'}
+          style={{
+            top: 20,
+          }}
+          {...(isModalOpen?.type === MODAL_TYPE.DETAIL ? { footer: null } : {})}
+          centered
+          onOk={() => {
+            form
+              .validateFields()
+              .then((values) => {
+                values.QuestionContent =
+                  values.QuestionContent?.editor?.getData();
 
-                              values.AnswerContent = values.AnswerContent?.editor?.getData();
+                values.AnswerContent = values.AnswerContent?.editor?.getData();
 
                 const {
                   QuestionCategoryId,
@@ -348,7 +358,7 @@ function QuestionListPage(props) {
                     : null,
                 };
 
-                              let body = { JsonString: bodyData };
+                let body = { JsonString: bodyData };
 
                 if (
                   fileListAttachment.length > 0 &&
@@ -375,7 +385,7 @@ function QuestionListPage(props) {
                   };
                 }
 
-                              body = { ...body, JsonString: bodyData };
+                body = { ...body, JsonString: bodyData };
 
                 onCreate(body);
               })
@@ -559,7 +569,7 @@ function QuestionListPage(props) {
                           { name: 'others', groups: ['others'] },
                           { name: 'about', groups: ['about'] },
                         ],
-                          extraPlugins: 'justify,font,colorbutton,forms, image2',
+                        extraPlugins: 'justify,font,colorbutton,forms, image2',
                         removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
                       }}
                     />
@@ -575,31 +585,7 @@ function QuestionListPage(props) {
                 >
                   <b>Thông tin trả lời</b>
                 </div>
-                {/* <Form.Item label="Trạng thái" name="questionStatus">
-                  {isModalOpen?.type === MODAL_TYPE.DETAIL ? (
-                    <div>
-                      {
-                        QuestionStatus?.find(
-                          (item) =>
-                            item?.id === isModalOpen?.content?.QuestionStatus
-                        )?.label
-                      }
-                    </div>
-                  ) : (
-                    <Select
-                      placeholder="Trạng thái"
-                      style={{ width: "100%" }}
-                      allowClear
-                      showSearch
-                    >
-                      {QuestionStatus?.map((x) => (
-                        <Option value={x.label} key={x.id}>
-                          {x.label}
-                        </Option>
-                      ))}
-                    </Select>
-                  )}
-                </Form.Item> */}
+
                 <Form.Item
                   label='Người trả lời'
                   name='AnswerPersonName'

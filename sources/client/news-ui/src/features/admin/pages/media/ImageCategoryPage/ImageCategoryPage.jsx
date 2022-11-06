@@ -18,6 +18,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { Option } from 'antd/lib/mentions';
 import { Select } from 'antd';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 
 const cx = classNames.bind(styles);
 const layout = {
@@ -53,6 +54,7 @@ function ImageCategoryPage(props) {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   useEffect(() => {
     if (isFirstCall.current) {
@@ -67,6 +69,7 @@ function ImageCategoryPage(props) {
    */
   const fetchCategoryList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await mediaApi.getImageCategoryAll(objFilter);
 
       setNewsData({
@@ -75,6 +78,8 @@ function ImageCategoryPage(props) {
       });
     } catch (error) {
       openNotification('Lấy loại văn bản thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   /**
@@ -91,6 +96,7 @@ function ImageCategoryPage(props) {
 
   const handleDeleteCategoryNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await mediaApi.deleteImageCategory(id);
       openNotification('Xóa danh mục hình ảnh thành công');
       fetchCategoryList();
@@ -100,10 +106,13 @@ function ImageCategoryPage(props) {
         '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await mediaApi.updateStatusImageCategory({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -113,6 +122,8 @@ function ImageCategoryPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -133,6 +144,7 @@ function ImageCategoryPage(props) {
   };
   const onCreate = async (values) => {
     try {
+      setConfirmLoading(true);
       if (document?.type === MODAL_TYPE.EDIT) {
         await mediaApi.updateImageCategory(document?.content?.Id, values);
         openNotification('Sửa danh mục hình ảnh thành công');
@@ -157,6 +169,8 @@ function ImageCategoryPage(props) {
           NotificationType.ERROR
         );
       }
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -174,8 +188,10 @@ function ImageCategoryPage(props) {
       keyword: '',
       parentId: 0,
     };
+    setConfirmLoading(true);
     const response = await mediaApi.getImageCategoryAll(filterRoot);
     setDataRoot(response?.PagedData?.Results ?? []);
+    setConfirmLoading(false);
   };
 
   const renderStaticCategoryId = (
@@ -211,6 +227,8 @@ function ImageCategoryPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       <Modal
         open={isModalOpen}
         title={

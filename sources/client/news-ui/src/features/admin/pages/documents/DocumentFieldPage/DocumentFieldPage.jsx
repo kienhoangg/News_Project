@@ -10,6 +10,7 @@ import { openNotification } from 'helpers/notification';
 import { Option } from 'antd/lib/mentions';
 import { FileAddFilled } from '@ant-design/icons';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -37,6 +38,7 @@ function DocumentFieldPage(props) {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   const MODAL_TYPE = {
     EDIT: 0,
@@ -63,6 +65,7 @@ function DocumentFieldPage(props) {
    */
   const fetchCategoryList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await documentApi.getDocumentFieldAll(objFilter);
 
       setNewsData({
@@ -70,7 +73,9 @@ function DocumentFieldPage(props) {
         total: response?.PagedData?.RowCount ?? 0,
       });
     } catch (error) {
-      openNotification("Lấy lĩnh vực thất bại", "", NotificationType.ERROR);
+      openNotification('Lấy lĩnh vực thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -88,8 +93,10 @@ function DocumentFieldPage(props) {
       keyword: '',
       parentId: 0,
     };
+    setConfirmLoading(true);
     const response = await documentApi.getDocumentFieldAll(filterRoot);
     setDataRoot(response?.PagedData?.Results ?? []);
+    setConfirmLoading(false);
   };
 
   const handleCancel = () => {
@@ -109,7 +116,7 @@ function DocumentFieldPage(props) {
     let parentID = null;
     if (values.parentId) {
       parentID = parseInt(
-        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? "0"
+        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? '0'
       );
     }
     values = {
@@ -128,12 +135,15 @@ function DocumentFieldPage(props) {
    */
   const updateCategoryNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.updateFieldDocument(document?.content?.Id, values);
       handleCancel();
       fetchCategoryList();
-      openNotification("Sửa loại văn bản thành công");
+      openNotification('Sửa loại văn bản thành công');
     } catch (error) {
-      openNotification("Sửa loại văn bản thất bại", "", NotificationType.ERROR);
+      openNotification('Sửa loại văn bản thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -142,12 +152,15 @@ function DocumentFieldPage(props) {
    */
   const insertCategoryNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.insertFieldDocument(values);
       handleCancel();
       fetchCategoryList();
-      openNotification("Tạo mới lĩnh vực thành công");
+      openNotification('Tạo mới lĩnh vực thành công');
     } catch (error) {
-      openNotification("Tạo mới lĩnh vực thất bại", "", NotificationType.ERROR);
+      openNotification('Tạo mới lĩnh vực thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -173,31 +186,38 @@ function DocumentFieldPage(props) {
 
   const handleDeleteCategoryNew = async (id) => {
     try {
+      setConfirmLoading(false);
       await documentApi.deleteFieldDocument(id);
-      openNotification("Xóa lĩnh vực thành công");
+      openNotification('Xóa lĩnh vực thành công');
       fetchCategoryList();
     } catch (error) {
-      openNotification("Xóa lĩnh vực thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa lĩnh vực thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
+
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.updatStatusFieldDocument({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
         Field: TypeUpdate.STATUS,
       });
       fetchCategoryList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const renderOption = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
       allowClear={true}
       showSearch
     >
@@ -210,28 +230,30 @@ function DocumentFieldPage(props) {
   );
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       {
         //#region popup thêm mới
       }
       <Modal
-        className={cx("modal-category-news")}
+        className={cx('modal-category-news')}
         title={
           document?.type === MODAL_TYPE.DETAIL
-            ? "Xem chi tiết"
+            ? 'Xem chi tiết'
             : document?.type === MODAL_TYPE.EDIT
-            ? "Chỉnh sửa"
-            : "Thêm mới"
+            ? 'Chỉnh sửa'
+            : 'Thêm mới'
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
           <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
+            name='title'
+            label='Tiêu đề'
+            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
           >
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Title}</div>
@@ -239,7 +261,7 @@ function DocumentFieldPage(props) {
               <Input />
             )}
           </Form.Item>
-          <Form.Item name="parentId" label="Danh mục cấp cha">
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>
                 {
@@ -252,14 +274,14 @@ function DocumentFieldPage(props) {
               renderOption
             )}
           </Form.Item>
-          <Form.Item name="order" label="Số thứ tự">
+          <Form.Item name='order' label='Số thứ tự'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Order}</div>
             ) : (
-              <Input type="number" min={0} defaultValue={0} />
+              <Input type='number' min={0} defaultValue={0} />
             )}
           </Form.Item>
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name='description' label='Mô tả'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Description}</div>
             ) : (
@@ -269,12 +291,12 @@ function DocumentFieldPage(props) {
           {document?.type === MODAL_TYPE.DETAIL ? null : (
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button
-                type="primary"
+                type='primary'
                 htmlType={
-                  document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"
+                  document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'
                 }
               >
-                {document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"}
+                {document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'}
               </Button>
             </Form.Item>
           )}
@@ -284,16 +306,16 @@ function DocumentFieldPage(props) {
         //#endregion
       }
 
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <DocumentFieldPageSearch setTextSearch={handleChangeTextSearch} />
-        <div className={cx("btn-add-field-document")}>
-          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
+        <div className={cx('btn-add-field-document')}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <DocumentFieldTableData
           data={newsData}
           setPagination={handleChangePagination}

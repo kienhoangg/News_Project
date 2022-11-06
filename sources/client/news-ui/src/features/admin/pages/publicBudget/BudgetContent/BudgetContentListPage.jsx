@@ -30,6 +30,7 @@ import { TreeNode } from 'antd/lib/tree-select';
 import { TypeUpdate, Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import BudgetContentDetail from './BudgetContentDetail/BudgetContentDetail';
 import BudgetContentDetailUpdate from './BudgetContentDetailUpdate/BudgetContentDetailUpdate';
+import Loading from 'components/Loading/Loading';
 
 const cx = classNames.bind(styles);
 
@@ -72,6 +73,7 @@ function BudgetContentListPage(props) {
   const [form] = Form.useForm();
 
   const refCategoryAll = useRef([]);
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -90,6 +92,7 @@ function BudgetContentListPage(props) {
    */
   const fetchCategoryList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await budgetPublicAPI.getContentAll(objFilter);
 
       setNewsData({
@@ -102,10 +105,13 @@ function BudgetContentListPage(props) {
         '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const getDataFilter = async () => {
+    setConfirmLoading(true);
     const responseCategoryAll = budgetPublicAPI.getBudgetCategoryAll(filterAll);
 
     Promise.all([responseCategoryAll]).then((values) => {
@@ -114,6 +120,7 @@ function BudgetContentListPage(props) {
         categoryAll: values[0]?.PagedData?.Results ?? [],
       });
     });
+    setConfirmLoading(false);
   };
 
   /**
@@ -139,14 +146,18 @@ function BudgetContentListPage(props) {
 
   const fetchItem = async (values) => {
     try {
+      setConfirmLoading(true);
       return await budgetPublicAPI.getContentById(values?.Id);
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   };
   const handleDeleteCategoryNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await budgetPublicAPI.deleteContent(id);
       openNotification('Xóa nội dung tĩnh thành công');
       fetchCategoryList();
@@ -156,10 +167,13 @@ function BudgetContentListPage(props) {
         '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await budgetPublicAPI.updateStatusContent({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -169,6 +183,8 @@ function BudgetContentListPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   /**
@@ -241,6 +257,7 @@ function BudgetContentListPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       <Modal
         open={isModalOpen}
         title='Tạo mới nội dung tĩnh'
@@ -257,18 +274,19 @@ function BudgetContentListPage(props) {
               const {
                 Title,
                 Description,
-                PublicInformationCategoryId,
+                publicInformationCategoryId,
                 content,
               } = values;
               const bodyData = {
                 Title,
                 Description,
                 content,
+                publicInformationCategoryId,
               };
-              if (PublicInformationCategoryId) {
-                bodyData.PublicInformationCategoryId = parseInt(
+              if (publicInformationCategoryId) {
+                bodyData.publicInformationCategoryId = parseInt(
                   dataFilter?.categoryAll.find(
-                    (x) => x.Title === PublicInformationCategoryId
+                    (x) => x.Title === publicInformationCategoryId
                   )?.Id ?? undefined
                 );
               }
@@ -392,7 +410,7 @@ function BudgetContentListPage(props) {
               }}
             />
           </Form.Item>
-          <Form.Item label='Danh mục' name='PublicInformationCategoryId '>
+          <Form.Item label='Danh mục' name='publicInformationCategoryId'>
             {renderBudgetCategoryId}
           </Form.Item>
           <Form.Item name='lb-attachment' label='Tệp đính kèm'>

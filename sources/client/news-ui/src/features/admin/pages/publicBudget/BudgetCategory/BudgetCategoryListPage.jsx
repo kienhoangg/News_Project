@@ -26,6 +26,7 @@ import { Option } from 'antd/lib/mentions';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import imageHelper from 'helpers/imageHelper';
 import { envDomainBackend } from 'common/enviroments';
+import Loading from 'components/Loading/Loading';
 const { TextArea } = Input;
 
 const cx = classNames.bind(styles);
@@ -61,6 +62,8 @@ function BudgetCategoryListPage(props) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const idEdit = useRef();
   const mode = useRef();
+  const [confirmLoading, setConfirmLoading] = useState(true);
+
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
    */
@@ -77,6 +80,7 @@ function BudgetCategoryListPage(props) {
    */
   const fetchCategoryList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await budgetPublicAPI.getBudgetCategoryAll(objFilter);
 
       setNewsData({
@@ -85,6 +89,8 @@ function BudgetCategoryListPage(props) {
       });
     } catch (error) {
       openNotification('Lấy loại văn bản thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -102,6 +108,7 @@ function BudgetCategoryListPage(props) {
 
   const handleDeleteCategoryNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await budgetPublicAPI.deleteCategory(id);
       openNotification('Xóa danh mục công khai thành công');
       fetchCategoryList();
@@ -111,11 +118,14 @@ function BudgetCategoryListPage(props) {
         '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await budgetPublicAPI.updateStatusCategory({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -125,6 +135,8 @@ function BudgetCategoryListPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -141,6 +153,7 @@ function BudgetCategoryListPage(props) {
   };
   const onCreate = async (formData) => {
     try {
+      setConfirmLoading(true);
       await budgetPublicAPI.insertCategory(formData);
       openNotification('Tạo mới nội dung công khai thành công');
     } catch (error) {
@@ -149,6 +162,8 @@ function BudgetCategoryListPage(props) {
         '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -179,12 +194,16 @@ function BudgetCategoryListPage(props) {
     }
     fetchCategoryList();
   };
+
   const updateSounceNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await budgetPublicAPI.updateCategoryByID(idEdit.current, values);
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   async function handleShowDetail(Id) {
@@ -195,6 +214,7 @@ function BudgetCategoryListPage(props) {
 
   async function getSourceNewById(id) {
     try {
+      setConfirmLoading(true);
       const res = await budgetPublicAPI.getCategoryByID(id);
       return res;
     } catch (err) {
@@ -204,6 +224,8 @@ function BudgetCategoryListPage(props) {
         NotificationType.ERROR
       );
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -221,6 +243,7 @@ function BudgetCategoryListPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       <Modal
         open={isModalOpen}
         title={
