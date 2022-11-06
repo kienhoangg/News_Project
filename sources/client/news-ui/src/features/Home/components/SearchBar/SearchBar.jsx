@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './SearchBar.module.scss';
 import classNames from 'classnames/bind';
@@ -8,6 +8,7 @@ import routes from 'config/configRoutes';
 import { useSelector } from 'react-redux';
 import Marquee from 'react-easy-marquee';
 import commonRender from 'common/commonRender';
+import { envApiKeyWeather } from 'common/enviroments';
 
 const { Search } = Input;
 const cx = classNames.bind(styles);
@@ -18,6 +19,25 @@ SearchBar.defaultProps = {};
 
 function SearchBar(props) {
     const homeRedux = useSelector((state) => state.home);
+    const [loading, setLoading] = useState(true);
+    const [weatherValue, setWeatherValue] = useState(null);
+
+    //Lấy thông tin thời tiết
+    useEffect(() => {
+        const fetchWeather = async () => {
+            try {
+                let url = `https://api.openweathermap.org/data/2.5/weather?lat=21.69611&lon=104.8752392&appid&appid=${envApiKeyWeather}`;
+                let dataWeather = await fetch(url).then((res) => res.json());
+                console.log('dataWeather', dataWeather);
+                setWeatherValue((dataWeather?.main?.temp - 273.15)?.toFixed(2));
+            } catch (error) {
+                console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchWeather();
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
@@ -50,7 +70,7 @@ function SearchBar(props) {
                 <Col md={4} xs={24}>
                     <div className={cx('weather')}>
                         <div className={cx('weather-label')}>Yên bái</div>
-                        <div className={cx('weather-value')}>27.3 - 29.3</div>
+                        <div className={cx('weather-value')}>{weatherValue ? `${weatherValue} ℃` : ''}</div>
                     </div>
                 </Col>
             </Row>

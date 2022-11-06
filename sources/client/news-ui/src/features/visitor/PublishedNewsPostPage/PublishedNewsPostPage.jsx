@@ -5,6 +5,7 @@ import classNames from 'classnames/bind';
 import commonRender from 'common/commonRender';
 import constant from 'common/constant';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
+import routes from 'config/configRoutes';
 import FormVisitorComment from 'features/visitor/components/FormVisitorComment/FormVisitorComment';
 import datetimeHelper from 'helpers/datetimeHelper';
 import imageHelper from 'helpers/imageHelper';
@@ -112,12 +113,12 @@ function PublishedDocumentPage(props) {
                     <Breadcrumb>
                         {data?.CategoryParentNews?.Id && (
                             <Breadcrumb.Item>
-                                <Link to={commonRender.renderLinkNewsCategory(data?.CategoryParentNews?.Id)}>{data?.CategoryParentNews?.CategoryNewsName}</Link>
+                                <Link to={routes.publishedNewsPostFieldList}>{data?.CategoryParentNews?.CategoryNewsName}</Link>
                             </Breadcrumb.Item>
                         )}
 
                         <Breadcrumb.Item>
-                            <Link to={commonRender.renderLinkNewsCategory(data?.NewsPostDetail?.CategoryNews?.Id)}>{data?.NewsPostDetail?.CategoryNews?.CategoryNewsName}</Link>
+                            <Link to={commonRender.renderLinkNewsCategoryDetail(data?.NewsPostDetail?.CategoryNews?.Id)}>{data?.NewsPostDetail?.CategoryNews?.CategoryNewsName}</Link>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <div className={cx('menu-divider')}></div>
