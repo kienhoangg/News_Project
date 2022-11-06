@@ -207,8 +207,12 @@ namespace News.API.Controllers
         public async Task<IActionResult>
       GetPublicInformationByPaging([FromBody] PublicInformationRequest publicInformationRequest)
         {
+            var lstInclude =
+             new Expression<Func<PublicInformation, object>>[] {
+                    (x => x.PublicInformationCategory)
+             };
             var result =
-                await _publicInformationService.GetPublicInformationByPaging(publicInformationRequest);
+                await _publicInformationService.GetPublicInformationByPaging(publicInformationRequest, includeProperties: lstInclude);
             return Ok(result);
         }
 

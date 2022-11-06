@@ -46,8 +46,8 @@ namespace News.API.Services
             var lstRootMenu = (await GetMenuByPaging(new MenuRequest()
             {
                 ParentId = 0,
-                OrderBy = "LastModifiedDate",
-                Direction = -1,
+                OrderBy = "Order",
+                Direction = 1,
                 Status = Status.Enabled
             })).PagedData.Results.ToList();
             foreach (var item in lstRootMenu)
