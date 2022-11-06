@@ -25,7 +25,7 @@ function PublishedPublicInformation(props) {
         const fetchHome = async () => {
             try {
                 const params = {};
-                const response = await publishedNewsApi.getFieldsDataListPage(params);
+                const response = await publishedNewsApi.getDataPublicInformationCategoriesListPage(params);
                 setDataPage(response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
@@ -53,8 +53,8 @@ function PublishedPublicInformation(props) {
                                     </div>
                                     <div style={{ border: '1px solid #0066b3', marginLeft: 8, marginBottom: 8 }}></div>
 
-                                    {Array.isArray(item?.NewsPosts) &&
-                                        item.NewsPosts.map((dataItem, index) => {
+                                    {Array.isArray(item?.PublicInformations) &&
+                                        item.PublicInformations.map((dataItem, index) => {
                                             dataItem.Description = '';
                                             dataItem.Description = '';
 

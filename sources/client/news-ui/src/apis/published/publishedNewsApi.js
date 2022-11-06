@@ -79,6 +79,15 @@ class PublishedNewsApi {
 
     return axiosClient.post(url, body);
   }
+
+
+  getDataPublicInformationCategoriesListPage() {
+    let url = `/home/published/publicinformationcategories`;
+    return axiosClient.get(url, {});
+
+    // var response = datafakePublishedCategoryList;
+    // return response;
+  }
 }
 const publishedNewsApi = new PublishedNewsApi();
 export default publishedNewsApi;
