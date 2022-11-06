@@ -51,7 +51,7 @@ function PublishedPublicInformationDetailPage(props) {
                     <>
                         <div className={cx('menu-items')}>
                             <div className={cx('title-container')}>
-                                <Link to={commonRender.renderLinkNewsCategory(data?.PublicInformationCategory?.Id)} className={cx('title')}>
+                                <Link to={commonRender.renderLinkPublishedPublicInformationListPage(data?.PublicInformationCategory?.Id)} className={cx('title')}>
                                     {data?.PublicInformationCategory?.Title}
                                 </Link>
                                 <span className={cx('right')}></span>

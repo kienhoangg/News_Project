@@ -1,7 +1,7 @@
-import { Skeleton } from 'antd';
+import { Pagination, Skeleton } from 'antd';
 import publishedNewsApi from 'apis/published/publishedNewsApi';
 import classNames from 'classnames/bind';
-import commonRender from 'common/commonRender';
+import commonRender, { commonRenderTable } from 'common/commonRender';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
@@ -11,9 +11,7 @@ import styles from './PublishedPublicInformationListPage.module.scss';
 
 const cx = classNames.bind(styles);
 
-PublishedPublicInformationListPage.propTypes = {
-    data: PropTypes.object,
-};
+PublishedPublicInformationListPage.propTypes = {};
 
 PublishedPublicInformationListPage.defaultProps = {};
 
@@ -24,12 +22,17 @@ function PublishedPublicInformationListPage(props) {
 
     const [pagingIndex, setPagingIndex] = useState(1);
 
+    //Dữ liệu thông tin công khai
     useEffect(() => {
         const fetchHome = async () => {
             try {
-                const params = {};
+                const params = {
+                    publicInformationId: id,
+                    currentPage: pagingIndex,
+                    pageSize: 10,
+                };
                 const response = await publishedNewsApi.getDataPublicInformationCategoriesListPage(params);
-                setDataPage(response);
+                setDataPage(response?.PagedData);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
             } finally {
@@ -39,40 +42,46 @@ function PublishedPublicInformationListPage(props) {
         fetchHome();
     }, []);
 
+    function handleOnChangeIndexPaging(params) {
+        setPagingIndex(params);
+    }
+
     return (
         <div className={cx('wrapper')}>
             <ScrollToTop />
             <Skeleton loading={loading} active>
                 <>
-                    {Array.isArray(dataPage) &&
-                        dataPage.map((item) => {
-                            return (
-                                <div key={item.Id} className={cx('category-container')}>
-                                    <div className={cx('title-container')}>
-                                        <Link to={commonRender.renderLinkNewsCategory(item.Id)} className={cx('title')}>
-                                            {item.Title}
-                                        </Link>
-                                        <span className={cx('right')}></span>
-                                    </div>
-                                    <div style={{ border: '1px solid #0066b3', marginLeft: 8, marginBottom: 8 }}></div>
+                    <div className={cx('category-container')}>
+                        <div className={cx('title-container')}>
+                            <Link to={commonRender.renderLinkNewsCategory(dataPage?.Id)} className={cx('title')}>
+                                {dataPage?.Title}
+                            </Link>
+                            <span className={cx('right')}></span>
+                        </div>
+                        <div style={{ border: '1px solid #0066b3', marginLeft: 8, marginBottom: 8 }}></div>
 
-                                    {Array.isArray(item?.PublicInformations) &&
-                                        item.PublicInformations.map((dataItem, index) => {
-                                            dataItem.Description = '';
-                                            dataItem.Description = '';
+                        {Array.isArray(dataPage?.Results) &&
+                            dataPage.Results.map((dataItem, index) => {
+                                dataItem.Description = '';
+                                dataItem.Description = '';
 
-                                            return (
-                                                <>
-                                                    <PublishedPublicInformationPageItem key={dataItem.Id} data={dataItem} isFirst={index === 0} />
-                                                    <div className={cx('divider')}></div>
-                                                </>
-                                            );
-                                        })}
+                                return (
+                                    <>
+                                        <PublishedPublicInformationPageItem key={dataItem.Id} data={dataItem} isFirst={index === 0} />
+                                        <div className={cx('divider')}></div>
+                                    </>
+                                );
+                            })}
 
-                                    <Link className={cx('see-more')}>Xem thêm >></Link>
-                                </div>
-                            );
-                        })}
+                        <Pagination
+                            className={cx('paging')}
+                            defaultCurrent={pagingIndex}
+                            total={dataPage?.RowCount}
+                            showTotal={() => commonRenderTable.showTableTotalPagination(dataPage?.RowCount ?? 0)}
+                            onChange={handleOnChangeIndexPaging}
+                            pageSizeOptions={[]}
+                        />
+                    </div>
                 </>
             </Skeleton>
         </div>
