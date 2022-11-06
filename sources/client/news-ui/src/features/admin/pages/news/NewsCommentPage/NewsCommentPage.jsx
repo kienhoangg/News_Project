@@ -1,17 +1,18 @@
-import classNames from "classnames/bind";
-import styles from "./NewsCommentPage.module.scss";
+import classNames from 'classnames/bind';
+import styles from './NewsCommentPage.module.scss';
 
-import { Divider, Form, Modal, Button } from "antd";
-import newsApi from "apis/newsApi";
-import { useEffect, useState } from "react";
-import NewsCommentPageSearch from "./NewsCommentPageSearch/NewsCommentPageSearch";
-import NewsCommentTableData from "./NewsCommentTableData/NewsCommentTableData";
-import { Direction, NotificationType } from "common/enum";
-import axiosClient from "apis/axiosClient";
-import { TypeUpdate } from "common/constant";
-import { openNotification } from "helpers/notification";
-import moment from "moment";
-import datetimeHelper from "helpers/datetimeHelper";
+import { Divider, Form, Modal, Button } from 'antd';
+import newsApi from 'apis/newsApi';
+import { useEffect, useState } from 'react';
+import NewsCommentPageSearch from './NewsCommentPageSearch/NewsCommentPageSearch';
+import NewsCommentTableData from './NewsCommentTableData/NewsCommentTableData';
+import { Direction, NotificationType } from 'common/enum';
+import axiosClient from 'apis/axiosClient';
+import { TypeUpdate } from 'common/constant';
+import { openNotification } from 'helpers/notification';
+import moment from 'moment';
+import datetimeHelper from 'helpers/datetimeHelper';
+import Loading from 'components/Loading/Loading';
 
 const cx = classNames.bind(styles);
 
@@ -24,13 +25,15 @@ function NewsCommentPage(props) {
     currentPage: 1,
     pageSize: 10,
     direction: Direction.DESC,
-    orderBy: "CreatedDate",
-    keyword: "",
+    orderBy: 'CreatedDate',
+    keyword: '',
   });
   const [newsData, setNewsData] = useState({
     data: [],
     total: 0,
   });
+  const [confirmLoading, setConfirmLoading] = useState(true);
+
   useEffect(() => {
     getCategoryNews();
   }, []);
@@ -41,14 +44,16 @@ function NewsCommentPage(props) {
 
   const fetchProductList = async () => {
     try {
-      const response = await axiosClient.post("/comments/filter", objFilter);
-
+      setConfirmLoading(true);
+      const response = await axiosClient.post('/comments/filter', objFilter);
       setNewsData({
         data: response?.PagedData?.Results,
         total: response?.PagedData?.RowCount,
       });
     } catch (error) {
-      console.log("Failed to fetch list: ", error);
+      console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -60,7 +65,7 @@ function NewsCommentPage(props) {
         pageSize: 9999,
         currentPage: 1,
         direction: -1,
-        orderBy: "CreatedDate",
+        orderBy: 'CreatedDate',
       });
       setListCategoryNews(responseCategoryNews?.PagedData?.Results);
     } catch (err) {}
@@ -96,25 +101,31 @@ function NewsCommentPage(props) {
 
   const handleUpdateStatusNew = async (values) => {
     try {
-      await axiosClient.put("/comments", {
+      setConfirmLoading(true);
+      await axiosClient.put('/comments', {
         ids: [values.Id],
         value: values.Status === 0,
         field: TypeUpdate.STATUS,
       });
       fetchProductList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleDeleteCategoryNew = async (res) => {
     try {
-      await axiosClient.delete("/comments/" + res?.Id);
-      openNotification("Xóa bình luận thành công");
+      setConfirmLoading(true);
+      await axiosClient.delete('/comments/' + res?.Id);
+      openNotification('Xóa bình luận thành công');
       fetchProductList();
     } catch (error) {
-      openNotification("Xóa bình luận thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa bình luận thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -130,15 +141,17 @@ function NewsCommentPage(props) {
   };
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       <Modal
         open={isModalOpen?.show}
-        title={"Hiển thị thông tin"}
+        title={'Hiển thị thông tin'}
         okText={false}
         okButtonProps={{
           hidden: true,
         }}
-        cancelText="Thoát"
+        cancelText='Thoát'
         onCancel={() => {
           setIsModalOpen({
             comment: null,
@@ -146,20 +159,20 @@ function NewsCommentPage(props) {
           });
         }}
       >
-        <Form form={form} {...layout} name="control-hooks">
-          <Form.Item label="Thuộc tin">
+        <Form form={form} {...layout} name='control-hooks'>
+          <Form.Item label='Thuộc tin'>
             <div>{isModalOpen?.comment?.NewsPost?.Title}</div>
           </Form.Item>
 
-          <Form.Item label="Người gửi">
+          <Form.Item label='Người gửi'>
             <div>{isModalOpen?.comment?.Username}</div>
           </Form.Item>
 
-          <Form.Item label="Nội dung">
+          <Form.Item label='Nội dung'>
             <div>{isModalOpen?.comment?.Content}</div>
           </Form.Item>
 
-          <Form.Item label="Ngày gửi">
+          <Form.Item label='Ngày gửi'>
             <div>
               {datetimeHelper.formatDateToDateVN(
                 isModalOpen?.comment?.CreatedDateRaw
@@ -168,14 +181,14 @@ function NewsCommentPage(props) {
           </Form.Item>
         </Form>
       </Modal>
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <NewsCommentPageSearch
           setTextSearch={handleChangeTextSearch}
           listCategoryNews={listCategoryNews}
         />
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <NewsCommentTableData
           data={newsData}
           setPagination={handleChangePagination}
