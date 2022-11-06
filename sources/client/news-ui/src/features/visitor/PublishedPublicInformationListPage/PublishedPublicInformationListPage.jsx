@@ -5,27 +5,30 @@ import commonRender from 'common/commonRender';
 import ScrollToTop from 'components/ScrollToTop/ScrollToTop';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import styles from './PublishedPublicInformation.module.scss';
-import PublishedPublicInformationPageItem from './PublishedPublicInformationPageItem/PublishedPublicInformationPageItem';
+import { Link, useParams } from 'react-router-dom';
+import PublishedPublicInformationPageItem from '../PublishedPublicInformationPage/PublishedPublicInformationPageItem/PublishedPublicInformationPageItem';
+import styles from './PublishedPublicInformationListPage.module.scss';
 
 const cx = classNames.bind(styles);
 
-PublishedPublicInformation.propTypes = {
+PublishedPublicInformationListPage.propTypes = {
     data: PropTypes.object,
 };
 
-PublishedPublicInformation.defaultProps = {};
+PublishedPublicInformationListPage.defaultProps = {};
 
-function PublishedPublicInformation(props) {
+function PublishedPublicInformationListPage(props) {
+    let { id } = useParams();
     const [dataPage, setDataPage] = useState();
     const [loading, setLoading] = useState(true);
+
+    const [pagingIndex, setPagingIndex] = useState(1);
 
     useEffect(() => {
         const fetchHome = async () => {
             try {
                 const params = {};
-                const response = await publishedNewsApi.getDataPublicInformationCategoriesPage(params);
+                const response = await publishedNewsApi.getDataPublicInformationCategoriesListPage(params);
                 setDataPage(response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
@@ -46,7 +49,7 @@ function PublishedPublicInformation(props) {
                             return (
                                 <div key={item.Id} className={cx('category-container')}>
                                     <div className={cx('title-container')}>
-                                        <Link to={commonRender.renderLinkPublishedPublicInformationListPage(item.Id)} className={cx('title')}>
+                                        <Link to={commonRender.renderLinkNewsCategory(item.Id)} className={cx('title')}>
                                             {item.Title}
                                         </Link>
                                         <span className={cx('right')}></span>
@@ -66,9 +69,7 @@ function PublishedPublicInformation(props) {
                                             );
                                         })}
 
-                                    <Link to={commonRender.renderLinkPublishedPublicInformationListPage(item.Id)} className={cx('see-more')}>
-                                        Xem thêm >>
-                                    </Link>
+                                    <Link className={cx('see-more')}>Xem thêm >></Link>
                                 </div>
                             );
                         })}
@@ -78,4 +79,4 @@ function PublishedPublicInformation(props) {
     );
 }
 
-export default PublishedPublicInformation;
+export default PublishedPublicInformationListPage;

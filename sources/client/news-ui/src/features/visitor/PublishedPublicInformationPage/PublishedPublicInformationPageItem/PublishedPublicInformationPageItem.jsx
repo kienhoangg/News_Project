@@ -33,7 +33,7 @@ function PublishedPublicInformationPageItem(props) {
                 )}
                 <Col flex='1'>
                     <div className={cx('title')}>
-                        <Link to={commonRender.renderLinkNewsDetail(data.Id)}>{data.Title}</Link>
+                        <Link to={commonRender.renderLinkPublishedPublicInformationDetailPage(data.Id)}>{data.Title}</Link>
                     </div>
 
                     <div className={cx('time')}>

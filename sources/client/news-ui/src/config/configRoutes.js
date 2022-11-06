@@ -18,6 +18,8 @@ const routes = {
   publishedDocumentList: "/documents",
 
   publishedPublicInformation: "/public-information",
+  publishedPublicInformationListPage: "/public-information/list/:id",
+  publishedPublicInformationDetailPage: "/public-information/detail/:id",
   publishedIntroduce: "/introduce",
   publishedStaticPage: "/page/:id", //Giành cho menu
 

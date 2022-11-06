@@ -102,6 +102,26 @@ export const commonRender = {
     },
 
     /**
+    * Lấy link đường dần danh sách một thông tin công khai
+    * @param {string} id ID của tin tức
+    * @returns Đường dần danh sách một thông tin công khai
+    */
+    renderLinkPublishedPublicInformationListPage: (id) => {
+        var link = routes.publishedPublicInformationListPage.replace(":id", id);
+        return link;
+    },
+
+    /**
+    * Lấy link đường dần chi tiết một thông tin công khai
+    * @param {string} id ID của tin tức
+    * @returns Đường dần chi tiết một thông tin công khai
+    */
+    renderLinkPublishedPublicInformationDetailPage: (id) => {
+        var link = routes.publishedPublicInformationDetailPage.replace(":id", id);
+        return link;
+    },
+
+    /**
      * Hiển thị thông báo todo
      */
     showNotifyTodo: () => {
