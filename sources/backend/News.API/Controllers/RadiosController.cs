@@ -144,16 +144,16 @@ namespace News.API.Controllers
             radioUpdated.FileAttachment = fileAttachmentPath;
             await _radioService.UpdateRadio(radioUpdated);
 
-            if (fileAttachmentPath != tempFileAttachmentPath)
-            {
-                FileInfo fileFileAttachment =
-                                     new FileInfo(Directory.GetCurrentDirectory() +
-                                         "/wwwroot" + tempFileAttachmentPath);
-                if (fileFileAttachment.Exists)
-                {
-                    fileFileAttachment.Delete();
-                }
-            }
+            // if (fileAttachmentPath != tempFileAttachmentPath)
+            // {
+            //     FileInfo fileFileAttachment =
+            //                          new FileInfo(Directory.GetCurrentDirectory() +
+            //                              "/wwwroot" + tempFileAttachmentPath);
+            //     if (fileFileAttachment.Exists)
+            //     {
+            //         fileFileAttachment.Delete();
+            //     }
+            // }
             var result = _mapper.Map<RadioDto>(source: radioUpdated);
             return Ok(result);
         }

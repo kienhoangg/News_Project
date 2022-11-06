@@ -49,6 +49,7 @@ namespace News.API.Controllers
         private readonly IRadioService _radioService;
         private readonly IPublicInformationService _publicInformationService;
         private readonly IPublicInformationCategoryService _publicInformationCategoryService;
+        private readonly IRadioCategoryService _radioCategoryService;
 
 
 
@@ -79,7 +80,8 @@ namespace News.API.Controllers
             IFeedbackService feedbackService,
             IRadioService radioService,
             IPublicInformationService publicInformationService,
-            IPublicInformationCategoryService publicInformationCategoryService)
+            IPublicInformationCategoryService publicInformationCategoryService,
+            IRadioCategoryService radioCategoryService)
         {
             _newsPostService = newsPostService;
             _serializeService = serializeService;
@@ -105,6 +107,7 @@ namespace News.API.Controllers
             _radioService = radioService;
             _publicInformationService = publicInformationService;
             _publicInformationCategoryService = publicInformationCategoryService;
+            _radioCategoryService = radioCategoryService;
         }
 
         [HttpGet("published/{id:int}")]
@@ -419,6 +422,15 @@ namespace News.API.Controllers
             if (staticInfo == null) return NotFound();
 
             var result = _mapper.Map<StaticInfoDto>(staticInfo);
+            return Ok(result);
+        }
+
+        [HttpPost("radiocategories/filter")]
+        public async Task<IActionResult>
+        GetRadioCategoryByPaging([FromBody] RadioCategoryRequest radioCategoryRequest)
+        {
+            var result =
+                await _radioCategoryService.GetRadioCategoryByPaging(radioCategoryRequest);
             return Ok(result);
         }
 
