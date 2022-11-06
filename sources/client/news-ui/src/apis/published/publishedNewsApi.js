@@ -8,13 +8,9 @@ import moment from 'moment';
 
 class PublishedNewsApi {
   getData = (params) => {
-    // const url = '/home';
     const { id } = params;
     let url = `/home/published/${id}`;
     return axiosClient.get(url, {});
-
-    // var response = datafakePublisedNews.objectExample;
-    // return response;
   };
 
   getComments() {
@@ -80,14 +76,22 @@ class PublishedNewsApi {
     return axiosClient.post(url, body);
   }
 
-
-  getDataPublicInformationCategoriesListPage() {
+  //#region API thông tin công khai
+  getDataPublicInformationCategoriesPage() {
     let url = `/home/published/publicinformationcategories`;
     return axiosClient.get(url, {});
-
-    // var response = datafakePublishedCategoryList;
-    // return response;
   }
+
+  getDataPublicInformationCategoriesListPage(body) {
+    let url = `/home/publicinformations/filter`;
+    return axiosClient.post(url, body);
+  }
+
+  getDataPublicInformationCategoriesDetailPage(id) {
+    let url = `/home/publicinformations/${id}`;
+    return axiosClient.get(url, {});
+  }
+  //#endregion
 }
 const publishedNewsApi = new PublishedNewsApi();
 export default publishedNewsApi;

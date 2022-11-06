@@ -65,6 +65,7 @@ function PublishedNewsPostPageCommentList(props) {
                     // showTotal={() => commonRenderTable.showTableTotalPagination(total ?? 0)}
                     onChange={handleOnChangeIndexPaging}
                     pageSizeOptions={[]}
+                    showSizeChanger={false}
                 />
             )}
         </div>

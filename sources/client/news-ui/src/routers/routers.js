@@ -55,6 +55,8 @@ import BudgetCategoryListPage from 'features/admin/pages/publicBudget/BudgetCate
 import PublishedAudioPage from 'features/visitor/PublishedAudioPage/PublishedAudioPage';
 import PublishedPublicInformation from 'features/visitor/PublishedPublicInformationPage/PublishedPublicInformation';
 import NewsStatisticsPage from 'features/admin/pages/news/NewsStatisticsPage/NewsStatisticsPage';
+import PublishedPublicInformationListPage from 'features/visitor/PublishedPublicInformationListPage/PublishedPublicInformationListPage';
+import PublishedPublicInformationDetailPage from 'features/visitor/PublishedPublicInformationDetailPage/PublishedPublicInformationDetailPage';
 
 // Public routes
 const publicRoutes = [
@@ -312,6 +314,14 @@ const publicRoutes = [
   {
     path: config.routes.publishedPublicInformation,
     component: PublishedPublicInformation,
+  },
+  {
+    path: config.routes.publishedPublicInformationListPage,
+    component: PublishedPublicInformationListPage,
+  },
+  {
+    path: config.routes.publishedPublicInformationDetailPage,
+    component: PublishedPublicInformationDetailPage,
   },
 
   // { path: config.routes.admin, component: NewsListPage, layout: AdminLayout },

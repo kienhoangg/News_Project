@@ -17,6 +17,7 @@ import convertHelper from 'helpers/convertHelper';
 import imageHelper from 'helpers/imageHelper';
 import { envDomainBackend } from 'common/enviroments';
 import datetimeHelper from 'helpers/datetimeHelper';
+import Loading from 'components/Loading/Loading';
 const layout = {
   labelCol: { span: 8 },
   wrapperCol: { span: 16 },
@@ -71,6 +72,7 @@ function CompanyListPage(props) {
 
   const [isShowDetail, setIsShowDetail] = useState(false);
   const detail = useRef({});
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -88,6 +90,7 @@ function CompanyListPage(props) {
    */
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await linkAndCompanyApi.getCompanyAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -95,10 +98,13 @@ function CompanyListPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const getDataFilter = async () => {
+    setConfirmLoading(true);
     const responseCategoryAll =
       linkAndCompanyApi.getCompanyInfoCategoryAll(filterAll);
 
@@ -107,6 +113,7 @@ function CompanyListPage(props) {
         categoryAll: values[0]?.PagedData?.Results ?? [],
       });
     });
+    setConfirmLoading(false);
   };
 
   /**
@@ -131,11 +138,14 @@ function CompanyListPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.deleteCompany(id);
       openNotification('Xóa doanh nghiệp thành công');
       fetchProductList();
     } catch (error) {
       openNotification('Xóa doanh nghiệp thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -210,6 +220,7 @@ function CompanyListPage(props) {
       if (values.FileAttachment) {
         formData.append('FileAttachment', values.FileAttachment);
       }
+      setConfirmLoading(true);
       if (mode.current === Mode.Create) {
         await linkAndCompanyApi.insertCompany(formData);
       } else {
@@ -221,11 +232,14 @@ function CompanyListPage(props) {
       setFileListAttachment([]);
     } catch (error) {
       openNotification('Thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.updateStatusCompany({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -235,6 +249,8 @@ function CompanyListPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -250,10 +266,13 @@ function CompanyListPage(props) {
 
   const fetchItem = async (values) => {
     try {
+      setConfirmLoading(true);
       return await linkAndCompanyApi.getCompanyById(values?.Id);
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -273,7 +292,9 @@ function CompanyListPage(props) {
   );
 
   const handleEdit = async (id) => {
+    setConfirmLoading(true);
     const res = await linkAndCompanyApi.getCompanyById(id);
+    setConfirmLoading(false);
     idEdit.current = id;
     mode.current = Mode.Edit;
     form?.setFieldsValue({
@@ -299,6 +320,7 @@ function CompanyListPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       <Modal
         className={cx('modal-insert-source-news')}
         title='Thêm mới nguồn tin tức'

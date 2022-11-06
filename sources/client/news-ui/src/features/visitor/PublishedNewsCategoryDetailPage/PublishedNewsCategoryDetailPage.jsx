@@ -74,6 +74,8 @@ function PublishedNewsCategoryDetailPage() {
                                     total={dataTotal.current}
                                     showTotal={() => commonRenderTable.showTableTotalPagination(dataTotal.current ?? 0)}
                                     onChange={handleOnChangeIndexPaging}
+                                    pageSizeOptions={[]}
+                                    showSizeChanger={false}
                                 />
                             </div>
                         </>

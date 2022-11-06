@@ -25,7 +25,7 @@ function PublishedPublicInformation(props) {
         const fetchHome = async () => {
             try {
                 const params = {};
-                const response = await publishedNewsApi.getDataPublicInformationCategoriesListPage(params);
+                const response = await publishedNewsApi.getDataPublicInformationCategoriesPage(params);
                 setDataPage(response);
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
@@ -46,7 +46,7 @@ function PublishedPublicInformation(props) {
                             return (
                                 <div key={item.Id} className={cx('category-container')}>
                                     <div className={cx('title-container')}>
-                                        <Link to={commonRender.renderLinkNewsCategory(item.Id)} className={cx('title')}>
+                                        <Link to={commonRender.renderLinkPublishedPublicInformationListPage(item.Id)} className={cx('title')}>
                                             {item.Title}
                                         </Link>
                                         <span className={cx('right')}></span>
@@ -66,7 +66,9 @@ function PublishedPublicInformation(props) {
                                             );
                                         })}
 
-                                    <Link className={cx('see-more')}>Xem thêm >></Link>
+                                    <Link to={commonRender.renderLinkPublishedPublicInformationListPage(item.Id)} className={cx('see-more')}>
+                                        Xem thêm >>
+                                    </Link>
                                 </div>
                             );
                         })}
