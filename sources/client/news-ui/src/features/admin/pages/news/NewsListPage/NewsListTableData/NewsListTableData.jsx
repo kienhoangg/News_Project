@@ -79,7 +79,7 @@ function NewsListTableData(props) {
     {
       key: 'PublishedDate',
       dataIndex: 'PublishedDate',
-      title: 'Ngày tạo',
+      title: 'Ngày sửa lần cuối',
       width: 200,
       sorter: (a, b) => a.PublishedDate - b.PublishedDate,
       render: (_, { PublishedDate }) => (
