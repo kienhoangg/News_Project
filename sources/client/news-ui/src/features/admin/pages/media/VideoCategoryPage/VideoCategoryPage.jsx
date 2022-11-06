@@ -12,6 +12,7 @@ import { openNotification } from 'helpers/notification';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import datetimeHelper from 'helpers/datetimeHelper';
 import TextArea from 'antd/lib/input/TextArea';
+import Loading from 'components/Loading/Loading';
 
 const cx = classNames.bind(styles);
 
@@ -49,13 +50,17 @@ function VideoCategoryPage(props) {
 
   const [isShowDetail, setIsShowDetail] = useState(false);
   const detail = useRef({});
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   const fetchList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await mediaApi.getVideoCategoryFilter(objFilter);
       setNewsData(response?.PagedData);
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -96,25 +101,32 @@ function VideoCategoryPage(props) {
 
   const insertCategory = async (values) => {
     try {
+      setConfirmLoading(true);
       await mediaApi.insertVideoCategory(values);
       openNotification('Tạo mới thành công');
     } catch (error) {
       openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const updateQuestionCategory = async (values) => {
     try {
+      setConfirmLoading(true);
       await mediaApi.updateVideoCategory(idEdit.current, values);
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   //Update
   const handleUpdateStatus = async (values) => {
     try {
+      setConfirmLoading(true);
       await mediaApi.updateStatusVideoCategory({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -124,16 +136,21 @@ function VideoCategoryPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   async function handleDelete(values) {
     try {
+      setConfirmLoading(true);
       await mediaApi.deleteStatusVideoCategory(values?.Id);
       openNotification('Xóa thành công');
       fetchList();
     } catch (error) {
       openNotification('Xóa thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -156,6 +173,7 @@ function VideoCategoryPage(props) {
 
   async function getCategoryByID(id) {
     try {
+      setConfirmLoading(true);
       const res = await mediaApi.getVideoCategoryByID(id);
       return res;
     } catch (err) {
@@ -165,6 +183,8 @@ function VideoCategoryPage(props) {
         NotificationType.ERROR
       );
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -176,6 +196,8 @@ function VideoCategoryPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       <div className={cx('top')}>
         <VideoCategoryPageSearch
           setTextSearch={handleChangeSearch}

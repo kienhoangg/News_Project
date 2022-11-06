@@ -9,6 +9,7 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import linkAndCompanyApi from 'apis/linkAndCompanyApi';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 
 const { TextArea } = Input;
 const layout = {
@@ -41,6 +42,7 @@ function ConnectionCategoryPage(props) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const idEdit = useRef();
   const mode = useRef();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -58,6 +60,7 @@ function ConnectionCategoryPage(props) {
    */
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await linkAndCompanyApi.getLinkInfoCategoryAll(
         objFilter
       );
@@ -67,6 +70,8 @@ function ConnectionCategoryPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -92,11 +97,14 @@ function ConnectionCategoryPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.deleteLinkInfoCategory(id);
       openNotification('Xóa thành công');
       fetchProductList();
     } catch (error) {
       openNotification('Xóa thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -128,23 +136,30 @@ function ConnectionCategoryPage(props) {
 
   const insertSounceNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.insertLinkInfoCategory(values);
       openNotification('Tạo mới nguồn tin tức thành công');
     } catch (error) {
       openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const updateSounceNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.updateLinkInfoCategory(idEdit.current, values);
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.updateStatusLinkInfoCategory({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -154,6 +169,8 @@ function ConnectionCategoryPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -165,6 +182,7 @@ function ConnectionCategoryPage(props) {
 
   async function getSourceNewById(id) {
     try {
+      setConfirmLoading(true);
       const res = await linkAndCompanyApi.getLinkInfoCategoryById(id);
       return res;
     } catch (err) {
@@ -174,6 +192,8 @@ function ConnectionCategoryPage(props) {
         NotificationType.ERROR
       );
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -190,6 +210,7 @@ function ConnectionCategoryPage(props) {
   }
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       <Modal
         className={cx('modal-insert-source-news')}
         title={

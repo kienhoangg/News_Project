@@ -30,6 +30,7 @@ import DocumentListTableData from './DocumentListTableData/DocumentListTableData
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import PopupUpdateDocuments from './PopupUpdateDocuments/PopupUpdateDocuments';
 import PopupDocumentDetail from './PopupDocumentDetail/PopupDocumentDetail';
+import Loading from 'components/Loading/Loading';
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 const cx = classNames.bind(styles);
 
@@ -71,6 +72,7 @@ function DocumentListPage(props) {
   });
   const [fileListAttachment, setFileListAttachment] = useState([]);
   const [form] = Form.useForm();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   useEffect(() => {
     if (isFirstCall.current) {
@@ -83,6 +85,7 @@ function DocumentListPage(props) {
 
   const fetchList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await documentApi.getDocumentAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -90,31 +93,39 @@ function DocumentListPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const getDataFilter = async () => {
-    // loại văn bản
-    const responseCategoryAll = documentApi.getDocumentCategoryAll(filterAll);
-    //Cơ quan ban hành
-    const responseSourceAll = documentApi.getDocumentSourceAll(filterAll);
-    //Lĩnh vực
-    const responseFieldAll = documentApi.getDocumentFieldAll(filterAll);
-    // Người ký
-    const responseSingerAll = documentApi.getDocumentSingerAll(filterAll);
-    Promise.all([
-      responseCategoryAll,
-      responseSourceAll,
-      responseFieldAll,
-      responseSingerAll,
-    ]).then((values) => {
-      setDataFilter({
-        categoryAll: values[0]?.PagedData?.Results ?? [],
-        sourceAll: values[1]?.PagedData?.Results ?? [],
-        fieldAll: values[2]?.PagedData?.Results ?? [],
-        singerAll: values[3]?.PagedData?.Results ?? [],
+    try {
+      setConfirmLoading(true);
+      // loại văn bản
+      const responseCategoryAll = documentApi.getDocumentCategoryAll(filterAll);
+      //Cơ quan ban hành
+      const responseSourceAll = documentApi.getDocumentSourceAll(filterAll);
+      //Lĩnh vực
+      const responseFieldAll = documentApi.getDocumentFieldAll(filterAll);
+      // Người ký
+      const responseSingerAll = documentApi.getDocumentSingerAll(filterAll);
+      Promise.all([
+        responseCategoryAll,
+        responseSourceAll,
+        responseFieldAll,
+        responseSingerAll,
+      ]).then((values) => {
+        setDataFilter({
+          categoryAll: values[0]?.PagedData?.Results ?? [],
+          sourceAll: values[1]?.PagedData?.Results ?? [],
+          fieldAll: values[2]?.PagedData?.Results ?? [],
+          singerAll: values[3]?.PagedData?.Results ?? [],
+        });
       });
-    });
+    } catch (error) {
+    } finally {
+      setConfirmLoading(false);
+    }
   };
 
   function onEditorChange(event) {
@@ -209,11 +220,14 @@ function DocumentListPage(props) {
         formData.append('FileAttachment', values.FileAttachment);
       }
       setIsModalOpen(false);
+      setConfirmLoading(true);
       await documentApi.insertDocument(formData);
       openNotification('Tạo mới tin thành công');
       fetchList();
     } catch (error) {
       openNotification('Tạo mới tin thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   const showModal = () => {
@@ -234,16 +248,20 @@ function DocumentListPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await documentApi.deleteDocument(id);
       openNotification('Xóa nguồn tin thành công');
       fetchList();
     } catch (error) {
       openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.updatStatusDocument({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -253,6 +271,8 @@ function DocumentListPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -266,6 +286,8 @@ function DocumentListPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       <Modal
         open={isModalOpen}
         title='Tạo mới văn bản'
@@ -481,8 +503,8 @@ function DocumentListPage(props) {
                   { name: 'others', groups: ['others'] },
                   { name: 'about', groups: ['about'] },
                 ],
-                extraPlugins: "justify,font,colorbutton,forms,image2",
-                removeButtons: "Scayt,HiddenField,CopyFormatting,About",
+                extraPlugins: 'justify,font,colorbutton,forms,image2',
+                removeButtons: 'Scayt,HiddenField,CopyFormatting,About',
                 allowedContent: true,
               }}
             />
