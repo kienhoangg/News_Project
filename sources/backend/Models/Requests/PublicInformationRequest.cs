@@ -5,6 +5,6 @@ namespace Models.Requests
 {
     public class PublicInformationRequest : FilterBase
     {
-
+        public int? PublicInformationId { get; set; }
     }
 }
