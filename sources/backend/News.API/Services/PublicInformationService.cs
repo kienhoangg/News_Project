@@ -59,6 +59,10 @@ namespace News.API.Services
             {
                 query = query.Where(x => x.Id == publicInformationRequest.PublicInformationId.Value);
             }
+            if (publicInformationRequest.PublicInformationCategoryId.HasValue)
+            {
+                query = query.Where(x => x.PublicInformationCategoryId == publicInformationRequest.PublicInformationCategoryId.Value);
+            }
             if (publicInformationRequest.Status.HasValue)
             {
                 query = query.Where(x => x.Status == publicInformationRequest.Status.Value);
