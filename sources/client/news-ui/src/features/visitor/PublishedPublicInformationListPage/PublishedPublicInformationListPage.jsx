@@ -27,7 +27,7 @@ function PublishedPublicInformationListPage(props) {
         const fetchHome = async () => {
             try {
                 const params = {
-                    publicInformationId: id,
+                    publicInformationCategoryId: id,
                     currentPage: pagingIndex,
                     pageSize: 10,
                 };
@@ -40,7 +40,7 @@ function PublishedPublicInformationListPage(props) {
             }
         };
         fetchHome();
-    }, []);
+    }, [pagingIndex]);
 
     function handleOnChangeIndexPaging(params) {
         setPagingIndex(params);
