@@ -74,6 +74,7 @@ function PublishedPublicInformationListPage(props) {
                             })}
 
                         <Pagination
+                            style={{ marginLeft: 8 }}
                             className={cx('paging')}
                             defaultCurrent={pagingIndex}
                             total={dataPage?.RowCount}
