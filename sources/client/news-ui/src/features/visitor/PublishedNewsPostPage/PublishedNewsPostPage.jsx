@@ -93,7 +93,7 @@ function PublishedDocumentPage(props) {
 
                 await publishedNewsApi.postVisitorComment(body);
                 setResetCommentFields(!resetCommentFields);
-                setOnResetDataComment(onFinishComment + 1);
+                setOnResetDataComment(onResetDataComment + 1);
                 commonRender.showNotifySuccess('Bình luận thành công');
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
