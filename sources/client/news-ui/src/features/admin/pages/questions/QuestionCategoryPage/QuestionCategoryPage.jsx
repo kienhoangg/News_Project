@@ -13,6 +13,7 @@ import { Option } from 'antd/lib/mentions';
 import { openNotification } from 'helpers/notification';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
 import datetimeHelper from 'helpers/datetimeHelper';
+import Loading from 'components/Loading/Loading';
 
 const cx = classNames.bind(styles);
 
@@ -50,18 +51,23 @@ function QuestionCategoryPage(props) {
 
   const [isShowDetail, setIsShowDetail] = useState(false);
   const detail = useRef({});
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   const fetchList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await questionApi.getCategoryFilter(objFilter);
       setNewsData(response?.PagedData);
     } catch (error) {
-      console.log("Failed to fetch list: ", error);
+      console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const fetchProductListAll = async () => {
     try {
+      setConfirmLoading(true);
       const response = await questionApi.getCategoryFilter({
         currentPage: 1,
         pageSize: 9_999_999,
@@ -69,7 +75,9 @@ function QuestionCategoryPage(props) {
       });
       setParentData(response?.PagedData?.Results);
     } catch (error) {
-      console.log("Failed to fetch list: ", error);
+      console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -79,7 +87,7 @@ function QuestionCategoryPage(props) {
 
   function handleChangeSearch(text) {
     let newFilter = { ...objFilter, keyword: text };
-    console.log("newFilter", newFilter);
+    console.log('newFilter', newFilter);
     setObjFilter(newFilter);
   }
 
@@ -95,8 +103,8 @@ function QuestionCategoryPage(props) {
   // MODEL tạo mới
   const renderOptionParentData = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
       allowClear={true}
       showSearch
     >
@@ -130,44 +138,56 @@ function QuestionCategoryPage(props) {
 
   const insertCategory = async (values) => {
     try {
+      setConfirmLoading(true);
       await questionApi.insertQuestionCategory(values);
-      openNotification("Tạo mới thành công");
+      openNotification('Tạo mới thành công');
     } catch (error) {
-      openNotification("Tạo mới thất bại", "", NotificationType.ERROR);
+      openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const updateQuestionCategory = async (values) => {
     try {
+      setConfirmLoading(true);
       await questionApi.updateQuestionCategory(idEdit.current, values);
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   //Update
   const handleUpdateStatus = async (values) => {
     try {
+      setConfirmLoading(true);
       await questionApi.updateStatusQuestionCategory({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
         Field: TypeUpdate.STATUS,
       });
       fetchList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   async function handleDelete(values) {
     try {
+      setConfirmLoading(true);
       await questionApi.deleteStatusQuestionCategory(values?.Id);
-      openNotification("Xóa thành công");
+      openNotification('Xóa thành công');
       fetchList();
     } catch (error) {
-      openNotification("Xóa thất bại", "", NotificationType.ERROR);
+      openNotification('Xóa thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -193,15 +213,18 @@ function QuestionCategoryPage(props) {
 
   async function getQuestionCategoryByID(id) {
     try {
+      setConfirmLoading(true);
       const res = await questionApi.getQuestionCategoryByID(id);
       return res;
     } catch (err) {
       openNotification(
-        "Lấy chi tiết dữ liệu thất bại",
-        "",
+        'Lấy chi tiết dữ liệu thất bại',
+        '',
         NotificationType.ERROR
       );
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -212,8 +235,10 @@ function QuestionCategoryPage(props) {
   }
 
   return (
-    <div className={cx("wrapper")}>
-      <div className={cx("top")}>
+    <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
+      <div className={cx('top')}>
         <QuestionCategoryPageSearch
           setTextSearch={handleChangeSearch}
           handleOnClickCreate={async () => {
@@ -223,8 +248,8 @@ function QuestionCategoryPage(props) {
           }}
         />
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <QuestionCategoryTableData
           data={newsData}
           setPagination={handleChangePagination}
@@ -237,37 +262,37 @@ function QuestionCategoryPage(props) {
 
       {/* MODEL */}
       <Modal
-        className={cx("modal-insert-source-news")}
-        title="Thêm mới danh mục"
+        className={cx('modal-insert-source-news')}
+        title='Thêm mới danh mục'
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
           <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
+            name='title'
+            label='Tiêu đề'
+            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item name="parentId" label="Danh mục cấp cha">
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
             {renderOptionParentData}
           </Form.Item>
-          <Form.Item name="order" label="Số thứ tự">
-            <Input type="number" min={0} />
+          <Form.Item name='order' label='Số thứ tự'>
+            <Input type='number' min={0} />
           </Form.Item>
 
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name='description' label='Mô tả'>
             <TextArea />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             <Button
-              type="primary"
-              htmlType={mode.current === Mode.Edit ? "Cập nhật" : "Tạo mới"}
+              type='primary'
+              htmlType={mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
             >
-              {mode.current === Mode.Edit ? "Cập nhật" : "Tạo mới"}
+              {mode.current === Mode.Edit ? 'Cập nhật' : 'Tạo mới'}
             </Button>
           </Form.Item>
         </Form>
@@ -275,58 +300,47 @@ function QuestionCategoryPage(props) {
 
       <Modal
         open={isShowDetail}
-        title="Hiển thị thông tin"
+        title='Hiển thị thông tin'
         okButtonProps={{
           style: {
-            display: "none",
+            display: 'none',
           },
         }}
-        cancelText="Thoát"
+        cancelText='Thoát'
         onCancel={() => {
           setIsShowDetail(false);
         }}
       >
         <Row gutter={8}>
           <Col span={16}>
-            <Row gutter={16} className={cx("row-item")}>
+            <Row gutter={16} className={cx('row-item')}>
               <Col span={8}>
-                <div className={cx("row-item-label")}>Tiêu đề</div>
+                <div className={cx('row-item-label')}>Tiêu đề</div>
               </Col>
               <Col span={16}>
                 <div>{detail.current?.Title}</div>
               </Col>
             </Row>
 
-            {/* {detail.current?.ParentId && (
-                            <Row gutter={16} className={cx('row-item')}>
-                                <Col span={8}>
-                                    <div className={cx('row-item-label')}>Danh mục cấp cha</div>
-                                </Col>
-                                <Col span={16}>
-                                    <div>{detail.current?.ParentId}</div>
-                                </Col>
-                            </Row>
-                        )} */}
-
-            <Row gutter={16} className={cx("row-item")}>
+            <Row gutter={16} className={cx('row-item')}>
               <Col span={8}>
-                <div className={cx("row-item-label")}>Số thứ tự</div>
+                <div className={cx('row-item-label')}>Số thứ tự</div>
               </Col>
               <Col span={16}>
                 <div>{detail.current?.Order}</div>
               </Col>
             </Row>
-            <Row gutter={16} className={cx("row-item")}>
+            <Row gutter={16} className={cx('row-item')}>
               <Col span={8}>
-                <div className={cx("row-item-label")}>Mô tả</div>
+                <div className={cx('row-item-label')}>Mô tả</div>
               </Col>
               <Col span={16}>
                 <div>{detail.current?.Description}</div>
               </Col>
             </Row>
-            <Row gutter={16} className={cx("row-item")}>
+            <Row gutter={16} className={cx('row-item')}>
               <Col span={8}>
-                <div className={cx("row-item-label")}>Ngày tạo</div>
+                <div className={cx('row-item-label')}>Ngày tạo</div>
               </Col>
               <Col span={16}>
                 <div>
@@ -336,9 +350,9 @@ function QuestionCategoryPage(props) {
                 </div>
               </Col>
             </Row>
-            <Row gutter={16} className={cx("row-item")}>
+            <Row gutter={16} className={cx('row-item')}>
               <Col span={8}>
-                <div className={cx("row-item-label")}>Ngày sửa cuối</div>
+                <div className={cx('row-item-label')}>Ngày sửa cuối</div>
               </Col>
               <Col span={16}>
                 <div>

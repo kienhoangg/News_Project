@@ -5,6 +5,7 @@ import questionApi from 'apis/questionApi';
 import classNames from 'classnames/bind';
 import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
 import { Direction, NotificationType } from 'common/enum';
+import Loading from 'components/Loading/Loading';
 import convertHelper from 'helpers/convertHelper';
 import imageHelper from 'helpers/imageHelper';
 import { openNotification } from 'helpers/notification';
@@ -58,13 +59,11 @@ function SuggetionBoxListPage(props) {
     orderBy: DEFAULT_COLUMN_ORDER_BY,
     keyword: '',
   });
-
-  const handleChangeAttachment = ({ fileList: newFileList }) => {
-    setFileListAttachment(newFileList);
-  };
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   const callApiGetDetail = async (id) => {
     try {
+      setConfirmLoading(true);
       const res = await axiosClient.get('/Feedbacks/' + id);
       setQuestionDetail(res);
       // const label =
@@ -95,7 +94,10 @@ function SuggetionBoxListPage(props) {
             url: imageHelper.getLinkImageUrl(res?.FilePath),
           },
         ]);
-    } catch (err) {}
+    } catch (err) {
+    } finally {
+      setConfirmLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -104,6 +106,7 @@ function SuggetionBoxListPage(props) {
 
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await questionApi.getSuggetBoxFillter(objFilter);
       setNewsData({
         data: response?.PagedData?.Results,
@@ -111,6 +114,8 @@ function SuggetionBoxListPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -173,37 +178,9 @@ function SuggetionBoxListPage(props) {
     setQuestionDetail({});
   };
 
-  const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
-  const onCreate = async (values = {}) => {
-    try {
-      var formData = new FormData();
-      formData.append(
-        'JsonString',
-        convertHelper.Serialize(values?.JsonString)
-      );
-
-      if (values?.FileAttachment) {
-        formData.append('FileAttachment', values?.FileAttachment);
-      }
-
-      if (isModalOpen?.type === MODAL_TYPE.CREATE) {
-        await axiosClient.post('/questions', formData);
-        openNotification('Tạo mới thành công');
-      } else {
-        await axiosClient.put('/questions/' + questionDetail?.Id, formData);
-        openNotification('Cập nhật thành công');
-      }
-
-      onCancel();
-
-      fetchProductList();
-    } catch (error) {
-      openNotification('Cập nhật tin tức thất bại', '', NotificationType.ERROR);
-    }
-  };
-
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       {(
         isModalOpen?.type === MODAL_TYPE.CREATE ||
         isModalOpen?.type === MODAL_TYPE.DETAIL
@@ -223,14 +200,7 @@ function SuggetionBoxListPage(props) {
           cancelText='Thoát'
           onCancel={onCancel}
           {...(isModalOpen?.type === MODAL_TYPE.DETAIL ? { footer: null } : {})}
-          onOk={() => {
-            form
-              .validateFields()
-              .then((values) => {})
-              .catch((info) => {
-                console.log('Validate Failed:', info);
-              });
-          }}
+          onOk={() => {}}
         >
           <Form
             form={form}

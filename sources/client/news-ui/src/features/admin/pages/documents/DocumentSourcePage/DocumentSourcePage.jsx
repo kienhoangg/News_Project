@@ -10,6 +10,7 @@ import { openNotification } from 'helpers/notification';
 import { Option } from 'antd/lib/mentions';
 import { FileAddFilled } from '@ant-design/icons';
 import { TypeUpdate, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 
 const { TextArea } = Input;
 const layout = {
@@ -38,6 +39,7 @@ function DocumentSourcePage(props) {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   const MODAL_TYPE = {
     EDIT: 0,
@@ -58,6 +60,7 @@ function DocumentSourcePage(props) {
 
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await documentApi.getDocumentSourceAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -65,10 +68,12 @@ function DocumentSourcePage(props) {
       });
     } catch (error) {
       openNotification(
-        "Lấy cơ quan ban hành thất bại",
-        "",
+        'Lấy cơ quan ban hành thất bại',
+        '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -86,8 +91,10 @@ function DocumentSourcePage(props) {
       keyword: '',
       parentId: 0,
     };
+    setConfirmLoading(true);
     const response = await documentApi.getDocumentSourceAll(filterRoot);
     setDataRoot(response?.PagedData?.Results ?? []);
+    setConfirmLoading(false);
   };
 
   const handleCancel = () => {
@@ -107,7 +114,7 @@ function DocumentSourcePage(props) {
     let parentID = null;
     if (values.parentId) {
       parentID = parseInt(
-        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? "0"
+        dataRoot.find((x) => x.Title === values.parentId)?.Id ?? '0'
       );
     }
     values = {
@@ -128,12 +135,15 @@ function DocumentSourcePage(props) {
    */
   const updateCategoryNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.updateSourceDocument(document?.content?.Id, values);
       handleCancel();
       fetchProductList();
-      openNotification("Sửa thành công");
+      openNotification('Sửa thành công');
     } catch (error) {
-      openNotification("Sửa thất bại", "", NotificationType.ERROR);
+      openNotification('Sửa thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -142,16 +152,19 @@ function DocumentSourcePage(props) {
    */
   const insertCategoryNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.insertSourceDocument(values);
       handleCancel();
       fetchProductList();
-      openNotification("Tạo mới cơ quan ban hành thành công");
+      openNotification('Tạo mới cơ quan ban hành thành công');
     } catch (error) {
       openNotification(
-        "Tạo mới cơ quan ban hành thất bại",
-        "",
+        'Tạo mới cơ quan ban hành thất bại',
+        '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -177,36 +190,42 @@ function DocumentSourcePage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await documentApi.deleteSourceDocument(id);
-      openNotification("Xóa cơ quan ban hành thành công");
+      openNotification('Xóa cơ quan ban hành thành công');
       fetchProductList();
     } catch (error) {
       openNotification(
-        "Xóa cơ quan ban hành thất bại",
-        "",
+        'Xóa cơ quan ban hành thất bại',
+        '',
         NotificationType.ERROR
       );
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await documentApi.updatStatusSourceDocument({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
         Field: TypeUpdate.STATUS,
       });
       fetchProductList();
-      openNotification("Cập nhật thành công");
+      openNotification('Cập nhật thành công');
     } catch (error) {
-      openNotification("Cập nhật thất bại", "", NotificationType.ERROR);
+      openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const renderOption = (
     <Select
-      placeholder="Chọn cấp cha"
-      style={{ width: "100%" }}
+      placeholder='Chọn cấp cha'
+      style={{ width: '100%' }}
       allowClear={true}
       showSearch
     >
@@ -219,28 +238,30 @@ function DocumentSourcePage(props) {
   );
 
   return (
-    <div className={cx("wrapper")}>
+    <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       {
         //#region popup thêm mới
       }
       <Modal
-        className={cx("modal-category-news")}
+        className={cx('modal-category-news')}
         title={
           document?.type === MODAL_TYPE.DETAIL
-            ? "Xem chi tiết"
+            ? 'Xem chi tiết'
             : document?.type === MODAL_TYPE.EDIT
-            ? "Chỉnh sửa"
-            : "Thêm mới"
+            ? 'Chỉnh sửa'
+            : 'Thêm mới'
         }
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
       >
-        <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+        <Form {...layout} form={form} name='control-hooks' onFinish={onFinish}>
           <Form.Item
-            name="title"
-            label="Tiêu đề"
-            rules={[{ required: true, message: "Tiêu đề không được để trống" }]}
+            name='title'
+            label='Tiêu đề'
+            rules={[{ required: true, message: 'Tiêu đề không được để trống' }]}
           >
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Title}</div>
@@ -248,7 +269,7 @@ function DocumentSourcePage(props) {
               <Input />
             )}
           </Form.Item>
-          <Form.Item name="parentId" label="Danh mục cấp cha">
+          <Form.Item name='parentId' label='Danh mục cấp cha'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>
                 {
@@ -261,14 +282,14 @@ function DocumentSourcePage(props) {
               renderOption
             )}
           </Form.Item>
-          <Form.Item name="order" label="Số thứ tự">
+          <Form.Item name='order' label='Số thứ tự'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Order}</div>
             ) : (
-              <Input type="number" min={0} defaultValue={0} />
+              <Input type='number' min={0} defaultValue={0} />
             )}
           </Form.Item>
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name='description' label='Mô tả'>
             {document?.type === MODAL_TYPE.DETAIL ? (
               <div>{document?.content?.Description}</div>
             ) : (
@@ -279,12 +300,12 @@ function DocumentSourcePage(props) {
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
             {document?.type === MODAL_TYPE.DETAIL ? null : (
               <Button
-                type="primary"
+                type='primary'
                 htmlType={
-                  document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"
+                  document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'
                 }
               >
-                {document?.type === MODAL_TYPE.EDIT ? "Lưu" : "Tạo mới"}
+                {document?.type === MODAL_TYPE.EDIT ? 'Lưu' : 'Tạo mới'}
               </Button>
             )}
           </Form.Item>
@@ -293,16 +314,16 @@ function DocumentSourcePage(props) {
       {
         //#endregion
       }
-      <div className={cx("top")}>
+      <div className={cx('top')}>
         <DocumentSourcePageSearch setTextSearch={handleChangeTextSearch} />
-        <div className={cx("btn-add-signer-document")}>
-          <Button type="primary" icon={<FileAddFilled />} onClick={showModal}>
+        <div className={cx('btn-add-signer-document')}>
+          <Button type='primary' icon={<FileAddFilled />} onClick={showModal}>
             Thêm mới
           </Button>
         </div>
       </div>
-      <Divider style={{ margin: "0" }} />
-      <div className={cx("table-data")}>
+      <Divider style={{ margin: '0' }} />
+      <div className={cx('table-data')}>
         <DocumentSourceTableData
           data={newsData}
           setPagination={handleChangePagination}

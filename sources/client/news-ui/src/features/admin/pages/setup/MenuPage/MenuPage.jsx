@@ -29,6 +29,7 @@ import styles from './MenuPage.module.scss';
 import MenuSearch from './MenuSearch/MenuSearch';
 import { Option } from 'antd/lib/mentions';
 import { TypeUpdate, Role, DEFAULT_COLUMN_ORDER_BY } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 const { DirectoryTree } = Tree;
 const layout = {
   labelCol: { span: 8 },
@@ -62,6 +63,8 @@ function MenuPage(props) {
   const idEdit = useRef(-1);
   const [isShowDetail, setIsShowDetail] = useState(false);
   const detail = useRef({});
+  const [confirmLoading, setConfirmLoading] = useState(true);
+
   useEffect(() => {
     if (isFirstCall.current) {
       isFirstCall.current = false;
@@ -72,11 +75,14 @@ function MenuPage(props) {
 
   const getMenuAll = async () => {
     try {
+      setConfirmLoading(true);
       const res = await setupApi.getMenuAll(filterAll);
       dataResource.current = res?.PagedData?.Results ?? [];
       setDataTree(res?.PagedData?.Results ?? []);
     } catch (err) {
       openNotification('Tạo mới tin thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -87,7 +93,9 @@ function MenuPage(props) {
   }
 
   async function editMenu(id) {
+    setConfirmLoading(true);
     const res = await setupApi.getMenuById(id);
+    setConfirmLoading(false);
     if (res?.Status) {
       openNotification(
         <>
@@ -140,6 +148,7 @@ function MenuPage(props) {
       cancelText: 'Hủy',
       onOk: async () => {
         try {
+          setConfirmLoading(true);
           await setupApi.updateStatusMenu({
             Ids: [id],
             Value: status === 0 ? 1 : 0,
@@ -149,6 +158,8 @@ function MenuPage(props) {
           openNotification('Cập nhật thành công');
         } catch (error) {
           openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+        } finally {
+          setConfirmLoading(false);
         }
       },
     });
@@ -173,18 +184,23 @@ function MenuPage(props) {
       cancelText: 'Hủy',
       onOk: async () => {
         try {
+          setConfirmLoading(true);
           await setupApi.deleteMenu(id);
           openNotification('Xóa thành công');
           getMenuAll();
         } catch (error) {
           openNotification('Xóa thất bại', '', NotificationType.ERROR);
+        } finally {
+          setConfirmLoading(false);
         }
       },
     });
   }
 
   async function handleShowDetail(Id) {
-    const res = await await setupApi.getMenuById(Id);
+    setConfirmLoading(true);
+    const res = await setupApi.getMenuById(Id);
+    setConfirmLoading(false);
     detail.current = res;
     setIsShowDetail(true);
   }
@@ -283,12 +299,15 @@ function MenuPage(props) {
    */
   const insertCategoryNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await setupApi.insertMenu(values);
       setIsModalOpen(false);
       getMenuAll();
       openNotification('Tạo mới danh mục thành công');
     } catch (error) {
       openNotification('Tạo mới danh mục thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -297,12 +316,15 @@ function MenuPage(props) {
    */
   const updateCategoryNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await setupApi.updateMenu(idEdit.current, values);
       setIsModalOpen(false);
       getMenuAll();
       openNotification('Cập nhật menu thành công');
     } catch (error) {
       openNotification('Cập nhật menu thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -313,6 +335,8 @@ function MenuPage(props) {
   };
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       {
         //#region popup thêm mới
       }

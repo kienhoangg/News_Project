@@ -17,6 +17,7 @@ import commonFunc from 'common/commonFunc';
 import convertHelper from 'helpers/convertHelper';
 import imageHelper from 'helpers/imageHelper';
 import { envDomainBackend } from 'common/enviroments';
+import Loading from 'components/Loading/Loading';
 
 const layout = {
   labelCol: { span: 8 },
@@ -64,6 +65,8 @@ function ConnectionListPage(props) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const mode = useRef(Mode.Create);
   const idEdit = useRef(-1);
+  const [confirmLoading, setConfirmLoading] = useState(true);
+
   const handleChangeAttachment = ({ fileList: newFileList }) => {
     setFileListAttachment(newFileList);
   };
@@ -84,6 +87,7 @@ function ConnectionListPage(props) {
    */
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await linkAndCompanyApi.getLinkInfoAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -91,10 +95,13 @@ function ConnectionListPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const getDataFilter = async () => {
+    setConfirmLoading(true);
     const responseCategoryAll =
       linkAndCompanyApi.getLinkInfoCategoryAll(filterAll);
 
@@ -103,6 +110,7 @@ function ConnectionListPage(props) {
         categoryAll: values[0]?.PagedData?.Results ?? [],
       });
     });
+    setConfirmLoading(false);
   };
 
   /**
@@ -127,11 +135,14 @@ function ConnectionListPage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.deleteLinkInfo(id);
       openNotification('Xóa doanh nghiệp thành công');
       fetchProductList();
     } catch (error) {
       openNotification('Xóa doanh nghiệp thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -209,6 +220,7 @@ function ConnectionListPage(props) {
       if (values.FileAttachment) {
         formData.append('FileAttachment', values.FileAttachment);
       }
+      setConfirmLoading(true);
       if (mode.current === Mode.Create) {
         await linkAndCompanyApi.insertLinkInfo(formData);
       } else {
@@ -220,11 +232,14 @@ function ConnectionListPage(props) {
       setFileListAttachment([]);
     } catch (error) {
       openNotification('Thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await linkAndCompanyApi.updateStatusLinkInfo({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -234,6 +249,8 @@ function ConnectionListPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -248,10 +265,13 @@ function ConnectionListPage(props) {
 
   const fetchItem = async (values) => {
     try {
+      setConfirmLoading(true);
       return await linkAndCompanyApi.getLinkInfoById(values?.Id);
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -271,7 +291,9 @@ function ConnectionListPage(props) {
   );
 
   const handleEdit = async (id) => {
+    setConfirmLoading(true);
     const res = await linkAndCompanyApi.getLinkInfoById(id);
+    setConfirmLoading(false);
     idEdit.current = id;
     mode.current = Mode.Edit;
     form?.setFieldsValue({
@@ -299,6 +321,7 @@ function ConnectionListPage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
       <Modal
         className={cx('modal-insert-source-news')}
         title='Thêm mới nguồn tin tức'
