@@ -112,6 +112,19 @@
             }
         }
     }
+
+    .file {
+        display: flex;
+        flex-direction: column;
+
+        .file-item {
+            margin-bottom: 8px;
+
+            span {
+                color: #337ab7;
+            }
+        }
+    }
 }
 
 @media (max-width: 767px) {
