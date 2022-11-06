@@ -66,19 +66,20 @@ function BudgetContentDetail(props) {
               <div className={cx('row-item-label')}>Tệp dính kèm</div>
             </Col>
             <Col span={20}>
-              {imageHelper.getNameFile(data?.FileAttachment) && (
-                <div
-                  className={cx('file-attachment')}
-                  onClick={() =>
-                    window.open(
-                      imageHelper.getLinkImageUrl(data?.FileAttachment)
-                    )
-                  }
-                >
-                  <FileOutlined />{' '}
-                  {imageHelper.getNameFile(data?.FileAttachment)}
-                </div>
-              )}
+              {Array.isArray(data?.FileAttachment?.split(';;')) &&
+                data?.FileAttachment?.split(';;').map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={cx('file-attachment')}
+                      onClick={() =>
+                        window.open(imageHelper.getLinkImageUrl(item))
+                      }
+                    >
+                      <FileOutlined /> {imageHelper.getNameFile(item)}
+                    </div>
+                  );
+                })}
             </Col>
           </Row>
         </Col>

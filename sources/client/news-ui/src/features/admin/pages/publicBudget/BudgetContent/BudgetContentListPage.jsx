@@ -204,7 +204,9 @@ function BudgetContentListPage(props) {
       formData.append('JsonString', convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
-        formData.append('FileAttachment', values.FileAttachment);
+        for (let file of values.FileAttachment) {
+          formData.append('FileAttachment', file);
+        }
       }
       setIsModalOpen(false);
       await budgetPublicAPI.insertContent(formData);
@@ -306,18 +308,20 @@ function BudgetContentListPage(props) {
                 }
                 body.Avatar = file;
               }
-              if (fileListAttachment.length > 0) {
-                const file = fileListAttachment[0].originFileObj;
+              let listFileUpload = [];
+              for (let i = 0; i < fileListAttachment.length; i++) {
+                const file = fileListAttachment[i].originFileObj;
                 if (file.size > LIMIT_UP_LOAD_FILE) {
                   openNotification(
-                    'File đính kèm đã lớn hơn 2MB',
+                    `File thứ ${i + 1} đã lớn hơn 2MB`,
                     '',
                     NotificationType.ERROR
                   );
                   return;
                 }
-                body.FileAttachment = file;
+                listFileUpload.push(file);
               }
+              body.FileAttachment = listFileUpload;
               form.resetFields();
               setFileList([]);
               setFileListAttachment([]);
@@ -419,14 +423,13 @@ function BudgetContentListPage(props) {
                 <Form.Item style={{ marginBottom: 0 }}>
                   <Upload
                     listType='picture'
-                    maxCount={1}
-                    fileList={fileListAttachment}
+                    defaultFileList={fileListAttachment}
                     onChange={handleChangeAttachment}
                     customRequest={commonFunc.dummyRequest}
+                    multiple={true}
+                    maxCount={100}
                   >
-                    {fileListAttachment.length < 1 ? (
-                      <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-                    ) : null}
+                    <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
                   </Upload>
                 </Form.Item>
               </Col>
