@@ -78,16 +78,22 @@ function PublishedPublicInformationDetailPage(props) {
                             )}
                         </div>
                         <Divider></Divider>
-                        {data?.FileAttachment && (
+                        {data?.FileAttachment && data.FileAttachment !== '' && (
                             <>
-                                <div className={cx('file')}>
-                                    <div className={cx('file-item')}>
-                                        <a href={imageHelper.getLinkImageUrl(data?.FileAttachment)} target={'_blank'} rel='noreferrer' download={true}>
-                                            <CloudDownloadOutlined style={{ marginRight: 4 }} />
-                                            <span>{commonFunc.getNameFileByPath(data?.FileAttachment)}</span>
-                                        </a>
-                                    </div>
-                                </div>
+                                {data.FileAttachment.split(';;').map((item, index) => {
+                                    return (
+                                        <>
+                                            <div className={cx('file')}>
+                                                <div className={cx('file-item')}>
+                                                    <a href={imageHelper.getLinkImageUrl(item)} target={'_blank'} rel='noreferrer' download={true}>
+                                                        <CloudDownloadOutlined style={{ marginRight: 4 }} />
+                                                        <span>{commonFunc.getNameFileByPath(item)}</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </>
+                                    );
+                                })}
                             </>
                         )}
                     </>
