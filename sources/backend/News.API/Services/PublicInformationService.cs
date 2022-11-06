@@ -40,7 +40,7 @@ namespace News.API.Services
             return await GetByIdAsync(id, includeProperties: x => x.PublicInformationCategory);
         }
 
-       
+
 
         public async Task<ApiSuccessResult<PublicInformationDto>> GetPublicInformationByPaging(PublicInformationRequest publicInformationRequest, params Expression<Func<PublicInformation, object>>[] includeProperties)
         {
@@ -54,6 +54,10 @@ namespace News.API.Services
             if (!string.IsNullOrEmpty(publicInformationRequest.Keyword))
             {
                 query = query.Where((x => x.Title.Contains(publicInformationRequest.Keyword)));
+            }
+            if (publicInformationRequest.PublicInformationId.HasValue)
+            {
+                query = query.Where(x => x.Id == publicInformationRequest.PublicInformationId.Value);
             }
             if (publicInformationRequest.Status.HasValue)
             {
