@@ -13,6 +13,7 @@ import imageHelper from 'helpers/imageHelper';
 import { openNotification } from 'helpers/notification';
 import { useLayoutEffect, useState } from 'react';
 import styles from './BudgetContentDetailUpdate.module.scss';
+import { envDomainBackend } from 'common/enviroments';
 
 const LIMIT_UP_LOAD_FILE = 2_097_152; //2mb
 const cx = classNames.bind(styles);
@@ -40,16 +41,20 @@ function BudgetContentDetailUpdate(props) {
 
       const res = await budgetPublicAPI.getContentById(id);
       setDocumentDetail(res);
-      res?.FileAttachment &&
-        setFileListAttachment([
-          {
+      if (res?.FileAttachment) {
+        let links = res?.FileAttachment.split(';;');
+        let linksObject = [];
+        for (let i = 0; i < links.length; i++) {
+          linksObject.push({
             isFileFormServer: true,
-            uid: '1',
-            name: imageHelper.getNameFile(res?.FileAttachment),
+            uid: i,
+            name: imageHelper.getNameFile(links[i]),
             status: 'done',
-            url: imageHelper.getLinkImageUrl(res?.FileAttachment),
-          },
-        ]);
+            url: imageHelper.getLinkImageUrl(links[i]),
+          });
+        }
+        setFileListAttachment(linksObject);
+      }
 
       form?.setFieldsValue({
         Title: res?.Title,
@@ -89,7 +94,9 @@ function BudgetContentDetailUpdate(props) {
       formData.append('JsonString', convertHelper.Serialize(values.JsonString));
 
       if (values.FileAttachment) {
-        formData.append('FileAttachment', values.FileAttachment);
+        for (let file of values.FileAttachment) {
+          formData.append('FileAttachment', file);
+        }
       }
       await budgetPublicAPI.updateContent(documentDetail?.Id, formData);
       openNotification('Cập nhật thành công');
@@ -188,6 +195,38 @@ function BudgetContentDetailUpdate(props) {
                   bodyData = {
                     ...bodyData,
                     FileAttachment: documentDetail?.FileAttachment,
+                  };
+                }
+                const _fileListAttachment = [...fileListAttachment];
+                let fileUploadCurrent = [];
+                let urlPath = '';
+                for (let file of _fileListAttachment) {
+                  if (file?.isFileFormServer) {
+                    urlPath += `${file.url.replaceAll(envDomainBackend, '')};;`;
+                    continue;
+                  }
+                  fileUploadCurrent.push(file);
+                }
+                let listFileUpload = [];
+                for (let i = 0; i < fileUploadCurrent.length; i++) {
+                  const file = fileUploadCurrent[i].originFileObj;
+                  if (file.size > LIMIT_UP_LOAD_FILE) {
+                    openNotification(
+                      `File thứ ${i + 1} đã lớn hơn 2MB`,
+                      '',
+                      NotificationType.ERROR
+                    );
+                    return;
+                  }
+                  listFileUpload.push(file);
+                }
+
+                body.FileAttachment = listFileUpload;
+
+                if (urlPath.length > 0) {
+                  bodyData = {
+                    ...bodyData,
+                    FileAttachment: urlPath.substring(0, urlPath.length - 2), // -2 dấu ;; ở cuối
                   };
                 }
                 body = { ...body, JsonString: bodyData };
@@ -290,14 +329,13 @@ function BudgetContentDetailUpdate(props) {
                   <Form.Item style={{ marginBottom: 0 }}>
                     <Upload
                       listType='picture'
-                      maxCount={1}
-                      fileList={fileListAttachment}
+                      defaultFileList={fileListAttachment}
                       onChange={handleChangeAttachment}
                       customRequest={commonFunc.dummyRequest}
+                      multiple={true}
+                      maxCount={100}
                     >
-                      {fileListAttachment.length < 1 ? (
-                        <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-                      ) : null}
+                      <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
                     </Upload>
                   </Form.Item>
                 </Col>

@@ -463,10 +463,6 @@ function ImageListPage(props) {
                   maxCount={100}
                 >
                   <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-
-                  {/* {fileListAttachment.length < 1 ? (
-                <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
-              ) : null} */}
                 </Upload>
               )}
             </Form.Item>

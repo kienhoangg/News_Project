@@ -1,6 +1,7 @@
 import { FileAddFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import {
   Button,
+  Checkbox,
   Col,
   DatePicker,
   Divider,
@@ -313,12 +314,14 @@ function DocumentListPage(props) {
                 DocumentSignPersonId,
                 DocumentTypeId,
                 content,
+                IsDocumentSection,
               } = values;
               const bodyData = {
                 Code,
                 Name,
                 content,
                 PublishedDate: publishedDate,
+                IsDocumentSection,
               };
               if (DocumentDepartmentId) {
                 bodyData.DocumentDepartmentId = parseInt(
@@ -379,6 +382,7 @@ function DocumentListPage(props) {
           // wrapperCol={{ span: 21 }}
           initialValues={{
             modifier: 'public',
+            IsDocumentSection: false,
           }}
         >
           <Form.Item
@@ -511,7 +515,7 @@ function DocumentListPage(props) {
           </Form.Item>
           <Form.Item name='lb-attachment' label='Tệp đính kèm'>
             <Row gutter={8}>
-              <Col span={7}>
+              <Col span={8}>
                 <Upload
                   listType='picture'
                   maxCount={1}
@@ -523,6 +527,15 @@ function DocumentListPage(props) {
                     <Button icon={<UploadOutlined />}>Tải lên Tệp</Button>
                   ) : null}
                 </Upload>
+              </Col>
+              <Col span={8}>
+                <Form.Item
+                  name='IsDocumentSection'
+                  valuePropName='checked'
+                  label={'Dạng văn bản'}
+                >
+                  <Checkbox></Checkbox>
+                </Form.Item>
               </Col>
             </Row>
           </Form.Item>
