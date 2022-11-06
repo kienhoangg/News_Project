@@ -254,16 +254,21 @@ function BudgetContentListPage(props) {
             .validateFields()
             .then((values) => {
               values.content = values.Content?.editor?.getData();
-              const { Title, Descritpion, BudgetCategoryId, content } = values;
+              const {
+                Title,
+                Description,
+                PublicInformationCategoryId,
+                content,
+              } = values;
               const bodyData = {
                 Title,
-                Descritpion,
+                Description,
                 content,
               };
-              if (BudgetCategoryId) {
-                bodyData.BudgetCategoryId = parseInt(
+              if (PublicInformationCategoryId) {
+                bodyData.PublicInformationCategoryId = parseInt(
                   dataFilter?.categoryAll.find(
-                    (x) => x.Title === BudgetCategoryId
+                    (x) => x.Title === PublicInformationCategoryId
                   )?.Id ?? undefined
                 );
               }
@@ -327,7 +332,7 @@ function BudgetContentListPage(props) {
           </Form.Item>
 
           <Form.Item
-            name='Descritpion'
+            name='Description'
             label='Mô tả'
             style={{ marginBottom: 0 }}
           >
@@ -387,7 +392,7 @@ function BudgetContentListPage(props) {
               }}
             />
           </Form.Item>
-          <Form.Item label='Danh mục' name='BudgetCategoryId'>
+          <Form.Item label='Danh mục' name='PublicInformationCategoryId '>
             {renderBudgetCategoryId}
           </Form.Item>
           <Form.Item name='lb-attachment' label='Tệp đính kèm'>
