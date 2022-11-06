@@ -46,6 +46,12 @@ class PublishedNewsApi {
     return axiosClient.post(url, body);
   }
 
+  getDataComments(body) {
+    const url = `/home/comments/filter`;
+    return axiosClient.post(url, body);
+  }
+
+
   getCategoryDetailDataPage(params) {
     const { id, currentPage } = params;
     const url = `/home/published/categorynews/${id}`;
