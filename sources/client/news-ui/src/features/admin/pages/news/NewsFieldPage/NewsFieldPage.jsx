@@ -9,6 +9,7 @@ import { Direction, NotificationType } from 'common/enum';
 import { openNotification } from 'helpers/notification';
 import { FileAddFilled } from '@ant-design/icons';
 import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 const { TextArea } = Input;
 
 const layout = {
@@ -42,6 +43,7 @@ function NewsFieldPage(props) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const idEdit = useRef();
   const mode = useRef();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -59,6 +61,7 @@ function NewsFieldPage(props) {
    */
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await newsApi.getNewsFieldAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -66,6 +69,8 @@ function NewsFieldPage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -91,16 +96,20 @@ function NewsFieldPage(props) {
 
   const handleDeleteFieldNews = async (id) => {
     try {
+      setConfirmLoading(true);
       await newsApi.deleteFieldNews(id);
       openNotification('Xóa thành công');
       fetchProductList();
     } catch (error) {
       openNotification('Xóa thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.updateStatusFieldNews({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -110,6 +119,8 @@ function NewsFieldPage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -150,20 +161,25 @@ function NewsFieldPage(props) {
    */
   const insertFieldNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.insertFieldNews(values);
-
       openNotification('Tạo mới lĩnh vực thành công');
     } catch (error) {
       openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const updateSounceNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.updateFieldNews(idEdit.current, values);
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   async function handleShowDetail(Id) {
@@ -174,6 +190,7 @@ function NewsFieldPage(props) {
 
   async function getSourceNewById(id) {
     try {
+      setConfirmLoading(true);
       const res = await newsApi.getNewsFieldByID(id);
       return res;
     } catch (err) {
@@ -183,6 +200,8 @@ function NewsFieldPage(props) {
         NotificationType.ERROR
       );
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -201,6 +220,8 @@ function NewsFieldPage(props) {
   }
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       {
         //#region Modal tạo mới
       }
