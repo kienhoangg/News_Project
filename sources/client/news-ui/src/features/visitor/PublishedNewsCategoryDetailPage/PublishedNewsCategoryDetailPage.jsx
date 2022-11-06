@@ -52,7 +52,7 @@ function PublishedNewsCategoryDetailPage() {
                         <>
                             <div key={dataPage.current?.Id} className={cx('category-container')}>
                                 <div className={cx('title-container')}>
-                                    <Link to={commonRender.renderLinkNewsCategory(dataPage.current?.Id)} className={cx('title')}>
+                                    <Link to={commonRender.renderLinkNewsCategoryDetail(dataPage.current?.Id)} className={cx('title')}>
                                         {dataPage.current?.CategoryNewsName}
                                     </Link>
                                     <span className={cx('right')}></span>

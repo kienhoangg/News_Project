@@ -63,7 +63,7 @@ function PublishedNewsFieldPage(props) {
                             <div key={dataPage.current?.CategoryId} className={cx('category-container')}>
                                 <div className={cx('title-container')}>
                                     <Link to={commonRender.renderLinkNewsCategory(dataPage.current?.Id)} className={cx('title')}>
-                                        {dataPage.current?.CategoryNewsName} / {dataPage.current?.CategoryNewsName}
+                                        {dataPage.current?.CategoryNewsName} / {dataPageFullPage?.CategoryNews?.FieldNews?.Title}
                                     </Link>
                                     <span className={cx('right')}></span>
                                 </div>

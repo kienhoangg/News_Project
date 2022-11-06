@@ -8,4 +8,6 @@ export const envDomainClient = "https://localhost:3000";
 
 export const envDomainBackend = "https://localhost:7122";
 
+export const envApiKeyWeather = "1129160d4fc9f97a1d1da12369699c87"; //OpenWeather
+
 export const envTimeTrackingVisitorOnline = 10000;

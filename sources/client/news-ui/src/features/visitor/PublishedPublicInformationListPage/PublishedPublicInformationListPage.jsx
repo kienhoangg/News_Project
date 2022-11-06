@@ -53,10 +53,14 @@ function PublishedPublicInformationListPage(props) {
                 <>
                     <div className={cx('category-container')}>
                         <div className={cx('title-container')}>
-                            <Link to={commonRender.renderLinkNewsCategory(dataPage?.Id)} className={cx('title')}>
-                                {dataPage?.Title}
-                            </Link>
-                            <span className={cx('right')}></span>
+                            {Array.isArray(dataPage?.Results) && dataPage?.Results.length > 0 && (
+                                <>
+                                    <Link to={commonRender.renderLinkPublishedPublicInformationListPage(dataPage?.Results[0].PublicInformationCategory.Id)} className={cx('title')}>
+                                        {dataPage?.Results[0].PublicInformationCategory.Title}
+                                    </Link>
+                                    <span className={cx('right')}></span>
+                                </>
+                            )}
                         </div>
                         <div style={{ border: '1px solid #0066b3', marginLeft: 8, marginBottom: 8 }}></div>
 

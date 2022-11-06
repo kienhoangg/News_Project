@@ -113,13 +113,15 @@ function ListSection(props) {
             <Col md={8} sm={24}>
                 <div className={cx('list-news')}>
                     <Row gutter={0} className={cx('list-card')} justify='space-between'>
-                        <Col span={12}>Dạng tin tức</Col>
+                        <Col span={24}>
+                            <Link to={commonRender.renderLinkNewsCategoryDetail(CategoryNews?.Id)}>{CategoryNews?.CategoryNewsName}</Link>
+                        </Col>
                     </Row>
                     <div className={cx('list-document-content')}>
-                        <div className={cx('title-news')}>
+                        {/* <div className={cx('title-news')}>
                             <div className={cx('divider')}></div>
                             <Link to={commonRender.renderLinkNewsCategoryDetail(CategoryNews?.Id)}>{CategoryNews?.CategoryNewsName}</Link>
-                        </div>
+                        </div> */}
                         <Skeleton loading={isLoading} active>
                             <>
                                 {Array.isArray(items) &&
