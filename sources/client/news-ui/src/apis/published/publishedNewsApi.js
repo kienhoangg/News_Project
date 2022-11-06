@@ -46,6 +46,12 @@ class PublishedNewsApi {
     return axiosClient.post(url, body);
   }
 
+  getDataComments(body) {
+    const url = `/home/comments/filter`;
+    return axiosClient.post(url, body);
+  }
+
+
   getCategoryDetailDataPage(params) {
     const { id, currentPage } = params;
     const url = `/home/published/categorynews/${id}`;
@@ -72,6 +78,15 @@ class PublishedNewsApi {
     const body = params;
 
     return axiosClient.post(url, body);
+  }
+
+
+  getDataPublicInformationCategoriesListPage() {
+    let url = `/home/published/publicinformationcategories`;
+    return axiosClient.get(url, {});
+
+    // var response = datafakePublishedCategoryList;
+    // return response;
   }
 }
 const publishedNewsApi = new PublishedNewsApi();

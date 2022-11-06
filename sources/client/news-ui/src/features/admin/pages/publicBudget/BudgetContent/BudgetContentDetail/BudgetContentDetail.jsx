@@ -8,13 +8,8 @@ const cx = classNames.bind(styles);
 BudgetContentDetail.propTypes = {};
 
 function BudgetContentDetail(props) {
-  const { open, onCancel, confirmLoading, categoryAll } = props;
+  const { open, onCancel, confirmLoading } = props;
   const { data } = props;
-
-  const findCategoryName = (id) => {
-    const cateory = categoryAll.find((x) => x.Id === id);
-    return cateory?.Title;
-  };
 
   return (
     <Modal
@@ -46,7 +41,7 @@ function BudgetContentDetail(props) {
               <div className={cx('row-item-label')}>Mô tả</div>
             </Col>
             <Col span={20}>
-              <div>{data?.Descritpion}</div>
+              <div>{data?.Description}</div>
             </Col>
           </Row>
           <Row gutter={16} className={cx('row-item')}>
@@ -62,7 +57,7 @@ function BudgetContentDetail(props) {
               <div className={cx('row-item-label')}>Danh mục</div>
             </Col>
             <Col span={20}>
-              <div>{findCategoryName(data?.StaticCategoryId)}</div>
+              <div>{data?.PublicInformationCategory?.Title}</div>
             </Col>
           </Row>
 
@@ -74,9 +69,11 @@ function BudgetContentDetail(props) {
               {imageHelper.getNameFile(data?.FileAttachment) && (
                 <div
                   className={cx('file-attachment')}
-                  // onClick={() =>
-                  //   window.open(getLinkFileAttachment(data?.FilePath))
-                  // }
+                  onClick={() =>
+                    window.open(
+                      imageHelper.getLinkImageUrl(data?.FileAttachment)
+                    )
+                  }
                 >
                   <FileOutlined />{' '}
                   {imageHelper.getNameFile(data?.FileAttachment)}

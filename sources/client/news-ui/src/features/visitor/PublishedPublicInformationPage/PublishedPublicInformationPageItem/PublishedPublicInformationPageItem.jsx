@@ -26,9 +26,11 @@ function PublishedPublicInformationPageItem(props) {
     return (
         <div className={isFirst ? cx('wrapper', 'first') : cx('wrapper')}>
             <Row gutter={4}>
-                <Col flex='4px'>
-                    <div className={cx('icon')}></div>
-                </Col>
+                {isFirst === false && (
+                    <Col flex='4px'>
+                        <div className={cx('icon')}></div>
+                    </Col>
+                )}
                 <Col flex='1'>
                     <div className={cx('title')}>
                         <Link to={commonRender.renderLinkNewsDetail(data.Id)}>{data.Title}</Link>

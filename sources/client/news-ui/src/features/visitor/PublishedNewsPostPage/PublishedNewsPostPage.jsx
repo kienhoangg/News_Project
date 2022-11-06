@@ -31,6 +31,10 @@ function PublishedDocumentPage(props) {
     const [resetCommentFields, setResetCommentFields] = useState(false);
     const [loadingSubmit, setLoadingSubmit] = useState(false);
 
+    const [pagingIndexComment, setPagingIndexComment] = useState(1);
+    const [dataComments, setDataComments] = useState([]);
+    const [onResetDataComment, setOnResetDataComment] = useState(0);
+
     //Lấy dữ liệu chi tiết
     useEffect(() => {
         const fetchDetail = async () => {
@@ -47,6 +51,26 @@ function PublishedDocumentPage(props) {
         };
         fetchDetail();
     }, []);
+
+    //Dữ liệu comment
+    useEffect(() => {
+        const fetchHome = async () => {
+            try {
+                const body = { currentPage: pagingIndexComment, newsPostId: id, pageSize: 10 };
+                const response = await publishedNewsApi.getDataComments(body);
+                setDataComments(response?.PagedData);
+            } catch (error) {
+                console.log('Failed to fetch list: ', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchHome();
+    }, [pagingIndexComment, onResetDataComment]);
+
+    function handleOnChangeIndexPaging(index) {
+        setPagingIndexComment(index);
+    }
 
     function handleChangeFontSize(value) {
         setFontSizeContainer(fontSizeContainer + value);
@@ -68,6 +92,7 @@ function PublishedDocumentPage(props) {
 
                 await publishedNewsApi.postVisitorComment(body);
                 setResetCommentFields(!resetCommentFields);
+                setOnResetDataComment(onFinishComment + 1);
                 commonRender.showNotifySuccess('Bình luận thành công');
             } catch (error) {
                 console.log('Failed to fetch list: ', error);
@@ -77,8 +102,6 @@ function PublishedDocumentPage(props) {
         };
         setLoadingSubmit(true);
         fetchSubmitComment(params);
-
-        console.log('onFinishComment', params);
     }
 
     return (
@@ -182,9 +205,20 @@ function PublishedDocumentPage(props) {
             </Skeleton>
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                 <div className={cx('comment')}>
-                    <div className={cx('comment-title')}>Ý kiến bạn đọc (10)</div>
+                    <div className={cx('comment-title')}>
+                        Ý kiến bạn đọc <span>({dataComments ? dataComments.RowCount : 0})</span>
+                    </div>
                     <div className={cx('comment-list')}>
-                        <PublishedNewsPostPageCommentList />
+                        {dataComments && (
+                            <>
+                                <PublishedNewsPostPageCommentList
+                                    data={dataComments.Results}
+                                    pagingIndex={dataComments.CurrentPage}
+                                    total={dataComments.RowCount}
+                                    onChangeIndexPaging={handleOnChangeIndexPaging}
+                                />
+                            </>
+                        )}
                     </div>
                     <div className={cx('divider')}></div>
                     <FormVisitorComment onFinish={onFinishComment} resetFields={resetCommentFields} submitLoading={loadingSubmit} />

@@ -9,6 +9,7 @@ import NewsSourcePageSearch from './NewsSourcePageSearch/NewsSourcePageSearch';
 import NewsSourceTableData from './NewsSourceTableData/NewsSourceTableData';
 import { FileAddFilled } from '@ant-design/icons';
 import { DEFAULT_COLUMN_ORDER_BY, TypeUpdate } from 'common/constant';
+import Loading from 'components/Loading/Loading';
 const { TextArea } = Input;
 const layout = {
   labelCol: { span: 8 },
@@ -41,6 +42,7 @@ function NewsSourcePage(props) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const idEdit = useRef();
   const mode = useRef();
+  const [confirmLoading, setConfirmLoading] = useState(true);
 
   /**
    * Thay đổi bộ lọc thì gọi lại danh sách
@@ -58,6 +60,7 @@ function NewsSourcePage(props) {
    */
   const fetchProductList = async () => {
     try {
+      setConfirmLoading(true);
       const response = await newsApi.getNewsSourceAll(objFilter);
       setNewsData({
         data: response?.PagedData?.Results ?? [],
@@ -65,6 +68,8 @@ function NewsSourcePage(props) {
       });
     } catch (error) {
       console.log('Failed to fetch list: ', error);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -90,11 +95,14 @@ function NewsSourcePage(props) {
 
   const handleDeleteSourceNew = async (id) => {
     try {
+      setConfirmLoading(true);
       await newsApi.deleteSourceNew(id);
       openNotification('Xóa nguồn tin thành công');
       fetchProductList();
     } catch (error) {
       openNotification('Xóa nguồn tin thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -126,23 +134,30 @@ function NewsSourcePage(props) {
 
   const insertSounceNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.insertSourceNew(values);
       openNotification('Tạo mới nguồn tin tức thành công');
     } catch (error) {
       openNotification('Tạo mới thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
   const updateSounceNews = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.updateSourceNew(idEdit.current, values);
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
   const handleUpdateStatusNew = async (values) => {
     try {
+      setConfirmLoading(true);
       await newsApi.updateStatusSourceNew({
         Ids: [values.Id],
         Value: values.Status === 0 ? 1 : 0,
@@ -152,6 +167,8 @@ function NewsSourcePage(props) {
       openNotification('Cập nhật thành công');
     } catch (error) {
       openNotification('Cập nhật thất bại', '', NotificationType.ERROR);
+    } finally {
+      setConfirmLoading(false);
     }
   };
 
@@ -163,6 +180,7 @@ function NewsSourcePage(props) {
 
   async function getSourceNewById(id) {
     try {
+      setConfirmLoading(true);
       const res = await newsApi.getSourceNewByID(id);
       return res;
     } catch (err) {
@@ -172,6 +190,8 @@ function NewsSourcePage(props) {
         NotificationType.ERROR
       );
       return null;
+    } finally {
+      setConfirmLoading(false);
     }
   }
 
@@ -189,6 +209,8 @@ function NewsSourcePage(props) {
 
   return (
     <div className={cx('wrapper')}>
+      <Loading show={confirmLoading} />
+
       <Modal
         className={cx('modal-insert-source-news')}
         title='Thêm mới nguồn tin tức'

@@ -53,10 +53,11 @@ function BudgetContentDetailUpdate(props) {
 
       form?.setFieldsValue({
         Title: res?.Title,
-        Descritpion: res?.Descritpion,
+        Description: res?.Description,
         Content: res?.Content,
-        BudgetCategoryId:
-          categoryAll.find((x) => x.Id === res?.BudgetCategoryId)?.Title ?? '',
+        PublicInformationCategoryId:
+          categoryAll.find((x) => x.Id === res?.PublicInformationCategoryId)
+            ?.Title ?? '',
       });
     } catch (error) {
       openNotification('Lấy dữ liệu thất bại', '', NotificationType.ERROR);
@@ -112,7 +113,7 @@ function BudgetContentDetailUpdate(props) {
       </TreeNode>
     ));
   };
-  const renderBudgetCategoryId = (
+  const renderPublicInformationCategoryId = (
     <TreeSelect
       showSearch
       style={{
@@ -147,16 +148,17 @@ function BudgetContentDetailUpdate(props) {
             form
               .validateFields()
               .then((values) => {
-                const { Title, Descritpion, BudgetCategoryId } = values;
+                const { Title, Description, PublicInformationCategoryId } =
+                  values;
                 let bodyData = {
                   Title,
-                  Descritpion,
+                  Description,
                   content: documentDetail?.Content,
                 };
-                if (BudgetCategoryId) {
-                  bodyData.BudgetCategoryId = parseInt(
+                if (PublicInformationCategoryId) {
+                  bodyData.PublicInformationCategoryId = parseInt(
                     dataFilter?.categoryAll.find(
-                      (x) => x.Title === BudgetCategoryId
+                      (x) => x.Title === PublicInformationCategoryId
                     )?.Id ?? undefined
                   );
                 }
@@ -222,7 +224,7 @@ function BudgetContentDetailUpdate(props) {
             </Form.Item>
 
             <Form.Item
-              name='Descritpion'
+              name='Description'
               label='Mô tả'
               style={{ marginBottom: 0 }}
             >
@@ -279,8 +281,8 @@ function BudgetContentDetailUpdate(props) {
                 }}
               />
             </Form.Item>
-            <Form.Item label='Danh mục' name='BudgetCategoryId'>
-              {renderBudgetCategoryId}
+            <Form.Item label='Danh mục' name='PublicInformationCategoryId'>
+              {renderPublicInformationCategoryId}
             </Form.Item>
             <Form.Item name='lb-attachment' label='Tệp đính kèm'>
               <Row gutter={8} justify={'space-between'}>
