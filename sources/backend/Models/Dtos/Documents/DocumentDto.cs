@@ -27,5 +27,6 @@ namespace Models.Dtos
         public int? DocumentFieldId { get; set; }
         public int? DocumentSignPersonId { get; set; }
         public int? DocumentTypeId { get; set; }
+        public bool IsDocumentSection { get; set; }
     }
 }

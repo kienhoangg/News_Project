@@ -489,12 +489,22 @@ namespace News.API.Controllers
             var lstDocuments =
                            (await _documentService.GetDocumentByPaging(new DocumentRequest()
                            {
-                               PageSize = 10,
+                               PageSize = 15,
                                CurrentPage = 1,
                                OrderBy = "Order",
                                Direction = 1,
                                Status = Status.Enabled
                            })).PagedData.Results.ToList();
+            var lstDocumentsSection =
+            (await _documentService.GetDocumentByPaging(new DocumentRequest()
+            {
+                PageSize = 5,
+                CurrentPage = 1,
+                OrderBy = "Order",
+                Direction = 1,
+                Status = Status.Enabled,
+                IsDocumentSection = true
+            })).PagedData.Results.ToList();
             if (
                 lstHotNews.PagedData.Results.Count <= 0 &&
                 lstNormalNews.PagedData.Results.Count <= 0 && lstDocuments.Count <= 0
@@ -511,14 +521,13 @@ namespace News.API.Controllers
                 Direction = 1,
                 Status = Status.Enabled
             }, x => x.PhotoCategory)).PagedData.Results.ToList();
-            int index = lstDocuments.Count / 2 + 1;
 
             var documentHots = new List<DocumentDto>();
             var documentSections = new List<DocumentDto>();
             if (lstDocuments.Count > 0)
             {
-                documentHots = lstDocuments.GetRange(0, index);
-                documentSections = lstDocuments.GetRange(index, lstDocuments.Count - index);
+                documentHots = lstDocuments;
+                documentSections = lstDocumentsSection;
             }
             var result =
                 new ApiSuccessResult<HomeDto>(new HomeDto()

@@ -78,6 +78,10 @@ namespace News.API.Services
             {
                 query = query.Where((x => x.Name.Contains(documentRequest.Title)));
             }
+            if (documentRequest.IsDocumentSection.HasValue)
+            {
+                query = query.Where((x => x.IsDocumentSection == documentRequest.IsDocumentSection.Value));
+            }
             if (documentRequest.DocumentDepartmentId.HasValue)
             {
                 query = query.Where(x => x.DocumentDepartmentId == documentRequest.DocumentDepartmentId.Value);
