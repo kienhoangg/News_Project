@@ -78,7 +78,7 @@ const PopupUpdateDocuments = (props) => {
         Content: res?.Content,
         IsDocumentSection: res?.IsDocumentSection,
       });
-    } catch (err) {}
+    } catch (err) { }
   };
 
   const getDataFilter = async () => {
@@ -465,7 +465,7 @@ const PopupUpdateDocuments = (props) => {
                   <Form.Item
                     name='IsDocumentSection'
                     valuePropName='checked'
-                    label={'Dạng văn bản'}
+                    label={'Thông tin chung'}
                   >
                     <Checkbox></Checkbox>
                   </Form.Item>

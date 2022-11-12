@@ -25,7 +25,7 @@ const PopupDocumentDetail = (props) => {
     try {
       const res = await axiosClient.get('/documents/' + id);
       setNewsDetail(res);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   return (
@@ -42,7 +42,7 @@ const PopupDocumentDetail = (props) => {
       onCancel={onCancel}
       width={1300}
       centered
-      onOk={() => {}}
+      onOk={() => { }}
     >
       <Row gutter={8}>
         <Col span={16}>
@@ -128,7 +128,7 @@ const PopupDocumentDetail = (props) => {
           </Row>
           <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx('row-item-label')}>Dạng văn bản</div>
+              <div className={cx('row-item-label')}>Thông tin chung</div>
             </Col>
             <Col span={20}>
               {newsDetail?.IsDocumentSection === true ? 'Có' : 'Không'}
