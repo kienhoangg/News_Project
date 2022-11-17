@@ -8,7 +8,7 @@ namespace Models.Entities
     public class Document : EntityAuditBase<long>
     {
         [Required]
-        [Column(TypeName = "varchar(50)")]
+        [Column(TypeName = "nvarchar(50)")]
         public string Code { get; set; }
         [Column(TypeName = "nvarchar(250)")]
         public string? Name { get; set; }

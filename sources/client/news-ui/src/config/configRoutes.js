@@ -7,12 +7,12 @@ const routes = {
   publishedNewsPost: "/news-posts/detail/:id",
   publishedNewsPostPrint: "/news-posts/detail/print/:id",
 
-  publishedNewsPostFieldList: '/news-posts/fields',
-  publishedNewsPostFieldDetail: '/news-posts/fields/:id',
-  publishedNewsPostCategoryDetail: '/news-posts/categories/:id',
-  publishedInternationalTreaties: '/news-posts/international-treaties',
-  publishedLawDissemination: '/news-posts/law-dissemination',
-  publishedSuggestionBox: '/news-posts/suggestion-box',
+  publishedNewsPostFieldList: "/news-posts/fields",
+  publishedNewsPostFieldDetail: "/news-posts/fields/:id",
+  publishedNewsPostCategoryDetail: "/news-posts/categories/:id",
+  publishedInternationalTreaties: "/news-posts/international-treaties",
+  publishedLawDissemination: "/news-posts/law-dissemination",
+  publishedSuggestionBox: "/news-posts/suggestion-box",
 
   publishedDocumentDetail: "/documents/:id",
   publishedDocumentList: "/documents",
@@ -27,6 +27,7 @@ const routes = {
 
   publishedQuestions: "/questions",
   publishedPhotos: "/media/photos", //QueryPrams: ?albumid=1
+  publishedRadios: "/media/radio",
   publishedVideos: "/media/videos", //QueryPrams: ?videoid=1
   publishedQuestionsDetail: "/questions/:id",
 
@@ -53,9 +54,9 @@ const routes = {
   adminDocumentSinger: "/admin/document/singer",
   adminDocumentSource: "/admin/document/source",
 
-  adminQuestionCategory: '/admin/question/category',
-  adminQuestionList: '/admin/question/list',
-  adminSuggetionBox: '/admin/suggetion-box',
+  adminQuestionCategory: "/admin/question/category",
+  adminQuestionList: "/admin/question/list",
+  adminSuggetionBox: "/admin/suggetion-box",
 
   adminMediaImageCategory: "/admin/media/image/category",
   adminMediaImageList: "/admin/media/image/list",
@@ -73,11 +74,11 @@ const routes = {
 
   adminSetupMenu: "/admin/setup/menu",
 
-  staticCategory: '/admin/static/category',
-  staticContent: '/admin/static/content',
+  staticCategory: "/admin/static/category",
+  staticContent: "/admin/static/content",
 
-  budgetCategory: '/admin/budget/category',
-  budgetContent: '/admin/budget/content',
+  budgetCategory: "/admin/budget/category",
+  budgetContent: "/admin/budget/content",
 
   //Test
   test: "/test",

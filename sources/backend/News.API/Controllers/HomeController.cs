@@ -116,7 +116,8 @@ namespace News.API.Controllers
             var lstInclude =
                 new Expression<Func<NewsPost, object>>[] {
                     (x => x.SourceNews),
-                    (x => x.CategoryNews)
+                    (x => x.CategoryNews),
+                    (x => x.Collaborator),
                 };
             var newsPost = await _newsPostService.GetNewsPost(id, lstInclude);
             if (newsPost == null) return NotFound("News is not found !");
@@ -461,7 +462,7 @@ namespace News.API.Controllers
             // Get 5 hot news
             var hotNewsRequest =
                 new NewsPostRequest()
-                { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsHotNews = true, Status = Status.Enabled };
+                { PageSize = 10, CurrentPage = 1, OrderBy = "LastModifiedDate", IsHotNews = true, Status = Status.Enabled };
             var documentNewsRequest =
            new NewsPostRequest()
            { PageSize = 10, CurrentPage = 1, OrderBy = "Order", IsDocumentNews = true, Status = Status.Enabled };
