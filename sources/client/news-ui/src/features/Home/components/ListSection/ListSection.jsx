@@ -82,7 +82,7 @@ function ListSection(props) {
             <Col md={8} sm={24}>
                 <div className={cx('list-document')}>
                     <Row gutter={0} className={cx('list-card')}>
-                        <Col span={12}>Dạng văn bản</Col>
+                        <Col span={12}>Thông tin chung</Col>
                         <Col span={12}>
                             <Link className={cx('search-right')} to={routes.publishedDocumentList}>
                                 <span style={{ fontSize: 13, marginRight: 4 }}>Tìm kiếm văn bản</span>
