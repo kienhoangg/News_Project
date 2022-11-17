@@ -225,7 +225,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
 
   const renderCollaborators = (
     <Select
-      placeholder='Cộng tác viên'
+      placeholder='Tác giả'
       style={{ width: '100%' }}
       showSearch
       allowClear
@@ -626,7 +626,7 @@ const PopupUpdateNews = ({ idNews, onSuccess, onCancel }) => {
                   </Form.Item>
                 </Col>
                 <Col span={8}>
-                  <Form.Item name='collaboratorId' label='Cộng tác viên'>
+                  <Form.Item name='collaboratorId' label='Tác giả'>
                     {renderCollaborators}
                   </Form.Item>
                 </Col>
