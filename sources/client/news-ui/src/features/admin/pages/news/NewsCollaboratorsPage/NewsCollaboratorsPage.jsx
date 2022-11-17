@@ -164,9 +164,9 @@ function NewsCollaboratorsPage(props) {
         open={isModalOpen?.show}
         title={
           isModalOpen?.type === POPUP_TYPE.DETAIL
-            ? 'Chi tiết cộng tác viên'
+            ? 'Chi tiết Tác giả'
             : isModalOpen?.type === POPUP_TYPE.CREATE
-            ? 'Thêm mới cộng tác viên'
+            ? 'Thêm mới Tác giả'
             : 'Chỉnh sửa thông tin'
         }
         okText={isModalOpen?.type === POPUP_TYPE.CREATE ? 'Tạo mới' : 'Lưu'}

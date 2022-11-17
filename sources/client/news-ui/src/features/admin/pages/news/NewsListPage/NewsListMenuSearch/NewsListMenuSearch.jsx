@@ -186,13 +186,13 @@ function NewsListMenuSearch(props) {
       </Row>
       <Row gutter={16} justify={'space-between'}>
         {/* <Col span={4}>
-          <Select placeholder='Cộng tác viên' style={{ width: '100%' }}>
-            <Option value='1'>Cộng tác viên 1</Option>
-            <Option value='2'>Cộng tác viên 2</Option>
-            <Option value='3'>Cộng tác viên 3</Option>
-            <Option value='4'>Cộng tác viên 4</Option>
-            <Option value='5'>Cộng tác viên 5</Option>
-            <Option value='6'>Cộng tác viên 6</Option>
+          <Select placeholder='Tác giả' style={{ width: '100%' }}>
+            <Option value='1'>Tác giả 1</Option>
+            <Option value='2'>Tác giả 2</Option>
+            <Option value='3'>Tác giả 3</Option>
+            <Option value='4'>Tác giả 4</Option>
+            <Option value='5'>Tác giả 5</Option>
+            <Option value='6'>Tác giả 6</Option>
           </Select>
         </Col> */}
         <Col span={5}>

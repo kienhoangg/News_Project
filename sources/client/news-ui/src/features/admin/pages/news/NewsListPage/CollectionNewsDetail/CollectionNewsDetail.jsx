@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import styles from "./CollectionNewsDetail.module.scss";
-import classNames from "classnames/bind";
-import { Card, Col, Divider, Form, Modal, Row } from "antd";
-import datetimeHelper from "helpers/datetimeHelper";
-import imageHelper from "helpers/imageHelper";
-import axiosClient from "apis/axiosClient";
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import styles from './CollectionNewsDetail.module.scss';
+import classNames from 'classnames/bind';
+import { Card, Col, Divider, Form, Modal, Row } from 'antd';
+import datetimeHelper from 'helpers/datetimeHelper';
+import imageHelper from 'helpers/imageHelper';
+import axiosClient from 'apis/axiosClient';
 
 const cx = classNames.bind(styles);
 
@@ -22,13 +22,13 @@ function CollectionNewsDetail(props) {
     <Modal
       confirmLoading={confirmLoading}
       open={open}
-      title="Hiển thị thông tin"
+      title='Hiển thị thông tin'
       okButtonProps={{
         style: {
-          display: "none",
+          display: 'none',
         },
       }}
-      cancelText="Thoát"
+      cancelText='Thoát'
       onCancel={onCancel}
       width={1300}
       centered
@@ -36,27 +36,27 @@ function CollectionNewsDetail(props) {
     >
       <Row gutter={8}>
         <Col span={16}>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Tiêu đề</div>
+              <div className={cx('row-item-label')}>Tiêu đề</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.Title}</div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Ảnh đại diện</div>
+              <div className={cx('row-item-label')}>Ảnh đại diện</div>
             </Col>
             <Col span={20}>
               <div style={{ width: 150, height: 200 }}>
                 {
                   <img
-                    alt=""
+                    alt=''
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
                     }}
                     src={imageHelper.getLinkImageUrl(dataDetail?.Avatar)}
                   />
@@ -64,25 +64,25 @@ function CollectionNewsDetail(props) {
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Tiêu đề ảnh</div>
+              <div className={cx('row-item-label')}>Tiêu đề ảnh</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.AvatarTitle}</div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Mô tả</div>
+              <div className={cx('row-item-label')}>Mô tả</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.Description}</div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Nội dung</div>
+              <div className={cx('row-item-label')}>Nội dung</div>
             </Col>
             <Col span={20}>
               <div
@@ -91,46 +91,46 @@ function CollectionNewsDetail(props) {
             </Col>
           </Row>
 
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Danh mục</div>
+              <div className={cx('row-item-label')}>Danh mục</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.CategoryNews?.CategoryNewsName}</div>
             </Col>
           </Row>
 
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Lĩnh vực</div>
+              <div className={cx('row-item-label')}>Lĩnh vực</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.FieldNews?.Title}</div>
             </Col>
           </Row>
 
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Nguồn tin</div>
+              <div className={cx('row-item-label')}>Nguồn tin</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.SourceNews?.Title}</div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Cộng tác viên</div>
+              <div className={cx('row-item-label')}>Tác giả</div>
             </Col>
             <Col span={20}>
               <div>{dataDetail?.Collaborator?.Name}</div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Tin nổi bật</div>
+              <div className={cx('row-item-label')}>Tin nổi bật</div>
             </Col>
             <Col span={20}>
-              <div>{dataDetail?.IsDocumentNews ? "Có" : "Không"}</div>
+              <div>{dataDetail?.IsDocumentNews ? 'Có' : 'Không'}</div>
             </Col>
           </Row>
           {/* <Row gutter={16} className={cx('row-item')}>
@@ -168,9 +168,9 @@ function CollectionNewsDetail(props) {
               <div>{dataDetail?.IsShowComment ? 'Có' : 'Không'}</div>
             </Col>
           </Row> */}
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Ngày sửa</div>
+              <div className={cx('row-item-label')}>Ngày sửa</div>
             </Col>
             <Col span={20}>
               <div>
@@ -180,9 +180,9 @@ function CollectionNewsDetail(props) {
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Ngày xuất bản</div>
+              <div className={cx('row-item-label')}>Ngày xuất bản</div>
             </Col>
             <Col span={20}>
               <div>
@@ -192,9 +192,9 @@ function CollectionNewsDetail(props) {
               </div>
             </Col>
           </Row>
-          <Row gutter={16} className={cx("row-item")}>
+          <Row gutter={16} className={cx('row-item')}>
             <Col span={4}>
-              <div className={cx("row-item-label")}>Tệp đính kèm</div>
+              <div className={cx('row-item-label')}>Tệp đính kèm</div>
             </Col>
             <Col span={20}>
               <a href={imageHelper.getLinkImageUrl(dataDetail?.FilePath)}>
