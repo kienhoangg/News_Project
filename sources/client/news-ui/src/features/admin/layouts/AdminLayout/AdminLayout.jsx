@@ -111,7 +111,7 @@ function AdminLayout({ children }) {
               icon={<LogoutOutlined />}
               onClick={() => {
                 commonFunc.deleteAllCookies();
-                window.open(routes.login, '_self');
+                navigate(routes.login);
               }}
             >
               Logout

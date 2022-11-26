@@ -14,10 +14,10 @@ function AccountPage(props) {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const onFinish = async (values) => {
-    await login(values);
+    await changeAccount(values);
   };
 
-  const login = async (body) => {
+  const changeAccount = async (body) => {
     try {
       console.log(body);
       setConfirmLoading(true);
