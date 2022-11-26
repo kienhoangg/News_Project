@@ -26,6 +26,7 @@ const {
   RadiusUpleftOutlined,
   ExperimentOutlined,
   AreaChartOutlined,
+  UserSwitchOutlined,
 } = require('@ant-design/icons');
 
 const adminMenu = [
@@ -254,19 +255,6 @@ const adminMenu = [
     ],
   },
   {
-    key: 'setup',
-    label: 'Thiết lập cổng',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        key: 'setup-menu',
-        label: 'Menu hệ thống',
-        icon: <MenuOutlined />,
-        to: routes.adminSetupMenu,
-      },
-    ],
-  },
-  {
     key: 'static',
     label: 'Thông tin tĩnh',
     icon: <HighlightOutlined />,
@@ -301,6 +289,25 @@ const adminMenu = [
         label: 'Nội dung',
         icon: <AuditOutlined />,
         to: routes.budgetContent,
+      },
+    ],
+  },
+  {
+    key: 'setup',
+    label: 'Thiết lập cổng',
+    icon: <SettingOutlined />,
+    children: [
+      {
+        key: 'setup-menu',
+        label: 'Menu hệ thống',
+        icon: <MenuOutlined />,
+        to: routes.adminSetupMenu,
+      },
+      {
+        key: 'setup-account',
+        label: 'Quản lý tài khoản',
+        icon: <UserSwitchOutlined />,
+        to: routes.adminSetupAccount,
       },
     ],
   },
