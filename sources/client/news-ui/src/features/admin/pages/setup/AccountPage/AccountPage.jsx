@@ -22,8 +22,35 @@ function AccountPage(props) {
     try {
       setConfirmLoading(true);
       await userApi.changeAccount(body);
-    } catch (err) {
-      openNotification('Đổi mật khẩu thất bại', '', NotificationType.ERROR);
+    } catch (error) {
+      if (error?.response?.data?.message === 'Not found account') {
+        openNotification(
+          'Tài khoản hoặc mật khẩu sai',
+          '',
+          NotificationType.ERROR
+        );
+        return;
+      } else if (
+        error?.response?.data?.message === 'PasswordNew same PasswordOld'
+      ) {
+        openNotification(
+          'Mật khẩu mới phải khác mật khẩu cũ',
+          '',
+          NotificationType.ERROR
+        );
+        return;
+      } else if (
+        error?.response?.data?.message === 'PasswordNew no same RePasswordNew'
+      ) {
+        openNotification(
+          'Mật khẩu mới và xác nhận mật khẩu mới phải trùng nhau',
+          '',
+          NotificationType.ERROR
+        );
+        return;
+      } else {
+        openNotification('Đổi mật khẩu thất bại', '', NotificationType.ERROR);
+      }
     } finally {
       setConfirmLoading(false);
     }
