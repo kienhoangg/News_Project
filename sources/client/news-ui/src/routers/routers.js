@@ -57,6 +57,7 @@ import PublishedPublicInformation from 'features/visitor/PublishedPublicInformat
 import NewsStatisticsPage from 'features/admin/pages/news/NewsStatisticsPage/NewsStatisticsPage';
 import PublishedPublicInformationListPage from 'features/visitor/PublishedPublicInformationListPage/PublishedPublicInformationListPage';
 import PublishedPublicInformationDetailPage from 'features/visitor/PublishedPublicInformationDetailPage/PublishedPublicInformationDetailPage';
+import AccountPage from 'features/admin/pages/setup/AccountPage/AccountPage';
 
 // Public routes
 const publicRoutes = [
@@ -256,6 +257,11 @@ const publicRoutes = [
   {
     path: config.routes.adminSetupMenu,
     component: MenuPage,
+    layout: AdminLayout,
+  },
+  {
+    path: config.routes.adminSetupAccount,
+    component: AccountPage,
     layout: AdminLayout,
   },
   {
