@@ -186,7 +186,7 @@ namespace News.API.Extensions
                 typeof(VideoCategoryService)).AddScoped(serviceType: typeof(IRatingService),
                 typeof(RatingService)).AddScoped(serviceType: typeof(IPhotoService),
                 typeof(PhotoService)).AddTransient(serviceType: typeof(ITokenService),
-                typeof(TokenService)).AddScoped<IJwtUtils, JwtUtils>();
+                typeof(TokenService)).AddScoped<IJwtUtils, JwtUtils>().AddScoped<ISecurityService, SecurityService>();
         }
     }
 }

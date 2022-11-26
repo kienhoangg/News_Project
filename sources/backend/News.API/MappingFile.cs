@@ -70,6 +70,9 @@ namespace News.API
             CreateMap<RadioCategory, RadioCategoryDto>().IgnoreAllNonExisting();
             CreateMap<RadioCategoryDto, RadioCategory>().IgnoreAllNonExisting();
 
+            CreateMap<User, UserDto>().IgnoreAllNonExisting();
+            CreateMap<UserDto, User>().IgnoreAllNonExisting();
+
             CreateMap<PublicInformation, PublicInformationDto>().IgnoreAllNonExisting();
             CreateMap<PublicInformationDto, PublicInformation>().IgnoreAllNonExisting();
 

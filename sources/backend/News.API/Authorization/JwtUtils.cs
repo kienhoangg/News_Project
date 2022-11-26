@@ -9,7 +9,7 @@
 
     public interface IJwtUtils
     {
-        public string GenerateJwtToken(string role);
+        public string GenerateJwtToken(string role, string username);
         public string? ValidateJwtToken(string token);
     }
 
@@ -22,14 +22,14 @@
             _jwtSettings = jwtSettings.Value;
         }
 
-        public string GenerateJwtToken(string role)
+        public string GenerateJwtToken(string role, string username)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Key);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("Role", role) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("Role", role), new Claim("UserName", username) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

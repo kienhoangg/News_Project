@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Logging;
+using Common.Shared.Configurations;
 using Common.Shared.DTOs.Configurations;
 using Microsoft.AspNetCore.Mvc;
 using News.API.Extensions;
@@ -23,6 +24,7 @@ try
     builder.Services.ConfigureRedis();
     var services = builder.Services;
     services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+    services.Configure<PasswordPhrases>(builder.Configuration.GetSection("PasswordPhrases"));
     services.AddControllers(o =>
     {
         o.Filters.Add(new ResponseCacheAttribute() { NoStore = true, Location = ResponseCacheLocation.None });
