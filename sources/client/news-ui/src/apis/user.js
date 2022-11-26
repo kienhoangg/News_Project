@@ -5,6 +5,11 @@ class UserAPI {
     const url = '/users';
     return axiosClient.post(url, body);
   };
+
+  changeAccount = (body) => {
+    const url = '/users';
+    return axiosClient.put(url, body);
+  };
 }
 const userApi = new UserAPI();
 export default userApi;

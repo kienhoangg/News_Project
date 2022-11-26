@@ -5,6 +5,7 @@ import Loading from 'components/Loading/Loading';
 import { openNotification } from 'helpers/notification';
 import { useState } from 'react';
 import styles from './AccountPage.module.scss';
+import userApi from 'apis/user';
 
 const cx = classNames.bind(styles);
 
@@ -19,8 +20,8 @@ function AccountPage(props) {
 
   const changeAccount = async (body) => {
     try {
-      console.log(body);
       setConfirmLoading(true);
+      await userApi.changeAccount(body);
     } catch (err) {
       openNotification('Đổi mật khẩu thất bại', '', NotificationType.ERROR);
     } finally {
