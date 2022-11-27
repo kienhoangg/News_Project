@@ -28,10 +28,21 @@ namespace News.API.Services
             {
                 foreach (var validUser in validUsers)
                 {
-                    if (validUser.Password.Decrypt() == userDto.Password)
+                    try
                     {
-                        user = validUser;
-                        break;
+                        if (validUser.Password.Decrypt() == userDto.Password)
+                        {
+                            user = validUser;
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (validUser.Password == userDto.Password)
+                        {
+                            user = validUser;
+                            break;
+                        }
                     }
                 }
             }
@@ -47,10 +58,21 @@ namespace News.API.Services
                 User user = null;
                 foreach (var validUser in validUsers)
                 {
-                    if (validUser.Password.Decrypt() == userDto.Password)
+                    try
                     {
-                        user = validUser;
-                        break;
+                        if (validUser.Password.Decrypt() == userDto.Password)
+                        {
+                            user = validUser;
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (validUser.Password == userDto.Password)
+                        {
+                            user = validUser;
+                            break;
+                        }
                     }
                 }
                 if (user != null)
