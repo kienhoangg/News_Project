@@ -73,18 +73,7 @@ function AdminLayout({ children }) {
         onCollapse={(value) => setCollapsed(value)}
       >
         <div className={cx('logo')}>
-          <span>Xin chào {commonFunc.getCookie('userName')},</span>
-          <Button
-            className={cx('btn-logout')}
-            type='text'
-            // icon={<LogoutOutlined />}
-            onClick={() => {
-              commonFunc.deleteAllCookies();
-              navigate(routes.login);
-            }}
-          >
-            Logout
-          </Button>
+          <span>Xin chào {commonFunc.getCookie('userName')}</span>
         </div>
         {/* <FontAwesomeIcon icon='fa-solid fa-house' /> */}
         <Menu
@@ -117,6 +106,17 @@ function AdminLayout({ children }) {
                 return <Breadcrumb.Item key={item}>{item}</Breadcrumb.Item>;
               })}
             </Breadcrumb>
+            <Button
+              className={cx('btn-logout')}
+              // type='text'
+              // icon={<LogoutOutlined />}
+              onClick={() => {
+                commonFunc.deleteAllCookies();
+                navigate(routes.login);
+              }}
+            >
+              Logout
+            </Button>
           </div>
 
           <div
