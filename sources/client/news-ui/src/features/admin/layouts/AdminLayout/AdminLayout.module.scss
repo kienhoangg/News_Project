@@ -14,6 +14,18 @@
     top: 0;
 }
 
+.btn-logout{
+
+    span{
+        color: #f0f8ffc7;
+        margin-left: -12px;
+
+        &:hover {
+            color: aliceblue;
+        }
+    }
+}
+
 .admin-menu {
     height: calc(100% - 40px);
     overflow: auto;

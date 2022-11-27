@@ -14,6 +14,9 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
   const token = commonFunc.getCookie('token');
   const pathName = window.location.pathname;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   if (!token && pathName !== routes.login && pathName.startsWith('/admin/')) {
     openNotification('Hết phiên đăng nhập', '', NotificationType.ERROR);
     setTimeout(() => {
@@ -21,7 +24,6 @@ axiosClient.interceptors.request.use(async (config) => {
     }, 500);
     return;
   }
-  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 axiosClient.interceptors.response.use(

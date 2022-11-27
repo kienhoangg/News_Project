@@ -35,6 +35,7 @@ function LoginPage(props) {
       const userInfor = convertHelper.Deserialize(atob(stringUserInfor));
       document.cookie = `token=${res.Data}`;
       document.cookie = `role=${userInfor['Role']}`;
+      document.cookie = `userName=${userInfor['UserName']}`;
       navigate(routes.admin);
     } catch (err) {
       openNotification('Đăng nhập thất bại', '', NotificationType.ERROR);
