@@ -24,10 +24,7 @@ const { Content, Sider } = Layout;
 const menuItems = adminConst.adminMenu;
 function AdminLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
-  const [breadcrumbValues, setBreadcrumbValues] = useState([
-    'Tin tức - bài viết',
-    'Tin tức',
-  ]);
+  const [breadcrumbValues, setBreadcrumbValues] = useState(['Tin tức - bài viết', 'Tin tức']);
   const navigate = useNavigate();
 
   const handleOnClickMenuItem = (values) => {
